@@ -1,0 +1,254 @@
+.blog-content h2 a:hover, .blog-content .post-meta li a:hover{
+	color: #7AB700;
+}
+
+.btn-transparent:after{
+  background: #7AB700;
+}
+
+.btn-transparent{
+  -webkit-box-shadow: inset 0 0 0 1px #7AB700;
+  box-shadow: inset 0 0 0 1px #7AB700;
+}
+
+#header .navbar-inverse .navbar-nav  .active  > a,  
+#header .navbar-inverse .navbar-nav  .active  > a:focus, 
+#header .navbar-nav.navbar-right li > a:hover,
+.navbar-inverse .navbar-nav > .open > a{
+  color:#7ab700;
+  border-color:#7ab700;
+}
+
+.dropdown-menu {
+  border-top: 3px solid #7ab700;
+}
+
+.carousel-indicators .active{
+  background-color: #7ab700 !important;
+}
+
+#home-carousel .carousel-inner h2 span{
+  color:#7ab700;
+}
+
+#home-carousel .carousel-left:hover,
+#home-carousel .carousel-right:hover{
+  border-color: #7ab700;
+}
+
+.features-nav  .media i:after {
+  border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) #7ab700;
+}
+
+.features-nav .active .media i, 
+.features-nav li:hover  .media i {
+  background-color: #7ab700;
+  border-color: #7ab700;
+}
+
+#portfolio .portfolio-filter li .active{
+  border: 1px solid #7ab700;
+  color: #7ab700;
+}
+
+#portfolio .portfolio-filter li a:hover, 
+#portfolio .portfolio-filter li a:focus,
+#portfolio .portfolio-filter li a:active {
+  color: #7ab700;
+}
+
+.mask i {
+  border: 1px solid #7ab700;
+  color: #7ab700;
+}
+
+.mask i:hover{
+  background-color:#7ab700;  
+}
+
+.carousel-left:hover, 
+.carousel-right:hover {
+  background: #7ab700;
+}
+
+.carousel-left, 
+.carousel-right {
+  border: 1px solid #7ab700;
+  color: #7ab700;
+}
+
+#team-member-carousel .team-member:hover{
+  background-color: #7ab700;
+}
+
+#our-team .carousel-left:hover,
+#our-team .carousel-right:hover{
+  border: 1px solid #7ab700;;
+}
+
+.testimonial p span{
+  color:#7ab700;
+}
+
+.single-blog .date {
+  background: none repeat scroll 0 0 #7AB700;
+}
+
+#contact .contact-form .btn-primary {
+  background: #7AB700;
+}
+
+
+#contact .contact-form .form-control:focus {
+  border-color: #7AB700
+}
+
+#footer a {
+  color:#7AB700;
+}
+
+
+
+.btn-readmore {
+  background-color: #7AB700;
+}
+
+.carousel-blog-control {
+  background: #7ab700;
+}
+
+.btn-reply:hover{
+  background:#7AB700;
+}
+
+.btn-send {
+  background: #7AB700;
+  }
+  
+
+.replay-box form span input:focus, 
+.replay-box form textarea:focus{
+	border-color: #7ab700;
+}  
+
+.pagination-lg li a:hover {
+  background-color: #7ab700;
+}
+
+.pagination  .active  a, 
+.pagination  .active  span, 
+.pagination  .active  a:hover, 
+.pagination  .active  span:hover, 
+.pagination  .active  a:focus, 
+.pagination  .active  span:focus {
+  background-color: #7ab700;
+}
+
+.btn-search, .btn-plan {
+  background: #7AB700;
+}
+
+.blog_category li a:hover, 
+.blog_category li a:focus {
+	color: #7AB700;
+}
+
+ul.plan:hover {
+  border-color: rgba(122, 183, 0, 0.7);
+}
+
+ul.plan:hover .plan-name {
+  background: rgba(122, 183, 0, 0.7);
+}
+
+ul.plan:hover .plan-price {
+  border-color: #9AC545 ;
+}
+
+
+
+.btn-readmore {
+  background-color: #7AB700;
+}
+
+.carousel-blog-control {
+  background: #7ab700;
+}
+
+.btn-reply:hover{
+  background:#7AB700;
+}
+
+.btn-send, .date{
+  background: #7AB700;
+  }
+  
+
+.replay-box form span input:focus, 
+.replay-box form textarea:focus{
+	border-color: #7ab700;
+}  
+
+.pagination-lg li a:hover {
+  background-color: #7ab700;
+}
+
+.pagination  .active  a, 
+.pagination  .active  span, 
+.pagination  .active  a:hover, 
+.pagination  .active  span:hover, 
+.pagination  .active  a:focus, 
+.pagination  .active  span:focus {
+  background-color: #7ab700;
+}
+
+.btn-search, .btn-plan {
+  background: #7AB700;
+}
+
+.blog_category li a:hover, 
+.blog_category li a:focus {
+	color: #7AB700;
+}
+
+ul.plan:hover {
+  border-color: rgba(122, 183, 0, 0.7);
+}
+
+ul.plan:hover .plan-name {
+  background: rgba(122, 183, 0, 0.7);
+}
+
+ul.plan:hover .plan-price {
+  border-color: #9AC545 ;
+}
+
+.tag-cloud li a:hover, .tag-cloud li a:focus {
+  background-color: #7ab700;
+}
+
+.portfolio-prev:hover, 
+.portfolio-next:hover {
+  background:#7AB700;
+  border-color:#7AB700;
+}
+
+.client-carousel-left:hover,  
+.client-carousel-right:hover,
+.client-carousel-left:focus,  
+.client-carousel-right:focus {
+  background:#7AB700;
+  border-color:#7AB700;
+}
+
+.single-carousel-right, 
+.single-carousel-left {
+  background:#7AB700;
+  border: 1px solid #7AB700;
+}
+
+.search_box:focus{
+  border-color: #7AB700;
+}
+
+
