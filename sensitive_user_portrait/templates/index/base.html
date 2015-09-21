@@ -119,8 +119,10 @@
    </div>
    </header>
    <div class="container">
+      {% block body %}
       <p class="lead">Fundamental HTML elements styled and enhanced with extensible classes.</p>
-   </div>
+      {% endblock body %}
+  </div>
   
    <script type="text/javascript">
       $(".metro").metro();
