@@ -6,16 +6,6 @@ from flask_debugtoolbar import DebugToolbarExtension
 from sensitive_user_portrait.extensions import admin
 from sensitive_user_portrait.jinja import gender, tsfmt, Int2string, gender_text, user_email, user_location, user_birth, user_vertify, weibo_source
 from sensitive_user_portrait.index.views import mod as indexModule
-from sensitive_user_portrait.attribute.views import mod as attributeModule
-from sensitive_user_portrait.manage.views import mod as manageModule
-from sensitive_user_portrait.recommentation.views import mod as recommentationModule
-from sensitive_user_portrait.profile.views import mod as profileModule
-from sensitive_user_portrait.overview.views import mod as overviewModule
-from sensitive_user_portrait.influence_application.views import mod as influenceModule
-from sensitvie_user_portrait.login.views import mod as loginModule
-from sensitive_user_portrait.group.views import mod as groupModule
-from sensitive_user_portrait.tag.views import mod as tagModule
-from sensitive_user_portrait.weibo.views import mod as weiboModule
 
 def create_app():
     app = Flask(__name__)
@@ -26,15 +16,6 @@ def create_app():
 
     # Create modules
     app.register_blueprint(indexModule)
-    app.register_blueprint(manageModule)
-    app.register_blueprint(attributeModule)
-    app.register_blueprint(recommentationModule)
-    app.register_blueprint(overviewModule)
-    app.register_blueprint(influenceModule)
-    app.register_blueprint(loginModule)
-    app.register_blueprint(groupModule)
-    app.register_blueprint(tagModule)
-    app.register_blueprint(weiboModule)
     # the debug toolbar is only enabled in debug mode
     app.config['DEBUG'] = True
 
@@ -102,9 +83,7 @@ def create_app():
 
 def register_blueprints(app):
     app.register_blueprint(indexModule)
-    app.register_blueprint(manageModule)
-    app.register_blueprint(attributeModule)
-    app.register_blueprint(profileModule)
+
 
 def register_extensions(app):
     app.config.setdefault('ES_USER_PROFILE_URL', 'http://219.224.135.97:9208/')
