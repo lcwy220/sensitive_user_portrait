@@ -1,4 +1,5 @@
 # -*- coding=utf-8 -*-
+# personal attribute calculate, include ip, time segment and @
 
 import re
 import sys

@@ -76,6 +76,8 @@ def cal_hashtag_work(item, sensitive):
                 r_cluster.hset('hashtag_'+str(ts), str(uid), json.dumps(hashtag_dict))
 
 def cal_sensitive_words_work(item, sw_list):
+    timestamp = item['timestamp']
+    uid = item['uid']
     timestamp = ts2datetime(timestamp).replace('-','')
     map = {}
     for w in sw_list:

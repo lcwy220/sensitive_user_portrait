@@ -58,6 +58,7 @@ def send_all(f, sender):
                 te = time.time()
                 print '[%s] read csv speed: %s sec/per %s' % (datetime.now().strftime('%Y-%m-%d %H:%M:%S'), te - ts, 10000)
                 ts = te
+                time.sleep(1.5)
     except:
         print "pass"
     total_cost = time.time() - tb

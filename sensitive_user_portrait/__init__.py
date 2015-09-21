@@ -26,6 +26,7 @@ def create_app():
     register_extensions(app)
     register_jinja_funcs(app)
 
+    # Create modules
     # the debug toolbar is only enabled in debug mode
     app.config['DEBUG'] = True
 
@@ -72,6 +73,7 @@ def register_blueprints(app):
     app.register_blueprint(tagModule)
     app.register_blueprint(weiboModule)
     """
+
 
 def register_extensions(app):
     app.config.setdefault('ES_USER_PROFILE_URL', 'http://219.224.135.97:9208/')
