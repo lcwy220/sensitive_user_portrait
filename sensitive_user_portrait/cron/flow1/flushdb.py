@@ -12,20 +12,20 @@ if __name__ == '__main__':
             weibo_redis.flushall()
     print "finish flushing!"
     """
-    startup_nodes = [{"host": '219.224.135.96', "port": '7380'}]
+    startup_nodes = [{"host": '219.224.135.91', "port": '7380'}]
     weibo_redis = RedisCluster(startup_nodes = startup_nodes)
     weibo_redis.flushall()
 
-    startup_nodes = [{"host": '219.224.135.94', "port": '7379'}]
+    startup_nodes = [{"host": '219.224.135.92', "port": '7380'}]
     weibo_redis = RedisCluster(startup_nodes = startup_nodes)
     weibo_redis.flushall()
 
-    startup_nodes = [{"host": '219.224.135.95', "port": '7379'}]
+    startup_nodes = [{"host": '219.224.135.93', "port": '7380'}]
     weibo_redis = RedisCluster(startup_nodes = startup_nodes)
     weibo_redis.flushall()
 
-    r = StrictRedis(host="219.224.135.97", port="7380")
-    r.flushall()
+    #r = StrictRedis(host="219.224.135.97", port="7380")
+    #r.flushall()
 
     print "ok"
     """

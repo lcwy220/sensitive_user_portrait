@@ -215,7 +215,7 @@ if __name__ == "__main__":
     controller.connect("tcp://%s:%s" %(ZMQ_VENT_HOST_FLOW1, ZMQ_CTRL_VENT_PORT_FLOW1))
 
     cluster_redis = R_CLUSTER_FLOW1
-
+    pointer = open('redis_cluster_error.txt','wb')
     sensitive_words = createWordTree()
 
     count = 0
@@ -228,8 +228,10 @@ if __name__ == "__main__":
             continue 
 
         if int(item['sp_type']) == 1:
-            cal_propage_work(item, sensitive_words)
-
+            try:
+                cal_propage_work(item, sensitive_words)
+            except Exception, r:
+                pointer.write(r +'\n')
             count += 1
             if count % 10000 == 0:
                 te = time.time()
