@@ -49,6 +49,7 @@ R_GROUP = _default_redis(host=REDIS_HOST, port=REDIS_PORT, db=14)
 # use to recomment 
 #two types hash
 #type1:{recomment_2013-09-01:{uid:status, uid:status}} status:0 not in  status:1 have in
+# type: hash---{'recommend', 20130901, uid_list}
 #type2:{compute:{uid:[in_date,status], uid:[in_date, status]}} status:0 not compute status:1 computing 
 R_RECOMMENTATION = _default_redis(host=REDIS_HOST, port=REDIS_PORT, db=15)
 

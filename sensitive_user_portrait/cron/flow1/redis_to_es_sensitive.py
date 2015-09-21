@@ -125,7 +125,6 @@ def compute(user_set, es):
         user_index = user_index_cal(origin_weibo_list, retweeted_weibo_list, user_fansnum, influence_origin_weibo_retweeted, influence_origin_weibo_comment, influence_retweeted_weibo_retweeted, influence_retweeted_weibo_comment)
 
 
-        sensitive_user_info = {}
         if not sensitive_user_info:
             s_user_index = 0
             s_origin_weibo_retweeted_total_number = 0
@@ -305,7 +304,7 @@ def compute(user_set, es):
 if __name__ == "__main__":
 
     #es_index = 's_'+time.strftime("%Y%m%d", time.localtime(time.time()-86400))
-    es_index = '20130901'
+    es_index = '20130902'
     bool = es.indices.exists(index=es_index)
     print bool
     if not bool:
@@ -330,6 +329,6 @@ if __name__ == "__main__":
             print "%s : %s" %(count, ts - tb)
             tb = ts
         else:
-            os.system("python update_daily_user_index_rank.py &")
+           # os.system("python update_daily_user_index_rank.py &")
             sys.exit(0)
 
