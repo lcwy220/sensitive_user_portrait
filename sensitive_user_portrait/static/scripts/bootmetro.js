@@ -14,6 +14,7 @@
       $(".metro-sections").css('left', 0);
 
       // setup the horizontal scroll
+	  /*
       $(".metro-sections").mousewheel(function(e, delta) {
          e.preventDefault();
 
@@ -26,7 +27,7 @@
             $s.css('left', newLeft ); 
       });
 
-
+		*/
       // if the tiles viewport is wider than the screen than shows the arrow buttons
       //if ( $(".metro").width() < totalWidth ){
       //   $("#tiles-scroll-prev").show();
