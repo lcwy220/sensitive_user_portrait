@@ -58,6 +58,9 @@ def search_top_k(index_name, top_k):
 
 if __name__ == "__main__":
     now_date = ts2datetime(time.time()).replace('-','')
+    former_date = ts2datetime(time.time()-7*24*3600).replace('-','')
+    r_recommend.hdel('recommend_sensitive', former_date) # delete 7 days ago recommentation uid_list
+    r_recommend.hdel('recommend_influence', former_date) # delete 7 days ago recommentation uid_list
     now_date = '20130901' # test
     sensitive_weibo_uid = search_sensitive_weibo(now_date) # sensitive words uid list, direct recommend in
     top_influence_uid = search_top_k(now_date, top_k) # top influence uid list, filter

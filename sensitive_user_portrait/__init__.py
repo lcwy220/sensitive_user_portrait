@@ -5,6 +5,7 @@ from elasticsearch import Elasticsearch
 from flask_debugtoolbar import DebugToolbarExtension
 from sensitive_user_portrait.extensions import admin
 from sensitive_user_portrait.index.views import mod as indexModule
+from sensitive_user_portrait.recommentation.views import mod as recommentationModule
 from sensitive_user_portrait.jinja import gender, tsfmt, Int2string, gender_text, user_email, user_location, user_birth, user_vertify, weibo_source
 """
 from sensitive_user_portrait.attribute.views import mod as attributeModule
@@ -27,6 +28,7 @@ def create_app():
     register_jinja_funcs(app)
 
     # Create modules
+
     # the debug toolbar is only enabled in debug mode
     app.config['DEBUG'] = True
 
@@ -61,6 +63,8 @@ def create_app():
 
 def register_blueprints(app):
     app.register_blueprint(indexModule)
+    app.register_blueprint(indexModule)
+    app.register_blueprint(recommentationModule)
     """
     app.register_blueprint(attributeModule)
     app.register_blueprint(manageModule)
