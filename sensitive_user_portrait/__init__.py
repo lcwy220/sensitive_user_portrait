@@ -4,10 +4,21 @@ from flask import Flask
 from elasticsearch import Elasticsearch
 from flask_debugtoolbar import DebugToolbarExtension
 from sensitive_user_portrait.extensions import admin
-from sensitive_user_portrait.jinja import gender, tsfmt, Int2string, gender_text, user_email, user_location, user_birth, user_vertify, weibo_source
 from sensitive_user_portrait.index.views import mod as indexModule
-#from sensitive_user_portrait.overview.views import mod as overviewModule
 from sensitive_user_portrait.recommentation.views import mod as recommentationModule
+from sensitive_user_portrait.jinja import gender, tsfmt, Int2string, gender_text, user_email, user_location, user_birth, user_vertify, weibo_source
+"""
+from sensitive_user_portrait.attribute.views import mod as attributeModule
+from sensitive_user_portrait.manage.views import mod as manageModule
+from sensitive_user_portrait.recommentation.views import mod as recommentationModule
+from sensitive_user_portrait.profile.views import mod as profileModule
+from sensitive_user_portrait.overview.views import mod as overviewModule
+from sensitive_user_portrait.influence_application.views import mod as influenceModule
+from sensitvie_user_portrait.login.views import mod as loginModule
+from sensitive_user_portrait.group.views import mod as groupModule
+from sensitive_user_portrait.tag.views import mod as tagModule
+from sensitive_user_portrait.weibo.views import mod as weiboModule
+"""
 
 def create_app():
     app = Flask(__name__)
@@ -17,9 +28,6 @@ def create_app():
     register_jinja_funcs(app)
 
     # Create modules
-    app.register_blueprint(indexModule)
-    #app.register_blueprint(overviewModule)
-    app.register_blueprint(recommentationModule)
 
     # the debug toolbar is only enabled in debug mode
     app.config['DEBUG'] = True
@@ -50,44 +58,25 @@ def create_app():
     # debug toolbar
     # toolbar = DebugToolbarExtension(app)
     
-    '''
-    app.config['MONGO_HOST'] = MONGODB_HOST
-    app.config['MONGO_PORT'] = MONGODB_PORT
-
-    app.config['MONGODB_SETTINGS'] = {
-        'db': MASTER_TIMELINE_54API_WEIBO_DB,
-        'host': MONGODB_HOST,
-        'port': MONGODB_PORT
-    }
-
-    # Create mysql database
-    db.init_app(app)
-    with app.test_request_context():
-        db.create_all()
-
-    # Create mongo_engine
-    mongo_engine.init_app(app)
-
-    admin.init_app(app)
-    """
-    # Create mysql database admin, visit via url: http://HOST:PORT/admin/
-    for m in model.__all__:
-        m = getattr(model, m)
-        n = m._name()
-        admin.add_view(SQLModelView(m, db.session, name=n))
-
-    for m in mongodb_model.__all__:
-        admin.add_view(MongoDBView(m))
-    """
-
-    # init mongo
-    mongo.init_app(app)
-    '''
     return app
    
 
 def register_blueprints(app):
     app.register_blueprint(indexModule)
+    app.register_blueprint(indexModule)
+    app.register_blueprint(recommentationModule)
+    """
+    app.register_blueprint(attributeModule)
+    app.register_blueprint(manageModule)
+    app.register_blueprint(recommentationModule)
+    app.register_blueprint(profileModule)
+    app.register_blueprint(overviewModule)
+    app.register_blueprint(influenceModule)
+    app.register_blueprint(loginModule)
+    app.register_blueprint(groupModule)
+    app.register_blueprint(tagModule)
+    app.register_blueprint(weiboModule)
+    """
 
 
 def register_extensions(app):
