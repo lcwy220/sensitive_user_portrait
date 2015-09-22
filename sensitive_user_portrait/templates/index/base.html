@@ -31,6 +31,9 @@
    <link rel="stylesheet" type="text/css" href="/static/content/css/bootmetro-charms.css">
    <link rel="stylesheet" type="text/css" href="/static/content/css/metro-ui-light.css">
    <link rel="stylesheet" type="text/css" href="/static/content/css/icomoon.css">
+   <link rel="stylesheet" type="text/css" href="/static/content/css/chosen.min.css">
+   <link rel="stylesheet" type="text/css" href="/static/content/css/jquery.iphone.toggle.css">
+   <link rel="stylesheet" type="text/css" href="/static/content/css/uploadify.css">
 
    <!--  these two css are to use only for documentation -->
    <link rel="stylesheet" type="text/css" href="/static/content/css/demo.css">
@@ -56,6 +59,13 @@
    <script type="text/javascript" src="/static/scripts/google-code-prettify/prettify.js"></script>
    <script type="text/javascript" src="/static/scripts/jquery.mousewheel.js"></script>
    <script type="text/javascript" src="/static/scripts/jquery.scrollTo.js"></script>
+   <script type="text/javascript" src="/static/scripts/jquery.dataTables.min.js"></script>
+   <script type="text/javascript" src="/static/scripts/jquery.cookie.js"></script>
+   <script type="text/javascript" src="/static/scripts/jquery.history.js"></script>
+   <script type="text/javascript" src="/static/scripts/chosen.jquery.min.js"></script>
+   <script type="text/javascript" src="/static/scripts/jquery.autogrow-textarea.js"></script>
+   <script type="text/javascript" src="/static/scripts/jquery.iphone.toggle.js"></script>
+   <script type="text/javascript" src="/static/scripts/jquery.uploadify-3.1.min.js"></script>
    <script type="text/javascript" src="/static/scripts/bootstrap.min.js"></script>
    <script type="text/javascript" src="/static/scripts/bootmetro.js"></script>
    <script type="text/javascript" src="/static/scripts/bootmetro-charms.js"></script>
@@ -119,8 +129,10 @@
    </div>
    </header>
    <div class="container">
+      {% block body %}
       <p class="lead">Fundamental HTML elements styled and enhanced with extensible classes.</p>
-   </div>
+      {% endblock body %}
+  </div>
   
    <script type="text/javascript">
       $(".metro").metro();
