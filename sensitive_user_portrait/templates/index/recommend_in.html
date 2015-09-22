@@ -8,7 +8,7 @@
     .dataTables_paginate{margin-top:-10px;margin-bottom:-20px;}
 </style>
 {% endblock css %}
-{% block main %}
+{% block body %}
 
 
 <h4 class="page-header">入库推荐</h4>
@@ -69,14 +69,13 @@
 </div>
 
 {% endblock %}
-<!--
+
 {% block Own_js %}
 {{ super() }}
-<script type="text/javascript" src="/static/in_extra.js"></script>
-<script type="text/javascript" src="/static/recommend_in.js"></script>
+<script type="text/javascript" src="/static/custom/js/in_extra.js"></script>
+<script type="text/javascript" src="/static/custom/js/recommend_in.js"></script>
 {% endblock Own_js %}
 {% block end_js %}
 {{ super() }}
-<script src="/static/in_table.js"></script>
+<script src="/static/custom/js/in_table.js"></script>
 {% endblock end_js %}
- -->
