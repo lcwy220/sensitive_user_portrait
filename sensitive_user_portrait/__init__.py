@@ -6,7 +6,9 @@ from flask_debugtoolbar import DebugToolbarExtension
 from sensitive_user_portrait.extensions import admin
 from sensitive_user_portrait.jinja import gender, tsfmt, Int2string, gender_text, user_email, user_location, user_birth, user_vertify, weibo_source
 from sensitive_user_portrait.index.views import mod as indexModule
-from sensitive_user_portrait.overview.views import mod as overviewModule
+#from sensitive_user_portrait.overview.views import mod as overviewModule
+from sensitive_user_portrait.recommentation.views import mod as recommentationModule
+
 def create_app():
     app = Flask(__name__)
 
@@ -16,7 +18,9 @@ def create_app():
 
     # Create modules
     app.register_blueprint(indexModule)
-    app.register_blueprint(overviewModule)
+    #app.register_blueprint(overviewModule)
+    app.register_blueprint(recommentationModule)
+
     # the debug toolbar is only enabled in debug mode
     app.config['DEBUG'] = True
 
