@@ -5,7 +5,7 @@ import redis
 import time
 import json
 from flask import Blueprint, url_for, render_template, request, abort, flash, session, redirect
-from utils import recommend_in_sensitive, recommend_in_top_influence, recommentation_more_information
+# from utils import recommend_in_sensitive, recommend_in_top_influence, recommentation_more_information
 from sensitive_user_portrait.global_utils import R_RECOMMENTATION as r
 from sensitive_user_portrait.time_utils import datetime2ts, ts2datetime
 
