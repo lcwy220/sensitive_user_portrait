@@ -1,7 +1,7 @@
 {% extends "index/base.html" %}
     {% block title %}自定义标签{% endblock title%}
     {% block subtitle %}自定义标签{% endblock subtitle%}
-      {% block css %}
+      {% block custom_css %}
       {{ super() }}
     <style type="text/css">
     .hidden{display:none;}
@@ -39,12 +39,12 @@ table th{text-align:center;}
 tbody td{text-align:center;}
 .tagCols{width:550px;margin:auto 0;  text-align: center;margin-bottom: 10px;height:50px;line-height: 45px;}
 .tagCols span{font-size:20px;}
-.addIcon{background-image:url(../../static/img/add.png);width:32px;display:inline-block;height:32px;cursor:pointer;padding-top:10px;}
-#editAdd{background-image:url(../../static/img/add.png);width:32px;display:inline-block;height:32px;cursor:pointer;padding-top:10px;}
+.addIcon{background-image:url(/static/content/img/add.png);width:32px;display:inline-block;height:32px;cursor:pointer;padding-top:10px;}
+#editAdd{background-image:url(/static/content/img/add.png);width:32px;display:inline-block;height:32px;cursor:pointer;padding-top:10px;}
 .tagbg{background-color:lightblue;min-width:50px;border:soild 1px #eee;margin-right:10px;}
-#delIcon{background-image:url(../../static/img/delete16.png);width:16px;height:14px;cursor:pointer;display:inline-block;}
+#delIcon{background-image:url(/static/content/img/delete16.png);width:16px;height:14px;cursor:pointer;display:inline-block;}
 #EDIT{font-size:18px;}
-.smallAdd{background-image:url(../../static/img/smallAdd.png);width:16px;height:16px;cursor:pointer;display:inline-block;}
+.smallAdd{background-image:url(/static/content/img/smallAdd.png);width:16px;height:16px;cursor:pointer;display:inline-block;}
 .input_tag_box{
     color: #5f5f5f;
     border-width: 1px;
@@ -53,11 +53,29 @@ tbody td{text-align:center;}
     border-color: #9b9b9d #dcdcdc #dce7eb;
     border-radius: 3px;
     background-color: #fbfcfc;margin-right: 20px;}
-
+.well {
+  min-height: 20px;
+  padding: 19px;
+  margin-bottom: 20px;
+  background-color: @well-bg;
+  border: 1px solid @well-border;
+  border-radius: @border-radius-base;
+  .box-shadow(inset 0 1px 1px rgba(0,0,0,.05));
+  blockquote {
+    border-color: #ddd;
+    border-color: rgba(0,0,0,.15);
+  }
+}
 </style>
- {% endblock css %}
+   <link type="text/css" href="/static/custom/css/charisma-app.css" rel="stylesheet">
+   <link rel="stylesheet" type="text/css" href="/static/custom/css/sidebar.css">
+   <!--<link rel="stylesheet" type="text/css" href="/static/custom/css/bootstrap-cerulean.min.css">-->
+   <link rel="stylesheet" type="text/css" href="/static/custom/css/wells.css">
+ {% endblock custom_css %}
 
-    {% block main %}
+
+
+    {% block body %}
 	<div id="pageTitle">标签管理</div>
     <div id="float-wrap" class="hidden"></div>
 <div id="SearchTab"  class="hidden">
@@ -148,10 +166,10 @@ tbody td{text-align:center;}
   </div>
 </div>
 
-    {% endblock main %}
+    {% endblock body %}
 
-    {% block Own_js %}
-    {{ super() }}
+    {% block end_js %}
+
   <script>
 
 	$("#uploadbtn1").off("click").click(function(){
@@ -175,10 +193,10 @@ tbody td{text-align:center;}
 	
 	
 </script>
-<script type="text/javascript" src="/static/js/portrait/tag.js"></script> 
-<script type="text/javascript" src="/static/js/portrait/tag_search.js"></script> 
-<script type="text/javascript" src="/static/js/portrait/tag_add.js"></script> 
-<script type="text/javascript" src="/static/js/portrait/tag_del.js"></script> 
+<script type="text/javascript" src="/static/custom/js/tag.js"></script> 
+<script type="text/javascript" src="/static/custom/js/tag_search.js"></script> 
+<script type="text/javascript" src="/static/custom/js/tag_add.js"></script> 
+<script type="text/javascript" src="/static/custom/js/tag_del.js"></script> 
  
 <script>
     var add_flag;
@@ -248,11 +266,9 @@ tbody td{text-align:center;}
             });
 	}
 </script>
-<script type="text/javascript" src="/static/js/portrait/tag_change.js"></script>
-{% endblock Own_js %}
-{% block end_js %}
-{{ super () }}
-<script src="../../static/js/charisma.js"></script>
+<script type="text/javascript" src="/static/custom/js/tag_change.js"></script>
+
+<script src="/static/custom/js/charisma.js"></script>
 {% endblock end_js %}
 
 
