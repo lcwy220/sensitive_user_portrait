@@ -22,6 +22,7 @@
    <title>{% block title %}{% endblock title %}</title>
 
    <!-- remove or comment this line if you want to use the local fonts -->
+   {% block custom_css %}
    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
 
    <link rel="stylesheet" type="text/css" href="/static/content/css/bootstrap.css">
@@ -32,9 +33,15 @@
    <link rel="stylesheet" type="text/css" href="/static/content/css/metro-ui-light.css">
    <link rel="stylesheet" type="text/css" href="/static/content/css/icomoon.css">
    <link rel="stylesheet" type="text/css" href="/static/content/css/chosen.min.css">
+   <link rel="stylesheet" type="text/css" href="/static/content/css/colorbox.css">
    <link rel="stylesheet" type="text/css" href="/static/content/css/jquery.iphone.toggle.css">
    <link rel="stylesheet" type="text/css" href="/static/content/css/jquery.dataTables.min.css">
    <link rel="stylesheet" type="text/css" href="/static/content/css/uploadify.css">
+   <!--  bower_components css -->
+   <link href='/static/bower_components/chosen/chosen.min.css' rel='stylesheet'>
+   <link href='/static/bower_components/colorbox/example3/colorbox.css' rel='stylesheet'>
+   <link href='/static/bower_components/responsive-tables/responsive-tables.css' rel='stylesheet'>
+   <link href='/static/bower_components/bootstrap-tour/css_js/css/bootstrap-tour.min.css' rel='stylesheet'>
 
    <!--  these two css are to use only for documentation -->
    <link rel="stylesheet" type="text/css" href="/static/content/css/demo.css">
@@ -47,12 +54,14 @@
    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/static/content/ico/apple-touch-icon-72-precomposed.png">
    <link rel="apple-touch-icon-precomposed" href="/static/content/ico/apple-touch-icon-57-precomposed.png">
    
-   {% block custom_css %}
    {% endblock custom_css %}
 
    <!-- All JavaScript at the bottom, except for Modernizr and Respond.
       Modernizr enables HTML5 elements & feature detects; Respond is a polyfill for min/max-width CSS3 Media Queries
       For optimal performance, use a custom Modernizr build: www.modernizr.com/download/ -->
+   {% block custom_js %}
+   <script src="/static/bower_components/bootstrap/css_js/js/bootstrap.min.js"></script>
+
    <script src="/static/scripts/modernizr-2.6.1.min.js"></script>
 
    <script src='/static/scripts/jquery-1.8.2.min.js'></script>
@@ -62,6 +71,19 @@
    <script type="text/javascript" src="/static/scripts/jquery.scrollTo.js"></script>
    <script type="text/javascript" src="/static/scripts/jquery.dataTables.min.js"></script>
    <script type="text/javascript" src="/static/scripts/jquery.cookie.js"></script>
+   <!-- calender plugin -->
+   <script src='/static/bower_components/moment/min/moment.min.js'></script>
+   <script src='/static/bower_components/fullcalendar/css_js/fullcalendar.min.js'></script>
+   <!-- select or dropdown enhancer -->
+   <script src="/static/bower_components/chosen/chosen.jquery.min.js"></script>
+   <!-- plugin for gallery image view -->
+   <script src="/static/bower_components/colorbox/jquery.colorbox-min.js"></script>
+   <!-- notification plugin -->
+   <script src="/static/js/jquery.noty.js"></script>
+   <!-- library for making tables responsive -->
+   <script src="/static/bower_components/responsive-tables/responsive-tables.js"></script>
+   <!-- tour plugin -->
+   <script src="/static/bower_components/bootstrap-tour/css_js/js/bootstrap-tour.min.js"></script>
    <script type="text/javascript" src="/static/scripts/jquery.raty.min.js"></script>
    <script type="text/javascript" src="/static/scripts/jquery.history.js"></script>
    <script type="text/javascript" src="/static/scripts/chosen.jquery.min.js"></script>
@@ -73,8 +95,11 @@
    <script type="text/javascript" src="/static/scripts/bootmetro-charms.js"></script>
    <script type="text/javascript" src="/static/scripts/demo.js"></script>
    <script type="text/javascript" src="/static/scripts/holder.js"></script>
+   <script type="text/javascript" src="/static/scripts/jquery.colorbox-min.js"></script>  
+   <script type="text/javascript" src="/static/scripts/moment.min.js"></script> 
+   <script type="text/javascript" src="/static/scripts/fullcalendar.min.js"></script> 
 
-   {% block custom_js %}
+
    {% endblock custom_js %}
 </head>
 
