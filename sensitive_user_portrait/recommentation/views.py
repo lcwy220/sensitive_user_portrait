@@ -6,7 +6,7 @@ import time
 import json
 from flask import Blueprint, url_for, render_template, request, abort, flash, session, redirect
 from utils import recommend_in_sensitive, recommend_in_top_influence, influence_recommentation_more_information
-from utils import sensitive_recommentation_more_information
+from utils import sensitive_recommentation_more_information, identify_in, show_in_history
 from sensitive_user_portrait.global_utils import R_RECOMMENTATION as r
 from sensitive_user_portrait.time_utils import datetime2ts, ts2datetime
 
@@ -78,4 +78,26 @@ def ajax_identify_in():
         print "result: ", result
     else:
         result = '0'
+    return json.dumps(result)
+
+
+# show sensitive user history in
+@mod.route('/show_sensitive_history_in/')
+def ajax_show_sensitive_history_in():
+    now_date = ts2datetime(time.time())
+    date = request.args.get('date', now_date)
+    date = str(date).replace('-','')
+    results = show_in_history(date, 1) # history in, include status
     return json.dumps(results)
+
+#show influence user history in
+@mod.route('/show_influence_history_in/')
+def ajax_show_influence_history_in():
+    now_date = ts2datetime(time.time())
+    date = request.args.get('date', now_date)
+    date = str(date).replace('-','')
+    results = show_in_history(date, 0) # history in, include status
+    return json.dumps(results)
+
+
+
