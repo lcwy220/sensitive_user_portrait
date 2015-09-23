@@ -32,7 +32,7 @@ def ajax_recommentation_in_sensitive_list():
 
 
 # top influence user recommentation
-@mod.route('show_in/influence_list')
+@mod.route('/show_in/influence_list')
 def ajax_recommentation_in_influence_list():
     date = request.args.get('date', '') # 2013-09-01
     '''
@@ -70,4 +70,12 @@ def ajax_identify_in():
     uid_list = request.args.get('uid_list','') # 123,456,789
     uid_list = uid_list.split(',')
     status = request.args.get('status','') # 1: compute now, 2: appointed compute
-    
+    data = []
+    if date and uid_list:
+        for uid in uid_list:
+            data.append([date, uid, status])
+        result = identify_in(data)
+        print "result: ", result
+    else:
+        result = '0'
+    return json.dumps(results)

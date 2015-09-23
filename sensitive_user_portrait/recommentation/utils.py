@@ -266,3 +266,22 @@ def sensitive_recommentation_more_information(uid):
 
     return results
 
+def identify_in(data):
+    appoint_list = []
+    now_list = []
+    for item in data:
+        date = data[0] # 2015-09-22
+        date = str(date).replace('-','')
+        uid = data[1]
+        status = data[2]
+        r.hset('identify_in_'+str(date), uid, status) # identify in user_list and compute status
+        if status == '1': # now
+            now_list.append(uid)
+        if status == '2': # appoint
+            appoint_list.append(uid)
+    r.hset('compute_now', date, json.dumps(now_list))
+    r.hset('compute_appoint', date, json.dumps(appoint_list))
+    return '1'
+
+
+
