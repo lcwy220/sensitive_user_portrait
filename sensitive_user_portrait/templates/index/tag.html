@@ -53,28 +53,18 @@ tbody td{text-align:center;}
     border-color: #9b9b9d #dcdcdc #dce7eb;
     border-radius: 3px;
     background-color: #fbfcfc;margin-right: 20px;}
-.well {
-  min-height: 20px;
-  padding: 19px;
-  margin-bottom: 20px;
-  background-color: @well-bg;
-  border: 1px solid @well-border;
-  border-radius: @border-radius-base;
-  .box-shadow(inset 0 1px 1px rgba(0,0,0,.05));
-  blockquote {
-    border-color: #ddd;
-    border-color: rgba(0,0,0,.15);
-  }
-}
+
 </style>
    <link type="text/css" href="/static/custom/css/charisma-app.css" rel="stylesheet">
    <link rel="stylesheet" type="text/css" href="/static/custom/css/sidebar.css">
    <!--<link rel="stylesheet" type="text/css" href="/static/custom/css/bootstrap-cerulean.min.css">-->
    <link rel="stylesheet/less" type="text/css" href="/static/custom/css/wells.less">
   <link rel="stylesheet/less" type="text/css" href="/static/custom/css/modals.less">
- {% endblock custom_css %}
-
-
+  {% endblock custom_css %}
+  
+  {% block custom_js %}
+   {{ super() }}
+  {% endblock custom_js %}
 
     {% block body %}
 	<div id="pageTitle">标签管理</div>
