@@ -256,10 +256,9 @@ input[type=file] {
    /*border: none;*/
    min-width: 100px;
    min-height: 20px;
-   width: 340px;
+   width: 206px;
    height: 32px;
    padding: 0;
-   margin: 7px 8px 21px 8px;
    background-clip: padding-box;
 }
 input[type=file]::-ms-value {
@@ -1462,10 +1461,11 @@ FlipView control.
           box-shadow: none;
 }
    .modal-header {
-      border: 0;
+      border-bottom:1px solid #eee ;
    }
    .modal-body {
       max-height: 300px;
+      border-bottom:1px solid #eee;
    }
    .modal-footer {
       background-color: transparent;
@@ -1544,7 +1544,6 @@ FlipView control.
 .btn-large {
    font-size: 15px;
    line-height: 24px;
-   padding: 2px 14px;
    -webkit-border-radius: 0;
    -moz-border-radius: 0;
    border-radius: 0;
