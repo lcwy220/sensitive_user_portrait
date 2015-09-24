@@ -1,3 +1,67 @@
 {% extends "index/base.html" %} 
 {% block title %}群体分析{% endblock title %}
 {% block subtitle %}群体分析{% endblock subtitle %}
+{% block custom_css %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="/static/custom/css/group.css">
+<style>
+    .btn-block{width:90%;}
+	.margint40{margin-top:40px;}
+	.margint20{margin-top:20px;}
+	.lineh14{line-height:14px;}
+</style>
+{% endblock custom_css  %}
+{% block body %}
+<div class="" style="width:100%;height:500px;background-color:#87CEFA;">
+	<div class="" style="width:60%;height:100%;float:left;">
+		<img src="/static/custom/images/users.png"/>
+	</div>
+	<div style="width:40%;margin:100px 0;float:left;">
+		<button class="btn btn-large btn-block btn-primary btnsize font20 margint40" type="button" data-toggle="modal" data-target="#upload_file">上传文件</button>
+		<a class="btn btn-large btn-block btn-primary btnsize font20 margint20" type="button" href="/index/group_search/">群组搜索</a>
+		<a class="btn btn-large btn-block btn-primary btnsize font20 margint20" type="button" href="/index/group_task/">群组管理</a>
+	</div>
+</div>
+
+<!--文件上传模态框-->
+<!-- Modal -->
+<div class="modal fade" id="upload_file" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        <h4 class="modal-title" id="myModalLabel">上传文件</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+			<fieldset style="margin:10px 0 0 150px;">
+				<label>群组名称</label>
+				<input type="text" placeholder="Type something…">
+			</fieldset>
+			<fieldset style="margin:10px 0 0 150px;">
+				<label style="margin-right:25px;">备 注 </label>
+				<input type="text" placeholder="Type something…">
+			</fieldset>
+			<form enctype="multipart/form-data" method="post"  >
+				<input type="file" name="fileUp" style="margin-left:150px;" id="file-upload" onchange="handleFileSelect(this.files)">  
+			</form>
+		</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default lineh14" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary lineh14">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block Own_js %}
+{{ super() }}
+<script type="text/javascript" src="/static/custom/js/in_extra.js"></script>
+<script type="text/javascript" src="/static/custom/js/recommend_in.js"></script>
+{% endblock Own_js %}
+{% block end_js %}
+{{ super() }}
+<script src="/static/custom/js/in_table.js"></script>
+{% endblock end_js %}
