@@ -78,4 +78,4 @@ def ajax_identify_in():
         print "result: ", result
     else:
         result = '0'
-    return json.dumps(results)
+    return json.dumps(result)
