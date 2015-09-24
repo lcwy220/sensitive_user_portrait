@@ -51,4 +51,6 @@ def monitor():
 def contrast():
     return render_template('index/contrast.html')
 
-
+@mod.route('/group_task/')
+def group_task():
+    return render_template('index/group_task.html')
