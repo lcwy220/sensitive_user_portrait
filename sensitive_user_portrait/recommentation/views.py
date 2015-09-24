@@ -101,5 +101,3 @@ def ajax_show_influence_history_in():
     results = show_in_history(date, 0) # history in, include status
     return json.dumps(results)
 
-
-
