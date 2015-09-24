@@ -79,6 +79,7 @@ def cal_sensitive_words_work(item, sw_list):
     timestamp = item['timestamp']
     uid = item['uid']
     timestamp = ts2datetime(timestamp).replace('-','')
+    ts = timestamp
     map = {}
     for w in sw_list:
         word = "".join([chr(x) for x in w])
