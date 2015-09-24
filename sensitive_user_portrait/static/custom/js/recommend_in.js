@@ -4,21 +4,7 @@ function Search_weibo_recommend(url, div){
   this.url = url;
   this.div = div;
 }
-function choose_value(){
-  //$(".choose-model input").click(function(){
-        var value= $(this).attr("value");
-        if (value=="0"){
-            alert('aaaaa');
-            return 1
-            //html += '<thead><tr><th style="width:140px">用户ID</th><th>昵称</th><th>注册地</th><th style="width:100px">粉丝数</th><th style="width:100px">微博数</th><th style="width:100px">影响力</th><th>计算状态</th></tr></thead>';
-            }else{
-            alert('bbbbbb');
-            return 2
-            //html += '<thead><tr><th style="width:140px">用户ID</th><th>昵称</th><th>注册地</th><th style="width:100px">粉丝数</th><th style="width:100px">微博数</th><th style="width:100px">敏感度</th><th style="width:100px">影响力</th><th>计算状态</th></tr></thead>';
-            }
-        
-       //})
-}
+
 Search_weibo_recommend.prototype = {
   call_sync_ajax_request:function(url, method, callback){
     $.ajax({
@@ -37,17 +23,13 @@ Search_weibo_recommend.prototype = {
     //console.log(user_url);
     html = '';
     html += '<table id="recommend_table_new" class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
-    $(".choose-model input").click(function(){
-        var value= $(this).attr("value");
-        if (value==1){
-            alert('aaaaa');
-            //html += '<thead><tr><th style="width:140px">用户ID</th><th>昵称</th><th>注册地</th><th style="width:100px">粉丝数</th><th style="width:100px">微博数</th><th style="width:100px">影响力</th><th>计算状态</th></tr></thead>';
-            }else{
-            alert('bbbbbb');
-            //html += '<thead><tr><th style="width:140px">用户ID</th><th>昵称</th><th>注册地</th><th style="width:100px">粉丝数</th><th style="width:100px">微博数</th><th style="width:100px">敏感度</th><th style="width:100px">影响力</th><th>计算状态</th></tr></thead>';
-            }
-       })
-    //html += '<thead><tr><th style="width:140px">用户ID</th><th>昵称</th><th>注册地</th><th style="width:100px">粉丝数</th><th style="width:100px">微博数</th><th style="width:100px">影响力</th><th style="width:100px">用户详情</th><th>' + '<input name="recommend_all" id="recommend_all" type="checkbox" value="" onclick="recommend_all()" />' + '</th></tr></thead>';
+    
+    if($('input[name="important"]:checked').val()==2){
+      html += '<thead><tr><th style="width:140px">用户ID</th><th>昵称</th><th>注册地</th><th style="width:100px">粉丝数</th><th style="width:100px">微博数</th><th style="width:100px">影响力</th><th style="width:100px">敏感度</th><th style="width:100px">用户详情</th><th>' + '<input name="recommend_all" id="recommend_all" type="checkbox" value="" onclick="recommend_all()" />' + '</th></tr></thead>';
+    }else{
+      html += '<thead><tr><th style="width:140px">用户ID</th><th>昵称</th><th>注册地</th><th style="width:100px">粉丝数</th><th style="width:100px">微博数</th><th style="width:100px">影响力</th><th style="width:100px">用户详情</th><th>' + '<input name="recommend_all" id="recommend_all" type="checkbox" value="" onclick="recommend_all()" />' + '</th></tr></thead>';
+    }
+
     var item = data;
     html += '<tbody>';
     for(var i in item){
@@ -288,16 +270,11 @@ Search_weibo_history.prototype = {
     //console.log(user_url);
     html = '';
     html += '<table id="history_table_new" class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
-    $(".choose-model input").click(function(){
-        var value= $(this).attr("value");
-        if (value==1){
-            alert('aaaaa');
-            //html += '<thead><tr><th style="width:140px">用户ID</th><th>昵称</th><th>注册地</th><th style="width:100px">粉丝数</th><th style="width:100px">微博数</th><th style="width:100px">影响力</th><th>计算状态</th></tr></thead>';
-            }else{
-            alert('bbbbbb');
-            //html += '<thead><tr><th style="width:140px">用户ID</th><th>昵称</th><th>注册地</th><th style="width:100px">粉丝数</th><th style="width:100px">微博数</th><th style="width:100px">敏感度</th><th style="width:100px">影响力</th><th>计算状态</th></tr></thead>';
-            }
-       })
+    if($('input[name="important"]:checked').val()==2){
+      html += '<thead><tr><th style="width:140px">用户ID</th><th>昵称</th><th>注册地</th><th style="width:100px">粉丝数</th><th style="width:100px">微博数</th><th style="width:100px">影响力</th><th style="width:100px">敏感度</th><th>计算状态</th></tr></thead>';
+    }else{
+      html += '<thead><tr><th style="width:140px">用户ID</th><th>昵称</th><th>注册地</th><th style="width:100px">粉丝数</th><th style="width:100px">微博数</th><th style="width:100px">影响力</th><th>计算状态</th></tr></thead>';
+    }
     var item = data;
     html += '<tbody>';
     for(var i in item){
@@ -377,10 +354,7 @@ function bindOption(){
                 uids_trans += ',';
           }
           if(recommend_uids.length == 0)
-            if($('input[name="important"]:checked').val()==1)
-              alert("请选择至少一个用户！"+"1");
-            if($('input[name="important"]:checked').val()==2)
-              alert("2")
+            alert("请选择至少一个用户！");
           else{
             var compute_time;
             if($('input[name="instant"]:checked').val()==1){
