@@ -1,0 +1,37 @@
+.dataTables_length select{
+    width: 20px;
+    height: 20px;
+    margin-bottom: 0px;
+}
+.dataTable thead th{
+    border-bottom:2px solid #ddd !important;
+}
+.dataTables_wrapper .dataTables_paginate {
+    float:center !important;
+}
+.dataTables_wrapper .row .col-md-6,
+.dataTables_wrapper .row .col-md-12{
+    padding-left:0px;
+}
+.pagination ul > .active > a,
+.pagination ul > .active > span {
+    background-color: #337ab7;
+    border-color: #337ab7;
+    color: #fff;
+}
+.dropdown-menu >li >a:focus,
+.dropdown-menu >li >a:hover {
+    background-color: #0081c2;
+}
+.dropdown-menu .active >a,
+.dropdown-menu .active >a:hover {
+    background-color: #0081c2;
+}
+.dropdown-menu {
+    font-size:13px;
+}
+.win-backbutton {
+    margin-left:55px;
+}
+.row-fluid{
+    padding-left:45px;

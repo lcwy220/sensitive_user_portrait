@@ -21,25 +21,22 @@ def get_sensitive_user_detail(uid_list, date, sensitive):
     user_bci_results = es_cluster.mget(index=index_name, doc_type='bci', body={'ids':uid_list}, _source=True)['docs']
     user_profile_results = es_user_profile.mget(index="weibo_user", doc_type="user", body={"ids":uid_list}, _source=True)['docs']
     for i in range(0, len(uid_list)):
-        personal_info = ['']*5
+        personal_info = ['']*6
         uid = uid_list[i]
         personal_info[0] = uid_list[i]
         if user_profile_results[i]['found']:
             profile_dict = user_profile_results[i]['_source']
             personal_info[1] = profile_dict['nick_name']
             personal_info[2] = profile_dict['user_location']
+            personal_info[3] = profile_dict['fansnum']
+            personal_info[4] = profile_dict['statusnum']
+        if user_bci_results[i]['found']:
+            personal_info[4] = user_bci_results[i]['_source']['user_index']
         if sensitive:
             sensitive_words = r_cluster.hget('sensitive_' + index_name, str(uid))
             if sensitive_words:
                 sensitive_dict = json.loads(sensitive_words)
-                personal_info[3] = sensitive_dict.keys() # sensitive words list
-        else:
-            try:
-                personal_info[3] = user_profile_results[i]['_source']['fansnum']
-            except:
-                pass
-        if user_bci_results[i]['found']:
-            personal_info[4] = user_bci_results[i]['_source']['user_index']
+                personal_info.append(sensitive_dict.keys())
         results.append(personal_info)
     return results
 
@@ -104,7 +101,6 @@ def get_user_sensitive_words(uid):
         ts = ts - 3600*24
         date = ts2datetime(ts).replace('-','')
         results = r_cluster.hget('sensitive_'+str(date), uid)
-        print results
         if results:
             sensitive_words_dict = json.loads(results)
             for word in sensitive_words_dict:
@@ -254,18 +250,13 @@ def influence_recommentation_more_information(uid):
 
 def sensitive_recommentation_more_information(uid):
     results = {}
-    results['statusnum'] = ''
-    results['fansnum'] = ''
-    user_profile_result = es_user_profile.get(index="weibo_user", doc_type="user", id=uid, _source=True)
-    if user_profile_result['found']:
-        results['statusnum'] = user_profile_result['_source']['statusnum']
-        results['fansnum'] = user_profile_result['_source']['fansnum']
     results['hashtag'] = get_user_hashtag(uid)
     results['time_trend'] = get_user_trend(uid)[0]
     results['activity_geo'] = get_user_geo(uid)[0]
 
     return results
 
+# preset status=3 as compute finish
 def identify_in(data):
     appoint_list = []
     now_list = []
@@ -274,14 +265,37 @@ def identify_in(data):
         date = str(date).replace('-','')
         uid = data[1]
         status = data[2]
-        r.hset('identify_in_'+str(date), uid, status) # identify in user_list and compute status
+        source = data[3]
+        if source == '1':
+            r.hset('identify_in_sensitive_'+str(date), uid, status) # identify in user_list and compute status
+        elif source == '2':
+            r.hset('identify_in_influence_'+str(date), uid, status)
         if status == '1': # now
             now_list.append(uid)
         if status == '2': # appoint
             appoint_list.append(uid)
     r.hset('compute_now', date, json.dumps(now_list))
-    r.hset('compute_appoint', date, json.dumps(appoint_list))
+    r.hset('compute_appoint', date, json.dumps(appoint_list)) # finish compute, revise 'identify_in_state' uid status
     return '1'
 
 
+def show_in_history(date, sensitive):
+    results = []
+    date = str(date).replace('-','')
+    if sensitive: # sensitive user recommentation history
+        sensitive_results = r.hgetall('identify_in_sensitive_'+str(date))
+        if sensitive_results:
+            uid_list = sensitive_results.keys()
+            results = get_sensitive_user_detail(uid_list, date, 1)
+            for item in results:
+                item.append(sensitive_results[item[0]])
+    else:
+        influence_results = t.hgetall('identify_in_influence_'+str(date))
+        if influence_results:
+            uid_list = influence_results.keys()
+            results = get_sensitive_user_detail(uid_list, date, 0)
+            for item in results:
+                item.append(influence_results[item[0]])
+
+    return results
 
