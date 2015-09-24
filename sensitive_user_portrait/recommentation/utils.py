@@ -31,7 +31,7 @@ def get_sensitive_user_detail(uid_list, date, sensitive):
             personal_info[3] = profile_dict['fansnum']
             personal_info[4] = profile_dict['statusnum']
         if user_bci_results[i]['found']:
-            personal_info[4] = user_bci_results[i]['_source']['user_index']
+            personal_info[5] = user_bci_results[i]['_source']['user_index']
         if sensitive:
             sensitive_words = r_cluster.hget('sensitive_' + index_name, str(uid))
             if sensitive_words:
@@ -260,13 +260,15 @@ def sensitive_recommentation_more_information(uid):
 def identify_in(data):
     appoint_list = []
     now_list = []
+    print data
     for item in data:
-        date = data[0] # 2015-09-22
+        date = item[0] # 2015-09-22
         date = str(date).replace('-','')
-        uid = data[1]
-        status = data[2]
-        source = data[3]
+        uid = item[1]
+        status = str(item[2])
+        source = str(item[3])
         if source == '1':
+            print source
             r.hset('identify_in_sensitive_'+str(date), uid, status) # identify in user_list and compute status
         elif source == '2':
             r.hset('identify_in_influence_'+str(date), uid, status)
