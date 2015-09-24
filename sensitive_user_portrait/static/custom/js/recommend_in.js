@@ -25,13 +25,16 @@ Search_weibo_recommend.prototype = {
     html += '<table id="recommend_table_new" class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
     
     if($('input[name="important"]:checked').val()==2){
-      html += '<thead><tr><th style="width:140px">用户ID</th><th>昵称</th><th>注册地</th><th style="width:100px">粉丝数</th><th style="width:100px">微博数</th><th style="width:100px">影响力</th><th style="width:100px">敏感度</th><th style="width:100px">用户详情</th><th>' + '<input name="recommend_all" id="recommend_all" type="checkbox" value="" onclick="recommend_all()" />' + '</th></tr></thead>';
+      console.log('2222');
+      html += '<thead><tr><th style="width:140px">用户ID</th><th>昵称</th><th>注册地</th><th style="width:100px">粉丝数</th><th style="width:100px">微博数</th><th style="width:100px">影响力</th><th style="width:100px">敏感词</th><th style="width:100px">用户详情</th><th>' + '<input name="recommend_all" id="recommend_all" type="checkbox" value="" onclick="recommend_all()" />' + '</th></tr></thead>';
     }else{
+      console.log('1111');
       html += '<thead><tr><th style="width:140px">用户ID</th><th>昵称</th><th>注册地</th><th style="width:100px">粉丝数</th><th style="width:100px">微博数</th><th style="width:100px">影响力</th><th style="width:100px">用户详情</th><th>' + '<input name="recommend_all" id="recommend_all" type="checkbox" value="" onclick="recommend_all()" />' + '</th></tr></thead>';
     }
 
     var item = data;
     html += '<tbody>';
+/* test start
     for(var i in item){
       item[i] = replace_space(item[i]);
       if(item[i][5]!='未知'){
@@ -46,19 +49,24 @@ Search_weibo_recommend.prototype = {
       if (item[i][4] == '未知'){
           item[i][4] = '';
       }
+end test*/
       user_url = 'http://weibo.com/u/';
-      user_url = user_url + item[i][0];
+      user_url = user_url + 'item[i][0]';
       html += '<tr>';
-      html += '<td class="center"><a href='+ user_url+ ' target="_blank">'+ item[i][0] +'</td>';
-      html += '<td class="center">'+ item[i][1] +'</td>';
-      html += '<td class="center">'+ item[i][2] +'</td>';
-      html += '<td class="center" style="width:100px">'+ item[i][3] +'</td>';
-      html += '<td class="center" style="width:100px">'+ item[i][4] +'</td>';
-      html += '<td class="center" style="width:100px">'+ item[i][5] +'</td>';
-      html += '<td class="center" style="width:100px"><a style="cursor:pointer;" name="details" id="'+ item[i][0] +'" title="'+ item[i][1] +'">详情</a></td>';
-      html += '<td class="center"><input name="in_status" class="in_status" type="checkbox" value="' + item[i][0] + '" /></td>';
+      html += '<td class="center"><a href='+ 'user_url'+ ' target="_blank">'+ 'item[i][0]' +'</td>';
+      html += '<td class="center">'+ 'item[i][1]' +'</td>';
+      html += '<td class="center">'+ 'item[i][2]' +'</td>';
+      html += '<td class="center" style="width:100px">'+ 'item[i][3]' +'</td>';
+      html += '<td class="center" style="width:100px">'+ 'item[i][4]' +'</td>';
+      html += '<td class="center" style="width:100px">'+ 'item[i][5]' +'</td>';
+      if($('input[name="important"]:checked').val()==2){
+        html += '<td class="center" style="width:100px">'+ 'item[i][6]' +'</td>';
+        //[i][6]预留敏感词
+      }
+      html += '<td class="center" style="width:100px"><a style="cursor:pointer;" name="details" id="'+ 'item[i][0]' +'" title="'+ 'item[i][1]' +'">详情</a></td>';
+      html += '<td class="center"><input name="in_status" class="in_status" type="checkbox" value="' + 'item[i][0]' + '" /></td>';
       html += '</tr>';
-    }
+    //}   后面删掉注释~
     html += '</tbody>';
     html += '</table>';
     $(div).append(html);
@@ -275,6 +283,9 @@ Search_weibo_history.prototype = {
     }else{
       html += '<thead><tr><th style="width:140px">用户ID</th><th>昵称</th><th>注册地</th><th style="width:100px">粉丝数</th><th style="width:100px">微博数</th><th style="width:100px">影响力</th><th>计算状态</th></tr></thead>';
     }
+
+
+    /*假数据
     var item = data;
     html += '<tbody>';
     for(var i in item){
@@ -300,16 +311,23 @@ Search_weibo_history.prototype = {
         in_status = "正在计算";
       else
         in_status = "计算完成";
+      
+      end 假数据*/
+
       html += '<tr>';
-      html += '<td class="center"><a href='+ user_url+ ' target="_blank">'+ item[i][0] +'</td>';
-      html += '<td class="center">'+ item[i][1] +'</td>';
-      html += '<td class="center">'+ item[i][2] +'</td>';
-      html += '<td class="center" style="width:100px">'+ item[i][3] +'</td>';
-      html += '<td class="center" style="width:100px">'+ item[i][4] +'</td>';
-      html += '<td class="center" style="width:100px">'+ item[i][5] +'</td>';
-      html += '<td class="center">'+ in_status +'</td>';
+      html += '<td class="center"><a href='+ 'user_url'+ ' target="_blank">'+ 'item[i][0]' +'</td>';
+      html += '<td class="center">'+ 'item[i][1]' +'</td>';
+      html += '<td class="center">'+ 'item[i][2]' +'</td>';
+      html += '<td class="center" style="width:100px">'+ 'item[i][3]' +'</td>';
+      html += '<td class="center" style="width:100px">'+ 'item[i][4]' +'</td>';
+      html += '<td class="center" style="width:100px">'+ 'item[i][5]' +'</td>';
+      if($('input[name="important"]:checked').val()==2){
+        html += '<td class="center" style="width:100px">'+ 'item[i][6]' +'</td>';
+        //[i][6]预留敏感词
+      }
+      html += '<td class="center">'+ 'in_status' +'</td>';
       html += '</tr>';
-    }
+    //}  delete!!!
     html += '</tbody>';
     html += '</table>';
     $(div).append(html);
@@ -330,6 +348,7 @@ function confirm_ok(data){
     alert('操作成功！');
 }
 
+/*  test need add after test
 function bindOption(){
       $('#recommend_button').click(function(){
           var cur_uids = [];
@@ -379,7 +398,7 @@ function bindOption(){
                   draw_table_compute_new = new Search_weibo_compute(url_compute_new, '#compute');
                   draw_table_compute_new.call_sync_ajax_request(url_compute_new, draw_table_compute_new.ajax_method, draw_table_compute_new.Re_Draw_table);
                   */
-
+/*
                   var url_history_new = '/recommentation/show_compute/?date=' + $("#history_date_select").val();
                   draw_table_history_new = new Search_weibo_history(url_history_new, '#history');
                   draw_table_history_new.call_sync_ajax_request(url_history_new, draw_table_history_new.ajax_method, draw_table_history_new.Re_Draw_table);
@@ -394,7 +413,6 @@ function bindOption(){
 
                 $('#recommend').append(waiting_html);
                 
-
                 var recommend_confirm_url = '/recommentation/identify_in/?date=' + recommend_date + '&uid_list=' + uids_trans + '&status=' + compute_time;
                 //console.log(recommend_confirm_url);
                 draw_table_recommend.call_sync_ajax_request(recommend_confirm_url, draw_table_recommend.ajax_method, confirm_ok);
@@ -402,19 +420,21 @@ function bindOption(){
                 var url_recommend_new = '/recommentation/show_in/?date=' + $("#recommend_date_select").val();
                 draw_table_recommend_new = new Search_weibo_recommend(url_recommend_new, '#recommend');
                 draw_table_recommend_new.call_sync_ajax_request(url_recommend_new, draw_table_recommend_new.ajax_method, draw_table_recommend_new.Re_Draw_table);
-                
+*/                
                 /*
                 var url_compute_new = '/recommentation/show_compute/?date=' + now;
                 draw_table_compute_new = new Search_weibo_compute(url_compute_new, '#compute');
                 draw_table_compute_new.call_sync_ajax_request(url_compute_new, draw_table_compute_new.ajax_method, draw_table_compute_new.Re_Draw_table);
                 */
-
+/*
                 var url_history_new = '/recommentation/show_compute/?date=' + $("#history_date_select").val();
                 draw_table_history_new = new Search_weibo_history(url_history_new, '#history');
                 draw_table_history_new.call_sync_ajax_request(url_history_new, draw_table_history_new.ajax_method, draw_table_history_new.Re_Draw_table);
             }
           }
       });
+
+test  end*/
       
       /*
       $('#compute_button').click(function(){
@@ -457,6 +477,8 @@ function bindOption(){
       });
       */
 
+/*test start
+
       $('#recommend_date_button').click(function(){
           //console.log($("#recommend_date_select").val());
           var url_recommend_new = '/recommentation/show_in/?date=' + $("#recommend_date_select").val();
@@ -489,12 +511,12 @@ var url_recommend = '/recommentation/show_in/?date=' + now;
 draw_table_recommend = new Search_weibo_recommend(url_recommend, '#recommend');
 draw_table_recommend.call_sync_ajax_request(url_recommend, draw_table_recommend.ajax_method, draw_table_recommend.Re_Draw_table);
 
-/*
+    /*
 var url_compute = '/recommentation/show_compute/?date=' + now;
 draw_table_compute = new Search_weibo_compute(url_compute, '#compute');
 draw_table_compute.call_sync_ajax_request(url_compute, draw_table_compute.ajax_method, draw_table_compute.Re_Draw_table);
-*/
-
+   */
+/*
 var url_history = '/recommentation/show_compute/?date=' + now;
 draw_table_history = new Search_weibo_history(url_history, '#history');
 draw_table_history.call_sync_ajax_request(url_history, draw_table_history.ajax_method, draw_table_history.Re_Draw_table);
@@ -554,7 +576,7 @@ function replace_space(data){
   }
   return data;
 }
-
+*/
 function draw_line_chart(xaxis, yaxis, div, uname){
   var uname_text = '"' + uname + '"的微博数';
   var line_chart_option = {
