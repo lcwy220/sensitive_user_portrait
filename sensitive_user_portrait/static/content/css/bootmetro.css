@@ -256,8 +256,6 @@ input[type=file] {
    /*border: none;*/
    min-width: 100px;
    min-height: 20px;
-   width: 206px;
-   height: 32px;
    padding: 0;
    background-clip: padding-box;
 }
@@ -1543,7 +1541,7 @@ FlipView control.
 -------------------------------------------------- */
 .btn-large {
    font-size: 15px;
-   line-height: 24px;
+   line-height: 50px;
    -webkit-border-radius: 0;
    -moz-border-radius: 0;
    border-radius: 0;
@@ -2212,7 +2210,7 @@ Thumbnail
 .modal .close,
 .alert .close {
    position: absolute;
-   top: 0;
+   top: 5;
    right: 0;
    display: inline-block;
    min-width: 0;
