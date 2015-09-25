@@ -260,7 +260,6 @@ def sensitive_recommentation_more_information(uid):
 def identify_in(data):
     appoint_list = []
     now_list = []
-    print data
     for item in data:
         date = item[0] # 2015-09-22
         date = str(date).replace('-','')
@@ -268,7 +267,6 @@ def identify_in(data):
         status = str(item[2])
         source = str(item[3])
         if source == '1':
-            print source
             r.hset('identify_in_sensitive_'+str(date), uid, status) # identify in user_list and compute status
         elif source == '2':
             r.hset('identify_in_influence_'+str(date), uid, status)
@@ -292,7 +290,7 @@ def show_in_history(date, sensitive):
             for item in results:
                 item.append(sensitive_results[item[0]])
     else:
-        influence_results = t.hgetall('identify_in_influence_'+str(date))
+        influence_results = r.hgetall('identify_in_influence_'+str(date))
         if influence_results:
             uid_list = influence_results.keys()
             results = get_sensitive_user_detail(uid_list, date, 0)
