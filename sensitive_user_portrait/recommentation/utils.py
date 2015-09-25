@@ -274,8 +274,20 @@ def identify_in(data):
             now_list.append(uid)
         if status == '2': # appoint
             appoint_list.append(uid)
-    r.hset('compute_now', date, json.dumps(now_list))
-    r.hset('compute_appoint', date, json.dumps(appoint_list)) # finish compute, revise 'identify_in_state' uid status
+    compute_now_list = r.hget('compute_now', date)
+    compute_appoint_list = r.hget('compute_appoint', date)
+    # compute now user list
+    if compute_now_list:
+        now_list.extend(json.loads(compute_now_list))
+        r.hset('compute_now', date, json.dumps(now_list))
+    else:
+        r.hset('compute_now', date, json.dumps(now_list))
+    # appointted compute user list
+    if compute_appoint_list:
+        appoint_list.extend(json.loads(compute_appoint_list))
+        r.hset('compute_appoint', date, json.dumps(appoint_list))
+    else:
+        r.hset('compute_appoint', date, json.dumps(appoint_list)) # finish compute, revise 'identify_in_state' uid status
     return '1'
 
 

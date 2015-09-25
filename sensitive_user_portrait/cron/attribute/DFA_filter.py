@@ -19,7 +19,7 @@ def createWordTree():
     awords = []
     for b in open('./../../sensitive_words.txt', 'rb'):
         awords.append(b.strip())
-
+    
     for word in awords:
         temp = wordTree
         for a in range(0,len(word)):
@@ -58,7 +58,7 @@ def searchWord(str):
         else:
             word.append(index)
         a = a + 1
-
+    
     return words
 
 def sensitive_words_extract(text):
@@ -67,12 +67,12 @@ def sensitive_words_extract(text):
     map = {}
     for w in list2:
         word = "".join([chr(x) for x in w])
-        word = word.decode('utf-8')
         if not map.__contains__(word):
             map[word] = 1
         else:
             map[word] = map[word] + 1
     return map
+
 
 if __name__ == '__main__':
     #reload(sys)  
