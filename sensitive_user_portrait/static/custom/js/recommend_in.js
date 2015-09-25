@@ -35,7 +35,7 @@ Search_weibo_recommend.prototype = {
     for(var i in item){
       item[i] = replace_space(item[i]);
       if(item[i][5]!='未知'){
-        item[i][5] = item[i][5].toFixed(2);
+        //item[i][5] = item[i][5].toFixed(2);
       }
       else{
           item[i][5] = '';
@@ -290,7 +290,7 @@ Search_weibo_history.prototype = {
     for(var i in item){
       item[i] = replace_space(item[i]);
       if(item[i][5]!='未知'){
-        item[i][5] = item[i][5].toFixed(2);
+        //item[i][5] = item[i][5].toFixed(2);
       }
       else{
         item[i][5] = '';
