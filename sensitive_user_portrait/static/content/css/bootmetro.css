@@ -2006,6 +2006,7 @@ header h1 {display: inline;}
    position: relative;
    height: 64px;
    margin-bottom: 20px;
+   border-bottom:1px solid #555;
 }
 
 
