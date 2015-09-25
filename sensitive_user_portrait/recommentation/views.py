@@ -67,13 +67,15 @@ def ajax_sensitive_recommentation_in_more():
 @mod.route('/identify_in/')
 def ajax_identify_in():
     date = request.args.get('date','') # date: 2015-09-22
+    date = date.replace('-','')
     uid_list = request.args.get('uid_list','') # 123,456,789
     uid_list = uid_list.split(',')
     status = request.args.get('status','') # 1: compute now, 2: appointed compute
+    source = request.args.get('source','') # 1: sensitive user, 2: influence user
     data = []
     if date and uid_list:
         for uid in uid_list:
-            data.append([date, uid, status])
+            data.append([date, uid, status, source])
         result = identify_in(data)
         print "result: ", result
     else:
@@ -98,3 +100,4 @@ def ajax_show_influence_history_in():
     date = str(date).replace('-','')
     results = show_in_history(date, 0) # history in, include status
     return json.dumps(results)
+

@@ -23,6 +23,14 @@ index_info = {
                     "type": "string",
                     "index": "not_analyzed"
                 },
+                "sensitive_words":{
+                    "type":"string",
+                    "index":"not_analyzed"
+                }, # sensitive words dict
+                "sensitive_words_string":{
+                    "type":"string",
+                    "analyzer": "my_analyzer"
+                }, # & linked
                 "uname":{
                     "type": "string",
                     "index": "not_analyzed"
@@ -38,6 +46,10 @@ index_info = {
                 "hashtag":{
                     "type": "string",
                     "analyzer": "my_analyzer"
+                },
+                "hashtag_dict":{
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "keywords":{
                     "type": "string",
@@ -129,7 +141,7 @@ index_info = {
 }
 
 
-es = Elasticsearch('219.224.135.93')
+es = Elasticsearch('219.224.135.93:9206')
 
 es.indices.create(index="sensitive_user_portrait", body=index_info, ignore=400)
 
