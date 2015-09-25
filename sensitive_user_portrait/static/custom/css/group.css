@@ -10,17 +10,18 @@
 		from { transform: rotate(0deg); }
 		to { transform: rotate(360deg); }
 	}
-	.wordtitle{line-height:200px;font-size:30px;margin-left:40px;text-decoration:none;}
-	.circle{width: 200px;height: 200px;border-radius:50%;background-image: -moz-radial-gradient(45px 45px 45deg, circle cover, yellow 0%, orange 100%, red 95%);
-	background-image: -webkit-radial-gradient(45px 45px, circle cover, yellow, orange);
-	background-image: radial-gradient(45px 45px 45deg, circle cover, yellow 0%, orange 100%, red 95%);}
+	.wordtitle{line-height:200px;font-size:30px;margin-left:40px;text-decoration:none;color:#000;}
+	.circle{width: 200px;height: 200px;border-radius:50%;
+	background-image: -moz-radial-gradient(45px 45px 45deg, circle cover,#CCFFFF,#FFF);
+	background-image: -webkit-radial-gradient(45px 45px, circle cover, #CCFFFF,#FFF);
+	background-image: radial-gradient(45px 45px 45deg, circle cover, #CCFFFF,#FFF);}
 	#advanced {
 	width: 200px;
 	height: 200px;
 	border-radius:50%;
-	background-image: -moz-radial-gradient(45px 45px 45deg, circle cover, yellow 0%, orange 100%, red 95%);
-	background-image: -webkit-radial-gradient(45px 45px, circle cover, yellow, orange);
-	background-image: radial-gradient(45px 45px 45deg, circle cover, yellow 0%, orange 100%, red 95%);
+	background-image: -moz-radial-gradient(45px 45px 45deg, circle cover, #CCFFFF,#FFF);
+	background-image: -webkit-radial-gradient(45px 45px, circle cover, #CCFFFF,#FFF);
+	background-image: radial-gradient(45px 45px 45deg, circle cover, #CCFFFF,#FFF);
 
 	animation-name: spin; 
 	animation-duration: 3s; /* 3 seconds */
