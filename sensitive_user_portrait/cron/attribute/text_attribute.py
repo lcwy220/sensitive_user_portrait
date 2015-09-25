@@ -5,14 +5,22 @@ import re
 import csv
 import json
 import time
-
 from weibo_api import read_user_weibo
+from DFA_filter import sensitive_words_extract
+
+reload(sys)
+sys.path.append('./../../')
+from global_utils import R_RECOMMENTATION as r
+from time_utils import datetime2ts, ts2datetime
 
 reload(sys)
 sys.path.append('../../../../../libsvm-3.17/python/')
 from sta_ad import load_scws
 
 EXTRA_WORD_WHITE_LIST_PATH = './one_word_white_list.txt'
+sw = load_scws()
+
+cx_dict = ['a', 'n', 'nr', 'ns', 'nz', 'v', '@', 'd']
 
 def load_one_words(): # one word emotion word
     one_words = [line.strip('\r\n') for line in file(EXTRA_WORD_WHITE_LIST_PATH)]
@@ -41,7 +49,7 @@ def get_emoticon_dict(): # enotion icons, [flower:1]
             results[emo_class] = [emoticon.decode('utf-8')]
     return results
 
-emotion_dict = get_emoticon_dict()
+emoticon_dict = get_emoticon_dict()
 
 def get_liwc_dict(): #angry words, [128: angry]
     results = {}
@@ -77,10 +85,10 @@ def attr_emoticon(weibo_list): # total weibo list, count emotion icons
                     text = text.decode('utf-8')
                 count = text.count(emoticon)
                 if count != 0:
-                try:
-                    results[emoticon] += count
-                except:
-                    results[emoticon] = count
+                    try:
+                        results[emoticon] += count
+                    except:
+                        results[emoticon] = count
 
     return results
 
@@ -147,7 +155,8 @@ def attr_keywords(weibo_list):
                 if (token[0] not in black_words):
                     tks.append(token)
                 else:
-                    print 'delete:', token[0]
+                    #print 'delete:', token[0]
+                    pass
 
     for tk in tks:
         word = tk[0].decode('utf-8')
@@ -162,6 +171,43 @@ def attr_keywords(weibo_list):
 
     return keywords_results
 
+def attri_sensitive_words(weibo_list):
+    sw_results = {}
+    for item in weibo_list:
+        text = item['text']
+        if not isinstance(text, str):
+            text = text.encode('utf-8', 'ignore')
+        sw_dict = sensitive_words_extract(text)
+        if not sw_dict:
+            continue
+        for key in sw_dict.keys():
+            if sw_results.has_key(key):
+                sw_results[key] += sw_dict[key]
+            else:
+                sw_results[key] = sw_dict[key]
+    return sw_results
+
+def attri_sensitive_hashtag(weibo_list):
+    sw_hashtag = {}
+    for item in weibo_list:
+        text = item['text']
+        if not isinstance(text, str):
+            text = text.encode('utf-8', 'ignore')
+        sw_dict = sensitive_words_extract(text)
+        if not sw_dict:
+            continue
+        text = text.decode('utf-8', 'ignore')
+        RE = re.compile(u'#([a-zA-Z-_⺀-⺙⺛-⻳⼀-⿕々〇〡-〩〸-〺〻㐀-䶵一-鿃豈-鶴侮-頻並-龎]+)#', re.UNICODE)
+        hashtag_list = RE.findall(text)
+        if not hashtag_list:
+            continue
+        for hashtag in hashtag_list:
+            if sw_hashtag.has_key(hashtag):
+                sw_hashtag[hashtag] += 1
+            else:
+                sw_hashtag[hashtag] = 1
+
+    return sw_hashtag
 
 def compute_text_attribute(user, weibo_list):
     result = {}
@@ -185,8 +231,37 @@ def compute_text_attribute(user, weibo_list):
     #result['topic_string'] = '&'.join(result['topic'].keys())
     result['topic'] = json.dumps({'art':1, 'education':2})
     result['topic_string'] = 'art&education'
+    sensitive_dict = attri_sensitive_words(weibo_list)
+    result['sensitive_words'] = json.dumps(sensitive_dict)
+    result['sensitive_words_string'] = '&'.join(sensitive_dict.keys())
+    sensitive_hashtag = attri_sensitive_hashtag(weibo_list)
+    result['sensitive_hashtag'] = json.dumps(sensitive_hashtag)
+    result['sensitvie_hashtag_string'] = '&'.join(sensitive_hashtag.keys())
 
     return result
 
+def read_uid_list():
+    date = ts2datetime(time.time())
+    date = date.replace('-','')
+    sensitive_dict = r.hgetall('identify_in_sensitive_'+str(date))
+    influence_dict = r.hgetall('identify_in_influence_'+str(date))
+    uid_list = []
+    for uid in sensitive_dict:
+        if sensitive_dict[uid] != '3':
+            uid_list.append(uid)
+    for uid in influence_dict:
+        if influence_dict[uid] != '3':
+            uid_list.append(uid)
+
+    return uid_list
+
+def compute_attribute():
+    uid_list = read_uid_list()
+    user_weibo_dict = read_user_weibo(uid_list)
+    uid_list = user_weibo_dict.keys()
+    print compute_text_attribute(uid_list[0], user_weibo_dict[uid_list[0]])
+
+if __name__ == '__main__':
+    compute_attribute()
 
 
