@@ -1,7 +1,32 @@
-.btnsize{height:70px;margin-top:5px;color:#fff;font-weight:600;}
-.font20{font-size:30px;}
-.margint50{margin-top:50px;}
-a.hover{text-direction:none;}
+	.btnsize{height:70px;margin-top:5px;color:#fff;font-weight:600;}
+	.font20{font-size:30px;}
+	.margint50{margin-top:50px;}
+	a.hover{text-direction:none;}
+	.btn-block{width:90%;}
+	.margint40{margin-top:40px;}
+	.margint20{margin-top:20px;}
+	.lineh14{line-height:14px;}
+	@keyframes spin {
+		from { transform: rotate(0deg); }
+		to { transform: rotate(360deg); }
+	}
+	.wordtitle{line-height:200px;font-size:30px;margin-left:40px;text-decoration:none;}
+	.circle{width: 200px;height: 200px;border-radius:50%;background-image: -moz-radial-gradient(45px 45px 45deg, circle cover, yellow 0%, orange 100%, red 95%);
+	background-image: -webkit-radial-gradient(45px 45px, circle cover, yellow, orange);
+	background-image: radial-gradient(45px 45px 45deg, circle cover, yellow 0%, orange 100%, red 95%);}
+	#advanced {
+	width: 200px;
+	height: 200px;
+	border-radius:50%;
+	background-image: -moz-radial-gradient(45px 45px 45deg, circle cover, yellow 0%, orange 100%, red 95%);
+	background-image: -webkit-radial-gradient(45px 45px, circle cover, yellow, orange);
+	background-image: radial-gradient(45px 45px 45deg, circle cover, yellow 0%, orange 100%, red 95%);
+
+	animation-name: spin; 
+	animation-duration: 3s; /* 3 seconds */
+	animation-iteration-count: infinite; 
+	animation-timing-function: linear;
+}
 
 
 
