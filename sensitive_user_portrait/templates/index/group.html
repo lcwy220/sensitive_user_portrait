@@ -5,14 +5,21 @@
 {{ super() }}
 <link rel="stylesheet" type="text/css" href="/static/custom/css/group.css">
 <style>
-    .btn-block{width:90%;}
-	.margint40{margin-top:40px;}
-	.margint20{margin-top:20px;}
-	.lineh14{line-height:14px;}
+    
 </style>
 {% endblock custom_css  %}
 {% block body %}
-<div class="" style="width:100%;height:500px;background-color:#87CEFA;">
+<div class="" style="width:100%;height:430px;background-color:#fff;">
+	<div class="circle" data-toggle="modal" data-target="#upload_file" id="" data-toggle="modal" data-target="#upload_file" style="margin-left:450px;margin-top:20px;">
+		<a class="wordtitle">上传文件</a>
+	</div>
+	<div class="circle" id="" style="margin-left:250px;float:left;">
+		<a class="wordtitle" href="/index/group_search/">群组搜索</a>
+	</div>
+	<div class="circle" id="" style="margin-left:200px;float:left;">
+		<a class="wordtitle" href="/index/group_task/">群组管理</a>
+	</div>
+	<!--
 	<div class="" style="width:60%;height:100%;float:left;">
 		<img src="/static/custom/images/users.png"/>
 	</div>
@@ -21,6 +28,7 @@
 		<a class="btn btn-large btn-block btn-primary btnsize font20 margint20" type="button" href="/index/group_search/">群组搜索</a>
 		<a class="btn btn-large btn-block btn-primary btnsize font20 margint20" type="button" href="/index/group_task/">群组管理</a>
 	</div>
+	-->
 </div>
 
 <!--文件上传模态框-->
