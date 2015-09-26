@@ -58,8 +58,10 @@ tbody td{text-align:center;}
   {% endblock custom_css %}
 
     {% block body %}
-	<div id="pageTitle">标签管理</div>
+    <!--
+    <div id="pageTitle">标签管理</div>
     <div id="float-wrap" class="hidden"></div>
+    -->
 <div id="SearchTab"  class="hidden">
 	<h3 class="title">搜索条件<a href="javascript:void(0)" id="close" class="close2"></a></h3>
 	<div class="decoration">
@@ -250,7 +252,6 @@ tbody td{text-align:center;}
             });
 	}
 </script>
-<script type="text/javascript" src="/static/custom/js/tag_change.js"></script>
 
 <script src="/static/custom/js/charisma.js"></script>
 {% endblock end_js %}
