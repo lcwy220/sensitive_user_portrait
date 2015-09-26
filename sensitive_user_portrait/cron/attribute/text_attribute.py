@@ -7,6 +7,9 @@ import json
 import time
 from weibo_api import read_user_weibo
 from DFA_filter import sensitive_words_extract
+from attribute_from_flow import get_flow_information
+from user_profile import get_profile_information
+from save_utils import save_user_results
 
 reload(sys)
 sys.path.append('./../../')
@@ -241,7 +244,7 @@ def compute_text_attribute(user, weibo_list):
     return result
 
 def read_uid_list():
-    date = ts2datetime(time.time())
+    date = ts2datetime(time.time()-24*3600)
     date = date.replace('-','')
     sensitive_dict = r.hgetall('identify_in_sensitive_'+str(date))
     influence_dict = r.hgetall('identify_in_influence_'+str(date))
@@ -255,13 +258,47 @@ def read_uid_list():
 
     return uid_list
 
-def compute_attribute():
-    uid_list = read_uid_list()
+def compute_attribute(uid_list=[]):
+    # test
     user_weibo_dict = read_user_weibo(uid_list)
     uid_list = user_weibo_dict.keys()
+    print len(uid_list)
+    flow_result = get_flow_information(uid_list)
+    register_result = get_profile_information(uid_list)
+    bulk_action = []
+    count = 0
+    for user in user_weibo_dict:
+        count += 1
+        weibo_list = user_weibo_dict[user]
+        uname = weibo_list[0]['uname']
+        results = compute_text_attribute(user, weibo_list)
+        results['uname'] = uname
+        results['uid'] = str(user)
+        flow_dict = flow_result[str(user)]
+        results.update(flow_dict)
+        user_info = {'uid':str(user), 'domain':results['domain'], 'topic':results['topic'], 'geo_activity':results['geo_activity']}
+        #evaluation_index = get_evaluate_index(user_info, status='insert')
+        #results.update(evaluation_index)
+        register_dict = register_result[user]
+        results.update(register_dict)
+        action = {'index':{'_id':str(user)}}
+        bulk_action.extend([action, results])
+        if count % 100 == 0:
+            status = save_user_results(bulk_action)
+            bulk_action = []
+            sys.exit(0)
+    if bulk_action:
+        status = save_user_results(bulk_action)
     print compute_text_attribute(uid_list[0], user_weibo_dict[uid_list[0]])
+    return "1"
 
 if __name__ == '__main__':
     compute_attribute()
-
+    """
+    user_weibo_dict = read_user_weibo()
+    uid_list = user_weibo_dict.keys()
+    print compute_text_attribute(uid_list[0], user_weibo_dict[uid_list[0]])
+    print get_flow_information([uid_list[0]])
+    print get_profile_information([uid_list[0]])
+    """
 

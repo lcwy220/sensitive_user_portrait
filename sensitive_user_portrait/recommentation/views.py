@@ -66,7 +66,7 @@ def ajax_sensitive_recommentation_in_more():
 # identify in
 @mod.route('/identify_in/')
 def ajax_identify_in():
-    date = request.args.get('date','') # date: 2015-09-22
+    date = request.args.get('date','') # date: 2013-09-01, recommend date
     date = date.replace('-','')
     uid_list = request.args.get('uid_list','') # 123,456,789
     uid_list = uid_list.split(',')
@@ -77,7 +77,6 @@ def ajax_identify_in():
         for uid in uid_list:
             data.append([date, uid, status, source])
         result = identify_in(data)
-        print "result: ", result
     else:
         result = '0'
     return json.dumps(result)
@@ -87,7 +86,7 @@ def ajax_identify_in():
 @mod.route('/show_sensitive_history_in/')
 def ajax_show_sensitive_history_in():
     now_date = ts2datetime(time.time())
-    date = request.args.get('date', now_date)
+    date = request.args.get('date', now_date) # in date:2013-09-01
     date = str(date).replace('-','')
     results = show_in_history(date, 1) # history in, include status
     return json.dumps(results)
