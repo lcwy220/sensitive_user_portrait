@@ -2,8 +2,6 @@
     {% block title %}自定义标签{% endblock title%}
     {% block subtitle %}自定义标签{% endblock subtitle%}
       {% block custom_css %}
-         <link rel="stylesheet" type="text/css" href="/static/custom/css/base.css">
-      {{ super() }}
 <style type="text/css">
     .hidden{display:none;}
 	#file-upload{margin-left:50px;border:1px solid #999;}
@@ -56,16 +54,8 @@ tbody td{text-align:center;}
     background-color: #fbfcfc;margin-right: 20px;}
 
 </style>
-   <link type="text/css" href="/static/custom/css/charisma-app.css" rel="stylesheet">
-   <link rel="stylesheet" type="text/css" href="/static/custom/css/sidebar.css">
-   <!--<link rel="stylesheet" type="text/css" href="/static/custom/css/bootstrap-cerulean.min.css">-->
-   <link rel="stylesheet" type="text/css" href="/static/custom/css/base.css">
 
   {% endblock custom_css %}
-  
-  {% block custom_js %}
-   {{ super() }}
-  {% endblock custom_js %}
 
     {% block body %}
 	<div id="pageTitle">标签管理</div>
@@ -188,16 +178,16 @@ tbody td{text-align:center;}
 	
 </script>
 <script type="text/javascript" src="/static/custom/js/tag.js"></script> 
-<script type="text/javascript" src="/static/custom/js/tag_search.js"></script> 
-<script type="text/javascript" src="/static/custom/js/tag_add.js"></script> 
-<script type="text/javascript" src="/static/custom/js/tag_del.js"></script> 
  
 <script>
     var add_flag;
+    var tagname = new Array();
     $('a[id^="currentEdit"]').click(function(e){
         add_flag = false;
-		var tagNames =  $(this).text();
-		tagname = tagNames.split('/');
+        var tagNames =  $(this).text();
+        if (tagNames.indexOf('/') > -1){
+            tagname = tagNames.split('/');
+        }
 		$('#EDIT').empty();
 		var html = '';
 		html += '<div class="" style="margin-bottom:10px;"><span style="">标签类别&nbsp;&nbsp;&nbsp;&nbsp;</span>';
@@ -221,10 +211,10 @@ tbody td{text-align:center;}
 			$(this).parent().remove();
 		});
 	});
-	$(".addIcon").off("click").click(function(){
-		var html = '';
-		html += '<div class="tagCols"><span style="margin-left:65px;">标签名</span><input name="attribute_value" class="inputbox " type="text" value="" style="margin-left:35px;line-height:36px;"></div>';
-		$('#ADDTAG').append(html);
+    $(".addIcon").off("click").click(function(){
+        var html = '';
+        html += '<div class="tagCols"><span style="margin-left:65px;">标签名</span><input name="attribute_value" class="inputbox " type="text" value="" style="margin-left:35px;line-height:36px;"></div>';
+        $('#ADDTAG').append(html);
 	});
 	function addNew(){
         var newtag = $('.input_tag_box').val();
