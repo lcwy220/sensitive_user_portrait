@@ -260,6 +260,8 @@ def sensitive_recommentation_more_information(uid):
 def identify_in(data):
     appoint_list = []
     now_list = []
+    sensitive_list = set()
+    influence_list = set()
     for item in data:
         date = item[0] # 2015-09-22
         date = str(date).replace('-','')
@@ -268,12 +270,33 @@ def identify_in(data):
         source = str(item[3])
         if source == '1':
             r.hset('identify_in_sensitive_'+str(date), uid, status) # identify in user_list and compute status
+            sensitive_list.add(uid)
         elif source == '2':
             r.hset('identify_in_influence_'+str(date), uid, status)
+            influence_list.add(uid)
         if status == '1': # now
             now_list.append(uid)
         if status == '2': # appoint
             appoint_list.append(uid)
+
+    sensitive_results = r.hget('recommend_sensitive', date)
+    if sensitive_results:
+        sensitive_results = json.loads(sensitive_results)
+        revise_set = set(sensitive_results) - sensitive_list
+        if revise_set:
+            r.hset('recommend_sensitive', date, json.dumps(revise_set))
+        else:
+            r.hset('recommend_sensitive', date, '0')
+    influence_results = r.hget('recommend_influence', date)
+    if influence_results:
+        influence_results = json.loads(influence_results)
+        revise_set = set(influence_results) - influence_list
+        if revise_set:
+            r.hset('recommend_influence', date, json.dumps(revise_set))
+        else:
+            r.hset('recommend_influence', date, '0')
+
+    # about compute
     compute_now_list = r.hget('compute_now', date)
     compute_appoint_list = r.hget('compute_appoint', date)
     # compute now user list
