@@ -140,6 +140,15 @@ Search_weibo_result.prototype = {
     });
   }
 }
+function base_call_ajax_request(url, callback){
+    $.ajax({
+        url:url,
+        type:"get",
+        dataType: "json",
+        async: true,
+        success: callback
+    })
+}
 
 function gender(num){
     if (num == '1'){
@@ -607,7 +616,7 @@ function group_confirm_button(){
   }
   console.log(group_confirm_uids);
   var group_ajax_url = '/group/submit_task/';
-  var group_url = '/index/group_result/';
+  var group_url = '/index/group_task/';
   var group_name = $('input[name="group_name"]').val();
   var remark = $('input[name="remark"]').val();
   console.log(group_name, remark);
