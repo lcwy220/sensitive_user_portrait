@@ -72,6 +72,7 @@ def get_flow_information(uid_list):
     ts = datetime2ts('2013-09-08')
     user_hashtag_result = {}
     user_sensitive_hashtag = {}
+    sensitive_words = {}
     user_ip_result = {}
     user_sensitive_ip = {}
     for i in range(1,8):
@@ -80,10 +81,17 @@ def get_flow_information(uid_list):
         hashtag_results = r_cluster.hmget('hashtag_'+str(date), uid_list)
         sensitive_hashtag = r_cluster.hmget('sensitive_hashtag_'+str(date), uid_list)
         ip_results = r_cluster.hmget('ip_'+str(date), uid_list)
-        sensitive_ip = r_cluster.hmget('sensitive_ip'+str(date), uid_list)
+        sensitive_ip = r_cluster.hmget('sensitive_ip_'+str(date), uid_list)
+        sensitive_results = r_cluster.hmget('sensitive_'+str(date), uid_list)
 
         for j in range(0, len(uid_list)):
             uid = uid_list[j]
+            if sensitive_results[j]:
+                sensitive_words_results = json.loads(sensitive_results[j])
+                if sensitive_words.has_key(uid):
+                    sensitive_words[uid].update({date: sensitive_words_results})
+                else:
+                    sensitive_words[uid] = {date: sensitive_words_results}
             if hashtag_results[j]:
                 hashtag_dict = json.loads(hashtag_results[j])
                 if user_hashtag_result.has_key(uid):
@@ -103,11 +111,11 @@ def get_flow_information(uid_list):
                 else:
                     user_ip_result[uid] = {date: ip_dict}
             if sensitive_ip[j]:
-                sensitive_ip = json.loads(sensitive_ip[j])
+                sensitive_ip_result = json.loads(sensitive_ip[j])
                 if user_sensitive_ip.has_key(uid):
-                    user_sensitive_ip[uid].update({date: sensitive_ip})
+                    user_sensitive_ip[uid].update({date: sensitive_ip_result})
                 else:
-                    user_sensitive_ip[uid] = {date: sensitive_ip}
+                    user_sensitive_ip[uid] = {date: sensitive_ip_result}
 
 
     for uid in uid_list:
@@ -119,7 +127,12 @@ def get_flow_information(uid_list):
         sensitive_hashtag_dict = {}
         ip_dict = {}
         sensitive_ip_dict = {}
+        sensitive_words_string = ''
+        sensitive_words_dict = {}
 
+        if sensitive_words.has_key(uid):
+            sensitive_words_string = extract_string(sensitive_words[uid])
+            sensitive_words_dict = json.dumps(sensitive_words[uid])
         if user_hashtag_result.has_key(uid):
             hashtag_string = extract_string(user_hashtag_result[uid])
             hashtag_dict = json.dumps(user_hashtag_result[uid])
@@ -136,11 +149,12 @@ def get_flow_information(uid_list):
         result_dict[uid] = {"hashtag_string": hashtag_string, "hashtag_dict": hashtag_dict, \
                             "sensitive_hashtag_string": sensitive_hashtag_string, "sensitive_hashtag_dict": sensitive_hashtag_dict, \
                              "geo_activity": ip_dict, "geo_string": ip_string, \
-                             "sensitive_geo_activity": sensitive_ip_dict, "sensitive_geo_string":sensitive_ip_string}
+                             "sensitive_geo_activity": sensitive_ip_dict, "sensitive_geo_string":sensitive_ip_string, \
+                             'sensitive_words_string': sensitive_words_string, 'sensitive_words_dict': sensitive_words_dict}
     return result_dict
 
 
 if __name__ == '__main__':
-    test_uid = ['1739764751', '1182389073']
+    test_uid = ['3542550035']
     result = get_flow_information(test_uid)
-    print result
+    print result['3542550035']['sensitive_geo_string']
