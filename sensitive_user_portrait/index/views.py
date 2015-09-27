@@ -39,6 +39,10 @@ def group():
 def search():
     return render_template('index/search.html')
 
+@mod.route('/search_results/')
+def search_results():
+    return render_template('index/search_results.html')
+
 @mod.route('/influence/')
 def influence():
     return render_template('index/influence.html')
@@ -54,3 +58,7 @@ def contrast():
 @mod.route('/group_task/')
 def group_task():
     return render_template('index/group_task.html')
+
+@mod.route('/group_search/')
+def group_search():
+    return render_template('index/group_search.html')

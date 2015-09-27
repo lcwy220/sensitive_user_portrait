@@ -1,8 +1,8 @@
 function Base(){
-    this.advanced_search_url = "/index/search_result/?stype=2&";
+    this.advanced_search_url = "/index/search_results/?stype=2&";
 }
 Base.prototype.simple_search_url = function (term){
-    return "/index/search_result/?stype=1&term=" + term;
+    return "/index/search_results/?stype=1&term=" + term;
 }
 
 
