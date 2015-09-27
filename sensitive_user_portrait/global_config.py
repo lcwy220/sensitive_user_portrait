@@ -39,7 +39,7 @@ BIN_FILE_PATH = '/home/ubuntu8/yuankun/data' # '219.224.135.93:/home/ubuntu8/yua
 BIN_FILE_PATH = '/home/ubuntu8/data1309/20130901'
 
 # first part of csv file
-FIRST_FILE_PART = 'MB_QL_9_6_NODE'
+FIRST_FILE_PART = 'MB_QL_9_1_NODE'
 
 # sensitive words path
 SENSITIVE_WORDS_PATH = '/home/ubuntu8/huxiaoqian/user_portrait/user_portrait/cron/flow4/sensitive_words.txt'
@@ -47,7 +47,7 @@ SENSITIVE_WORDS_PATH = '/home/ubuntu8/huxiaoqian/user_portrait/user_portrait/cro
 # need three ES identification 
 USER_PROFILE_ES_HOST = ['219.224.135.96:9208','219.224.135.97:9208','219.224.135.98:9208']
 USER_PROFILE_ES_PORT = 9208
-SENSITIVE_USER_PORTRAIT_ES_HOST = '219.224.135.93:9206'
+SENSITIVE_USER_PORTRAIT_ES_HOST = ['219.224.135.93:9206','219.224.135.94:9206']
 SENSITIVE_USER_PORTRAIT_ES_PORT = '9206'
 
 # use to identify the db number of redis-97
