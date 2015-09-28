@@ -2,8 +2,7 @@
 import sys
 import json
 from elasticsearch import Elasticsearch
-
-es = Elasticsearch('219.224.135.93')
+from global_utils import es_sensitive_user_portrait as es
 
 attribute_index_name = 'custom_attribute'
 attribute_index_type = 'attribute'

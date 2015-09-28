@@ -10,9 +10,9 @@ def read_user_weibo(uid_list):
 '''
 
 # test: read user weibo
-def read_user_weibo(uid_list):
+def read_user_weibo(uid_list=[]):
     user_weibo_dict = dict()
-    csvfile = open('./uid_text.csv', 'rb')
+    csvfile = open('./sensitive_uid_text.csv', 'rb')
     reader = csv.reader(csvfile)
     for line in reader:
         weibo = dict()

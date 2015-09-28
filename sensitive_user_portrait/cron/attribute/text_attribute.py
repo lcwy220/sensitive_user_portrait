@@ -5,12 +5,18 @@ import re
 import csv
 import json
 import time
+from elasticsearch import Elasticsearch
 from weibo_api import read_user_weibo
 from DFA_filter import sensitive_words_extract
+from attribute_from_flow import get_flow_information
+from user_profile import get_profile_information
+from save_utils import save_user_results
+from evaluate_index import get_evaluate_index
 
 reload(sys)
 sys.path.append('./../../')
 from global_utils import R_RECOMMENTATION as r
+from global_utils import es_sensitive_user_portrait as es
 from time_utils import datetime2ts, ts2datetime
 
 reload(sys)
@@ -231,17 +237,17 @@ def compute_text_attribute(user, weibo_list):
     #result['topic_string'] = '&'.join(result['topic'].keys())
     result['topic'] = json.dumps({'art':1, 'education':2})
     result['topic_string'] = 'art&education'
-    sensitive_dict = attri_sensitive_words(weibo_list)
-    result['sensitive_words'] = json.dumps(sensitive_dict)
-    result['sensitive_words_string'] = '&'.join(sensitive_dict.keys())
-    sensitive_hashtag = attri_sensitive_hashtag(weibo_list)
-    result['sensitive_hashtag'] = json.dumps(sensitive_hashtag)
-    result['sensitvie_hashtag_string'] = '&'.join(sensitive_hashtag.keys())
+    #sensitive_dict = attri_sensitive_words(weibo_list)
+    #result['sensitive_words'] = json.dumps(sensitive_dict)
+    #result['sensitive_words_string'] = '&'.join(sensitive_dict.keys())
+    #sensitive_hashtag = attri_sensitive_hashtag(weibo_list)
+    #result['sensitive_hashtag'] = json.dumps(sensitive_hashtag)
+    #result['sensitvie_hashtag_string'] = '&'.join(sensitive_hashtag.keys())
 
     return result
 
 def read_uid_list():
-    date = ts2datetime(time.time())
+    date = ts2datetime(time.time()-24*3600)
     date = date.replace('-','')
     sensitive_dict = r.hgetall('identify_in_sensitive_'+str(date))
     influence_dict = r.hgetall('identify_in_influence_'+str(date))
@@ -255,13 +261,52 @@ def read_uid_list():
 
     return uid_list
 
-def compute_attribute():
-    uid_list = read_uid_list()
+def compute_attribute(uid_list=[]):
+    # test
     user_weibo_dict = read_user_weibo(uid_list)
     uid_list = user_weibo_dict.keys()
-    print compute_text_attribute(uid_list[0], user_weibo_dict[uid_list[0]])
+    flow_result = get_flow_information(uid_list)
+    register_result = get_profile_information(uid_list)
+    bulk_action = []
+    count = 0
+    count_list = set()
+    for user in uid_list:
+        weibo_list = user_weibo_dict[user]
+        uname = weibo_list[0]['uname']
+        results = compute_text_attribute(user, weibo_list)
+        results['uname'] = uname
+        results['uid'] = str(user)
+        flow_dict = flow_result[str(user)]
+        results.update(flow_dict)
+        user_info = {'uid':str(user), 'domain':results['domain'], 'topic':results['topic'], 'activity_geo':results['geo_string']}
+        evaluation_index = get_evaluate_index(user_info, status='insert')
+        results.update(evaluation_index)
+        register_dict = register_result[user]
+        results.update(register_dict)
+        action = {'index':{'_id':str(user)}}
+        bulk_action.extend([action, results])
+        count_list.add(user)
+        count += 1
+        if count % 200 == 0:
+            es.bulk(bulk_action, index=index_name, doc_type="user", timeout=60)
+            bulk_action = []
+            print count
+    if bulk_action:
+        status = save_user_results(bulk_action)
+    return "1"
 
 if __name__ == '__main__':
+    index_name = "sensitive_user_portrait"
+    doc_type = "user"
+    bool = es.indices.exists(index=index_name)
+    if not bool:
+        es.indices.create(index=index_name, ignore=400)
     compute_attribute()
-
+    """
+    user_weibo_dict = read_user_weibo()
+    uid_list = user_weibo_dict.keys()
+    print compute_text_attribute(uid_list[0], user_weibo_dict[uid_list[0]])
+    print get_flow_information([uid_list[0]])
+    print get_profile_information([uid_list[0]])
+    """
 
