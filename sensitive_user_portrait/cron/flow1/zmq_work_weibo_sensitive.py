@@ -231,7 +231,8 @@ if __name__ == "__main__":
             try:
                 cal_propage_work(item, sensitive_words)
             except Exception, r:
-                pointer.write(str(r) +'\n')
+                date = ts2datetime(time.time())
+                pointer.write(date + ":" + str(r) +'\n')
             count += 1
             if count % 10000 == 0:
                 te = time.time()

@@ -5,14 +5,21 @@
 {{ super() }}
 <link rel="stylesheet" type="text/css" href="/static/custom/css/group.css">
 <style>
-    .btn-block{width:90%;}
-	.margint40{margin-top:40px;}
-	.margint20{margin-top:20px;}
-	.lineh14{line-height:14px;}
+    
 </style>
 {% endblock custom_css  %}
 {% block body %}
-<div class="" style="width:100%;height:500px;background-color:#87CEFA;">
+<div class="" style="width:100%;height:420px;background-image:url('/static/custom/images/bgcolor.png');background-repeat:repeat;">
+	<div class="circle" data-toggle="modal" data-target="#upload_file" id="advanced" data-toggle="modal" data-target="#upload_file" style="margin-left:450px;margin-top:20px;">
+		<a class="wordtitle">上传文件</a>
+	</div>
+	<div class="circle" id="" style="margin-left:250px;float:left;">
+		<a class="wordtitle" href="/index/group_search/">群组搜索</a>
+	</div>
+	<div class="circle" id="" style="margin-left:200px;float:left;">
+		<a class="wordtitle" href="/index/group_task/">群组管理</a>
+	</div>
+	<!--
 	<div class="" style="width:60%;height:100%;float:left;">
 		<img src="/static/custom/images/users.png"/>
 	</div>
@@ -21,6 +28,7 @@
 		<a class="btn btn-large btn-block btn-primary btnsize font20 margint20" type="button" href="/index/group_search/">群组搜索</a>
 		<a class="btn btn-large btn-block btn-primary btnsize font20 margint20" type="button" href="/index/group_task/">群组管理</a>
 	</div>
+	-->
 </div>
 
 <!--文件上传模态框-->
@@ -43,7 +51,7 @@
 				<input type="text" placeholder="Type something…">
 			</fieldset>
 			<form enctype="multipart/form-data" method="post"  >
-				<input type="file" name="fileUp" style="margin-left:150px;" id="file-upload" onchange="handleFileSelect(this.files)">  
+				<input type="file" name="fileUp" style="margin-left:150px;height:23px;" id="file-upload" onchange="handleFileSelect(this.files)">  
 			</form>
 		</form>
       </div>
@@ -56,12 +64,3 @@
 </div>
 {% endblock %}
 
-{% block Own_js %}
-{{ super() }}
-<script type="text/javascript" src="/static/custom/js/in_extra.js"></script>
-<script type="text/javascript" src="/static/custom/js/recommend_in.js"></script>
-{% endblock Own_js %}
-{% block end_js %}
-{{ super() }}
-<script src="/static/custom/js/in_table.js"></script>
-{% endblock end_js %}

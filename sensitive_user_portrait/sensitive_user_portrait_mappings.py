@@ -23,7 +23,7 @@ index_info = {
                     "type": "string",
                     "index": "not_analyzed"
                 },
-                "sensitive_words":{
+                "sensitive_words_dict":{
                     "type":"string",
                     "index":"not_analyzed"
                 }, # sensitive words dict
@@ -39,11 +39,31 @@ index_info = {
                     "type": "string",
                     "index": "not_analyzed"
                 },
-                "geo_activity_dict":{
+                "sensitive_geo_activity":{
                     "type": "string",
                     "index": "not_analyzed"
                 },
-                "hashtag":{
+                "sensitive_geo_string":{
+                    "type": "string",
+                    "analyzer": "my_analyzer"
+                },
+                "geo_activity":{
+                    "type": "string",
+                    "index": "not_analyzed"
+                },
+                "geo_string":{
+                    "type": "string",
+                    "analyzer": "my_analyzer"
+                },
+                "sensitive_hashtag_string":{
+                    "type": "string",
+                    "analyzer": "my_analyzer"
+                },
+                "sensitive_hashtag_dict":{
+                    "type": "string",
+                    "index": "not_analyzed"
+                },
+                "hashtag_string":{
                     "type": "string",
                     "analyzer": "my_analyzer"
                 },
@@ -55,6 +75,14 @@ index_info = {
                     "type": "string",
                     "index": "not_analyzed"
                 },
+                "keywords_string":{
+                    "type" : "string",
+                    "analyzer": "my_analyzer"
+                },
+                "psycho_status_string":{
+                    "type" : "string",
+                    "analyzer": "my_analyzer"
+                },
                 "psycho_status":{
                     "type": "string",
                     "index": "not_analyzed"
@@ -65,18 +93,6 @@ index_info = {
                 },
 
 
-                "geo_activity":{
-                    "type": "string",
-                    "analyzer": "my_analyzer"
-                },
-                "keywords_string":{
-                    "type": "string",
-                    "analyzer": "my_analyzer"
-                },
-                "psycho_status_string":{
-                    "type": "string",
-                    "analyzer": "my_analyzer"
-                },
                 "topic_string":{
                     "type": "string",
                     "analyzer": "my_analyzer"
@@ -141,7 +157,7 @@ index_info = {
 }
 
 
-es = Elasticsearch('219.224.135.93:9206')
+es = Elasticsearch('219.224.135.93:9206', timeout=60)
 
 es.indices.create(index="sensitive_user_portrait", body=index_info, ignore=400)
 

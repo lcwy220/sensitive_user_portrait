@@ -17,9 +17,9 @@ def readInputText():
 
 def createWordTree():
     awords = []
-    for b in open('sensitive_words.txt', 'rb'):
+    for b in open('./../../sensitive_words.txt', 'rb'):
         awords.append(b.strip())
-    
+
     for word in awords:
         temp = wordTree
         for a in range(0,len(word)):
@@ -31,11 +31,11 @@ def createWordTree():
                 elif temp[index] == 1:
                     node = [[None for x in range(256)],1]
                     temp[index] = node
-                
+
                 temp = temp[index][0]
             else:
                 temp[index] = 1
-    
+
 
 def searchWord(str):
     temp = nodeTree
@@ -58,8 +58,21 @@ def searchWord(str):
         else:
             word.append(index)
         a = a + 1
-    
+
     return words
+
+def sensitive_words_extract(text):
+    createWordTree();
+    list2 = searchWord(text)
+    map = {}
+    for w in list2:
+        word = "".join([chr(x) for x in w])
+        word = word.decode('utf-8')
+        if not map.__contains__(word):
+            map[word] = 1
+        else:
+            map[word] = map[word] + 1
+    return map
 
 if __name__ == '__main__':
     #reload(sys)  

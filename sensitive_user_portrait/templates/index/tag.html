@@ -2,8 +2,7 @@
     {% block title %}自定义标签{% endblock title%}
     {% block subtitle %}自定义标签{% endblock subtitle%}
       {% block custom_css %}
-      {{ super() }}
-    <style type="text/css">
+<style type="text/css">
     .hidden{display:none;}
 	#file-upload{margin-left:50px;border:1px solid #999;}
 	.fleft{float:left;}
@@ -55,20 +54,14 @@ tbody td{text-align:center;}
     background-color: #fbfcfc;margin-right: 20px;}
 
 </style>
-   <link type="text/css" href="/static/custom/css/charisma-app.css" rel="stylesheet">
-   <link rel="stylesheet" type="text/css" href="/static/custom/css/sidebar.css">
-   <!--<link rel="stylesheet" type="text/css" href="/static/custom/css/bootstrap-cerulean.min.css">-->
-   <link rel="stylesheet/less" type="text/css" href="/static/custom/css/wells.less">
-  <link rel="stylesheet/less" type="text/css" href="/static/custom/css/modals.less">
+
   {% endblock custom_css %}
-  
-  {% block custom_js %}
-   {{ super() }}
-  {% endblock custom_js %}
 
     {% block body %}
-	<div id="pageTitle">标签管理</div>
+    <!--
+    <div id="pageTitle">标签管理</div>
     <div id="float-wrap" class="hidden"></div>
+    -->
 <div id="SearchTab"  class="hidden">
 	<h3 class="title">搜索条件<a href="javascript:void(0)" id="close" class="close2"></a></h3>
 	<div class="decoration">
@@ -116,7 +109,7 @@ tbody td{text-align:center;}
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" style=".alert .close:after{content='';height:0;width:0;}">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">编辑标签</h4>
       </div>
       <div class="modal-body" id="EDIT" style="padding:30px;">
@@ -134,20 +127,22 @@ tbody td{text-align:center;}
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">添加标签</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&nbsp;</span></button>
+        <h4 class="modal-title" style="font-size:18px;" id="myModalLabel">添加标签</h4>
       </div>
       <div class="modal-body" id="ADDTAG">
         <div class="tagCols">
 			<span  style="margin-left:55px;">标签类别</span>
-			<input name="attribute_name" id="tagClass" class="inputbox" type="text" value="" style="line-height:36px;" placeholder="如：危险">
+			<input name="attribute_name" id="tagClass" class="inputbox" type="text" value="" style="/*line-height:36px;*/" placeholder="如：危险">
 		</div>
-		<div class="tagCols" >
-			<span style="margin-left:95px;">标签名</span>
-			<input name="attribute_value" class="inputbox " type="text" value="" style="margin-left:35px;line-height:36px;" placeholder="如：一级">
-			<span class="addIcon" id="addTag" style="margin-bottom:-10px;"></span>
-		</div>
-		
+
+		<div class="tagCols">
+      <span style="margin-left:100px;">标签名</span>
+      <input name="attribute_value" class="inputbox " type="text" value="" style="margin-left:35px;" placeholder="如：一级">
+      <span class="addIcon" id="addTag" style="margin-bottom:-10px;">
+      </span>
+    </div>
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -185,16 +180,16 @@ tbody td{text-align:center;}
 	
 </script>
 <script type="text/javascript" src="/static/custom/js/tag.js"></script> 
-<script type="text/javascript" src="/static/custom/js/tag_search.js"></script> 
-<script type="text/javascript" src="/static/custom/js/tag_add.js"></script> 
-<script type="text/javascript" src="/static/custom/js/tag_del.js"></script> 
  
 <script>
     var add_flag;
+    var tagname = new Array();
     $('a[id^="currentEdit"]').click(function(e){
         add_flag = false;
-		var tagNames =  $(this).text();
-		tagname = tagNames.split('/');
+        var tagNames =  $(this).text();
+        if (tagNames.indexOf('/') > -1){
+            tagname = tagNames.split('/');
+        }
 		$('#EDIT').empty();
 		var html = '';
 		html += '<div class="" style="margin-bottom:10px;"><span style="">标签类别&nbsp;&nbsp;&nbsp;&nbsp;</span>';
@@ -218,10 +213,10 @@ tbody td{text-align:center;}
 			$(this).parent().remove();
 		});
 	});
-	$(".addIcon").off("click").click(function(){
-		var html = '';
-		html += '<div class="tagCols"><span style="margin-left:65px;">标签名</span><input name="attribute_value" class="inputbox " type="text" value="" style="margin-left:35px;line-height:36px;"></div>';
-		$('#ADDTAG').append(html);
+    $(".addIcon").off("click").click(function(){
+        var html = '';
+        html += '<div class="tagCols"><span style="margin-left:65px;">标签名</span><input name="attribute_value" class="inputbox " type="text" value="" style="margin-left:35px;line-height:36px;"></div>';
+        $('#ADDTAG').append(html);
 	});
 	function addNew(){
         var newtag = $('.input_tag_box').val();
@@ -257,7 +252,6 @@ tbody td{text-align:center;}
             });
 	}
 </script>
-<script type="text/javascript" src="/static/custom/js/tag_change.js"></script>
 
 <script src="/static/custom/js/charisma.js"></script>
 {% endblock end_js %}

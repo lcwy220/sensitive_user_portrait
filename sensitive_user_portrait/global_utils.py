@@ -62,7 +62,7 @@ R_ADMIN = _default_redis(host=REDIS_HOST, port=REDIS_PORT, db=15)
 
 # elasticsearch initialize, one for user_profile, one for user_portrait
 es_user_profile = Elasticsearch(USER_PROFILE_ES_HOST, timeout = 60)
-es_sensitive_user_portrait = Elasticsearch(SENSITIVE_USER_PORTRAIT_ES_HOST, timeout = 600)
+es_sensitive_user_portrait = Elasticsearch(SENSITIVE_USER_PORTRAIT_ES_HOST, timeout=60)
 ES_CLUSTER_FLOW1 = Elasticsearch(ES_CLUSTER_HOST_FLOW1, timeout=60, sniff_on_start=True, sniff_on_connection_fail=True, sniffer_timeout=60)
 
 def get_client(api_host=WEIBO_API_HOST, api_port=WEIBO_API_PORT):
