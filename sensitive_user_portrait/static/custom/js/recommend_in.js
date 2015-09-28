@@ -491,7 +491,35 @@ function bindOption(){
           draw_table_compute_new.call_sync_ajax_request(url_compute_new, draw_table_compute_new.ajax_method, draw_table_compute_new.Re_Draw_table);
       });
       */
+      
+      $('input[name="important"]').click(function(){
+          //console.log($("#recommend_date_select").val());
+          var recommend_date
+          var history_recommend
+          if($('#recommend_date_button').click()){
+            if($('input[name="important"]:checked').val()==2){
+            recommend_date = '/recommentation/show_in/sensitive_list?date=' + $("#recommend_date_select").val();
+          }else{
+            recommend_date = '/recommentation/show_in/influence_list?date=' +  $("#recommend_date_select").val();
+          }
+          //console.log(influence_recommend);
+          draw_table_recommend_new = new Search_weibo_recommend(recommend_date, '#recommend');
+          draw_table_recommend_new.call_sync_ajax_request(recommend_date, draw_table_recommend_new.ajax_method, draw_table_recommend_new.Re_Draw_table);
+          }
+          if($('#history_date_button').click()){
+            if($('input[name="important"]:checked').val()==2){
+            history_recommend = '/recommentation/show_sensitive_history_in/?date=' + $("#history_date_select").val();
+          }else{
+            history_recommend = '/recommentation/show_influence_history_in/?date=' + $("#history_date_select").val();
+          }
 
+          //console.log(history_recommend);
+          draw_table_history_new = new Search_weibo_history(history_recommend, '#history');
+          draw_table_history_new.call_sync_ajax_request(history_recommend, draw_table_history_new.ajax_method, draw_table_history_new.Re_Draw_table);
+
+          }       
+      });
+      
       $('#recommend_date_button').click(function(){
           //console.log($("#recommend_date_select").val());
           var url_recommend_new
