@@ -10,7 +10,7 @@
 {% endblock custom_css  %}
 {% block body %}
 <div class="" style="width:100%;height:420px;background-image:url('/static/custom/images/bgcolor.png');background-repeat:repeat;">
-	<div class="circle" data-toggle="modal" data-target="#upload_file" id="advanced" data-toggle="modal" data-target="#upload_file" style="margin-left:450px;margin-top:20px;">
+	<div class="circle" data-toggle="modal" data-target="#upload_file" id="advanced" style="margin-left:450px;margin-top:20px;">
 		<a class="wordtitle">上传文件</a>
 	</div>
 	<div class="circle" id="" style="margin-left:250px;float:left;">
@@ -63,4 +63,6 @@
   </div>
 </div>
 {% endblock %}
-
+{% block end_js%}
+    <script src="/static/custom/js/group.js/"></script>
+{% endblock end_js%}

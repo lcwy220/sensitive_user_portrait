@@ -48,8 +48,8 @@ def extract_geo(result):
 def ip_to_geo(result):
     date_list = result.values()
     result_dict = {}
-    for item in date_list:
-        result_dict.update(ip2geo(item))
+    for item in result:
+        result_dict.update({item:ip2geo(result[item])})
     return result_dict
 
 def extract_string(result):
@@ -144,7 +144,7 @@ def get_flow_information(uid_list):
             ip_dict = json.dumps(ip_to_geo(user_ip_result[uid]))
         if user_sensitive_ip.has_key(uid):
             sensitive_ip_string = extract_geo(user_sensitive_ip[uid])
-            sensitive_ip_dict = json.dumps(user_sensitive_ip[uid])
+            sensitive_ip_dict = json.dumps(ip_to_geo(user_sensitive_ip[uid]))
 
         result_dict[uid] = {"hashtag_string": hashtag_string, "hashtag_dict": hashtag_dict, \
                             "sensitive_hashtag_string": sensitive_hashtag_string, "sensitive_hashtag_dict": sensitive_hashtag_dict, \
@@ -157,4 +157,3 @@ def get_flow_information(uid_list):
 if __name__ == '__main__':
     test_uid = ['3542550035']
     result = get_flow_information(test_uid)
-    print result['3542550035']['sensitive_geo_string']

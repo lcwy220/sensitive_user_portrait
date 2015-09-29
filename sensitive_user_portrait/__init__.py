@@ -9,6 +9,7 @@ from sensitive_user_portrait.index.views import mod as indexModule
 from sensitive_user_portrait.recommentation.views import mod as recommentationModule
 from sensitive_user_portrait.group.views import mod as groupModule
 from sensitive_user_portrait.tag.views import mod as tagModule
+from sensitive_user_portrait.attribute.views import mod as attributeModule
 """
 from sensitive_user_portrait.attribute.views import mod as attributeModule
 from sensitive_user_portrait.manage.views import mod as manageModule
@@ -67,6 +68,7 @@ def register_blueprints(app):
     app.register_blueprint(recommentationModule)
     app.register_blueprint(groupModule)
     app.register_blueprint(tagModule)
+    app.register_blueprint(attributeModule)
     """
     app.register_blueprint(attributeModule)
     app.register_blueprint(manageModule)
