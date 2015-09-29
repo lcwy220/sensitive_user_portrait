@@ -127,9 +127,9 @@ if __name__ == "__main__":
             text = item['text']
             sw_list = searchWord(text.encode('utf-8'))
             sensitive = len(sw_list)
-            cal_hashtag_work(item, sensitive) # hashtag 
-            if item and item['message_type']==3:
-                cal_propage_work(item, sensitive) # retweet relationship
+            #cal_hashtag_work(item, sensitive) # hashtag 
+            #if item and item['message_type']==3:
+            #    cal_propage_work(item, sensitive) # retweet relationship
             if sensitive:
                 cal_sensitive_words_work(item, sw_list) # sensitive_words
             count += 1
