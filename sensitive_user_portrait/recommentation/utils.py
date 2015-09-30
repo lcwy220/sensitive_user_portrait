@@ -67,6 +67,7 @@ def recommend_in_top_influence(date):
 # get user hashtag
 def get_user_hashtag(uid):
     user_hashtag_dict = {}
+    sensitive_user_hashtag_dict = {}
     now_ts = time.time()
     now_date = ts2datetime(now_ts) # 2015-09-22
     ts = datetime2ts(now_date)
@@ -77,6 +78,7 @@ def get_user_hashtag(uid):
         ts = ts - 3600*24
         date = ts2datetime(ts).replace('-','')
         results = r_cluster.hget('hashtag_'+str(date), uid)
+        sensitive_results = r_cluster.hget('sensitive_hashtag_'+str(date), uid)
         if results:
             hashtag_dict = json.loads(results)
             for hashtag in hashtag_dict:
@@ -84,9 +86,24 @@ def get_user_hashtag(uid):
                     user_hashtag_dict[hashtag] += hashtag_dict[hashtag]
                 else:
                     user_hashtag_dict[hashtag] = hashtag_dict[hashtag]
-    sort_hashtag_dict = sorted(user_hashtag_dict.items(), key=lambda x:x[1], reverse=True)
+        if sensitive_results:
+            sensitive_hashtag_dict = json.loads(sensitive_results)
+            for hashtag in sensitive_hashtag_dict:
+                if sensitive_user_hashtag_dict.has_key(hashtag):
+                    sensitive_user_hashtag_dict[hashtag] += sensitive_hashtag_dict[hashtag]
+                else:
+                    sensitive_user_hashtag_dict[hashtag] = sensitive_hashtag_dict[hashtag]
+    ordinary_key_set = set(user_hashtag_dict.keys())
+    sensitive_key_set = set(sensitive_user_hashtag_dict.keys())
+    for key in sensitive_key_set:
+        if key in ordinary_key_set:
+            user_hashtag_dict[key] += sensitive_user_hashtag_dict[key]
+        else:
+            user_hashtag_dict[key] = sensitive_user_hashtag_dict[key]
 
-    return sort_hashtag_dict
+    sort_hashtag_dict = sorted(user_hashtag_dict.items(), key=lambda x:x[1], reverse=True)
+    sort_sensitive_dict = sorted(sensitive_user_hashtag_dict.items(), key=lambda x:x[1], reverse=True)
+    return [sort_hashtag_dict, sort_sensitive_dict]
 
 # get user sensitive words
 def get_user_sensitive_words(uid):
@@ -171,13 +188,22 @@ def get_user_geo(uid):
                 else:
                     user_sensitive_ip_result[ip] = sensitive_ip_results[ip]
 
+    ordinary_key_set = set(user_ip_result.keys())
+    sensitive_key_set = set(user_sensitive_ip_result.keys())
+    for key in sensitive_key_set:
+        if key in ordinary_key_set:
+            user_ip_result[key] += user_sensitive_ip_result[key]
+        else:
+            user_ip_result[key] = user_sensitive_ip_result[key]
+
     user_geo_dict = ip2geo(user_ip_result)
     sorted_user_geo_dict = sorted(user_geo_dict.items(), key=lambda x:x[1], reverse=True)
     sensitive_user_geo_dict = ip2geo(user_sensitive_ip_result)
     sorted_sensitive_user_geo_dict = sorted(sensitive_user_geo_dict.items(), key=lambda x:x[1], reverse=True)
 
+
     return_list = []
-    return_list = [sorted_user_geo_dict, sorted_sensitive_user_geo_dict]
+    return_list = [sorted_user_geo_dict, sorted_sensitive_user_geo_dict] # total and sensitive
     return return_list
 
 
@@ -236,21 +262,29 @@ def get_user_trend(uid):
                     num += sensitive_results[seg_time]
             sensitive_trend_dict[base_time] = num
 
+    ordinary_key_set = set(trend_dict.keys())
+    sensitive_key_set = set(sensitive_trend_dict.keys())
+    for key in sensitive_key_set:
+        if key in ordinary_key_set:
+            trend_dict[key] += sensitive_trend_dict[key]
+        else:
+            trend_dict[key] = sensitive_trend_dict[key]
+
     sorted_dict = sorted(trend_dict.items(), key=lambda x:x[0], reverse=False)
     sorted_sensitive_dict = sorted(sensitive_trend_dict.items(), key=lambda x:x[0], reverse=False)
-    return [sorted_dict, sorted_sensitive_dict]
+    return [sorted_dict, sorted_sensitive_dict] # total and sensitive
 
 
 def influence_recommentation_more_information(uid):
     result = {}
-    result['hashtag'] = get_user_hashtag(uid)
+    result['hashtag'] = get_user_hashtag(uid)[0]
     result['time_trend'] = get_user_trend(uid)[0]
     result['activity_geo'] = get_user_geo(uid)[0]
     return result
 
 def sensitive_recommentation_more_information(uid):
     results = {}
-    results['hashtag'] = get_user_hashtag(uid)
+    results['hashtag'] = get_user_hashtag(uid)[0]
     results['time_trend'] = get_user_trend(uid)[0]
     results['activity_geo'] = get_user_geo(uid)[0]
 

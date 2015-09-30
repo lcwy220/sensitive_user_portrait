@@ -48,6 +48,7 @@ var Tag = new Tag();
 Tag.call_sync_ajax_request(url, Tag.ajax_method, Tag.Draw_tag_table);
 
 function Tag_search(){
+
 	 this.url = "/tag/search_attribute/?";
 }
 Tag_search.prototype = {   //群组搜索
@@ -153,13 +154,19 @@ function get_input_data(){
     var input_value;
     var input_name;
 	var tagnames = document.getElementsByName("attribute_name");
+	var tagclass = document.getElementById("tagClass");
 	input_name = "attribute_name=";
 	input_value = document.getElementsByName("attribute_name")[tagnames.length-1].value;
 	var reg = "^[a-zA-Z0-9_\u4e00-\u9fa5\uf900-\ufa2d]";
-	if(!input_value.match(reg)){
+	
+	while(!input_value.match(reg)){
+		alert('标签类型只能包含英文、汉字、数字和下划线，请重新输入');
+		tagnames.focus();
+	}
+	/*if(!input_value.match(reg)){
 		alert('标签类型只能包含英文、汉字、数字和下划线，请重新输入');
 		return;
-	}
+	}*/
 	temp += input_name;
     temp = temp + input_value +'&';
 	var tagnames = document.getElementsByName("attribute_value");
@@ -225,7 +232,8 @@ call_sync_ajax_request:function(url, method, callback){
     });
 },
 del:function(data){
-	location.reload();
+	//location.reload();
+	console.log(data);
 }
 }
 

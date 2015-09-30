@@ -304,7 +304,7 @@ def compute(user_set, es):
 if __name__ == "__main__":
 
     #es_index = 's_'+time.strftime("%Y%m%d", time.localtime(time.time()-86400))
-    es_index = '20130907'
+    es_index = '20130901'
     bool = es.indices.exists(index=es_index)
     print bool
     if not bool:
