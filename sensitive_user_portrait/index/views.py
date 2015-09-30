@@ -62,3 +62,7 @@ def group_task():
 @mod.route('/group_search/')
 def group_search():
     return render_template('index/group_search.html')
+
+@mod.route('/group_analysis/')
+def group_analysis():
+    return render_template('index/group_analysis.html')

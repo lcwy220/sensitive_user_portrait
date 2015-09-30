@@ -1,4 +1,201 @@
 {% extends "index/base.html" %} 
 {% block title %}整体概览{% endblock title %}
 {% block subtitle %}整体概览{% endblock subtitle %}
-{% block body %}<div>iiiiiiii</div>{% endblock body %}
+{% block custom_css %}
+{{ super() }}
+	<link rel="stylesheet" href="/static/custom/css/demo.css" media="screen" />
+    <link rel="stylesheet" href="/static/custom/css/jelevator.css"  media="screen" />
+	<style>
+	.box{width:310px;height:300px;float:left;}
+	.important{}
+	</style>
+{% endblock custom_css  %}
+{% block body %}
+  <div id="page">
+        <div id="content">
+            <div class="demo-description">
+                <h1>基本信息</h1>
+                <p style="margin-top:30px;">系统总共有<span id="totalNumber">5555</span>人。其中敏感人物有<span id="sensitiveN">55</span>人，高影响力有<span id="hinfluence">79</span>人。</p>
+				<h1>工作信息</h1>
+                <p style="margin-top:30px">截至到昨日，系统总共有<span id="storeNumber">5555</span>人入库。正在监控<span id="groupN">5</span>群组，总计<span id="gtotal">156</span>人。新增敏感词<a href="" id="wordsN">3</a>个。</p>
+			</div>
+
+            <hr>
+            <h2>统计信息</h2>
+            <div class="count">
+				<div id="sensitiveCloud" class="box"></div>
+				<div id="psychologyState" class="box"></div>
+				<div id="hashtagCloud" class="box"></div>
+			</div>
+			
+			<hr>
+			<h2 >领域重点人物</h2>
+            <div class="important" id="domain_portrait"></div>
+			<hr>
+            <h2>话题重点人物</h2>
+			<div class="important" id="topic_portrait"></div>
+            <div class="clear"></div>
+			
+			<hr>
+			
+            <h2>排名信息</h2>
+            <div>
+				<span style='font-size:16px;color:#777'>影响力排名</span>
+				<span style='font-size:16px;margin-left:140px'>
+					<a href="" ><u><font color="#555555">查看更多</font></u></a>
+				</span>
+				<span style="margin-left:20px;font-size:16px;color:#777">重要度排名</span>
+				<span data-toggle="modal" type="button"data-target="#rank_important"  style='font-size:16px;margin-left:130px;cursor: pointer'><u>查看更多</u></span>
+				<span style="margin-left:30px;font-size:16px;color:#777">活跃度排名</span>
+				<span type="button"data-toggle="modal" data-target="#rank_activeness" style='font-size:16px;margin-left:130px;cursor: pointer'><u>查看更多</u>
+				</span>
+			</div>
+			<div class="table-responsive"id='top_influence' style='overflow-x:hidden;width:300px;height:250px;float:left;'>
+			</div>
+			<div class="table-responsive"id='importance' style='overflow-x:hidden;width:300px;height:250px;float:left;margin-left:10px;'>
+			</div>
+			<div class="table-responsive"id='top_activeness' style='overflow-x:hidden;width:300px;height:250px;float:left;margin-left:10px;'>
+			</div>
+			<div>
+				<span style='font-size:16px;color:#777;'>敏感度排名</span>
+				<span type="button"data-toggle="modal" data-target="#rank_sensitive" style='font-size:16px;margin-left:140px;cursor: pointer'><u>查看更多</u></span>
+				<span style="margin-left:20px;font-size:16px;color:#777;">转发量排名</span>
+				<span type="button"data-toggle="modal" data-target="#rank_retweeted"  style='font-size:16px;margin-left:130px;cursor: pointer'><u>查看更多</u></span>
+				<span style="margin-left:20px;font-size:16px;color:#777">评论量排名</span>
+				<span data-toggle="modal" type="button"data-target="#rank_comment"  style='font-size:16px;margin-left:130px;cursor: pointer'><u>查看更多</u></span>
+			</div>
+			<div class="table-responsive" id='top_sensitive' style='overflow-x:hidden;width:300px;height:250px;float:left;'>
+			</div>
+			<div class="table-responsive" id='retweeted_user' style='overflow-x:hidden;width:300px;height:250px;float:left;margin-left:10px;margin-right:10px;'>             
+			</div>
+			<div class="table-responsive" id='top_comment_user' style='overflow-x:hidden;width:300px;height:250px;margin-left:0px;'>              
+			</div>
+			<div>
+				<span style='color:#777;font-size:16px'>发布敏感微博人排名</span>
+				<span type="button"data-toggle="modal" data-target="#sensitive_rank" style='font-size:16px;margin-left:60px;cursor: pointer'><u>查看更多</u></span>
+			</div>
+			<div class="table-responsive" id='top_user_sensitive' style='overflow-x:hidden;width:300px;height:250px;float:left'>
+			</div>
+            
+        </div>
+    </div>
+	
+<!--模态框-->
+<div class="modal fade" id="rank_important" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        <h4 class="modal-title" id="myModalLabel">重要度排名</h4>
+      </div>
+      <div class="modal-body" id='more_important'>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="rank_activeness" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        <h4 class="modal-title" id="myModalLabel">活跃度排名</h4>
+      </div>
+      <div class="modal-body" id='more_activeness'>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="rank_sensitive" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        <h4 class="modal-title" id="myModalLabel">敏感度排名</h4>
+      </div>
+      <div class="modal-body" id='more_sensitive'>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="rank_retweeted" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        <h4 class="modal-title" id="myModalLabel">转发量排名</h4>
+      </div>
+      <div class="modal-body" id='more_retweeted'>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="rank_comment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        <h4 class="modal-title" id="myModalLabel">评论量排名</h4>
+      </div>
+      <div class="modal-body" id='more_comment'>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="sensitive_rank" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        <h4 class="modal-title" id="myModalLabel">发布敏感微博人排名</h4>
+      </div>
+      <div class="modal-body" id='more_sensitive_rank'>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock body %}
+{% block end_js %}
+  <script  src="/static/custom/js/jquery-1.10.2.min.js"></script>
+  <script  src="/static/custom/js/jquery-jelevator-1.0.2.min.js"></script>
+  <script  src="/static/custom/js/overview.js"></script>
+  <script type="text/javascript">
+    jQuery(function($){
+        $("h1,h2").jElevator({
+            howTopButton: true,
+            showBottomButton: true,
+            showSectionsMenu: true
+        });
+    });
+ </script>
+{% endblock end_js%}
+
