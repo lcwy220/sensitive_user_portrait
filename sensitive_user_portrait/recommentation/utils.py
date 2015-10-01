@@ -309,9 +309,9 @@ def identify_in(data):
             r.hset('identify_in_influence_'+str(date), uid, status)
             influence_list.add(uid)
         if status == '1': # now
-            now_list.append(uid)
+            now_list.append([uid, source])
         if status == '2': # appoint
-            appoint_list.append(uid)
+            appoint_list.append([uid, source])
 
     sensitive_results = r.hget('recommend_sensitive', date)
     if sensitive_results:
