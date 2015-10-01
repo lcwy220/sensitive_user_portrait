@@ -1,8 +1,3 @@
-function Base(){
-    this.advanced_search_url = "/index/search_results/?stype=1&";
-}
-
-
 function bindSearchFunc(that){ 
     $("#bluebtn").off("click").click(function(){
         var advanced_url = that.advanced_search_url;
@@ -125,8 +120,3 @@ function bindAddFunction(){
     });
 }
 
-
-var base = new Base();
-bindSearchFunc(base);
-getAttributeName();
-bindAddFunction();

@@ -1,6 +1,6 @@
 {% extends "index/base.html" %} 
-{% block title %}重点人物监控{% endblock title %}
-{% block subtitle %}重点人物监控{% endblock subtitle %}
+{% block title %}自定义标签{% endblock title %}
+{% block subtitle %}自定义标签{% endblock subtitle %}
 
 {% block custom_css %}
     <link href="/static/custom/css/search.css" rel="stylesheet">
@@ -13,11 +13,12 @@
 <script src="/static/custom/js/search_base.js"></script>
 <script>
     function Base(){
-        this.advanced_search_url = "/index/search_results/?stype=2&";
+        this.advanced_search_url = "/index/search_results/?stype=3&";
     }
 
     var base = new Base();
     bindSearchFunc(base);
     getAttributeName();
     bindAddFunction();
+</script>
 {% endblock end_js %}
