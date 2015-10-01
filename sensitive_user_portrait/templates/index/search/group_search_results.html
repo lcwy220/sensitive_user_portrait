@@ -1,0 +1,15 @@
+{% extends "index/base.html" %} 
+{% block title %}重点人物监控{% endblock title %}
+{% block subtitle %}重点人物监控{% endblock subtitle %}
+
+{% block custom_css %}
+<style>
+    .dataTables_filter{text-align:right;margin-bottom:5px;}
+    .dataTables_paginate{margin-top:-10px;margin-bottom:-20px;}
+    .mouse {border:#d0d0d0 solid 1px;}
+</style>
+{% endblock custom_css %}
+
+{% block body %}
+{% include "/index/search/search_results_base.html" %}
+{% endblock body %}

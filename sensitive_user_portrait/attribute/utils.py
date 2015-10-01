@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 
+import re
 import sys
 import time
 import csv
@@ -24,9 +25,71 @@ from sensitive_user_portrait.global_utils import es_sensitive_user_portrait as e
 from sensitive_user_portrait.global_utils import es_user_profile
 from sensitive_user_portrait.recommentation.utils import get_user_trend, get_user_geo, get_user_hashtag
 
-
 emotion_mark_dict = {'126': 'positive', '127':'negative', '128':'anxiety', '129':'angry'}
 link_ratio_threshold = [0, 0.5, 1]
+sensitive_text = 'sensitive_user_text'
+
+def extract_uname(text):
+    at_uname_list = []
+    if isinstance(text, str):
+        text = text.decode('utf-8', 'ignore')
+    #text = text.split('//@')
+    RE = re.compile(u'//@([a-zA-Z-_⺀-⺙⺛-⻳⼀-⿕々〇〡-〩〸-〺〻㐀-䶵一-鿃豈-鶴侮-頻並-龎]+):', re.UNICODE)
+    repost_chains = RE.findall(text)
+    print repost_chains
+    return repost_chains
+
+def ip2geo(ip_dict):
+    city_set = set()
+    geo_dict = dict()
+    for ip in ip_dict:
+        try:
+            city = IP.find(str(ip))
+            if city:
+                city.encode('utf-8')
+            else:
+                city = ''
+        except Exception, e:
+            city = ''
+        if city:
+            len_city = len(city.split('\t'))
+            if len_city == 4:
+                city = '\t'.join(city.split('\t')[0:3])
+            try:
+                geo_city[city] += ip_dict[ip]
+            except:
+                geo_dict[city] = ip_dict[ip]
+
+    return geo_dict
+
+def search_sensitive_text(uid):
+    results = []
+    query_body = {
+        "query":{
+            "filtered":{
+                "filter":{
+                    "term":{
+                        "uid": uid
+                    }
+                }
+            }
+        },
+        "sort": {'timestamp': {'order': 'desc'}}
+    }
+
+    search_results = es.search(index='sensitive_user_text', doc_type='user', body=query_body)['hits']['hits']
+    print search_results
+    if search_results:
+        results = search_results
+
+    return results
+
+def text_sentiment(text):
+    text_list = [text]
+    liwc_list = attr_liwc[text_list]
+    emoticon_list = attr_emoticon
+
+    return [liwc_list, emoticon_list]
 
 def identify_uid_in(uid):
     result= []
@@ -371,10 +434,62 @@ def search_portrait(condition_num, query, sort, size):
         for item in result:
             user_dict = item['_source']
             score = item['_score']
+            if not user_dict['uname']:
+                user_dict['uname'] = 'unknown'
+            if not user_dict['location']:
+                user_dict['location'] = 'unknown'
 
             user_result.append([user_dict['uid'], user_dict['uname'], user_dict['location'], user_dict['activeness'], user_dict['importance'], user_dict['influence'], score])
 
     return user_result
+
+
+def sensitive_attribute(uid):
+    results = {}
+
+    # sensitive weibo number statistics
+    date = ts2datetime(time.time()-24*3600).replace('-', '')
+    date = '20130907' # test
+    influence_results = []
+    try:
+        influence_results = es.get(index=date, doc_type='bci', id=uid)['_source']
+        sensitive_origin_weibo_number = influence_results.get('s_origin_weibo_number', 0)
+        sensitive_retweeted_weibo_number = influence_results.get('s_retweeted_weibo_number', 0)
+        sensitive_comment_weibo_number = influence_results.get('s_comment_weibo_number', 0)
+        origin_weibo_number = influence_results.get('origin_weibo_number', 0)
+        retweeted_weibo_number = influence_results.get('retweeted_weibo_number', 0)
+        comment_weibo_number = influence_results.get('comment_weibo_number', 0)
+        if sensitive_origin_weibo_number or origin_weibo_number:
+            results['proportion_sensitive_origin_weibo'] = sensitive_origin_weibo_number/(sensitive_origin_weibo_number+origin_weibo_number)
+        else:
+            results['proportion_sensitive_origin_weibo'] = 0
+        if sensitive_retweeted_weibo_number or retweeted_weibo_number:
+            results['proportion_sensitive_retweeted_weibo'] = sensitive_retweeted_weibo_number/(sensitive_retweeted_weibo_number+retweeted_weibo_number)
+        else:
+            results['proportion_sensitive_retweeted_weibo'] = 0
+        if sensitive_comment_weibo_number or comment_weibo_number:
+            results['proportion_sensitive_comment_weibo'] = sensitive_comment_weibo_number/(sensitive_comment_weibo_number+comment_weibo_number)
+        else:
+            results['proportion_sensitive_comment_weibo'] = 0
+        results['sensitive_origin_weibo'] = sensitive_origin_weibo_number
+        results['sensitive_retweeted_weibo'] = sensitive_retweeted_weibo_number
+        results['sensitive_comment_weibo'] = sensitive_comment_weibo_number
+    except:
+        results['proportion_sensitive_origin_weibo'] = 0
+        results['proportion_sensitive_retweeted_weibo'] = 0
+        results['proportion_sensitive_comment_weibo'] = 0
+        results['sensitive_origin_weibo'] = 0
+        results['sensitive_retweeted_weibo'] = 0
+        results['sensitive_comment_weibo'] = 0
+
+    sensitive_text = search_sensitive_text(uid)
+    text_detail = []
+    if sensitive_text:
+        for item in sensitive_text:
+            text_
+            item = item['_source']
+            text = item['text']
+            
 
 
 if __name__ == '__main__':
