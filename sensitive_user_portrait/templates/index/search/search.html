@@ -1,0 +1,14 @@
+{% extends "index/base.html" %} 
+{% block title %}人物检索{% endblock title %}
+{% block subtitle %}人物检索{% endblock subtitle %}
+
+{% block custom_css %}
+    <link href="/static/custom/css/search.css" rel="stylesheet">
+{% endblock custom_css %}
+
+{% block body %}
+{% include "index/search/search_base.html" %}
+{% endblock %}
+{% block end_js %}
+    <script src="/static/custom/js/tbase.js"></script>
+{% endblock end_js %}

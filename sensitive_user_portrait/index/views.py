@@ -37,11 +37,35 @@ def group():
 
 @mod.route('/search/')
 def search():
-    return render_template('index/search.html')
+    return render_template('index/search/search.html')
 
 @mod.route('/search_results/')
 def search_results():
-    return render_template('index/search_results.html')
+    stype = request.args.get('stype','')
+    uid = request.args.get('uid', '')
+    uname = request.args.get('uname', '')
+    location = request.args.get('location', '')
+    activity_geo = request.args.get('activity_geo', '')
+    adkeyword = request.args.get('adkeyword', '')
+    hashtag = request.args.get('hashtag', '')
+    psycho_status = request.args.get('psycho_status', '')
+    psycho_feature = request.args.get('psycho_feature', '')
+    domain = request.args.get('domain', '')
+    topic = request.args.get('topic', '')
+    tag = request.args.get('tag', '')
+
+    if (stype == '1'):
+        return render_template('index/search/search_results.html', uid=uid, uname=uname,\
+                location=location, activity_geo=activity_geo, adkeyword=adkeyword, hashtag=hashtag, psycho_status=psycho_status,\
+                psycho_feature=psycho_feature, domain=domain, topic=topic, tag=tag)
+    elif (stype == '2'):
+        return render_template('index/search/group_search_results.html', uid=uid, uname=uname,\
+                location=location, activity_geo=activity_geo, adkeyword=adkeyword, hashtag=hashtag, psycho_status=psycho_status,\
+                psycho_feature=psycho_feature, domain=domain, topic=topic, tag=tag)
+    else:
+        return render_template('index/search/search_results.html', uid=uid, uname=uname,\
+                location=location, activity_geo=activity_geo, adkeyword=adkeyword, hashtag=hashtag, psycho_status=psycho_status,\
+                psycho_feature=psycho_feature, domain=domain, topic=topic, tag=tag)
 
 @mod.route('/influence/')
 def influence():
@@ -61,4 +85,8 @@ def group_task():
 
 @mod.route('/group_search/')
 def group_search():
-    return render_template('index/group_search.html')
+    return render_template('index/search/group_search.html')
+
+@mod.route('/group_analysis/')
+def group_analysis():
+    return render_template('index/group_analysis.html')

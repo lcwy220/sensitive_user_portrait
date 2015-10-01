@@ -1,0 +1,14 @@
+{% extends "index/base.html" %} 
+{% block title %}重点人物监控{% endblock title %}
+{% block subtitle %}重点人物监控{% endblock subtitle %}
+
+{% block custom_css %}
+    <link href="/static/custom/css/search.css" rel="stylesheet">
+{% endblock custom_css %}
+
+{% block body %}
+{% include "index/search/search_base.html" %}
+{% endblock %}
+{% block end_js %}
+    <script src="/static/custom/js/group_tbase.js"></script>
+{% endblock end_js %}

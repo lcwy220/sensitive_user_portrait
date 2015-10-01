@@ -1,5 +1,5 @@
 function Base(){
-    this.advanced_search_url = "/index/search_results/?stype=1&";
+    this.advanced_search_url = "/index/search_results/?stype=2&";
 }
 
 
