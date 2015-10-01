@@ -44,77 +44,66 @@ def ajax_search_portrait():
             'sensitive_words':'sensitive_words_string', 'sensitive_geo_activity':'sensitive_geo_string', \
             'sensitive_hashtag_string':'sensitive_hashtag_string', 'topic':'topic_string'}
 
-    stype = request.args.get('stype', '')
-    if stype == "1": #fuzzy search
-        fuzz_item = ['uid', 'uname']
-        for item in fuzz_item:
-            item_data = request.args.get(item, '')
-            if item_data:
-                query_list.append({'wildcard':{item:'*'+item_data+'*'}})
+    fuzz_item = ['uid', 'uname', 'location', 'activity_geo', 'keywords', 'hashtag']
+    sensitive_item = ['sensitive_words', 'sensitive_geo_activity', 'sensitive_hashtag']
+    select_item = ['gender', 'verified', 'psycho_feature', 'psycho_status']
+    range_item = ['fansnum', 'statusnum', 'friendsnum', 'importance', 'activeness', 'influence']
+    multi_item = ['topic', 'domain']
+    for item in fuzz_item:
+        item_data = request.args.get(item, '')
+        if item_data:
+            if shift_dict.has_key(item):
+                query.append({'wildcard':{shift_dict[item]:'*'+item_data+'*'}})
+            else:
+                query.append({'wildcard':{item:'*'+item_data+'*'}})
+            condition_num += 1
+    for item in select_item:
+        item_data = request.args.get(item, '')
+        if item_data:
+            if shift_dict.has_key(item):
+                query.append({'wildcard':{shift_dict[item]:'*'+item_data+'*'}})
+            else:
+                query.append({'wildcard':{item:'*'+item_data+'*'}})
+            condition_num += 1
+    for item in sensitive_item:
+        item_data = request.args.get(item, '')
+        if item_data:
+            if shift_dict.has_key(item):
+                query.append({'wildcard':{shift_dict[item]:'*'+item_data+'*'}})
+            else:
+                query.append({'wildcard':{item:'*'+item_data+'*'}})
+            condition_num += 1
+    '''
+    if custom_attribute_list: 
+        for custom_tag in custom_attribute_list:
+            item_data = request.args.get(custom_tag, '')
+            query.append({'wildcard':{custom_tag:'*'+item_data+'*'}})
+            condition_num += 1
+    '''
+    tag_items = request.args.get('tag', '')
+    if tag_items:
+        tag_item_list = tag_items.split(',')
+        print 'tag_term_list:', tag_item_list
+        for tag_item in tag_item_list:
+            attribute_name_value = tag_item.split(':')
+            attribute_name = attribute_name_value[0]
+            attribute_value = attribute_name_value[1]
+            if attribute_name and attribute_value:
+                query.append({'wildcard':{attribute_name:'*'+attribute_value+'*'}})
                 condition_num += 1
-        query.append({'bool':{'should':query_list}})
 
-    else:
-        fuzz_item = ['uid', 'uname', 'location', 'activity_geo', 'keywords', 'hashtag']
-        sensitive_item = ['sensitive_words', 'sensitive_geo_activity', 'sensitive_hashtag']
-        select_item = ['gender', 'verified', 'psycho_feature', 'psycho_status']
-        range_item = ['fansnum', 'statusnum', 'friendsnum', 'importance', 'activeness', 'influence']
-        multi_item = ['topic', 'domain']
-        for item in fuzz_item:
-            item_data = request.args.get(item, '')
-            if item_data:
-                if shift_dict.has_key(item):
-                    query.append({'wildcard':{shift_dict[item]:'*'+item_data+'*'}})
-                else:
-                    query.append({'wildcard':{item:'*'+item_data+'*'}})
-                condition_num += 1
-        for item in select_item:
-            item_data = request.args.get(item, '')
-            if item_data:
-                if shift_dict.has_key(item):
-                    query.append({'wildcard':{shift_dict[item]:'*'+item_data+'*'}})
-                else:
-                    query.append({'wildcard':{item:'*'+item_data+'*'}})
-                condition_num += 1
-        for item in sensitive_item:
-            item_data = request.args.get(item, '')
-            if item_data:
-                if shift_dict.has_key(item):
-                    query.append({'wildcard':{shift_dict[item]:'*'+item_data+'*'}})
-                else:
-                    query.append({'wildcard':{item:'*'+item_data+'*'}})
-                condition_num += 1
-        '''
-        if custom_attribute_list: 
-            for custom_tag in custom_attribute_list:
-                item_data = request.args.get(custom_tag, '')
-                query.append({'wildcard':{custom_tag:'*'+item_data+'*'}})
-                condition_num += 1
-        '''
-        tag_items = request.args.get('tag', '')
-        if tag_items:
-            tag_item_list = tag_items.split(',')
-            print 'tag_term_list:', tag_item_list
-            for tag_item in tag_item_list:
-                attribute_name_value = tag_item.split(':')
-                attribute_name = attribute_name_value[0]
-                attribute_value = attribute_name_value[1]
-                if attribute_name and attribute_value:
-                    query.append({'wildcard':{attribute_name:'*'+attribute_value+'*'}})
-                    condition_num += 1
-
-        for item in multi_item:
-            nest_body = {}
-            nest_body_list = []
-            item_data = request.args.get(item, '')
-            if item == 'topic':
-                item = 'topic_string'
-            if item_data:
-                term_list = item_data.split(',')
-                for term in term_list:
-                    nest_body_list.append({'match':{item: term}})
-                condition_num += 1
-                query.append({'bool':{'should':nest_body_list}})
+    for item in multi_item:
+        nest_body = {}
+        nest_body_list = []
+        item_data = request.args.get(item, '')
+        if item == 'topic':
+            item = 'topic_string'
+        if item_data:
+            term_list = item_data.split(',')
+            for term in term_list:
+                nest_body_list.append({'match':{item: term}})
+            condition_num += 1
+            query.append({'bool':{'should':nest_body_list}})
 
     # size = request.args.get('size', 1000)
     size = 1000
