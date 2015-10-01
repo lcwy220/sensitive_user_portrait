@@ -1,0 +1,50 @@
+{% extends "index/base.html" %} 
+{% block title %}自定义标签{% endblock title %}
+{% block subtitle %}自定义标签{% endblock subtitle %}
+
+{% block custom_css %}
+<style>
+    .dataTables_filter{text-align:right;margin-bottom:5px;}
+    .dataTables_paginate{margin-top:-10px;margin-bottom:-20px;}
+    .mouse {border:#d0d0d0 solid 1px;}
+</style>
+{% endblock custom_css %}
+
+{% block body %}
+{% include "/index/search/search_results_base.html" %}
+    <button class="btn btn-primary btn-sm" style="float:right;width:80px;height:40px;margin-right:5px" name="custom_button" id="custom_button" title="为用户添加标签"  onclick="custom_button();">自定义属性</button>
+<div class="modal fade" id="custom" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document" style="width:850px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        <h4 class="modal-title" id="myModalLabel">自定义属性</h4>
+      </div>
+      <div class="modal-body">
+          <div style="font-size:18px;margin-bottom:10px;">为这些用户添加标签</div>
+          <div>
+              <span>选择类别：</span>
+              <span style="margin-left:10px">
+                  <select name="attribute_name"></select>
+              </span>
+              <span style='margin-left:20px'>选择标签：</span>
+              <span style="margin-left:10px">
+                  <select name="attribute_value"></select>
+              </span>
+          </div>
+          <div id="custom_confirm" style="margin-top:20px"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="custom_confirm_button()">确认</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock body %}
+
+{% block end_js %}
+<script type="text/javascript" src="/static/custom/js/search_result.js"></script> 
+<script type="text/javascript" src="/static/custom/js/tag_search_result.js"></script> 
+<script src="/static/custom/js/result_table.js"></script>
+{% endblock end_js %}

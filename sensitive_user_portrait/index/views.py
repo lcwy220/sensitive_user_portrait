@@ -27,6 +27,14 @@ def recommend_in():
 def tag():
     return render_template('index/tag.html')
 
+@mod.route('/tag_search/')
+def tag_search():
+    return render_template('index/search/tag_search.html')
+
+@mod.route('/tag_manage/')
+def tag_manage():
+    return render_template('index/tag_manage.html')
+
 @mod.route('/sensitive_words/')
 def sensitive_words():
     return render_template('index/sensitive.html')
@@ -34,6 +42,14 @@ def sensitive_words():
 @mod.route('/group/')
 def group():
     return render_template('index/group.html')
+
+@mod.route('/group_task/')
+def group_task():
+    return render_template('index/group_task.html')
+
+@mod.route('/group_search/')
+def group_search():
+    return render_template('index/search/group_search.html')
 
 @mod.route('/search/')
 def search():
@@ -62,6 +78,10 @@ def search_results():
         return render_template('index/search/group_search_results.html', uid=uid, uname=uname,\
                 location=location, activity_geo=activity_geo, adkeyword=adkeyword, hashtag=hashtag, psycho_status=psycho_status,\
                 psycho_feature=psycho_feature, domain=domain, topic=topic, tag=tag)
+    elif (stype == '3'):
+        return render_template('index/search/tag_search_results.html', uid=uid, uname=uname,\
+                location=location, activity_geo=activity_geo, adkeyword=adkeyword, hashtag=hashtag, psycho_status=psycho_status,\
+                psycho_feature=psycho_feature, domain=domain, topic=topic, tag=tag)
     else:
         return render_template('index/search/search_results.html', uid=uid, uname=uname,\
                 location=location, activity_geo=activity_geo, adkeyword=adkeyword, hashtag=hashtag, psycho_status=psycho_status,\
@@ -79,13 +99,6 @@ def monitor():
 def contrast():
     return render_template('index/contrast.html')
 
-@mod.route('/group_task/')
-def group_task():
-    return render_template('index/group_task.html')
-
-@mod.route('/group_search/')
-def group_search():
-    return render_template('index/search/group_search.html')
 
 @mod.route('/group_analysis/')
 def group_analysis():
