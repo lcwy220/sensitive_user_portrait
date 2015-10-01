@@ -13,3 +13,8 @@
 {% block body %}
 {% include "index/search/search_results_base.html" %}
 {% endblock %}
+
+{% block end_js %}
+<script type="text/javascript" src="/static/custom/js/search_result.js"></script> 
+<script src="/static/custom/js/result_table.js"></script>
+{% endblock end_js %}
