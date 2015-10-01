@@ -93,7 +93,7 @@ Date.prototype.format = function(format) {
         series: [{
             name:'微博量',
             //data: data_count
-			data:[1,2,5,3,6,8,3]
+			data:[1,2,5,3,6,8]
         }]
     });
   
@@ -195,3 +195,147 @@ for(i=0;i<7;i++){
 		}
 		*/
 	}
+	
+//思想分析
+$(document).ready(function(){
+ 		Draw_think_topic();
+ 		Draw_think_emotion();
+ 	})
+        // 基于准备好的dom，初始化echarts图表
+function Draw_think_topic(){
+    // domain_value = [];
+    // domain_key = [];
+    // indicate = [];
+    // for ( key in data['2']){
+    //      indicator = {};
+    //     domain_key.push(key);
+    //     indicator['text'] = key;
+    //     indicator['max'] = 20;
+    //     indicate.push(indicator);
+    //     domain_value.push(data['2'][key]);
+    // }
+    var myChart = echarts.init(document.getElementById('radar_domain')); 
+        
+        var option = {
+        title : {
+            text: '',
+            subtext: ''
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            x : 'center',
+            data:['倾向性']
+        },
+        toolbox: {
+            show : true,
+        },
+        calculable : true,
+        polar : [
+            {
+            indicator : [
+                {text : '九一八', max  : 100},
+                {text : '博鳌论坛', max  : 100},
+                {text : 'APEC', max  : 100},
+                {text : '两会', max  : 100}],
+                radius : 80
+            }
+        ],
+        series : [
+            {
+                name: '',
+                type: 'radar',
+                itemStyle: {
+                    normal: {
+                        areaStyle: {
+                            type: 'default'
+                        }
+                    }
+                },
+                data : [
+                    {
+                        value : [97, 42, 88, 94, 90, 86],
+                        name : '倾向性'
+                    }
+                ]
+            }
+        ]
+    };                
+        // 为echarts对象加载数据 
+        myChart.setOption(option); 
+}
+function Draw_think_emotion(){
+    var myChart = echarts.init(document.getElementById('pie_emotion')); 
+    var option = {
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    toolbox: {
+        show : true,
+        feature : {
+            mark : {show: false},
+            dataView : {show: false, readOnly: false},
+            magicType : {
+                show: false, 
+                type: ['pie', 'funnel']
+            },
+            restore : {show: false},
+        }
+    },
+    calculable : false,
+    series : [
+        {
+            name:'',
+            type:'pie',
+            selectedMode: 'single',
+            radius : [0, 35],
+            
+            // for funnel
+            x: '20%',
+            width: '40%',
+            funnelAlign: 'right',
+            max: 1548,
+            
+            itemStyle : {
+                normal : {
+                    label : {
+                        position : 'inner'
+                    },
+                    labelLine : {
+                        show : false
+                    }
+                }
+            },
+            data:[
+                {value:5, name:'积极'},
+                {value:5, name:'中性'},
+                {value:12, name:'消极', selected:true}
+            ]
+        },
+        {
+            name:'',
+            type:'pie',
+            radius : [50, 70],
+            
+            // for funnel
+            x: '60%',
+            width: '35%',
+            funnelAlign: 'left',
+            max: 1048,
+            
+            data:[
+                {value:5, name:'积极'},
+                {value:5, name:'中性'},
+                {value:3, name:'生气'},
+                {value:4, name:'悲伤'},
+                {value:5, name:'其他'}
+            ]
+        }
+    ]
+}
+    myChart.setOption(option);  
+                    
+}
+	

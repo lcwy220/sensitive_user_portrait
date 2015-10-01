@@ -1,6 +1,6 @@
 {% extends "index/base.html" %} 
-{% block title %}整体概览{% endblock title %}
-{% block subtitle %}整体概览{% endblock subtitle %}
+{% block title %}个人属性{% endblock title %}
+{% block subtitle %}个人属性{% endblock subtitle %}
 {% block custom_css %}
 {{ super() }}
 	<link rel="stylesheet" href="/static/custom/css/overview.css" media="screen" />
@@ -13,7 +13,7 @@
 {% endblock custom_css  %}
 {% block body %}
 
-  <div id="page">
+	<div id="page">
 		<div class="portait" style="font-family:'Microsoft YaHei UI'; font-size:16px;margin-left:20px;">
 			<div class="PortraitImg" ><img id="portraitImg" src="http://tp2.sinaimg.cn/1878376757/50/0/1" alt="" class="img-"></div>
 			<div style="text-align:left;height:30px;margin-top:20px;">
@@ -32,18 +32,18 @@
             <h2>基本信息</h2>
 			<div class="basic_information" style="margin-top:10px;">
 				<ul class="clearfix">
-            <li class="li_1">
-				<span class="pt_title">用户ID</span>
-				<span class="pt_detail" id="userId">1828183230</span>
-			</li>
-			<li class="li_1">
-				<span class="pt_title">注册地</span>
-				<span class="pt_detail" id="userLocation">江苏 苏州</span>
-			</li>
-			<li class="li_1">
-				<span class="pt_title">性别</span>
-				<span class="pt_detail" id="userGender">男</span>
-			</li>
+					<li class="li_1">
+						<span class="pt_title">用户ID</span>
+						<span class="pt_detail" id="userId">1828183230</span>
+					</li>
+					<li class="li_1">
+						<span class="pt_title">注册地</span>
+						<span class="pt_detail" id="userLocation">江苏 苏州</span>
+					</li>
+					<li class="li_1">
+						<span class="pt_title">性别</span>
+						<span class="pt_detail" id="userGender">男</span>
+					</li>
 			<!--
 			<li class="li_1">
 				<span class="pt_title">领域</span>
@@ -54,19 +54,19 @@
 				<span class="pt_detail" id="userTopic" ></span>
 			</li>
 			-->
-			<li class="li_1">
-				<span class="pt_title">粉丝数</span>
-				<span class="pt_detail" id="userFans">21663</span>
-			</li>
-			<li class="li_1">
-				<span class="pt_title">关注数</span>
-				<span class="pt_detail" id="userFriend">470</span>
-			</li>
-			<li class="li_1">
-				<span class="pt_title">在线方式</span>
-				<span class="pt_detail" id="userOnline">weibo.com</span>
-			</li>
-		</ul>
+					<li class="li_1">
+						<span class="pt_title">粉丝数</span>
+						<span class="pt_detail" id="userFans">21663</span>
+					</li>
+					<li class="li_1">
+						<span class="pt_title">关注数</span>
+						<span class="pt_detail" id="userFriend">470</span>
+					</li>
+					<li class="li_1">
+						<span class="pt_title">在线方式</span>
+						<span class="pt_detail" id="userOnline">weibo.com</span>
+					</li>
+				</ul>
 			</div>
             <hr>
             <h2>时空分析</h2>
@@ -77,13 +77,13 @@
 					<li>
 						<div class="shiji">
 							<p class="font12 ico" id="d1" >09-01</p>
-							<p class="ms" id="city1">北京</p>
+							<p class="ms" id="city1"></p>
 						</div>
 					</li>
 					<li>
 						<div class="shiji">
 							<p class="font12 ico" id="d2">09-01</p>
-							<p class="ms" id="city2">北京</p>
+							<p class="ms" id="city2"></p>
 						</div>
 					</li>
 					<li>
@@ -120,7 +120,18 @@
 			</div>
 			<hr>
 			<h2 >微博分析</h2>
-            <div id="weiboTime" style="height:349px;width:680px;margin-top:50px;" ></div>
+            <div id="weiboTime"  style="height:349px;width:900px;margin-top:20px;" ></div>
+			<div id="weibo_text" style="height:300px;width:900px;margin-top:20px;font-size:10px;background-color:whitesmoke;overflow-y:auto;margin-left:auto;margin-right:auto;">
+				 <div style="margin-left:20px;float:left;">
+					<span >当前选择日期</span>
+					<span id="date_zh" value="" >09-01</span>
+				</div>
+				<div style="float:left;margin-left:10px;width:200px;">
+					<span>时间段</span>
+					<span id="time_zh" value="00:00:00">00:00-04:00</span>
+				</div>
+				<div id="weibo_content" style="width:900px;float:left;">eftretgreytrytrytr</div>
+			</div>
 			<hr>
             <h2>交互分析</h2>
 			<div class="" id=""></div>
@@ -129,7 +140,18 @@
 			<hr>
 			
             <h2>思想分析</h2>
-            
+            <div style="width:900px;"><h4 class="page-header"style='margin-top:10px'>倾向性和心理状态</h4>
+				<div>
+					<div style="height:380px;width:450px;float:left;margin-top:-20px">
+						<div style="font-size:16px">倾向性</div>
+						<div id="radar_domain" style="height:350px;width:450px;"></div>
+					</div>
+					<div style="height:380px;width:450px;float:right;margin-top:-20px">
+						<div style="font-size:16px">心理状态</div>
+						<div id="pie_emotion" style="height:350px;width:450px;"></div>
+					</div>
+				</div>	
+			</div>
 			
             
         </div>
@@ -139,8 +161,8 @@
 
 {% endblock body %}
 {% block end_js %}
-  <script  src="/static/custom/js/jquery-1.10.2.min.js"></script>
-  <script  src="/static/custom/js/jquery-jelevator-1.0.2.min.js"></script>
+  <script  src="/static/scripts/jquery-1.10.2.min.js"></script>
+  <script  src="/static/scripts/jquery-jelevator-1.0.2.min.js"></script>
   <script type="text/javascript">
     jQuery(function($){
         $("h1,h2").jElevator({
