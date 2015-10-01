@@ -229,6 +229,7 @@ def compute(user_set, es):
         user_item['origin_weibo_number'] = len(origin_weibo_list)
         user_item['comment_weibo_number'] = comment_weibo_number
         user_item['retweeted_weibo_number'] = len(retweeted_weibo_list)
+        user_item['s_origin_weibo_number'] = len(s_origin_weibo_list)
         user_item['s_comment_weibo_number'] = s_comment_weibo_number
         user_item['s_retweeted_weibo_number'] = len(s_retweeted_weibo_list)
 

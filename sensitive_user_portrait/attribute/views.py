@@ -5,7 +5,9 @@ import time
 import json
 from flask import Blueprint, url_for, render_template, request, abort, flash, session, redirect
 from sensitive_user_portrait.global_utils import es_sensitive_user_portrait as es
+from sensitive_user_portrait.global_utils import es_user_profile
 from utils import search_attribute_portrait,search_mention, search_portrait
+from utils import extract_uname, search_sensitive_text
 
 mod = Blueprint('attribute', __name__, url_prefix='/attribute')
 
@@ -13,9 +15,15 @@ mod = Blueprint('attribute', __name__, url_prefix='/attribute')
 def ajax_portrait_attribute():
     uid = request.args.get('uid', '')
     uid = str(uid)
-    results = search_attribute_portrait(uid)
+    u_list = []
+    #results = search_attribute_portrait(uid)
+    results = search_sensitive_text(uid)
     if results:
-        return json.dumps(results)
+        for item in results:
+            u_list.append(extract_uname(item['_source']['text']))
+            u_list.append(sentiment(item['_source']['text']))
+    if results:
+        return json.dumps(u_list)
     else:
         return '0'
 
