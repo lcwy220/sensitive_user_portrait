@@ -181,12 +181,15 @@ var influenceChart = echarts.init(document.getElementById('influence_chart'));
         // 为echarts对象加载数据 
         influenceChart.setOption(Influenceoption); 
 //一周轨迹分布
+$('.course_nr2 li').find('.shiji').slideDown(600);
+
 for(i=0;i<7;i++){
 		document.getElementById('d'+(i+1)).innerHTML = '09-01';
     }
-    for(i=0;i<1;i++){
+    for(i=0;i<7;i++){
 		document.getElementById('city'+(i+1)).innerHTML = '北京';
-        /*console.log(citys[i]);
+		/*
+        console.log(citys[i]);
 		if(citys[i]){
 			document.getElementById('city'+(i+1)).innerHTML = citys[i][0];
 		}else{
@@ -194,8 +197,9 @@ for(i=0;i<7;i++){
 			document.getElementById('city'+(i+1)).innerHTML = '未发布微博';
 		}
 		*/
+		
 	}
-	
+
 //思想分析
 $(document).ready(function(){
  		Draw_think_topic();
