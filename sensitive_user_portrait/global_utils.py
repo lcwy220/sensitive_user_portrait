@@ -52,7 +52,7 @@ R_GROUP = _default_redis(host=REDIS_HOST, port=REDIS_PORT, db=14)
 # type: hash---{'recommend', 20130901, uid_list}
 #type2:{compute:{uid:[in_date,status], uid:[in_date, status]}} status:0 not compute status:1 computing 
 R_RECOMMENTATION = _default_redis(host=REDIS_HOST, port=REDIS_PORT, db=15)
-
+RECOMMENTATION_TOPK = 10000
 R_RECOMMENTATION_OUT = _default_redis(host=REDIS_HOST, port=REDIS_PORT, db=15)
 # type: hash----{recommend_delete_list, 20130901, list}
 # type: hash----{decide_delete_list, 20130901, list}

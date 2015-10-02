@@ -7,6 +7,7 @@ import csv
 import json
 import time
 from elasticsearch import Elasticsearch
+from DFA_filter import sensitive_words_extract
 
 reload(sys)
 sys.path.append('./../../')
@@ -98,6 +99,10 @@ def sensitive_user_text_mapping():
                     "message_type":{
                         "type":"string",
                         "index": "not_analyzed"
+                    },
+                    "sensitive":{
+                        "type":"string",
+                        "index": "not_analyzed"
                     }
                 }
             }
@@ -111,7 +116,7 @@ def save_text2es():
     count = 0
     bulk_action = []
     user_weibo_dict = dict()
-    csvfile = open('./sensitive_uid_text.csv', 'rb')
+    csvfile = open('./sensitive_uid_text_1.csv', 'rb')
     reader = csv.reader(csvfile)
     for line in reader:
         count += 1
@@ -124,6 +129,14 @@ def save_text2es():
         weibo['uid'] = user
         sentiment = attr_liwc([weibo['text']])
         weibo['sentiment'] = json.dumps(sentiment)
+        if not isinstance(weibo['text'], str):
+            text = (weibo['text']).encode('utf-8', 'ignore')
+        sw_dict = sensitive_words_extract(text)
+        if sw_dict:
+            weibo['sensitive_words'] = json.dumps(sw_dict)
+            weibo['sensitive'] = 1
+        else:
+            weibo['sensitive'] = 0
         action = {'index':{'_id':weibo['mid']}}
         bulk_action.extend([action, weibo])
         if count % 1000 == 0:

@@ -8,7 +8,6 @@ from filter_rules import filter_rules, filter_recommend, save_recommentation2red
 
 reload(sys)
 sys.path.append('../../')
-from global_config import RECOMMENTATION_TOPK as top_k
 from global_utils import ES_CLUSTER_FLOW1 as es_cluster
 from global_utils import R_RECOMMENTATION as r_recommend
 
@@ -63,7 +62,7 @@ if __name__ == "__main__":
     r_recommend.hdel('recommend_influence', former_date) # delete 7 days ago recommentation uid_list
     now_date = '20130901' # test
     sensitive_weibo_uid = search_sensitive_weibo(now_date) # sensitive words uid list, direct recommend in
-    top_influence_uid = search_top_k(now_date, top_k) # top influence uid list, filter
+    top_influence_uid = search_top_k(now_date, 10000) # top influence uid list, filter
 
     # step 1: no sensitive user in top influence
     revise_influence_uid_list = set(top_influence_uid) - set(sensitive_weibo_uid)

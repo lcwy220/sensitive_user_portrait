@@ -16,8 +16,8 @@ sys.path.append('../../')
 from global_utils import R_CLUSTER_FLOW2 as r_cluster
 from global_utils import R_DICT, ES_DAILY_RANK, es_sensitive_user_portrait
 from global_utils import R_RECOMMENTATION as r
-from global_utils import RECOMMENTATION_TOPK as top_k
-from time.utils import datetime2ts, ts2datetime
+from global_config import RECOMMENTATION_TOPK as top_k
+from time_utils import datetime2ts, ts2datetime
 
 activity_threshold = 50
 ip_threshold = 7
@@ -88,7 +88,7 @@ def filter_retweet_count(user_set):
             retweet_result = rr.hgetall('retweet_'+str(user))
             for retweet_user in retweet_result:
                 retweet_set.add(retweet_user)
-        if len(retweet_ret) < retweet_threshold
+        if len(retweet_set) < retweet_threshold:
             results.append(user)
         else:
             writer.writerow([user, 'retweet'])
@@ -99,7 +99,7 @@ def filter_mention(user_set):
     results = []
     now_date = ts2datetime(time.time())
     now_date = '2013-09-08'
-    timestamp = datetime2ts(now_date) = 24*3600
+    timestamp = datetime2ts(now_date) - 24*3600
     for user in user_set:
         mention_set = set()
         for i in range(0,7):
