@@ -17,9 +17,9 @@ Search_weibo_result.prototype = {
   },
 
   Draw_table: function(data){
-    console.log(data);
+    //console.log(data);
     var div = that.div
-    console.log(div);
+    //console.log(div);
     $(div).empty();
     var user_url ;
     //console.log(user_url);
@@ -27,16 +27,13 @@ Search_weibo_result.prototype = {
     html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
     html += '<thead><tr><th>用户ID</th><th>昵称</th><th>注册地</th><th>活跃度</th><th>重要度</th><th>影响力</th><th>相关度</th><th>' + '<input name="choose_all" id="choose_all" type="checkbox" value="" onclick="choose_all()" />' + '</th></tr></thead>';
     html += '<tbody>';
-    //for(var i = 0; i<data.length;i++){
-      //var item = data[i];
-      var item = data;
-      //item = replace_space(item);
-      /*
+    for(var i = 0; i<data.length;i++){
+      var item = data[i];
+      item = replace_space(item);
       for(var j=3;j<7;j++){
         if(item[j]!='未知')
           item[j] = item[j].toFixed(2);
       }
-      */
       global_data[item[0]] = item; // make global data
       user_url = '/index/personal/?uid=' + item[0];
       html += '<tr id=' + item[0] +'>';
@@ -49,11 +46,11 @@ Search_weibo_result.prototype = {
       html += '<td class="center" style="width:100px;">'+ item[6] +'</td>';
       html += '<td class="center"><input name="search_result_option" class="search_result_option" type="checkbox" value="' + item[0] + '" /></td>';
       html += '</tr>';
-    //}
+    }
     html += '</tbody>';
     html += '</table>';
     $(div).append(html);
-    console.log('over');
+    //console.log('over');
   },
   Dy_Draw_table: function(data){
     //console.log(data);
@@ -169,12 +166,7 @@ console.log(url_search_result);
 var draw_table_search_result = new Search_weibo_result(url_search_result, '#search_result');
 draw_conditions(draw_table_search_result);
 
-var test_data = new Array();
-for (var i = 0;i < 8; i++){
-    test_data.push(i+10000);
-}
-draw_table_search_result.Draw_table(test_data);
-//draw_table_search_result.call_sync_ajax_request(url_search_result, draw_table_search_result.ajax_method, draw_table_search_result.Draw_table);
+draw_table_search_result.call_sync_ajax_request(url_search_result, draw_table_search_result.ajax_method, draw_table_search_result.Draw_table);
 
 function deleteurl(that, parameter){
     var pname = parameter.substring(7, parameter.length);
@@ -210,13 +202,13 @@ function deleteurl(that, parameter){
         }
     }
     draw_conditions(that);
-    url_search_result = '/attribute/portrait_search/?stype=2&' + par2url(pars, values);
+    url_search_result = '/attribute/search_portrait/?' + par2url(pars, values);
     console.log(url_search_result);
     // reinitialize
     var global_pre_page = 1;
     var global_choose_uids = new Array();
     var global_data = new Array();
-    // that.call_sync_ajax_request(url_search_result, that.ajax_method, that.Dy_Draw_table);
+    that.call_sync_ajax_request(url_search_result, that.ajax_method, that.Dy_Draw_table);
 }
 function process_par(name, value){
     var result = new Array();
@@ -288,37 +280,29 @@ function process_par(name, value){
     return result;
 }
 function draw_conditions(that){
-    if (stype == 1){
-        console.log('=1');
-        return;
-    }
-    else{
-        console.log('=2');
-        $("#search_result").css("margin-top", "40px");
-        $('#conditions').empty();
-        var html = '';
-        for (var i = 0;i < pars.length;i++){
-            var pre_name = pars[i];
-            var pre_value = values[i];
+    $('#conditions').empty();
+    var html = '';
+    for (var i = 0;i < pars.length;i++){
+        var pre_name = pars[i];
+        var pre_value = values[i];
 
-            var fix_result = process_par(pre_name, pre_value);
-            //console.log(fix_result);
-            var fix_name = fix_result[0];
-            var fix_value = fix_result[1];
-            // console.log(fix_name);
-            // console.log(fix_value);
-            if (fix_value){
-                if (fix_value.indexOf(',') >= 0){
-                    var term_list = fix_value.split(',');
-                    for (var j = 0; j < term_list.length;j++){
-                        html += '<span class="mouse" id=choose_' + pre_name + '_' + j +' style="margin-left:10px">'+ fix_name + ':'+ term_list[j];
-                        html += '&nbsp;<a class="cross" href="#">X</a></span>';
-                    }
-                }
-                else{
-                    html += '<span class="mouse" id=choose_' + pre_name + ' style="margin-left:10px">'+ fix_name + ':'+ fix_value;
+        var fix_result = process_par(pre_name, pre_value);
+        //console.log(fix_result);
+        var fix_name = fix_result[0];
+        var fix_value = fix_result[1];
+        // console.log(fix_name);
+        // console.log(fix_value);
+        if (fix_value){
+            if (fix_value.indexOf(',') >= 0){
+                var term_list = fix_value.split(',');
+                for (var j = 0; j < term_list.length;j++){
+                    html += '<span class="mouse" id=choose_' + pre_name + '_' + j +' style="margin-left:10px">'+ fix_name + ':'+ term_list[j];
                     html += '&nbsp;<a class="cross" href="#">X</a></span>';
                 }
+            }
+            else{
+                html += '<span class="mouse" id=choose_' + pre_name + ' style="margin-left:10px">'+ fix_name + ':'+ fix_value;
+                html += '&nbsp;<a class="cross" href="#">X</a></span>';
             }
         }
         $('#conditions').html(html);
@@ -369,30 +353,6 @@ function get_custom_name(){
 
 }
 
-function custom_button(){
-  var cur_uids = []
-  $('input[name="search_result_option"]:checked').each(function(){
-      cur_uids.push($(this).attr('value'));
-  });
-  global_choose_uids[global_pre_page] = cur_uids;
-  var custom_uids = [];
-  for (var key in global_choose_uids){
-      var temp_list = global_choose_uids[key];
-      for (var i = 0; i < temp_list.length; i++){
-        custom_uids.push(temp_list[i]);
-      }
-  }
-  console.log(custom_uids);
-  var len = custom_uids.length;
-  if(len<1){
-    alert("请至少选择1个用户！");
-  }
-  else{
-      draw_table_custom_confirm(custom_uids, "#custom_confirm");
-      get_custom_name();
-      $('#custom').modal();
-  }
-}
 function compare_button(){
   var cur_uids = []
   $('input[name="search_result_option"]:checked').each(function(){
@@ -417,29 +377,6 @@ function compare_button(){
   }
 }
 
-function group_button(){
-  var cur_uids = []
-  $('input[name="search_result_option"]:checked').each(function(){
-      cur_uids.push($(this).attr('value'));
-  });
-  global_choose_uids[global_pre_page] = cur_uids;
-  var group_uids = [];
-  for (var key in global_choose_uids){
-      var temp_list = global_choose_uids[key];
-      for (var i = 0; i < temp_list.length; i++){
-        group_uids.push(temp_list[i]);
-      }
-  }
-  console.log(group_uids);
-  var len = group_uids.length;
-  if (len < 1){
-      alert("请选择至少1个用户!");
-  }
-  else{
-      draw_table_group_confirm(group_uids, "#group_comfirm");
-      $("#group").modal();
-  }
-}
 
 function delete_button(){
   var cur_uids = []
@@ -469,29 +406,6 @@ function choose_all(){
   $('input[name="search_result_option"]').prop('checked', $("#choose_all").prop('checked'));
 }
 
-function draw_table_custom_confirm(uids, div){
-    $(div).empty();
-    var html = '';
-    html += '<table id="custom_confirm_table" class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
-    html += '<thead><tr><th>用户ID</th><th>用户名</th><th>注册地</th><th>活跃度</th><th>重要度</th><th>影响力</th><th>相关度</th><th></th></tr></thead>';
-    html += '<tbody>';
-    for(var i in uids){
-      var item = global_data[uids[i]];
-      html += '<tr">';
-      html += '<td class="center" name="custom_confirm_uids">'+ uids[i] +'</td>';
-      html += '<td class="center">'+ item[1] + '</td>';
-      html += '<td class="center">'+ item[2] + '</td>';
-      html += '<td class="center" style="width:100px;">'+ item[3] + '</td>';
-      html += '<td class="center" style="width:100px;">'+ item[4] + '</td>';
-      html += '<td class="center" style="width:100px;">'+ item[5] + '</td>';
-      html += '<td class="center" style="width:100px;">'+ item[6] + '</td>';
-      html += '<td class="center" style="width:80px;"><button class="btn btn-primary btn-sm" style="width:60px;height:30px" onclick="delRow(this)">移除</button></td>';
-      html += '</tr>';
-    }
-    html += '</tbody>';
-    html += '</table>';
-    $(div).append(html);
-}
 function draw_table_compare_confirm(uids, div){
   $(div).empty();
     var html = '';
@@ -516,29 +430,6 @@ function draw_table_compare_confirm(uids, div){
     $(div).append(html);
 }
 
-function draw_table_group_confirm(uids, div){
-  $(div).empty();
-    var html = '';
-    html += '<table id="group_confirm_table" class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
-    html += '<thead><tr><th>用户ID</th><th>用户名</th><th>注册地</th><th>活跃度</th><th>重要度</th><th>影响力</th><th>相关度</th><th></th></tr></thead>';
-    html += '<tbody>';
-    for(var i in uids){
-      var item = global_data[uids[i]];
-      html += '<tr>';
-      html += '<td class="center" name="group_confirm_uids">'+ uids[i] +'</td>';
-      html += '<td class="center">'+ item[1] + '</td>';
-      html += '<td class="center">'+ item[2] + '</td>';
-      html += '<td class="center" style="width:100px;">'+ item[3] + '</td>';
-      html += '<td class="center" style="width:100px;">'+ item[4] + '</td>';
-      html += '<td class="center" style="width:100px;">'+ item[5] + '</td>';
-      html += '<td class="center" style="width:100px;">'+ item[6] + '</td>';
-      html += '<td class="center" style="width:80px;"><button class="btn btn-primary btn-sm" style="width:60px;height:30px" onclick="delRow(this)">移除</button></td>';
-      html += '</tr>';
-    }
-    html += '</tbody>';
-    html += '</table>';
-    $(div).append(html);
-}
 
 function draw_table_delete_confirm(uids, div){
   $(div).empty();
@@ -572,25 +463,6 @@ function delRow(obj){
   Row.parentNode.removeChild(Row);
 }
 
-function custom_confirm_button(){
-  var custom_confirm_uids = [];
-  $('[name="custom_confirm_uids"]').each(function(){
-      custom_confirm_uids.push($(this).text());
-  })
-  if (custom_confirm_uids.length < 1){
-      alert('至少需要选择1名用户!');
-      return;
-  }
-  var attribute_name = $('[name=attribute_name]').val();
-  var attribute_value = $('[name=attribute_value]').val();
-  var custom_url = '/tag/add_group_tag/?uid_list='+ custom_confirm_uids.join(',');
-  custom_url += '&attribute_name=' + attribute_name + '&attribute_value=' + attribute_value;
-  console.log(custom_url);
-  base_call_ajax_request(custom_url, callback);
-  function callback(data){
-       console.log(data);
-  }
-}
 function compare_confirm_button(){
   var compare_confirm_uids = [];
   $('[name="compare_confirm_uids"]').each(function(){
@@ -603,56 +475,6 @@ function compare_confirm_button(){
   var compare_url = '/index/contrast/?uid_list='+ compare_confirm_uids.join(',');
   console.log(compare_url);
   window.open(compare_url);
-}
-
-function group_confirm_button(){
-  var group_confirm_uids = [];
-  $('[name="group_confirm_uids"]').each(function(){
-      group_confirm_uids.push($(this).text());
-  })
-  if (group_confirm_uids.length < 1){
-      alert('至少需要选择1名用户!');
-      return;
-  }
-  console.log(group_confirm_uids);
-  var group_ajax_url = '/group/submit_task/';
-  var group_url = '/index/group_task/';
-  var group_name = $('input[name="group_name"]').val();
-  var remark = $('input[name="remark"]').val();
-  console.log(group_name, remark);
-  if (group_name.length == 0){
-      alert('群体名称不能为空');
-      return;
-  }
-
-
-  var reg = "^[a-zA-Z0-9_\u4e00-\u9fa5\uf900-\ufa2d]+$";
-  if (!group_name.match(reg)){
-    alert('群体名称只能包含英文、汉字、数字和下划线,请重新输入!');
-    return;
-  }
-  if ((remark.length > 0) && (!remark.match(reg))){
-    alert('备注只能包含英文、汉字、数字和下划线,请重新输入!');
-    return;
-  }
-  var job = {"task_name":group_name, "uid_list":group_confirm_uids, "state":remark};
-  $.ajax({
-      type:'POST',
-      url: group_ajax_url,
-      contentType:"application/json",
-      data: JSON.stringify(job),
-      dataType: "json",
-      success: callback
-  });
-  function callback(data){
-      console.log(data);
-      if (data == '1'){
-          window.location.href = group_url;
-      }
-      else{
-          alert('已存在相同名称的群体分析任务,请重试一次!');
-      }
-  }
 }
 
 function delete_confirm_button(){
