@@ -73,12 +73,10 @@ a#basic_info:hover{cursor:hand;}
   padding-left:90px;
 }
 /* 时间轴样式 */
-.course_nr{height:70px; background:url(/static/custom/images/ico9.gif) repeat-x center;}
-.course_nr li{ float:left; padding-top:30px; width:130px; text-align:center; position:relative; margin-left:5px;}
-.shiji{ position:absolute; width:100%; left:0; top:-20px; display:none;}
-.ico{ height:67px; line-height:67px; color:#518dbb; font-weight:bold; background:url(/static/custom/images/ico11.gif) no-repeat center top; margin-bottom:8px;}
-.ms{ width:100px;line-height:14px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;margin-left:18px;}
-#Alocation{height:auto;width:180px;}
-.gray{color:#999;}
+.course_nr{height:162px; background:url(/static/custom/images/ico9.gif) repeat-x center;}
+.course_nr li{ float:left;  padding-top:30px; width:120px; text-align:center; position:relative; margin-top:65px;}
+.shiji{ position:absolute; width:100%; left:20px; top:-20px; display:none;}
+.ico { height:67px; line-height:67px; color:#518dbb; font-weight:bold; background:url(/static/custom/images/ico11.gif) no-repeat center top; margin-bottom:8px;}
+.shiji p{color:#999;}
 
 
