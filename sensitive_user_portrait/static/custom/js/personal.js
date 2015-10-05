@@ -1,6 +1,5 @@
 //微博时间走势图
 
-/*
 Date.prototype.format = function(format) {
     var o = {
         "M+" : this.getMonth()+1, //month
@@ -97,7 +96,7 @@ Date.prototype.format = function(format) {
         }]
     });
   
-
+/*
 function point2weibo(xnum, ts){
 	var url ="/weibo/show_user_weibo_ts/?uid="+parent.personalData.uid+"&ts="+ts[0];
     var delta;
