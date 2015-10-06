@@ -5,11 +5,16 @@ the functions about the track task
 import sys
 import time
 import json
+'''
 reload(sys)
 sys.path.append('../')
 from global_utils import G_GROUP as r
 from global_utils import G_GROUP_TASK as r_task
 from global_utils import es_user_portrait as es
+'''
+from sensitive_user_portrait.global_utils import R_GROUP as r
+from sensitive_user_portrait.global_utils import R_GROUP_TASK as r_task
+from sensitive_user_portrait.global_utils import es_sensitive_user_portrait as es
 
 index_name = 'group_result'
 index_type = 'group'
@@ -119,8 +124,8 @@ def search_track_task(task_name, submit_date, state, status):
         task_dict_list = source['hits']['hits']
     except:
         return None
-    for task_dict in task_dict_listL
-        result.append([task_dict['_source']['task_name'], task_dict['_source']['submit_date']. task_dict['_source']['count'], task_dict['_source']['state'], task_dict['_source']['status'])
+    for task_dict in task_dict_list:
+        result.append([task_dict['_source']['task_name'], task_dict['_source']['submit_date']. task_dict['_source']['count'], task_dict['_source']['state'], task_dict['_source']['status']])
     return result
 
 # get track task result
