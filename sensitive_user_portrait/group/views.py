@@ -118,7 +118,7 @@ add track group analysis information to overview
 
 # submit task to track a group analysis result
 #input_data = 'task_name', 'uid_list', 'state'
-@mod.route('/upload_track_task/', method=['GET', 'POST'])
+@mod.route('/upload_track_task/', methods=['GET', 'POST'])
 def ajax_upload_track_file():
     results = {}
     upload_data = request.form['upload_data']
@@ -143,7 +143,7 @@ def ajax_upload_track_file():
     return json.dumps(status)
 
 # submit_task
-@mod.route('/submit_track_task/', method=['GET', 'POST'])
+@mod.route('/submit_track_task/', methods=['GET', 'POST'])
 def ajax_submit_track_task():
     input_data = dict()
     input_data = request.get_json()
