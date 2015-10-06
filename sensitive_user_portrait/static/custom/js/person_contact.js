@@ -358,7 +358,7 @@ $('.inline-checkbox').click(function(){
 
 //获取选择的条件，把参数传出获取返回值
 function get_choose_data(uid){
-    var url = '/manage/imagine/?uid=' + uid + '&keywords=';
+    var url = '/imagine/?uid=' + uid + '&keywords=';
     var keywords = new Array();
     var weight = new Array();
     var field ;
