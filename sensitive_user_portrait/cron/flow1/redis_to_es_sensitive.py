@@ -50,6 +50,10 @@ def compute(user_set, es):
         comment_weibo_number = 0
         s_comment_weibo_number = 0
         user_friendsnum = 0
+        s_origin_weibo_retweeted_detail={}
+        s_origin_weibo_comment_detail={}
+        s_retweeted_weibo_retweeted_detail={}
+        s_retweeted_weibo_comment_detail = {}
 
 
         for key in user_info.iterkeys():
@@ -232,7 +236,10 @@ def compute(user_set, es):
         user_item['s_origin_weibo_number'] = len(s_origin_weibo_list)
         user_item['s_comment_weibo_number'] = s_comment_weibo_number
         user_item['s_retweeted_weibo_number'] = len(s_retweeted_weibo_list)
-
+        user_item['s_origin_weibo_retweeted_detail'] = s_origin_weibo_retweeted_detail
+        user_item['s_origin_weibo_comment_detail'] = s_origin_weibo_comment_detail
+        user_item['s_retweeted_weibo_retweeted_detail'] = s_retweeted_weibo_retweeted_detail
+        user_item['s_retweeted_weibo_comment_detail'] = s_retweeted_weibo_comment_detail
 
         user_item['origin_weibo_retweeted_total_number'] = origin_weibo_retweeted_total_number
         user_item['origin_weibo_retweeted_average_number'] = origin_weibo_retweeted_average_number
@@ -305,7 +312,7 @@ def compute(user_set, es):
 if __name__ == "__main__":
 
     #es_index = 's_'+time.strftime("%Y%m%d", time.localtime(time.time()-86400))
-    es_index = '20130901'
+    es_index = '20130907'
     bool = es.indices.exists(index=es_index)
     print bool
     if not bool:
