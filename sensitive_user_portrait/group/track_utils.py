@@ -8,6 +8,7 @@ import json
 reload(sys)
 sys.path.append('../')
 from global_utils import G_GROUP as r
+from global_utils import G_GROUP_TASK as r_task
 from global_utils import es_user_portrait as es
 
 index_name = 'group_result'
@@ -19,6 +20,7 @@ def submit_track_task(input_data):
     step1: identify the task_name is not exist
     step2: index new task_name
     step3: add user list to redis???---should identify
+    step4: add task to redis queue
     '''
     status = 0
     task_name = input_data['task_name']
@@ -32,7 +34,27 @@ def submit_track_task(input_data):
         if status == 0:
             return 'add user to redis set fail'
         else:
-            return 'success index'
+            status = add_task_redis(task_name)
+            if status == 0:
+                return 'add task to redis fail'
+            else:
+                return 'success submit'
+
+# add track task to reis
+def add_task_redis(task_name):
+    status = 0
+    result = r_task.lpush('monitor_task', task_name)
+    if result != 0:
+        status = 1
+    return status
+
+# delete track task from redis when the task is end or delete
+def delete_task_redis(task_name):
+    status = 0
+    result = r_task.lrem('monitor_task', 0, task_name)
+    if result != 0:
+        status = 1
+    return status
 
 # add user to redis set where keep user to track
 '''
@@ -132,7 +154,11 @@ def end_track_task(task_name):
             return 'change user task count fail'
         else:
             es.index(index=index_name, doc_type=index_type, id=task_name, body=task_exist)
-            return 'success change status to end'
+            status = delete_task_redis(task_name)
+            if status == 0:
+                return 'delete task from redis fail'
+            else:
+                return 'success change status to end'
 
 
 # track task user in redis set
@@ -163,5 +189,9 @@ def delete_track_task(task_name):
     else:
         #delete task from es
         result = es.delete(index=index_name, doc_type=index_type, id=task_name)
-        return 'success delete task'
+        status = delete_task_redis(task_name)
+        if status == 0:
+            return 'delete task from redis fail'
+        else:
+            return 'success delete task'
 

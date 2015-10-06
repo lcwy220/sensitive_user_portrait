@@ -39,11 +39,10 @@ R_12 = _default_redis(host=REDIS_HOST, port=REDIS_PORT, db=12)
 R_DICT = {'0':R_0, '1':R_1, '2':R_2, '3':R_3, '4':R_4, '5':R_5, '6':R_6, '7':R_7,\
           '8':R_8, '9':R_9, '10':R_10, '11':R_11, '12':R_12}
 
+#use to keep the track task queue
+G_GROUP_TASK = _default_redis(host=REDIS_HOST, port=REDIS_PORT, db=13)
 
-# use to write group task
-# two type data----group task;  group task members
-# type1 list: group_task  index   group_task_basic_information
-# type2 list: group_task_name index group_task_members
+# use to keep the track task user 
 R_GROUP = _default_redis(host=REDIS_HOST, port=REDIS_PORT, db=14)
 
 # use to recomment 
