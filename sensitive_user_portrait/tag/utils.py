@@ -7,7 +7,7 @@ from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts
 attribute_index_name = 'custom_attribute'
 attribute_index_type = 'attribute'
 
-user_index_name = 'test_user_portrait'
+user_index_name = 'test_sensitive_user_portrait'
 user_index_type = 'user'
 
 group_index_name = 'group_result'

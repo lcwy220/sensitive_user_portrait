@@ -8,7 +8,7 @@ from imagine import imagine
 
 mod = Blueprint('imagine', __name__, url_prefix='/imagine')
 
-@mod.route('/imagine/')
+@mod.route('/')
 def ajax_imagine():
     uid = request.args.get('uid', '') # uid
     query_keywords = request.args.get('keywords','') # query dict and corresponding weight
