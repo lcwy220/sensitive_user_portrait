@@ -227,8 +227,7 @@ def compute_text_attribute(user, weibo_list):
     result['keywords_string'] = '&'.join(keywords_dict.keys())
     # result['domain'] = attri_domain(weibo_list)
     result['domain'] = 'test_domain'
-    # result['psycho_feature'] = attr_psycho_feature(user, weibo_list)
-    result['psycho_feature'] = 'psycho_feature'
+    results['domain_string'] = "&".join(result['domain'])
     # result['psycho_status'] = attr_psycho_status(user, weibo_list)
     # result['psycho_status_string'] = '&'.join(result['psycho_status'].keys())
     result['psycho_status'] = json.dumps({'level1':{'status1':1, 'status2':2}, 'level2':{'status1':1, 'status2':2}})
@@ -296,7 +295,7 @@ def compute_attribute(uid_list=[]):
     return "1"
 
 if __name__ == '__main__':
-    index_name = "sensitive_user_portrait"
+    index_name = "test_sensitive_user_portrait"
     doc_type = "user"
     bool = es.indices.exists(index=index_name)
     if not bool:
