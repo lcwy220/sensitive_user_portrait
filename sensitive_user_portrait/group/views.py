@@ -7,6 +7,10 @@ from werkzeug import secure_filename
 from flask import Blueprint, url_for, render_template, request,\
                   abort, flash, session, redirect, send_from_directory
 from utils import submit_task, search_task, get_group_results, get_group_list, delete_group_results
+#track utils
+from track_utils import submit_track_task, search_track_task, get_track_result ,\
+                        end_track_task, delete_track_task
+
 from sensitive_user_portrait.global_config import UPLOAD_FOLDER, ALLOWED_EXTENSIONS
 from sensitive_user_portrait.search_user_profile import es_get_source
 from sensitive_user_portrait.time_utils import ts2datetime
@@ -113,31 +117,77 @@ add track group analysis information to overview
 '''
 
 # submit task to track a group analysis result
-@mod.route('/submit_track_task/')
-def ajax_submit_track_task():
+#input_data = 'task_name', 'uid_list', 'state'
+@mod.route('/upload_track_task/', methods=['GET', 'POST'])
+def ajax_upload_track_file():
     results = {}
-    return json.dumps(results)
+    upload_data = request.form['upload_data']
+    task_name = request.form['task_name']
+    state = request.args.form['state']
+    now_ts = time.time()
+    now_Date = ts2datetime(now_ts)
+    line_list = upload_data.split('\n')
+    input_data = {}
+    #submit task and start at what time?!should identify
+    input_data['submit_date'] = now_date
+    input_data['task_name'] = task_name
+    uid_list = []
+    for line in line_list:
+        uid = line[:10]
+        if len(uid)==10:
+            uid_list.append(uid)
+    input_data['uid_list'] = uid_list
+    input_data['status'] = 1 # status show the track task is doing or end; doing 1, end 0
+    input_data['count'] = len(uid_list)
+    status = submit_track_task(input_data)
+    return json.dumps(status)
+
+# submit_task
+@mod.route('/submit_track_task/', methods=['GET', 'POST'])
+def ajax_submit_track_task():
+    input_data = dict()
+    input_data = request.get_json()
+    now_ts = time.time()
+    now_date = ts2datetime(now_ts)
+    input_data['submit_date'] = now_date
+    input_data['status'] = 1 # show track task is doing; doing 1, end 0
+    len_uid_list = len(input_data['uid_list'])
+    status = submit_track_task(input_data)
+    return json.dumps(status)
+
 
 # search track task
 @mod.route('/search_track_task/')
 def ajax_search_track_task():
     results = {}
+    task_name = request.args.get('task_name', '')
+    submit_date = request.args.get('submit_date', '')
+    state = request.args.get('state', '')
+    status = request.args.get('status', '') # doing 1; end 0
+    result = search_track_task(task_name, submit_date, state, status)
     return json.dumps(results)
 
 # get the track results
 @mod.route('/track_track_results/')
 def ajax_get_track_results():
     results = {}
-    return json.dumps()
+    task_name = request.args.get('task_name', '')
+    module = request.args.get('module', 'basic')
+    results = get_track_result(task_name, module)
+    return json.dumps(result)
 
 # end a track task
 @mod.route('/end_track_task/')
 def ajax_end_track_task():
     results = {}
-    return json.dumps(results)
+    task_name = request.args.get('task_name', '')
+    status = end_track_task(task_name)
+    return json.dumps(status)
 
 # delete a track task results
 @mod.route('delete_track_results')
 def ajax_delete_track_tresults():
     results = {}
-    return json.dumps(results)
+    task_name = request.args.get('task_name', '')
+    status = delete_track_task(task_name)
+    return json.dumps(status)
