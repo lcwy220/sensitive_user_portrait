@@ -109,6 +109,10 @@ def personal():
     return render_template('index/personal.html')
 
 
+@mod.route('/contact/')
+def contact():
+    uid = request.args.get('uid', '1022866242')
+    return render_template('index/contact.html', uid=uid)
 
 
 
