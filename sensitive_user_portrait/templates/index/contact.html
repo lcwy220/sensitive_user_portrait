@@ -317,7 +317,6 @@
     IPsum.innerHTML = personalData.all_count;
     var FPsum = document.getElementById('FPsum');
     FPsum.innerHTML = personalData.all_count;
-    /*
     var img = document.getElementById('portraitImg');
     //console.log(personalData.photo_url);
     if(personalData.photo_url == "unknown"){
@@ -325,7 +324,6 @@
     }else{
         img.src = personalData.photo_url;
     }
-    */
     var influencePower = document.getElementById('FPnum');
     if(personalData.influence){
         influencePower.innerHTML = personalData.influence.toFixed(2);
@@ -436,14 +434,12 @@
     }else{
         friends.innerHTML = "无此数据";
     }
-   /*     
     var pattern = document.getElementById('userOnline');
     if(personalData.online_pattern[0][0]){
         pattern.innerHTML = personalData.online_pattern[0][0];
     }else{
         pattern.innerHTML = "无此数据";
         }
-    */
 
     $("#basic_info").off("click").click(function(){
         $("#float-wrap").removeClass("hidden");
