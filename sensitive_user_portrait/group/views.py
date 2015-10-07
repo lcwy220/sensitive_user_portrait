@@ -146,12 +146,16 @@ def ajax_upload_track_file():
 @mod.route('/submit_track_task/', methods=['GET', 'POST'])
 def ajax_submit_track_task():
     input_data = dict()
-    input_data = request.get_json()
-    now_ts = time.time()
-    now_date = ts2datetime(now_ts)
-    input_data['submit_date'] = now_date
+    #input_data = request.get_json()
+    # test
+    input_data = {'task_name':'testtask', 'state':'it is a test', 'uid_list':['1311967407', '1671386130', '1653255165']}
+    #now_ts = time.time()
+    #now_date = ts2datetime(now_ts)
+    #input_data['submit_date'] = now_date
+    input_data['submit_date'] = '2013-09-01'
     input_data['status'] = 1 # show track task is doing; doing 1, end 0
     len_uid_list = len(input_data['uid_list'])
+    input_data['count'] = len_uid_list
     status = submit_track_task(input_data)
     return json.dumps(status)
 
@@ -164,7 +168,7 @@ def ajax_search_track_task():
     submit_date = request.args.get('submit_date', '')
     state = request.args.get('state', '')
     status = request.args.get('status', '') # doing 1; end 0
-    result = search_track_task(task_name, submit_date, state, status)
+    results = search_track_task(task_name, submit_date, state, status)
     return json.dumps(results)
 
 # get the track results
@@ -174,7 +178,7 @@ def ajax_get_track_results():
     task_name = request.args.get('task_name', '')
     module = request.args.get('module', 'basic')
     results = get_track_result(task_name, module)
-    return json.dumps(result)
+    return json.dumps(results)
 
 # end a track task
 @mod.route('/end_track_task/')
@@ -185,7 +189,7 @@ def ajax_end_track_task():
     return json.dumps(status)
 
 # delete a track task results
-@mod.route('delete_track_results')
+@mod.route('/delete_track_results/')
 def ajax_delete_track_tresults():
     results = {}
     task_name = request.args.get('task_name', '')
