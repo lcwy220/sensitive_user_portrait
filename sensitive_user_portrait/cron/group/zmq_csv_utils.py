@@ -46,7 +46,7 @@ def send_all(f, sender):
                 print '[%s] deliver speed: %s sec/per %s' % (datetime.now().strftime('%Y-%m-%d %H:%M:%S'), te - ts, 10000)
                 if count % 100000 == 0:
                     print '[%s] total deliver %s, cost %s sec [avg %s per/sec]' % (datetime.now().strftime('%Y-%m-%d %H:%M:%S'), count, te - tb, count / (te - tb))
-                time.sleep(2.5)
+                #time.sleep(2.5)
                 ts = te
     except:
         print 'error'

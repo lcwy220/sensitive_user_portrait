@@ -124,8 +124,11 @@ def search_track_task(task_name, submit_date, state, status):
         task_dict_list = source['hits']['hits']
     except:
         return None
+    #print 'task_dict_list:', task_dict_list
     for task_dict in task_dict_list:
-        result.append([task_dict['_source']['task_name'], task_dict['_source']['submit_date']. task_dict['_source']['count'], task_dict['_source']['state'], task_dict['_source']['status']])
+        #print 'task_dict:', task_dict['_source'], type(task_dict)
+        result.append([task_dict['_source']['task_name'], task_dict['_source']['submit_date'], task_dict['_source']['count'], task_dict['_source']['state'],task_dict['_source']['status']])
+    #print 'result:', result
     return result
 
 # get track task result
@@ -141,6 +144,7 @@ def get_track_result(task_name, module):
 '''
 step1: identify the task exist and status is 1
 step2: change the task status from 1 to 0
+step3: delete the task from redis queue
 '''
 def end_track_task(task_name):
     status = 0
@@ -153,7 +157,7 @@ def end_track_task(task_name):
         return 'task have end'
     else:
         task_exist['status'] = 0
-        task_user = task_exist['user_list']
+        task_user = task_exist['uid_list']
         status = change_user_count(task_user)
         if status == 0:
             return 'change user task count fail'
@@ -171,7 +175,12 @@ def end_track_task(task_name):
 def change_user_count(task_user):
     status = 0
     for uid in task_user:
-        r.hincrby('track_task_user', str(uid), -1)
+        uid_task_count = r.hget('track_task_user', str(uid))
+        if int(uid_task_count) >1:
+            r.hincrby('track_task_user', str(uid), -1)
+        else:
+            r.hdel('track_task_user', str(uid))
+    status = 1
     return status
 
 
@@ -188,7 +197,8 @@ def delete_track_task(task_name):
         return 'task not exist'
     task_user = task_exist['uid_list']
     #change the user task_count in redis set
-    status = change_user_count(task_user)
+    #status = change_user_count(task_user)
+    status = 1
     if status==0:
         return 'change user count fail'
     else:
