@@ -1,7 +1,8 @@
 {% extends "index/base.html" %}
 {% block title %}关联分析{% endblock title%}
+{% block subtitle %}关联分析{% endblock subtitle%}
 
-{% block css %}
+{% block custom_css %}
 <link  type="text/css" href="/static/custom/css/style.css" rel="stylesheet"/>
 <link  type="text/css" href="/static/custom/css/basic.css" rel="stylesheet"/>
 <link href="/static/custom/css/lanrenzhijia.css" type="text/css" rel="stylesheet" />
@@ -12,9 +13,10 @@
     .addIcon{background-image:url(../../static/img/add.png);width:32px;display:inline-block;height:32px;cursor:pointer;padding-top:10px;}
     .tagCols{width:550px;margin:auto 0;  text-align: center;margin-bottom: 10px;height:50px;line-height: 45px;}
     .tagCols span{font-size:20px;}
+    .controls input[type=radio] {opacity:1;}
 </style>
 
-{% endblock css %}
+{% endblock custom_css %}
 
 {% block custom_js %}
 <script type="text/javascript" src="/static/custom/js/lanrenzhijia.js"></script>
@@ -198,7 +200,7 @@
           <div class="modal-dialog" role="document" style="width:1000px">
             <div class="modal-content">
               <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
                 <h4 class="modal-title" style="font-size:18px" id="myModalLabel">群组成员</h4>
               </div>
               <div class="modal-body">
@@ -219,7 +221,7 @@
   <div class="modal-dialog" role="document" style="width:850px;">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
         <h4 class="modal-title" id="myModalLabel">个体对比</h4>
       </div>
       <div class="modal-body">
@@ -237,7 +239,7 @@
   <div class="modal-dialog" role="document" style="width:850px;">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
         <h4 class="modal-title" id="myModalLabel">群体分析</h4>
       </div>
       <div class="modal-body">
@@ -317,7 +319,6 @@
     IPsum.innerHTML = personalData.all_count;
     var FPsum = document.getElementById('FPsum');
     FPsum.innerHTML = personalData.all_count;
-    /*
     var img = document.getElementById('portraitImg');
     //console.log(personalData.photo_url);
     if(personalData.photo_url == "unknown"){
@@ -325,7 +326,6 @@
     }else{
         img.src = personalData.photo_url;
     }
-    */
     var influencePower = document.getElementById('FPnum');
     if(personalData.influence){
         influencePower.innerHTML = personalData.influence.toFixed(2);
@@ -436,14 +436,12 @@
     }else{
         friends.innerHTML = "无此数据";
     }
-   /*     
     var pattern = document.getElementById('userOnline');
     if(personalData.online_pattern[0][0]){
         pattern.innerHTML = personalData.online_pattern[0][0];
     }else{
         pattern.innerHTML = "无此数据";
         }
-    */
 
     $("#basic_info").off("click").click(function(){
         $("#float-wrap").removeClass("hidden");

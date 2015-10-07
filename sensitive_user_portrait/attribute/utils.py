@@ -254,6 +254,7 @@ def search_attribute_portrait(uid):
     except:
         return None
     results = search_result['_source']
+    return_results = results
     user_sensitive = user_type(uid)
     if user_sensitive:
         return_results.update(sensitive_attribute(uid))
@@ -337,6 +338,7 @@ def search_attribute_portrait(uid):
         return_results['emotion'] = sort_emotion_dict[:5]
     else:
         return_results['emotion'] = []
+    '''
 
     # on_line pattern
     if results['online_pattern']:
@@ -345,7 +347,6 @@ def search_attribute_portrait(uid):
         return_results['online_pattern'] = sort_online_pattern_dict[:5]
     else:
         return_results['online_pattern'] = []
-    '''
 
 
     # psycho_status
@@ -455,7 +456,12 @@ def search_attribute_portrait(uid):
             "match_all":{}
         }
     }
-    all_count = es.count(index='sensitive_user_portrait', doc_type='user', body=query_body)['count']
+    all_count = es.count(index='sensitive_user_portrait', doc_type='user', body=query_body)
+    if all_count['_shards']['successful'] != 0:
+        return_results['all_count'] = all_count['count']
+    else:
+        print 'es_sensitive_user_portrait error'
+        return_results['all_count'] = 0
 
     # link
     link_ratio = results['link']
@@ -589,7 +595,7 @@ def sensitive_attribute(uid):
             if single_sw:
                 sw = json.loads(single_sw).keys()
             else:
-                print item
+                # print item
                 sw = []
             geo = item['geo']
             retweeted_link = extract_uname(text)
@@ -616,7 +622,7 @@ def sensitive_attribute(uid):
             for k,v in sensitive_geo_dict.items():
                 temp_list = []
                 sorted_geo = sorted(v.items(), lambda x:x[1], reverse=True)[0:2]
-                print sorted_geo
+                # print sorted_geo
                 temp_list.extend([k, sorted_geo])
                 sensitive_geo_list.append(temp_list)
         results['sensitive_geo_distribute'] = sensitive_geo_list

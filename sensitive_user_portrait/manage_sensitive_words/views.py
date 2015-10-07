@@ -35,9 +35,9 @@ def ajax_identify_in():
     total = []
     for i in range(len(words_list)):
         detail = []
-        detail.append(words_list[i])
-        detail.append(level_list[i])
-        detail.append(category_list[i])
+        detail.append(words_list[i].encode('utf-8', 'ignore'))
+        detail.append(level_list[i].encode('utf-8', 'ignore'))
+        detail.append(category_list[i].encode('utf-8', 'ignore'))
         total.append(detail)
     results = identify_in(date, total)
 
@@ -57,9 +57,10 @@ def ajax_self_add_in():
     date = request.args.get('date', '')
     date = date.replace('-','')
     word = request.args.get('word', '')
+    word = word.encode('utf-8', 'ignore')
     level = request.args.get('level', '')
     category = request.args.get('category', '')
-
+    category = category.encode('utf-8', 'ignore')
     result = '0'
     if date and word and level and category:
         result = self_add_in(date, word, level, category)
@@ -69,6 +70,7 @@ def ajax_self_add_in():
 @mod.route('/self_delete/')
 def ajax_self_delete():
     word = request.args.get('word', '')
+    word = word.encode('utf-8', 'ignore')
     result = '0'
     if word:
         result = self_delete(word)
