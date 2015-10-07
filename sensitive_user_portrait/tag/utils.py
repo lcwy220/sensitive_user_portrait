@@ -7,7 +7,7 @@ from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts
 attribute_index_name = 'custom_attribute'
 attribute_index_type = 'attribute'
 
-user_index_name = 'test_user_portrait'
+user_index_name = 'test_sensitive_user_portrait'
 user_index_type = 'user'
 
 group_index_name = 'group_result'
@@ -191,12 +191,15 @@ def delete_attribute_portrait(uid, attribute_name, submit_user):
 
     return status
 
-identify_attribute_list = ['emoticon','domain', 'psycho_status_string', 'uid', 'hashtag_dict', \
+identify_attribute_list = ['emotion','domain', 'psycho_status_string', 'uid', 'hashtag_dict', \
                            'importance', 'online_pattern', 'influence', 'keywords_string', 'topic', \
-                           'activity_geo', 'link', 'hashtag', 'keywords', 'fansnum', 'psycho_status', \
+                           'geo_activity', 'link', 'hashtag', 'keywords', 'fansnum', 'psycho_status', \
                            'text_len', 'photo_url', 'verified', 'uname', 'statusnum', 'gender', \
                            'topic_string', 'activeness', 'location', 'activity_geo_dict', \
-                           'emotion_words', 'psycho_feature', 'friendsnum']
+                           'emotion_words', 'psycho_feature', 'friendsnum', \
+                           'sensitive', 'sensitive_geo_string', 'sensitive_hashtag_string', 'type', \
+                           'geo_string', 'sensitive_words_string', 'hashtag_string', 'sensitive_geo_activity', \
+                           'sensitive_hashtag_dict', 'sensitive_words_dict']
 
 # use to get user custom tag
 # return {uid:['attribute_name1:attribute_value1', 'attribute_name2:attribtue_value2']}

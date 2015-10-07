@@ -2,9 +2,11 @@
 
 import sys
 import json
+import time
 from sensitive_user_portrait.global_utils import R_RECOMMENTATION as r
 from sensitive_user_portrait.global_utils import es_sensitive_user_portrait as es
 from sensitive_user_portrait.time_utils import datetime2ts, ts2datetime
+from appendix import get_top_user, get_topic_user
 
 def query_body_module(term):
     query_body={
@@ -158,6 +160,12 @@ def get_attr(date):
     # domain and topic
     domain_list = ['']
     #search_important('domain', )
+    domain_results = get_top_user()
+    topic_results = get_topic_user()
+    results['domain_rank'] = domain_results
+    results['topic_rank'] = topic_results
+
+
 
     # rank
     important_list = search_in_portrait('importance')
@@ -170,7 +178,7 @@ def get_attr(date):
         "query":{
             "match_all": {}
         },
-        "sorted": {"s_origin_weibo_comment_top_number": {"order": "desc"}}
+        "sort": {"s_origin_weibo_comment_top_number": {"order": "desc"}}
     }
     date = ts2datetime(time.time()-24*3600).replace('-','')
     date = '20130907'
@@ -188,7 +196,7 @@ def get_attr(date):
         "query":{
             "match_all": {}
         },
-        "sorted": {"s_origin_weibo_retweeted_top_number": {"order": "desc"}}
+        "sort": {"s_origin_weibo_retweeted_top_number": {"order": "desc"}}
     }
     date = ts2datetime(time.time()-24*3600).replace('-','')
     date = '20130907'

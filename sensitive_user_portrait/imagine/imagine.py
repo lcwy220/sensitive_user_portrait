@@ -62,6 +62,9 @@ def imagine(uid, query_fields_dict,index_name="sensitive_user_portrait", doctype
     elif query_fields_dict['field'] == "importance":
         score_standard['field'] = "importance"
         score_standard['factor'] = 0.01
+    elif query_fields_dict['field'] == "sensitive":
+        score_standard['field'] = "sensitive"
+        score_standard['factor'] = 100
     elif query_fields_dict['field'] == 'influence':
         score_standard['field'] = "influence"
         score_standard['factor'] = 0.1
@@ -89,7 +92,7 @@ def imagine(uid, query_fields_dict,index_name="sensitive_user_portrait", doctype
 
 
     result = es.search(index=index_name, doc_type=doctype, body=query_body)['hits']['hits']
-    field_list = ['uid','photo_url', 'uname', 'online_pattern', 'activeness','importance', 'influence']
+    field_list = ['uid','uname', 'activeness','importance', 'influence', 'sensitive']
     return_list = []
     count = 0
     for item in result:

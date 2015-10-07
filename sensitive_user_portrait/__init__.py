@@ -13,6 +13,7 @@ from sensitive_user_portrait.attribute.views import mod as attributeModule
 from sensitive_user_portrait.overview.views import mod as overviewModule
 from sensitive_user_portrait.imagine.views import mod as imagineModule
 from sensitive_user_portrait.search.views import mod as searchModule
+from sensitive_user_portrait.manage_sensitive_words.views import mod as wordsmanagementModule
 """
 from sensitive_user_portrait.attribute.views import mod as attributeModule
 from sensitive_user_portrait.manage.views import mod as manageModule
@@ -75,6 +76,7 @@ def register_blueprints(app):
     app.register_blueprint(overviewModule)
     app.register_blueprint(imagineModule)
     app.register_blueprint(searchModule)
+    app.register_blueprint(wordsmanagementModule)
     """
     app.register_blueprint(attributeModule)
     app.register_blueprint(manageModule)

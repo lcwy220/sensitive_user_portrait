@@ -6,6 +6,7 @@
 # include new words 
 
 import redis
+import time
 import json
 from sensitive_user_portrait.global_utils import R_RECOMMENTATION as r
 from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts
@@ -16,24 +17,19 @@ def recommend_new_words(date_list):
         date = date.replace('-', '')
         words_dict = r.hgetall('recommend_sensitive_words_'+date)
         if words_dict:
-            words_dict = json.loads(words_dict)
+            #words_dict = json.loads(words_dict)
             results[date] = words_dict
     return results
 
 def identify_in(date, words_list):
     # identify_in date and words_list(include level and category, [word, level, category])
     # date is date when new words were recommended
-    new_dict = dict()
+    new_list = []
+    print words_list
     for item in words_list:
         r.hset('sensitive_words', item[0], json.dumps([item[1], item[2]]))
-        new_dict[item[0]] = json.dumps([item[1], item[2]])
-    history_in_list = r.hget('history_in_'+date)
-    history_in_dict = {}
-    if history_in_list:
-        history_in_dict = json.loads(history_in_list)
-    history_in_dict.update(new_dict)
-    for item in history_in_dict:
-        r.hset('history_in_'+date, item, history_in_dict[item])
+        new_list.append(item[0])
+        r.hset('history_in_'+date, item[0], json.dumps([item[1], item[2]]))
     if new_list:
         for item in new_list:
             r.hdel('recommend_sensitive_words_'+date, item)
@@ -46,14 +42,14 @@ def search_sensitive_words(state):
     words_dict = r.hgetall('sensitive_words')
     if words_dict:
         if state == "level":
+            level_1 = []
+            level_2 = []
+            level_3 = []
             for k,v in words_dict.items():
                 word_state = json.loads(v)
-                level_1 = []
-                level_2 = []
-                level_3 = []
-                if word_state[0] == '1':
+                if int(word_state[0]) == 1:
                     level_1.append(k)
-                elif word_state[0] == "2":
+                elif int(word_state[0]) == 2:
                     level_2.append(k)
                 else:
                     level_3.append(k)
@@ -64,9 +60,9 @@ def search_sensitive_words(state):
             for k,v in words_dict.items():
                 word_state = json.loads(v)
                 try:
-                    results[v[1]].append(k)
-                else:
-                    results[v[1]] = [k]
+                    results[word_state[1]].append(k)
+                except:
+                    results[word_state[1]] = [k]
         else:
             pass
 

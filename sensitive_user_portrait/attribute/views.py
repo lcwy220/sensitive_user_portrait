@@ -21,7 +21,7 @@ def ajax_portrait_attribute():
         return json.dumps(results)
     else:
         return '0'
-
+'''
 @mod.route('/mention/')
 def ajax_mention():
     uid = request.args.get('uid', '')
@@ -33,7 +33,7 @@ def ajax_mention():
         return json.dumps(results)
     else:
         return '0'
-
+'''
 
 @mod.route('/search_portrait/')
 def ajax_search_portrait():
@@ -86,7 +86,7 @@ def ajax_search_portrait():
     tag_items = request.args.get('tag', '')
     if tag_items:
         tag_item_list = tag_items.split(',')
-        print 'tag_term_list:', tag_item_list
+        # print 'tag_term_list:', tag_item_list
         for tag_item in tag_item_list:
             attribute_name_value = tag_item.split(':')
             attribute_name = attribute_name_value[0]
@@ -112,7 +112,7 @@ def ajax_search_portrait():
     size = 1000
     # sort = request.args.get('sort', 'influence')
     sort= '_score'
-    print 'condition_num, query:', condition_num, query
+    # print 'condition_num, query:', condition_num, query
     result = search_portrait(condition_num, query, sort, size)
     return json.dumps(result)
 
