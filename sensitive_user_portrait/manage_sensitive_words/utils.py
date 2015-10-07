@@ -65,7 +65,7 @@ def search_sensitive_words(state):
                 word_state = json.loads(v)
                 try:
                     results[v[1]].append(k)
-                else:
+                except:
                     results[v[1]] = [k]
         else:
             pass

@@ -21,7 +21,7 @@ def ajax_portrait_attribute():
         return json.dumps(results)
     else:
         return '0'
-
+'''
 @mod.route('/mention/')
 def ajax_mention():
     uid = request.args.get('uid', '')
@@ -33,7 +33,7 @@ def ajax_mention():
         return json.dumps(results)
     else:
         return '0'
-
+'''
 
 @mod.route('/search_portrait/')
 def ajax_search_portrait():

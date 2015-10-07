@@ -223,12 +223,12 @@ def search_mention(uid, sensitive):
         if not at_temp:
             continue
         else:
-            result_dict = json.loads(result_string)
+            result_dict = json.loads(at_temp)
         for at_uid in result_dict:
             if stat_results.has_key(at_uid):
-                stat_results[uid] += result_dict[uid]
+                stat_results[uid] += result_dict[at_uid]
             else:
-                stat_results[uid] = result_dict[uid]
+                stat_results[uid] = result_dict[at_uid]
     if not stat_results:
         return [None, 0]
 
