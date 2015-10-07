@@ -2,7 +2,7 @@
 {% block title %}关联分析{% endblock title%}
 {% block subtitle %}关联分析{% endblock subtitle%}
 
-{% block css %}
+{% block custom_css %}
 <link  type="text/css" href="/static/custom/css/style.css" rel="stylesheet"/>
 <link  type="text/css" href="/static/custom/css/basic.css" rel="stylesheet"/>
 <link href="/static/custom/css/lanrenzhijia.css" type="text/css" rel="stylesheet" />
@@ -13,9 +13,10 @@
     .addIcon{background-image:url(../../static/img/add.png);width:32px;display:inline-block;height:32px;cursor:pointer;padding-top:10px;}
     .tagCols{width:550px;margin:auto 0;  text-align: center;margin-bottom: 10px;height:50px;line-height: 45px;}
     .tagCols span{font-size:20px;}
+    .controls input[type=radio] {opacity:1;}
 </style>
 
-{% endblock css %}
+{% endblock custom_css %}
 
 {% block custom_js %}
 <script type="text/javascript" src="/static/custom/js/lanrenzhijia.js"></script>
