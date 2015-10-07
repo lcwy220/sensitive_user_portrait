@@ -29,11 +29,11 @@ if __name__=="__main__":
 
     # used for send weibo
     sender = context.socket(zmq.PUSH)
-    sender.bind('tcp://%s:%s' %(ZMQ_VENT_HOST_FLOW1, ZMQ_VENT_PORT_FLOW3))  
+    sender.bind('tcp://%s:%s' %(ZMQ_VENT_HOST_FLOW1, ZMQ_VENT_PORT_FLOW4))  
     
     # used for controlled by controllor
     controller = context.socket(zmq.SUB)
-    controller.connect('tcp://%s:%s' % (ZMQ_CTRL_HOST_FLOW1, ZMQ_CTRL_VENT_PORT_FLOW3))
+    controller.connect('tcp://%s:%s' % (ZMQ_CTRL_HOST_FLOW1, ZMQ_CTRL_VENT_PORT_FLOW4))
     controller.setsockopt(zmq.SUBSCRIBE, "")
 
     poller = zmq.Poller()

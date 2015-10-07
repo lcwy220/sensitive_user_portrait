@@ -100,6 +100,8 @@ def imagine(uid, query_fields_dict,index_name="sensitive_user_portrait", doctype
             score = item['_score']
             continue
         info = []
+        if not item['_source']['uname']:
+            item['_source']['uname'] = 'unknown'
         for field in field_list:
             info.append(item['_source'][field])
         info.append(item['_score'])
