@@ -1,5 +1,5 @@
 //词云
-	function createRandomItemStyle() {
+function createRandomItemStyle() {
     return {
         normal: {
             color: 'rgb(' + [
@@ -10,332 +10,346 @@
         }
     };
 }
-	var sensitiveChart = echarts.init(document.getElementById('sensitiveCloud')); 
+function call_ajax_request(url, callback){
+    $.ajax({
+        url: url,
+        type: 'get',
+        dataType: 'json',
+        async: false,
+        success: callback
+    });
+}
+function drawSensitiveCloud(){
+    var sensitiveChart = echarts.init(document.getElementById('sensitiveCloud')); 
 	var optionSensitive = {
-    title: {
-        text: '敏感词',
-    },
-    tooltip: {
-        show: true
-    },
-    series: [{
-        type: 'wordCloud',
-        size: ['80%', '80%'],
-        textRotation : [0, 45, 90, -45],
-        textPadding: 0,
-        autoSize: {
-            enable: true,
-            minSize: 14
+        title: {
+            text: '敏感词',
         },
-        data: [
-            {
-                name: "Sam S Club",
-                value: 10000,
-                itemStyle: {
-                    normal: {
-                        color: 'black'
+        tooltip: {
+            show: true
+        },
+        series: [{
+            type: 'wordCloud',
+            size: ['80%', '80%'],
+            textRotation : [0, 45, 90, -45],
+            textPadding: 0,
+            autoSize: {
+                enable: true,
+                minSize: 14
+            },
+            data: [
+                {
+                    name: "Sam S Club",
+                    value: 10000,
+                    itemStyle: {
+                        normal: {
+                            color: 'black'
+                        }
                     }
+                },
+                {
+                    name: "Macys",
+                    value: 6181,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Amy Schumer",
+                    value: 4386,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Jurassic World",
+                    value: 4055,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Charter Communications",
+                    value: 2467,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Chick Fil A",
+                    value: 2244,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Planet Fitness",
+                    value: 1898,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Pitch Perfect",
+                    value: 1484,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Express",
+                    value: 1112,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Home",
+                    value: 965,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Johnny Depp",
+                    value: 847,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Lena Dunham",
+                    value: 582,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Lewis Hamilton",
+                    value: 555,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "KXAN",
+                    value: 550,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Mary Ellen Mark",
+                    value: 462,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Farrah Abraham",
+                    value: 366,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Rita Ora",
+                    value: 360,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Serena Williams",
+                    value: 282,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "NCAA baseball tournament",
+                    value: 273,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Point Break",
+                    value: 265,
+                    itemStyle: createRandomItemStyle()
                 }
-            },
-            {
-                name: "Macys",
-                value: 6181,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Amy Schumer",
-                value: 4386,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Jurassic World",
-                value: 4055,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Charter Communications",
-                value: 2467,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Chick Fil A",
-                value: 2244,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Planet Fitness",
-                value: 1898,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Pitch Perfect",
-                value: 1484,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Express",
-                value: 1112,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Home",
-                value: 965,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Johnny Depp",
-                value: 847,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Lena Dunham",
-                value: 582,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Lewis Hamilton",
-                value: 555,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "KXAN",
-                value: 550,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Mary Ellen Mark",
-                value: 462,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Farrah Abraham",
-                value: 366,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Rita Ora",
-                value: 360,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Serena Williams",
-                value: 282,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "NCAA baseball tournament",
-                value: 273,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Point Break",
-                value: 265,
-                itemStyle: createRandomItemStyle()
-            }
-        ]
-    }]
-};
-      sensitiveChart.setOption(optionSensitive);
-	  
+            ]
+        }]
+    };
+    sensitiveChart.setOption(optionSensitive);
+}	  
 	  
 //hashtag
+function drawHashtagCloud(){
 	var hashtagChart = echarts.init(document.getElementById('hashtagCloud')); 
 	var optionHashtag = {
-    title: {
-        text: 'hashtag',
-    },
-    tooltip: {
-        show: true
-    },
-    series: [{
-        type: 'wordCloud',
-        size: ['80%', '80%'],
-        textRotation : [0, 45, 90, -45],
-        textPadding: 0,
-        autoSize: {
-            enable: true,
-            minSize: 14
+        title: {
+            text: 'hashtag',
         },
-        data: [
-            {
-                name: "Sam S Club",
-                value: 10000,
-                itemStyle: {
-                    normal: {
-                        color: 'black'
+        tooltip: {
+            show: true
+        },
+        series: [{
+            type: 'wordCloud',
+            size: ['80%', '80%'],
+            textRotation : [0, 45, 90, -45],
+            textPadding: 0,
+            autoSize: {
+                enable: true,
+                minSize: 14
+            },
+            data: [
+                {
+                    name: "Sam S Club",
+                    value: 10000,
+                    itemStyle: {
+                        normal: {
+                            color: 'black'
+                        }
                     }
+                },
+                {
+                    name: "Macys",
+                    value: 6181,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Amy Schumer",
+                    value: 4386,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Jurassic World",
+                    value: 4055,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Charter Communications",
+                    value: 2467,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Chick Fil A",
+                    value: 2244,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Planet Fitness",
+                    value: 1898,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Pitch Perfect",
+                    value: 1484,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Express",
+                    value: 1112,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Home",
+                    value: 965,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Johnny Depp",
+                    value: 847,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Lena Dunham",
+                    value: 582,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Lewis Hamilton",
+                    value: 555,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "KXAN",
+                    value: 550,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Mary Ellen Mark",
+                    value: 462,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Farrah Abraham",
+                    value: 366,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Rita Ora",
+                    value: 360,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Serena Williams",
+                    value: 282,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "NCAA baseball tournament",
+                    value: 273,
+                    itemStyle: createRandomItemStyle()
+                },
+                {
+                    name: "Point Break",
+                    value: 265,
+                    itemStyle: createRandomItemStyle()
                 }
-            },
-            {
-                name: "Macys",
-                value: 6181,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Amy Schumer",
-                value: 4386,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Jurassic World",
-                value: 4055,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Charter Communications",
-                value: 2467,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Chick Fil A",
-                value: 2244,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Planet Fitness",
-                value: 1898,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Pitch Perfect",
-                value: 1484,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Express",
-                value: 1112,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Home",
-                value: 965,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Johnny Depp",
-                value: 847,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Lena Dunham",
-                value: 582,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Lewis Hamilton",
-                value: 555,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "KXAN",
-                value: 550,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Mary Ellen Mark",
-                value: 462,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Farrah Abraham",
-                value: 366,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Rita Ora",
-                value: 360,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Serena Williams",
-                value: 282,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "NCAA baseball tournament",
-                value: 273,
-                itemStyle: createRandomItemStyle()
-            },
-            {
-                name: "Point Break",
-                value: 265,
-                itemStyle: createRandomItemStyle()
-            }
-        ]
-    }]
-};
-      hashtagChart.setOption(optionHashtag);
-	  
+            ]
+        }]
+    };
+    hashtagChart.setOption(optionHashtag);
+}
 //心理状态
+function drawPsyState(){
     var psychologyChart = echarts.init(document.getElementById('psychologyState')); 
     var optionPsychology = {
-	title: {
-        text: '心理状态',
-    },
-    tooltip : {
-        trigger: 'item',
-        formatter: "{a} <br/>{b} : {c} ({d}%)"
-    },
-    calculable : false,
-    //     grid:{
-    //     y:40
-    // },
-    series : [
-        {
-            name:'',
-            type:'pie',
-            selectedMode: 'single',
-            radius : [0, 40],
-            center: ['50%', '60%'],
-            
-            // for funnel
-            x: '20%',
-            width: '40%',
-            funnelAlign: 'right',
-            max: 1548,
-            
-            itemStyle : {
-                normal : {
-                    label : {
-                        position : 'inner'
-                    },
-                    labelLine : {
-                        show : false
-                    }
-                }
-            },
-            data:[
-                {value:5, name:'积极'},
-                {value:5, name:'中性'},
-                {value:12, name:'消极', selected:true}
-            ]
+        title: {
+            text: '心理状态',
         },
-        {
-            name:'心理状态',
-            type:'pie',
-            radius : [60, 80],
-            center: ['50%', '60%'],
-            
-            // for funnel
-            x: '60%',
-            width: '35%',
-            funnelAlign: 'left',
-            max: 1048,
-            
-            data:[
-                {value:5, name:'积极'},
-                {value:5, name:'中性'},
-                {value:3, name:'生气'},
-                {value:4, name:'悲伤'},
-                {value:5, name:'其他'}
-            ]
-        }
-    ]
-}
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        calculable : false,
+        //     grid:{
+        //     y:40
+        // },
+        series : [
+            {
+                name:'',
+                type:'pie',
+                selectedMode: 'single',
+                radius : [0, 40],
+                center: ['50%', '60%'],
+                
+                // for funnel
+                x: '20%',
+                width: '40%',
+                funnelAlign: 'right',
+                max: 1548,
+                
+                itemStyle : {
+                    normal : {
+                        label : {
+                            position : 'inner'
+                        },
+                        labelLine : {
+                            show : false
+                        }
+                    }
+                },
+                data:[
+                    {value:5, name:'积极'},
+                    {value:5, name:'中性'},
+                    {value:12, name:'消极', selected:true}
+                ]
+            },
+            {
+                name:'心理状态',
+                type:'pie',
+                radius : [60, 80],
+                center: ['50%', '60%'],
+                
+                // for funnel
+                x: '60%',
+                width: '35%',
+                funnelAlign: 'left',
+                max: 1048,
+                
+                data:[
+                    {value:5, name:'积极'},
+                    {value:5, name:'中性'},
+                    {value:3, name:'生气'},
+                    {value:4, name:'悲伤'},
+                    {value:5, name:'其他'}
+                ]
+            }
+        ]
+    }
     psychologyChart.setOption(optionPsychology);  
-	
+}
+
 //重点领域人物
-$('#domain_portrait').empty();
+function drawDomain(){
+    $('#domain_portrait').empty();
   var num = 0 
   //for (key in data['domain_top_user']){ 
   for(j=0;j<6;j++){
@@ -372,9 +386,10 @@ $('#domain_portrait').empty();
        $('#domain_portrait').append(html);
 	   }
    }
-	
+}	
 //话题重点人物
-$('#topic_portrait').empty();
+function drawTopic(){
+    $('#topic_portrait').empty();
   var num = 0 
   //for (key in data['domain_top_user']){ 
   for(j=0;j<6;j++){
@@ -411,183 +426,112 @@ $('#topic_portrait').empty();
        $('#topic_portrait').append(html);
 	   }
    }	
-	
+}	
 	
 //画表格
-//影响力排名
- $('#top_influence').empty();
-    html = '';
-    html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
-    html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">昵称</th><th style="text-align:center">影响力</th></tr>';
-    for (var i = 0; i < 5; i++) {
-       var s = i.toString();
-       var m = i + 1;
-	   /*
-       if (data['top_retweeted_user'][s]['1'] == 'unknown'){
-          top_retweeted = '未知';
-       }else{
-          top_retweeted = data['top_retweeted_user'][s]['1'];
-       };
-       html += '<tr><th style="text-align:center">' + m + '</th><th style="text-align:center"><a target="_blank" href="/index/personal/?uid=' + data['top_retweeted_user'][s]['0'] + '">' + top_retweeted + '</a></th><th style="text-align:center">' + data['top_retweeted_user'][s]['3'] +  '</th></tr>';
-		*/
-	 html += '<tr><th style="text-align:center">' + m + '</th><th style="text-align:center">国际在线</th><th style="text-align:center">1000</th></tr>';
-	};
-    html += '</table>'; 
-    $('#top_influence').append(html);  
-	
-//重要度排名
-$('#importance').empty();
-    html = '';
-    html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
-    html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">昵称</th><th style="text-align:center">重要度</th></tr>';
-    for (var i = 0; i < 5; i++) {
-       var s = i.toString();
-       var m = i + 1;
-	   /*
-       if (data['top_retweeted_user'][s]['1'] == 'unknown'){
-          top_retweeted = '未知';
-       }else{
-          top_retweeted = data['top_retweeted_user'][s]['1'];
-       };
-       html += '<tr><th style="text-align:center">' + m + '</th><th style="text-align:center"><a target="_blank" href="/index/personal/?uid=' + data['top_retweeted_user'][s]['0'] + '">' + top_retweeted + '</a></th><th style="text-align:center">' + data['top_retweeted_user'][s]['3'] +  '</th></tr>';
-		*/
-	 html += '<tr><th style="text-align:center">' + m + '</th><th style="text-align:center">国际在线</th><th style="text-align:center">1000</th></tr>';
-	};
-    html += '</table>'; 
-    $('#importance').append(html);  
-//活跃度排名
-$('#top_activeness').empty();
-    html = '';
-    html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
-    html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">昵称</th><th style="text-align:center">活跃度</th></tr>';
-    for (var i = 0; i < 5; i++) {
-       var s = i.toString();
-       var m = i + 1;
-	   /*
-       if (data['top_retweeted_user'][s]['1'] == 'unknown'){
-          top_retweeted = '未知';
-       }else{
-          top_retweeted = data['top_retweeted_user'][s]['1'];
-       };
-       html += '<tr><th style="text-align:center">' + m + '</th><th style="text-align:center"><a target="_blank" href="/index/personal/?uid=' + data['top_retweeted_user'][s]['0'] + '">' + top_retweeted + '</a></th><th style="text-align:center">' + data['top_retweeted_user'][s]['3'] +  '</th></tr>';
-		*/
-	 html += '<tr><th style="text-align:center">' + m + '</th><th style="text-align:center">国际在线</th><th style="text-align:center">1000</th></tr>';
-	};
-    html += '</table>'; 
-    $('#top_activeness').append(html);
+function drawRank(div_name, cname, rank_data, more_div){
+     $('#'+ div_name).empty();
+        html = '';
+        html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
+        html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">昵称</th>';
+        html += '<th style="text-align:center">' + cname + '</th></tr>';
+        var min_row = Math.min(5, rank_data.length);
+        for (var i = 0; i < min_row; i++) {
+           var s = i.toString();
+           var m = i + 1;
+           /*
+           if (data['top_retweeted_user'][s]['1'] == 'unknown'){
+              top_retweeted = '未知';
+           }else{
+              top_retweeted = data['top_retweeted_user'][s]['1'];
+           };
+           html += '<tr><th style="text-align:center">' + m + '</th><th style="text-align:center"><a target="_blank" href="/index/personal/?uid=' + data['top_retweeted_user'][s]['0'] + '">' + top_retweeted + '</a></th><th style="text-align:center">' + data['top_retweeted_user'][s]['3'] +  '</th></tr>';
+            */
+         html += '<tr><th style="text-align:center">' + m + '</th>';
+         html += '<th style="text-align:center">' + rank_data[i] + '</th>';
+         html += '<th style="text-align:center">1000</th></tr>';
+        };
+        html += '</table>'; 
+        $('#' + div_name).append(html);  
 
-//敏感度排名	
-$('#top_sensitive').empty();
-    html = '';
-    html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
-    html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">昵称</th><th style="text-align:center">敏感度</th></tr>';
-    for (var i = 0; i < 5; i++) {
-       var s = i.toString();
-       var m = i + 1;
-	   /*
-       if (data['top_retweeted_user'][s]['1'] == 'unknown'){
-          top_retweeted = '未知';
-       }else{
-          top_retweeted = data['top_retweeted_user'][s]['1'];
-       };
-       html += '<tr><th style="text-align:center">' + m + '</th><th style="text-align:center"><a target="_blank" href="/index/personal/?uid=' + data['top_retweeted_user'][s]['0'] + '">' + top_retweeted + '</a></th><th style="text-align:center">' + data['top_retweeted_user'][s]['3'] +  '</th></tr>';
-		*/
-	 html += '<tr><th style="text-align:center">' + m + '</th><th style="text-align:center">国际在线</th><th style="text-align:center">1000</th></tr>';
-	};
-    html += '</table>'; 
-    $('#top_sensitive').append(html);
-//转发量排名
- $('#retweeted_user').empty();
-    html = '';
-    html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
-    html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">昵称</th><th style="text-align:center">转发量</th></tr>';
-    for (var i = 0; i < 5; i++) {
-       var s = i.toString();
-       var m = i + 1;
-	   /*
-       if (data['top_retweeted_user'][s]['1'] == 'unknown'){
-          top_retweeted = '未知';
-       }else{
-          top_retweeted = data['top_retweeted_user'][s]['1'];
-       };
-       html += '<tr><th style="text-align:center">' + m + '</th><th style="text-align:center"><a target="_blank" href="/index/personal/?uid=' + data['top_retweeted_user'][s]['0'] + '">' + top_retweeted + '</a></th><th style="text-align:center">' + data['top_retweeted_user'][s]['3'] +  '</th></tr>';
-		*/
-	 html += '<tr><th style="text-align:center">' + m + '</th><th style="text-align:center">国际在线</th><th style="text-align:center">1000</th></tr>';
-	};
-    html += '</table>'; 
-    $('#retweeted_user').append(html);  
-//评论量排名
- $('#top_comment_user').empty();
-    html = '';
-    html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
-    html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">昵称</th><th style="text-align:center">评论量</th></tr>';
-    for (var i = 0; i < 5; i++) {
-       var s = i.toString();
-       var m = i + 1;
-	   /*
-       if (data['top_retweeted_user'][s]['1'] == 'unknown'){
-          top_retweeted = '未知';
-       }else{
-          top_retweeted = data['top_retweeted_user'][s]['1'];
-       };
-       html += '<tr><th style="text-align:center">' + m + '</th><th style="text-align:center"><a target="_blank" href="/index/personal/?uid=' + data['top_retweeted_user'][s]['0'] + '">' + top_retweeted + '</a></th><th style="text-align:center">' + data['top_retweeted_user'][s]['3'] +  '</th></tr>';
-		*/
-	 html += '<tr><th style="text-align:center">' + m + '</th><th style="text-align:center">国际在线</th><th style="text-align:center">1000</th></tr>';
-	};
-    html += '</table>'; 
-    $('#top_comment_user').append(html);  
 //发布敏感微博人
- $('#top_user_sensitive').empty();
-    html = '';
-    html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
-    html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">昵称</th><th style="text-align:center">发布敏感微博人</th></tr>';
-    for (var i = 0; i < 5; i++) {
-       var s = i.toString();
-       var m = i + 1;
-	   /*
-       if (data['top_retweeted_user'][s]['1'] == 'unknown'){
-          top_retweeted = '未知';
-       }else{
-          top_retweeted = data['top_retweeted_user'][s]['1'];
-       };
-       html += '<tr><th style="text-align:center">' + m + '</th><th style="text-align:center"><a target="_blank" href="/index/personal/?uid=' + data['top_retweeted_user'][s]['0'] + '">' + top_retweeted + '</a></th><th style="text-align:center">' + data['top_retweeted_user'][s]['3'] +  '</th></tr>';
-		*/
-	 html += '<tr><th style="text-align:center">' + m + '</th><th style="text-align:center">国际在线</th><th style="text-align:center">1000</th></tr>';
-	};
-    html += '</table>'; 
-    $('#top_user_sensitive').append(html);  
+     $('#top_user_sensitive').empty();
+        html = '';
+        html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
+        html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">昵称</th><th style="text-align:center">发布敏感微博人</th></tr>';
+        var min_row = Math.min(5, rank_data.length);
+        for (var i = 0; i < min_row; i++) {
+           var s = i.toString();
+           var m = i + 1;
+           /*
+           if (data['top_retweeted_user'][s]['1'] == 'unknown'){
+              top_retweeted = '未知';
+           }else{
+              top_retweeted = data['top_retweeted_user'][s]['1'];
+           };
+           html += '<tr><th style="text-align:center">' + m + '</th><th style="text-align:center"><a target="_blank" href="/index/personal/?uid=' + data['top_retweeted_user'][s]['0'] + '">' + top_retweeted + '</a></th><th style="text-align:center">' + data['top_retweeted_user'][s]['3'] +  '</th></tr>';
+            */
+         html += '<tr><th style="text-align:center">' + m + '</th><th style="text-align:center">国际在线</th><th style="text-align:center">1000</th></tr>';
+        };
+        html += '</table>'; 
+        $('#top_user_sensitive').append(html);  
 	
 	
 	//更多
-	$('#more_sensitive_rank').empty();
+	$('#' + more_div).empty();
     html = '';
-    html += '<table id="modal_online_pattern" class="table table-striped table-bordered bootstrap-datatable datatype responsive">';
-    html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">上网方式</th><th style="text-align:center">微博数</th></tr>';
-    /*
-	for (var i = 0; i < data['online_pattern_top'].length; i++) {
+    html += '<table class="table table-striped table-bordered bootstrap-datatable datatype responsive">';
+    html += '<tr><th style="text-align:center">排名</th>';
+    html += '<th style="text-align:center">昵称</th><th style="text-align:center">' + cname + '</th></tr>';
+	for (var i = 0; i < rank_data.length; i++) {
        var s = i.toString();
        var m = i + 1;
-       html += '<tr><th style="text-align:center">' + m + '</th><th style="text-align:center">' + data['online_pattern_top'][s]['0'] +  '</th><th style="text-align:center">' + data['online_pattern_top'][s]['1'] +  '</th></tr>';
+       html += '<tr><th style="text-align:center">' + m + '</th>';
+       html += '<th style="text-align:center">' + rank_data[i] +  '</th>';
+       html += '<th style="text-align:center">1000</th></tr>';
     };
-	*/
-    html += '<tr><th style="text-align:center">' + 2 + '</th><th style="text-align:center">iPhone 6 Plus</th><th style="text-align:center">88625</th></tr>';
-    html += '<tr><th style="text-align:center">' + 3 + '</th><th style="text-align:center">iPhone 6</th><th style="text-align:center">78230</th></tr>';
-    html += '<tr><th style="text-align:center">' + 4 + '</th><th style="text-align:center">iPhone客户端</th><th style="text-align:center">51368</th></tr>';
-    html += '<tr><th style="text-align:center">' + 5 + '</th><th style="text-align:center">360安全浏览器</th><th style="text-align:center">50629</th></tr>';
-    html += '<tr><th style="text-align:center">' + 6 + '</th><th style="text-align:center">皮皮时光机</th><th style="text-align:center">48625</th></tr>';
-    html += '<tr><th style="text-align:center">' + 7 + '</th><th style="text-align:center">vivo_X5Max</th><th style="text-align:center">48230</th></tr>';
-    html += '<tr><th style="text-align:center">' + 8 + '</th><th style="text-align:center">iPhone 5s</th><th style="text-align:center">11368</th></tr>';
-    html += '<tr><th style="text-align:center">' + 9 + '</th><th style="text-align:center">Android客户端</th><th style="text-align:center">9629</th></tr>';
-    html += '<tr><th style="text-align:center">' + 10 + '</th><th style="text-align:center">红米Note</th><th style="text-align:center">8625</th></tr>';
-    html += '<tr><th style="text-align:center">' + 11 + '</th><th style="text-align:center">搜狗高速浏览器</th><th style="text-align:center">8230</th></tr>';
-    html += '<tr><th style="text-align:center">' + 12 + '</th><th style="text-align:center">小米手机2S</th><th style="text-align:center">7368</th></tr>';
-    html += '<tr><th style="text-align:center">' + 13 + '</th><th style="text-align:center">三星 GALAXY S6</th><th style="text-align:center">6629</th></tr>';
-    html += '<tr><th style="text-align:center">' + 14 + '</th><th style="text-align:center">iPad客户端</th><th style="text-align:center">6625</th></tr>';
-    html += '<tr><th style="text-align:center">' + 15 + '</th><th style="text-align:center">iPad mini</th><th style="text-align:center">5230</th></tr>';
-    html += '<tr><th style="text-align:center">' + 16 + '</th><th style="text-align:center">三星GALAXY S5</th><th style="text-align:center">4368</th></tr>';
-    html += '<tr><th style="text-align:center">' + 17 + '</th><th style="text-align:center">SAMSUNG</th><th style="text-align:center">3629</th></tr>';
-    html += '<tr><th style="text-align:center">' + 18 + '</th><th style="text-align:center">微博手机版</th><th style="text-align:center">3230</th></tr>';
-    html += '<tr><th style="text-align:center">' + 19 + '</th><th style="text-align:center">魅族 MX4</th><th style="text-align:center">2368</th></tr>';
-    html += '<tr><th style="text-align:center">' + 20 + '</th><th style="text-align:center">三星GALAXY S4</th><th style="text-align:center">1629</th></tr>';
     html += '</table>'; 
-    $('#more_sensitive_rank').append(html);                  
+    $('#' + more_div).append(html);                  
+}
+function draw(data){
+    console.log(data);
+    global_overview_data = data;
+    var rank_list = new Array();
+    rank_list['top_influence'] = 'influence';
+    rank_list['importance'] = 'importance';
+    rank_list['top_activeness'] = 'activeness';
+    rank_list['top_sensitive'] = 'sensitive';
+    rank_list['retweeted_user'] = 'top_retweeted';
+    rank_list['top_comment_user'] = 'top_comment';
+    //rank_list['top_user_sensitive'] = '';
+    var cname_list = new Array();
+    cname_list['top_influence'] = '影响力';
+    cname_list['importance'] = '重要性';
+    cname_list['top_activeness'] = '活跃度';
+    cname_list['top_sensitive'] = '敏感度';
+    cname_list['retweeted_user'] = '转发量';
+    cname_list['top_comment_user'] = '评论量';
+    cname_list['top_user_sensitive'] = '敏感微博数';
+    var more_div_list = new Array();
+    more_div_list['top_influence'] = 'more_influence';
+    more_div_list['importance'] = 'more_important';
+    more_div_list['top_activeness'] = 'more_activeness';
+    more_div_list['top_sensitive'] = 'more_sensitive';
+    more_div_list['retweeted_user'] = 'more_retweeted';
+    more_div_list['top_comment_user'] = 'more_comment';
+    more_div_list['top_user_sensitive'] = 'more_sensitive_rank';
+    for (var div_name in rank_list){
+        var key = rank_list[div_name];
+        var cname = cname_list[div_name];
+        var more_div = more_div_list[div_name];
+        drawRank(div_name, cname, data[key], more_div);
+    }
+}
+var global_overview_data;
+var overview_url = '/overview/show/?date=2013-09-07';
+call_ajax_request(overview_url, draw);
+drawSensitiveCloud();
+drawHashtagCloud();
+drawPsyState();
+drawDomain();
+drawTopic();
