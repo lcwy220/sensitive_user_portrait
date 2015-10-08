@@ -8,8 +8,14 @@ from global_utils import es_sensitive_user_portrait as es
 def main():
     index_info = {
         'settings':{
-            'number_of_shards':5,
-            'number_of_replicas':0,
+            'analysis':{
+                'analyzer':{
+                    'my_analyzer':{
+                        'type': 'pattern',
+                        'pattern': '&'
+                        }
+                    }
+                }
             },
         'mappings':{
             'text':{
@@ -27,7 +33,7 @@ def main():
                         'index': 'not_analyzed'
                         },
                     'timestamp':{
-                        'type': 'int'
+                        'type': 'long'
                         },
                     'sentiment':{
                         'type': 'string',
@@ -44,7 +50,16 @@ def main():
                     'uid':{
                         'type': 'string',
                         'index': 'not_analyzed'
+                        },
+                    'hashtag':{
+                        'type': 'string',
+                        'analyzer': 'my_analyzer'
+                        },
+                    'sensitive_word':{
+                        'type': 'string',
+                        'analyzer': 'my_analyzer'
                         }
+
                     }
                 }
             }

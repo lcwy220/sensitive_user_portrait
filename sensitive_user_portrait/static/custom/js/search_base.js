@@ -1,4 +1,29 @@
 function bindSearchFunc(that){ 
+    $("#keyword").bind('keyup', function(e){
+        var ev = document.all?window.event:e;
+        if (ev.keyCode == 13){
+            var simple_url = that.simple_search_url;
+            var term = $('#keyword').val();
+            simple_url += term;
+            console.log(simple_url);
+            window.location.href = simple_url;
+        }
+    }).bind('keydown', function(e){
+        var ev = document.all?window.event:e;
+        if (ev.keyCode == 13){
+            return false;
+        }
+    });
+    $('#simple_search').click(function(){
+        var simple_url = that.simple_search_url;
+        var term = $('#keyword').val();
+        simple_url += term;
+        console.log(simple_url);
+        window.location.href = simple_url;
+    });
+    
+    
+    
     $("#bluebtn").off("click").click(function(){
         var advanced_url = that.advanced_search_url;
         $("#float-wrap").addClass("hidden");
