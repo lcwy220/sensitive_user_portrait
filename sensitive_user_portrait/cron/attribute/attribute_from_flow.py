@@ -142,13 +142,14 @@ def get_flow_information(uid_list):
         if user_ip_result.has_key(uid):
             ip_string = extract_geo(user_ip_result[uid])
             ip_dict = json.dumps(ip_to_geo(user_ip_result[uid]))
+            ip_all = json.dumps(user_ip_result[uid])
         if user_sensitive_ip.has_key(uid):
             sensitive_ip_string = extract_geo(user_sensitive_ip[uid])
             sensitive_ip_dict = json.dumps(ip_to_geo(user_sensitive_ip[uid]))
 
         result_dict[uid] = {"hashtag_string": hashtag_string, "hashtag_dict": hashtag_dict, \
                             "sensitive_hashtag_string": sensitive_hashtag_string, "sensitive_hashtag_dict": sensitive_hashtag_dict, \
-                             "geo_activity": ip_dict, "geo_string": ip_string, \
+                            "geo_activity": ip_dict, "geo_string": ip_string, 'ip': ip_all, \
                              "sensitive_geo_activity": sensitive_ip_dict, "sensitive_geo_string":sensitive_ip_string, \
                              'sensitive_words_string': sensitive_words_string, 'sensitive_words_dict': sensitive_words_dict}
     return result_dict
