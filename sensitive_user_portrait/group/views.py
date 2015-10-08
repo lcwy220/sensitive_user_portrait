@@ -8,8 +8,9 @@ from flask import Blueprint, url_for, render_template, request,\
                   abort, flash, session, redirect, send_from_directory
 from utils import submit_task, search_task, get_group_results, get_group_list, delete_group_results
 #track utils
-from track_utils import submit_track_task, search_track_task, get_track_result ,\
+from track_utils import submit_track_task, search_track_task,\
                         end_track_task, delete_track_task
+from track_result_utils import get_track_result
 
 from sensitive_user_portrait.global_config import UPLOAD_FOLDER, ALLOWED_EXTENSIONS
 from sensitive_user_portrait.search_user_profile import es_get_source
