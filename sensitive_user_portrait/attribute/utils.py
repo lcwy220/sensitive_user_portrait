@@ -254,7 +254,7 @@ def search_attribute_portrait(uid):
     except:
         return None
     results = search_result['_source']
-    return_results = results
+    #return_results = results
     user_sensitive = user_type(uid)
     if user_sensitive:
         return_results.update(sensitive_attribute(uid))

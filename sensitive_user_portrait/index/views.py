@@ -87,6 +87,20 @@ def search_results():
                 location=location, activity_geo=activity_geo, adkeyword=adkeyword, hashtag=hashtag, psycho_status=psycho_status,\
                 psycho_feature=psycho_feature, domain=domain, topic=topic, tag=tag)
 
+@mod.route('/text_search/')
+def text_search():
+    stype = request.args.get('stype','')
+    words_list = request.args.get('words_list', '')
+
+    if (stype == '1'):
+        return render_template('index/search/text_search.html', words_list=words_list)
+    elif (stype == '2'):
+        return render_template('index/search/group_text_search.html', words_list=words_list)
+    elif (stype == '3'):
+        return render_template('index/search/tag_text_search.html', words_list=words_list)
+    else:
+        return render_template('index/search/text_search.html', words_list=words_list)
+
 @mod.route('/influence/')
 def influence():
     return render_template('index/influence.html')
