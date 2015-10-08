@@ -1,8 +1,8 @@
-# -*- coding: UTF-8 -*-
+# -*- coding:UTF-8 -*-
 import csv
 import sys
 from elasticsearch import Elasticsearch
-from text_attribute import attr_liwc
+#from text_attribute import attr_liwc
 
 
 '''

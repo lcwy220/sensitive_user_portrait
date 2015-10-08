@@ -294,13 +294,32 @@ def compute_attribute(uid_list=[]):
         status = save_user_results(bulk_action)
     return "1"
 
+def update_portrait():
+    user_weibo_dict = read_user_weibo()
+    uid_list = user_weibo_dict.keys()
+    flow_result = get_flow_information(uid_list)
+    bulk_action = []
+    count = 0
+    for user in uid_list:
+        action = {'update':{'_id': str(user)}}
+        result = {'doc':flow_result[user]}
+        bulk_action.extend([action, result])
+        count += 1
+        if count % 500 == 0:
+            es.bulk(bulk_action, index='sensitive_user_portrait', doc_type='user', timeout=60)
+            bulk_action = []
+            print count
+    if bulk_action:
+        es.bulk(bulk_action, index='sensitive_user_portrait', doc_type='user', timeout=60)
+    return '1'
+
 if __name__ == '__main__':
     index_name = "test_sensitive_user_portrait"
     doc_type = "user"
     bool = es.indices.exists(index=index_name)
     if not bool:
         es.indices.create(index=index_name, ignore=400)
-    compute_attribute()
+    #compute_attribute()
     """
     user_weibo_dict = read_user_weibo()
     uid_list = user_weibo_dict.keys()
@@ -308,4 +327,4 @@ if __name__ == '__main__':
     print get_flow_information([uid_list[0]])
     print get_profile_information([uid_list[0]])
     """
-
+    update_portrait()

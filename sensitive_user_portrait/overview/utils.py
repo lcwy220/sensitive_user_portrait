@@ -5,6 +5,7 @@ import json
 import time
 from sensitive_user_portrait.global_utils import R_RECOMMENTATION as r
 from sensitive_user_portrait.global_utils import es_sensitive_user_portrait as es
+from sensitive_user_portrait.global_utils import es_user_profile
 from sensitive_user_portrait.time_utils import datetime2ts, ts2datetime
 from appendix import get_top_user, get_topic_user
 
@@ -33,7 +34,7 @@ def search_important(category, detail):
     results = es.search(index="sensitive_user_portrait", doc_type="user", body=query_body)['hits']['hits']
     uid_list = []
     for item in results:
-        uid_list.append(item['_source']['uid'])
+        uid_list.append([item['_source']['uid'], item['_source']['uname']])
     return uid_list
 
 
@@ -47,7 +48,7 @@ def search_in_portrait(category):
     results = es.search(index="sensitive_user_portrait", doc_type="user", body=query_body)['hits']['hits']
     uid_list = []
     for item in results:
-        uid_list.append(item['_source']['uid'])
+        uid_list.append([item['_source']['uid'], item['_source']['uname'], item['_source'][category]])
     return uid_list
 
 
@@ -178,7 +179,7 @@ def get_attr(date):
         "query":{
             "match_all": {}
         },
-        "sort": {"s_origin_weibo_comment_top_number": {"order": "desc"}}
+        "sort": {"s_origin_weibo_comment_total_number": {"order": "desc"}}
     }
     date = ts2datetime(time.time()-24*3600).replace('-','')
     date = '20130907'
@@ -186,17 +187,22 @@ def get_attr(date):
     comment_weibo_detail = []
     for item in results_list:
         temp = []
+        uid = item['_source']['uid']
+        try:
+            uname = es_user_profile.get(index='weibo_user', doc_type='user', id=uid)['_source']['nick_name']
+        except:
+            uname = 'unknown'
         temp.append(item['_source']['uid'])
-        temp.append(item['_source']['s_origin_weibo_top_comment_id'])
-        temp.append(item['_source']['s_origin_weibo_comment_top_number'])
+        temp.append(uname)
+        temp.append(item['_source']['s_origin_weibo_comment_total_number'])
         comment_weibo_detail.append(temp)
-    results['top_comment'] = comment_weibo_detail
+    results['comment_total'] = comment_weibo_detail
 
     query_body={
         "query":{
             "match_all": {}
         },
-        "sort": {"s_origin_weibo_retweeted_top_number": {"order": "desc"}}
+        "sort": {"s_origin_weibo_retweeted_total_number": {"order": "desc"}}
     }
     date = ts2datetime(time.time()-24*3600).replace('-','')
     date = '20130907'
@@ -204,11 +210,39 @@ def get_attr(date):
     retweeted_weibo_detail = []
     for item in results_list:
         temp = []
+        uid = item['_source']['uid']
+        try:
+            uname = es_user_profile.get(index='weibo_user', doc_type='user', id=uid)['_source']['nick_name']
+        except:
+            uname = 'unknown'
         temp.append(item['_source']['uid'])
-        temp.append(item['_source']['s_origin_weibo_top_retweeted_id'])
-        temp.append(item['_source']['s_origin_weibo_retweeted_top_number'])
-        comment_weibo_detail.append(temp)
-    results['top_retweeted'] = retweeted_weibo_detail
+        temp.append(uname)
+        temp.append(item['_source']['s_origin_weibo_retweeted_total_number'])
+        retweeted_weibo_detail.append(temp)
+    results['retweeted_total'] = retweeted_weibo_detail
+
+    query_body={
+        "query":{
+            "match_all": {}
+        },
+        "sort": {"s_origin_weibo_number": {"order": "desc"}}
+    }
+    date = ts2datetime(time.time()-24*3600).replace('-','')
+    date = '20130907'
+    results_list = es.search(index=date, doc_type="bci", body=query_body)['hits']['hits']
+    weibo_detail = []
+    for item in results_list:
+        temp = []
+        uid = item['_source']['uid']
+        try:
+            uname = es_user_profile.get(index='weibo_user', doc_type='user', id=uid)['_source']['nick_name']
+        except:
+            uname = 'unknown'
+        temp.append(item['_source']['uid'])
+        temp.append(uname)
+        temp.append(item['_source']['s_origin_weibo_number'])
+        weibo_detail.append(temp)
+    results['top_weibo_number'] = weibo_detail
 
 
 

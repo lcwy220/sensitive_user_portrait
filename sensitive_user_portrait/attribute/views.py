@@ -8,6 +8,7 @@ from sensitive_user_portrait.global_utils import es_sensitive_user_portrait as e
 from sensitive_user_portrait.global_utils import es_user_profile
 from utils import search_attribute_portrait,search_mention, search_portrait
 from utils import extract_uname, search_sensitive_text, sensitive_attribute
+from utils import user_sentiment_trend
 
 mod = Blueprint('attribute', __name__, url_prefix='/attribute')
 
@@ -15,8 +16,9 @@ mod = Blueprint('attribute', __name__, url_prefix='/attribute')
 def ajax_portrait_attribute():
     uid = request.args.get('uid', '')
     uid = str(uid)
-    results = search_attribute_portrait(uid)
+    #results = search_attribute_portrait(uid)
     #results = sensitive_attribute(uid)
+    results = user_sentiment_trend(uid)
     if results:
         return json.dumps(results)
     else:
