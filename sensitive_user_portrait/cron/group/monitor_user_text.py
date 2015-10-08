@@ -4,11 +4,12 @@ use to compute the mid-result about monitor task
 '''
 import sys
 import time
+import json
 reload(sys)
 sys.path.append('../../')
 from global_utils import es_sensitive_user_portrait as es
-from global_utils import G_GROUP as r
-from global_utils import G_GROUP_TASK as r_task
+from global_utils import R_GROUP as r
+from global_utils import R_GROUP_TASK as r_task
 from time_utils import datetime2ts, ts2datetime
 
 text_index_name = 'monitor_user_text'
@@ -16,6 +17,9 @@ text_index_type = 'text'
 
 group_index_name = 'group_result'
 group_index_type = 'group'
+
+monitor_index_name = 'monitor_result'
+#monitor_index_type:  task_name
 
 # keep task queue in redis
 def get_task_name():
@@ -46,10 +50,12 @@ def compute_mid_result_one(task_name, task_user, start_ts):
     #step1: count the sensitive or not weibo count
     #step2: count the sensitive or not weibo geo count
     #step3: sensitive words score
+    #step4: compute hashtag
+    #step5: compute sensitive_word
     #save mid_result
     query_body = []
     #query user
-    query_body.append({'term':{'uid': task_user[0]}})
+    query_body.append({'term':{'uid': int(task_user[0])}})
     #query time_segment
     query_body.append({'range':{'timestamp':{'from':start_ts, 'to':start_ts+900}}})
     try:
@@ -61,6 +67,8 @@ def compute_mid_result_one(task_name, task_user, start_ts):
     sensitive_weibo_dict = {}
     sentiment_weibo_dict = {'0':{}, '1':{}}
     geo_weibo_dict = {'0':{}, '1':{}}
+    hashtag_weibo_dict = {}
+    sensitive_word_dict = {}
     if task_user_weibo:
         for weibo_item in task_user_weibo:
             weibo_dict = weibo_item['_source']
@@ -73,30 +81,60 @@ def compute_mid_result_one(task_name, task_user, start_ts):
             #compute geo_weibo_count
             geo = weibo_dict['geo']
             try:
-                geo_weibo_dict[str(sensitive)] += 1
+                geo_weibo_dict[str(sensitive)][geo] += 1
             except:
-                geo_weibo_dict[str(sensitiive)] = 1
+                geo_weibo_dict[str(sensitiive)][geo] = 1
             #compute sentiment_weibo_count
             sentiment = weibo_dict['sentiment']
             try:
                 sentiment_weibo_dict[str(sensitive)][sentiment] += 1
             except:
                 sentiment_weibo_dict[str(sensitive)][sentiment] = 1
+            #compute hashtag
+            try:
+                hashtag_list = weibo_dict['hashtag'].split('&')
+            except:
+                hashtag_list = None
+            if hastag_list:
+                for hashtag in hashtag_list:
+                    try:
+                        hashtag_weibo_dict[hashtag] += 1
+                    except:
+                        hashtag_weibo_dict[hashtag] = 1
+            else:
+                hashtag_weibo_dict = None
+            
+            #compute sensitive_word
+            try:
+                sensitive_word_list = weibo_dict['sensitive_word'].split('&')
+            except:
+                sensitive_word_list = None
+            if sensitive_word_list:
+                for word in senstive_word_list:
+                    try:
+                        sensitive_word_dict[word] += 1
+                    except:
+                        sensitive_word_dict[word] = 1
+            else:
+                sensitive_word_dict = None
 
-    status = save_mid_result_one(task_name, sensitive_weibo_dict, geo_weibo_dict, sentiment_weibo_dict, start_ts)
+    status = save_mid_result_one(task_name, sensitive_weibo_dict, geo_weibo_dict, sentiment_weibo_dict, hashtag_weibo_dict, sensitive_word_dict, start_ts)
     return status
 
 # save task: one  mid-result to es----group_result
-def save_mid_result_one(task_name, sensitive_weibo_dict, geo_weibo_dict, sentiment_weibo_dict, start_ts):
+def save_mid_result_one(task_name, sensitive_weibo_dict, geo_weibo_dict, sentiment_weibo_dict, hashtag_weibo_dict, sensitive_word_dict, start_ts):
     status = 0
-    update_body = {}
-    sensitive_field = 'count_' + str(start_ts)
-    geo_field = 'geo_' + str(start_ts)
-    sentiment_field = 'sentiment' + str(start_ts)
-    update_body[sentiment_field] = json.dumps(sentiment_weibo_dict)
-    update_body[geo_field] = json.dumps(geo_weibo_dict)
-    update_body[sentiment_field] = json.dumps(sentiment_weibo_dict)
-    es.update(index=group_index_name, doc_type=group_index_type, id=task_name, body={'doc': update_body})
+    insert_body = {}
+    insert_body['count'] = json.dumps(sensitive_weibo_dict)
+    insert_body['geo'] = json.dumps(geo_weibo_dict)
+    insert_body['sentiment'] = json.dumps(sentiment_weibo_dict)
+    if hashtag_weibo_dict:
+        insert_body['hashtag'] = json.dumps(hashtag_weibo_dict)
+    if sensitive_word_dict:
+        insert_body['sensitive_word'] = json.dumps(sensitive_word_dict)
+    insert_body['timestamp'] = start_ts # mark the ts
+    
+    es.index(index=monitor_index_name, doc_type=task_name, id=start_ts, body=insert_body)
     status = 1
     return status
 
@@ -106,14 +144,62 @@ def compute_mid_result_group(task_name, task_user, start_ts):
     #step1: count the sensitive or not weibo count
     #step2: count the geo weibo count
     #step3: count the sentiment weibo count
+    #step4: compute hashtag
+    #step5: compute sensitive
+    #step: compute the social
     #save mid result
-    query_body = []
-    status = save_mid_result_group(task_name, result)
+    sensitive_weibo_dict = {}
+    sentiment_weibo_dict = {'0':{}, '1':{}}
+    geo_weibo_dict = {'0':{}, '1':{}}
+    for uid in task_user:
+        query_body = []
+        query_body.append({'term':{'uid':uid}})
+        query_body.append({'range':{'timestamp':{'from': start_ts, 'to':start_ts+900}}})
+        try:
+            user_weibo = es.search(index=text_index_name, doc_type=text_index_type, \
+                    body={'query':{'bool':{'must':query_body}}, 'size':100000})['hits']['hits']
+        except Exception, e:
+            raise e
+
+        if user_weibo:
+            for weibo_item in user_weibo:
+                weibo_dict = weibo_item['_source']
+                #compute sensitive_weibo_count and unsensitive_weibo_count in time-segment
+                sensitive = weibo_dict['sensitive']
+                try:
+                    sensitive_weibo_dict[str(sensitive)] += 1
+                except:
+                    sensitive_weibo_dict[str(sensitive)] = 1
+                #compute geo_weibo_count
+                geo = weibo_dict['geo']
+                try:
+                    geo_weibo_dict[str(sensitive)][geo] += 1
+                except:
+                    geo_weibo_dict[str(sensitive)][geo] = 1
+                #compute sentiment_weibo_count
+                sentiment = weibo_dict['sentiment']
+                try:
+                    sentiment_weibo_dict[str(sensitive)][sentiment] += 1
+                except:
+                    sentiment_weibo_dict[str(sensitive)][sentiment] = 1
+    
+    status = save_mid_result_group(task_name, sensitive_weibo_dict, geo_weibo_dict, \
+            sentiment_weibo_dict, start_ts)
+
     return status
 
 # save task: group mid-result to es----group_result
-def save_mid_result_group(task_name, result):
+def save_mid_result_group(task_name, sensitive_weibo_dict, geo_weibo_dict, sentiment_weibo_dict, start_ts):
     status = 0
+    update_body = {}
+    sensitive_field = 'count_' + str(start_ts)
+    geo_field = 'geo_' + str(start_ts)
+    sentiment_field = 'sentiment_' + str(start_ts)
+    update_body[sensitive_field] = json.dumps(sensitive_weibo_dict)
+    update_body[geo_field] = json.dumps(geo_weibo_dict)
+    update_body[sentiment_field] = json.dumps(sentiment_weibo_dict)
+    es.update(index=group_index_name, doc_type=group_index_type, id=task_name, body={'doc':update_body})
+    status = 1
     return status
 
 #identify task is doing in ES(group_result)
@@ -169,5 +255,17 @@ def main():
                         r_task.hdel('monitor_task_time_record', task_name)
 
 if __name__=='__main__':
-    main()
+    #main()
+    '''
+    task_name = 'test2'
+    sensitive_weibo_dict = {'0':1, '1':2}
+    geo_weibo_dict = {'city1':1, 'city2':2}
+    sentiment_weibo_dict = {'126':1, '130':2}
+    start_ts = 1429215300
+    hashtag_weibo_dict = {'hashtag1':1}
+    sensitive_word_dict = {'word1':1, 'word2':2}
 
+    save_mid_result_one(task_name, sensitive_weibo_dict, geo_weibo_dict, sentiment_weibo_dict, hashtag_weibo_dict, sensitive_word_dict, start_ts)
+    '''
+    task_name = 'testtask'
+    task_user = []

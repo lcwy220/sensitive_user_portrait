@@ -1,6 +1,7 @@
 # -*- coding=utf-8 -*-
 
 import IP
+import re
 import csv
 import sys
 import zmq
@@ -67,9 +68,21 @@ def expand_index_action(item):
     index_body['sensitive'] = item['sensitive']
     index_body['sentiment'] = item['sentiment']
     index_body['timestamp'] = int(item['timestamp'])
+    index_body['message_type'] = item['message_type']
+    if item['message_type'] != 1:
+        index_body['root_mid'] = item['root_mid']
+        index_body['root_uid'] = item['root_uid']
     ip = item['send_ip']
     index_body['ip'] = ip
     index_body['geo'] = ip2city(ip)
+    try:
+        index_body['hashtag'] = item['hashtag']
+    except:
+        pass
+    try:
+        index_body['sensitive_word'] = item['sensitive_word']
+    except:
+        pass
     action = {'index': {'_id': index_body['mid']}}
     xdata = {'doc': index_body}
     return action, xdata
@@ -100,6 +113,22 @@ def get_sentiment_attribute(text):
         max_sentiment = '130' # mark: sentiment is other
     return max_sentiment
 
+def get_hashtag_attribute(text):
+    hashtag_string = ''
+    user_text_list = text.split('//@')
+    if user_text_list:
+        user_text = user_text_list[0]
+    else:
+        user_text = text
+    if len(user_text) != 0:
+        if isinstance(user_text, str):
+            user_text = user_text.decode('utf-8', 'ignore')
+            RE = re.compile(u'#([a-zA-Z-_⺀-⺙⺛-⻳⼀-⿕々〇〡-〩〸-〺〻㐀-䶵一-鿃豈-鶴侮-頻並-龎]+)#', re.UNICODE)
+            hashtag_list = RE.findall(user_text)
+            if hashtag_list:
+                hashtag_string = '&'.join(hashtag_list)
+
+    return hashtag_string
 
 
 if __name__ == "__main__":
@@ -142,16 +171,28 @@ if __name__ == "__main__":
             #print 'item:', item
             if str(item['uid']) in monitor_user_list:
                 text = item['text']
-                # add sensitive field to weibo
+                # add sensitive field and sensitive_word field to weibo
                 sw_list = searchWord(text.encode('utf-8'))
                 sensitive = len(sw_list)
                 if sensitive:
                     item['sensitive'] = 1
+                    word_set = set()
+                    for w in sw_list:
+                        word = ''.join([chr(x) for x in w])
+                        word = word.decode('utf-8')
+                        word_set.add(word)
+                    sensitive_word_string = '&'.join(list(word_set))
+                    item['sensitive_word'] = sensitive_word_string
                 else:
                     item['sensitive'] = 0
                 # add sentiment field to weibo
                 sentiment = get_sentiment_attribute(text)
                 item['sentiment'] = sentiment
+                # add hashtag field to weibo
+                hashtag_string = get_hashtag_attribute(text)
+                if hashtag_string != '':
+                    item['hashtag'] = hashtag_string
+                # save
                 action, xdata = expand_index_action(item)
                 bulk_action.extend([action, xdata])
                 count += 1
