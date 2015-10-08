@@ -38,7 +38,7 @@ def ts2format_time(ts):
     return format_time
 
 def full_text_search(words_list):
-    results = []
+    results = dict()
     query_body = {
         "query": {
             "bool": {
@@ -57,6 +57,9 @@ def full_text_search(words_list):
         item = item['_source']
         item['timestamp'] = ts2format_time(item['timestamp'])
         item['sentiment'] = sentiment_test(item['sentiment'])
-        results.append(item)
+        try:
+            results[item['uid']].append(item)
+        except:
+            results[item['uid']] = [item]
 
     return results
