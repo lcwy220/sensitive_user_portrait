@@ -342,7 +342,7 @@ $('#domain_portrait').empty();
    num ++;
    if (num < 7){
        html = '';
-       html += '<div ng-repeat="t in hotTopics" class="col-md-4 ng-scope"><div style="padding:5px; padding-left:15px; padding-right:15px; margin-bottom:15px" class="section-block">';
+       html += '<div ng-repeat="t in hotTopics" class="col-md-4 ng-scope"><div style="padding:20px; padding-left:15px; padding-right:15px; margin-bottom:15px" class="section-block">';
       // html += '<h1 class="no-margin"><small><a style="color:#777;font-size:18px" class="ng-binding">' + key + '</a></small></h1>';
 	  html += '<span class="no-margin"><small><a style="color:#777;font-size:18px" class="ng-binding">草根</a></small></span>';
        html += '<hr style="margin-top: 5px; margin-bottom: 15px">';
@@ -381,7 +381,7 @@ $('#topic_portrait').empty();
    num ++;
    if (num < 7){
        html = '';
-       html += '<div ng-repeat="t in hotTopics" class="col-md-4 ng-scope"><div style="padding:5px; padding-left:15px; padding-right:15px; margin-bottom:15px" class="section-block">';
+       html += '<div ng-repeat="t in hotTopics" class="col-md-4 ng-scope"><div style="padding:20px; padding-left:15px; padding-right:15px; margin-bottom:15px" class="section-block">';
       // html += '<h1 class="no-margin"><small><a style="color:#777;font-size:18px" class="ng-binding">' + key + '</a></small></h1>';
 	  html += '<span class="no-margin"><small><a style="color:#777;font-size:18px" class="ng-binding">生活</a></small></span>';
        html += '<hr style="margin-top: 5px; margin-bottom: 15px">';
@@ -390,7 +390,7 @@ $('#topic_portrait').empty();
 	   /*
 	   for (i = 0; i<data['domain_top_user'][key].length; i++){
           var s = i.toString();
-           if (data['domain_top_user'][key][s]['1'] == 'unknown'){
+           if (data20domain_top_user'][key][s]['1'] == 'unknown'){
               domain_top_username = '未知';
            }else{
               domain_top_username = data['domain_top_user'][key][s]['1'];

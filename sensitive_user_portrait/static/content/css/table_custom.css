@@ -30,8 +30,17 @@
 .dropdown-menu {
     font-size:13px;
 }
+#nav-bar {
+    width:80%;
+}
+.container-fluid {
+    padding-right:0px;
+}
+/*
 .win-backbutton {
     margin-left:55px;
 }
 .row-fluid{
     padding-left:45px;
+}
+*/
