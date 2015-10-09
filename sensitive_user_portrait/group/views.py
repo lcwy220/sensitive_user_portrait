@@ -177,7 +177,7 @@ def ajax_search_track_task():
 def ajax_get_track_results():
     results = {}
     task_name = request.args.get('task_name', '')
-    module = request.args.get('module', 'basic')
+    module = request.args.get('module', 'basic') #module=basic/comment_retweet/network
     results = get_track_result(task_name, module)
     return json.dumps(results)
 

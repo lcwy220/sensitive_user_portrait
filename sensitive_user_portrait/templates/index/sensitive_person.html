@@ -1,0 +1,99 @@
+{% extends "index/base.html" %} 
+{% block title %}敏感人物属性{% endblock title %}
+{% block subtitle %}敏感人物属性{% endblock subtitle %}
+{% block custom_css %}
+{{ super() }}
+	<link rel="stylesheet" href="/static/custom/css/overview.css" media="screen" />
+    <link rel="stylesheet" href="/static/custom/css/jelevator.css"  media="screen" />
+	<link rel="stylesheet" href="/static/custom/css/sensitive_person.css" media="screen" />
+	<style>
+	.box{width:310px;height:300px;float:left;}
+	li{list-style:none;}
+	</style>
+{% endblock custom_css  %}
+{% block body %}
+<div id="page">
+		<div class="portait" style="font-family:'Microsoft YaHei UI'; font-size:16px;margin-top:10px">
+			<div class="PortraitImg" ><span class="sensitive_name">敏感人物姓名</span></div>
+			<div style="text-align:left;height:30px;margin-top:20px;float:left;">
+				<span style="margin-right:30px">政治倾向:<span>倾左</span></span>
+				<span style="margin-right:20px">敏感度:<span>高级</span></span>
+				<span style="margin-right:20px">领域类别:<span>****</span></span>
+			</div>
+		</div>
+            <br />
+        <div style="float:left;">
+            <h2>统计信息</h2>            
+            <table class="statictics" width="750" border="1">
+				<tr>
+				    <td class="col_1">统计信息</td>
+				    <td>敏感/微博总数</td>
+				    <td>敏感/总转发</td>
+				    <td>敏感/总评论</td>
+				</tr>
+				<tr>
+				    <td class="col_1">原创</td>
+				    <td><span id="origin_sensitive" style="color:red">123</span>/<span id="origin_total">4567</span></td>
+				    <td><span id="origin_sensitive" style="color:red">123</span>/<span id="origin_total">4567</span></td>
+				    <td><span id="origin_sensitive" style="color:red">123</span>/<span id="origin_total">4567</span></td>
+				</tr>
+				<tr>
+				    <td class="col_1">转发</td>
+				    <td><span class="re_sensitive" style="color:red">123</span>/<span class="re_total">4567</span></td>
+				    <td><span class="re_sensitive" style="color:red">123</span>/<span class="re_total">4567</span></td>
+				    <td><span class="re_sensitive" style="color:red">123</span>/<span class="re_total">4567</span></td>
+				</tr>
+			</table>
+		</div>
+
+		<div style="float:left">
+			<hr />
+			<h2>活动信息</h2>
+			<div id="influence_chart" style="height:300px;width:680px;float:left; background-color:#666"></div>
+			<div id="location_7"><h3>一周活动轨迹</h3>
+				<div class="clearfix course_nr">
+					<ul class="course_nr2">
+						<li class="shiji">
+							<p><span class="ico" id="d1" >1993</span>&nbsp&nbsp&nbsp&nbsp&nbsp-----<span  id="city1">内容描述1。</span></p>
+						</li>
+						<li class="shiji">
+							<p><span class="ico" id="d2" >1993</span>&nbsp&nbsp&nbsp&nbsp&nbsp-----<span  id="city2">内容描述1。</span></p>
+						</li>
+						<li class="shiji">
+							<p><span class="ico" id="d3" >1993</span><span  id="city3">内容描述1。</span></p>
+						</li>
+						<li class="shiji">
+							<p><span class="ico" id="d4" >1993</span><span  id="city4">内容描述1。</span></p>
+						</li>
+						<li class="shiji">
+							<p><span class="ico" id="d5" >1993</span><span  id="city5">内容描述1。</span></p>
+						</li>
+						<li class="shiji">
+							<p><span class="ico" id="d6" >1993</span><span  id="city6">内容描述1。</span></p>
+						</li>
+						<li class="shiji">
+							<p><span class="ico" id="d7" >1993</span><span  id="city7">内容描述1。</span></p>
+						</li>
+							</ul>
+				</div>
+
+
+			</div>
+
+
+		</div>
+</div>
+{% endblock body %}
+{% block end_js %}
+  <script  src="/static/scripts/jquery-jelevator-1.0.2.min.js"></script>
+  <script type="text/javascript">
+    jQuery(function($){
+        $("h1,h2").jElevator({
+            howTopButton: true,
+            showBottomButton: true,
+            showSectionsMenu: true
+        });
+    });
+ </script>
+ <script  src="/static/custom/js/sensitive_person.js"></script>
+{% endblock end_js%}

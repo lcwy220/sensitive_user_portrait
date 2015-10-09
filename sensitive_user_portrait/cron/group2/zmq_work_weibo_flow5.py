@@ -32,9 +32,9 @@ def add_comment(item):
     timestamp = item['timestamp']
     date = ts2datetime(timestamp)
     date_ts = datetime2ts(date)
-    time_segment = (timestamp - date_ts) / 900
+    time_segment = int((timestamp - date_ts) / 900)
     start_ts = date_ts + time_segment * 900
-    key = 'comment_' + str(ts)
+    key = 'comment_' + str(start_ts)
     monitor_r.hincrby(str(root_uid), key, 1)
     
 
@@ -44,9 +44,9 @@ def add_retweet(item):
     timestamp = item['timestamp']
     date = ts2datetime(timestamp)
     date_ts = datetime2ts(date)
-    time_segment = (timestamp - date_ts) / 900
+    time_segment = int((timestamp - date_ts) / 900)
     start_ts = date_ts + time_segment * 900
-    key = 'retweet_' + str(ts)
+    key = 'retweet_' + str(start_ts)
     monitor_r.hincrby(str(root_uid), key, 1)
 
 
