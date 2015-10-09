@@ -9,7 +9,7 @@ from global_config import REDIS_CLUSTER_HOST_FLOW1, REDIS_CLUSTER_PORT_FLOW1,\
                           REDIS_HOST, REDIS_PORT
 from global_config import WEIBO_API_HOST, WEIBO_API_PORT
 from global_config import USER_PROFILE_ES_HOST, USER_PROFILE_ES_PORT, ES_CLUSTER_HOST_FLOW1, SENSITIVE_USER_PORTRAIT_ES_HOST, SENSITIVE_USER_PORTRAIT_ES_PORT
-
+from global_config import MONITOR_REDIS_HOST, MONITOR_REDIS_PORT
 
 def _default_cluster_redis(host=REDIS_CLUSTER_HOST_FLOW1, port=REDIS_CLUSTER_PORT_FLOW1):
     startup_nodes = [{'host':host, 'port':port}]
@@ -44,6 +44,10 @@ R_GROUP_TASK = _default_redis(host=REDIS_HOST, port=REDIS_PORT, db=13)
 
 # use to keep the track task user 
 R_GROUP = _default_redis(host=REDIS_HOST, port=REDIS_PORT, db=14)
+
+# use to save monitor user be_retweet and be_count result
+MONITOR_REDIS = _default_redis(host=MONITOR_REDIS_HOST, port=MONITOR_REDIS_PORT, db=1)
+
 
 # use to recomment 
 #two types hash
