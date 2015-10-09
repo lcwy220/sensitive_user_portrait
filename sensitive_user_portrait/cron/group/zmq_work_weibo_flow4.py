@@ -62,16 +62,16 @@ def ip2city(ip):
 # use to expand index body to bulk action
 def expand_index_action(item):
     index_body = {}
-    index_body['uid'] = item['uid']
+    index_body['uid'] = str(item['uid'])
     index_body['text'] = item['text']
-    index_body['mid'] = item['mid']
+    index_body['mid'] = str(item['mid'])
     index_body['sensitive'] = item['sensitive']
     index_body['sentiment'] = item['sentiment']
     index_body['timestamp'] = int(item['timestamp'])
     index_body['message_type'] = item['message_type']
     if item['message_type'] != 1:
-        index_body['root_mid'] = item['root_mid']
-        index_body['root_uid'] = item['root_uid']
+        index_body['root_mid'] = str(item['root_mid'])
+        index_body['root_uid'] = str(item['root_uid'])
     ip = item['send_ip']
     index_body['ip'] = ip
     index_body['geo'] = ip2city(ip)
@@ -84,7 +84,7 @@ def expand_index_action(item):
     except:
         pass
     action = {'index': {'_id': index_body['mid']}}
-    xdata = {'doc': index_body}
+    xdata = index_body
     return action, xdata
 
 
