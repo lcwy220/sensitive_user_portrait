@@ -10,7 +10,8 @@ from utils import submit_task, search_task, get_group_results, get_group_list, d
 #track utils
 from track_utils import submit_track_task, search_track_task,\
                         end_track_task, delete_track_task
-from track_result_utils import get_track_result
+from track_result_utils import get_track_result, get_count_weibo, get_sentiment_weibo, \
+                               get_sensitive_word, get_geo_user, get_geo_weibo
 
 from sensitive_user_portrait.global_config import UPLOAD_FOLDER, ALLOWED_EXTENSIONS
 from sensitive_user_portrait.search_user_profile import es_get_source
@@ -196,3 +197,60 @@ def ajax_delete_track_tresults():
     task_name = request.args.get('task_name', '')
     status = delete_track_task(task_name)
     return json.dumps(status)
+
+# show weibo when click count node
+@mod.route('/get_count_weibo/')
+def ajax_get_node_weibo():
+    results = {}
+    task_name = request.args.get('task_name', '')
+    sensitive_status = request.args.get('sensitive_status', '') # 0 unsensitive 1 sensitive
+    sensitive_status = int(sensitive_status)
+    timestamp = request.args.get('timestamp', '')
+    timestamp = int(timestamp)
+    results = get_count_weibo(task_name, sensitive_status, timestamp)
+    return json.dumps(results)
+
+# show weibo when click sentiment node
+@mod.route('/get_sentiment_weibo/')
+def ajax_get_sentiment_weibo():
+    results = {}
+    task_name = request.args.get('task_name', '')
+    sensitive_status = request.args.get('sensitive_status', '') # 0 unsensitive 1 sensitive
+    sensitive_status = int(sensitive_status)
+    sentiment = request.args.get('sentiment', '') # sentiment 126, 127, 128, 129, 130
+    timestamp = request.args.get('timestamp', '')
+    timestamp = int(timestamp)
+    results = get_sentiment_weibo(task_name, sensitive_status, sentiment, timestamp)
+    return json.dumps(results)
+
+# show sensitive_word when click sensitive score
+@mod.route('/get_sensitive_word/')
+def ajax_get_sensitive_word():
+    results = {}
+    task_name = request.args.get('task_name', '')
+    timestamp = request.args.get('timestamp', '')
+    timestamp = int(timestamp)
+    results = get_sensitive_word(task_name, timestamp)
+    return json.dumps(results)
+
+# show user when click geo
+@mod.route('/get_geo_user/')
+def ajax_get_geo_user():
+    results = {}
+    task_name = request.args.get('task_name', '')
+    geo = request.args.get('geo', '')
+    timestamp = request.args.get('timestamp', '')
+    timestamp = int(timestamp)
+    results = get_geo_user(task_name, geo, timestamp)
+    return json.dumps(results)
+
+# show weibo when click geo
+@mod.route('/get_geo_weibo/')
+def ajax_get_geo_ewibo():
+    results = {}
+    task_name = request.args.get('task_name', '')
+    geo = request.args.get('geo', '')
+    timestamp = request.args.get('timestamp', '')
+    timestamp = int(timestamp)
+    results = get_geo_weibo(task_name, geo, timestamp)
+    return json.dumps(results)
