@@ -130,86 +130,76 @@ function drawPsyState(){
     psychologyChart.setOption(optionPsychology);  
 }
 
-//重点领域人物
-function drawDomain(){
-    $('#domain_portrait').empty();
-  var num = 0 
-  //for (key in data['domain_top_user']){ 
-  for(j=0;j<6;j++){
-   num ++;
-   if (num < 7){
-       html = '';
-       html += '<div ng-repeat="t in hotTopics" class="col-md-4 ng-scope"><div style="padding:20px; padding-left:15px; padding-right:15px; margin-bottom:15px" class="section-block">';
-      // html += '<h1 class="no-margin"><small><a style="color:#777;font-size:18px" class="ng-binding">' + key + '</a></small></h1>';
-	  html += '<span class="no-margin"><small><a style="color:#777;font-size:18px" class="ng-binding">草根</a></small></span>';
-       html += '<hr style="margin-top: 5px; margin-bottom: 15px">';
-       html += '<ul style="margin-top:0px;margin-bottom:0;padding-left: 7px;height:50px; overflow-y:hidden" class="list-inline">';
-       for(i=0;i<6;i++){
-	   /*
-	   for (i = 0; i<data['domain_top_user'][key].length; i++){
-          var s = i.toString();
-           if (data['domain_top_user'][key][s]['1'] == 'unknown'){
-              domain_top_username = '未知';
-           }else{
-              domain_top_username = data['domain_top_user'][key][s]['1'];
-                  };
-           if (data['domain_top_user'][key][s]['2'] == 'unknown'){
-              domain_top_user_portrait = "http://tp2.sinaimg.cn/1878376757/50/0/1";
-           }else{
-              domain_top_user_portrait = data['domain_top_user'][key][s]['2'];
-                  };
-		
-          html += '<li ng-repeat="result in t.result" target="_blank" style="margin-bottom: 10px" class="index-small-photo-wrap no-padding ng-scope"><a target="_blank" href="/index/personal/?uid=' + data['domain_top_user'][key][s]['0'] +'" title="' + domain_top_username +'">';
-          html += '<div class="small-photo shadow-5"><span class="helper"></span><img src="' + domain_top_user_portrait + '" alt="' + domain_top_username +'"></div></a></li>';         
-       */
-	   html += '<li ng-repeat="result in t.result" target="_blank" style="margin-bottom: 10px" class="index-small-photo-wrap no-padding ng-scope">';
-	    html += '<div class="small-photo shadow-5"><span class="helper"></span><img src="http://tp2.sinaimg.cn/1878376757/50/0/1" alt="xxx"></div></a></li>';
-	   }
-       html += '</ul></div></div>';
-       $('#domain_portrait').append(html);
-	   }
-   }
-}	
 //话题重点人物
-function drawTopic(){
-    $('#topic_portrait').empty();
-  var num = 0 
-  //for (key in data['domain_top_user']){ 
-  for(j=0;j<6;j++){
-   num ++;
-   if (num < 7){
-       html = '';
-       html += '<div ng-repeat="t in hotTopics" class="col-md-4 ng-scope"><div style="padding:20px; padding-left:15px; padding-right:15px; margin-bottom:15px" class="section-block">';
-      // html += '<h1 class="no-margin"><small><a style="color:#777;font-size:18px" class="ng-binding">' + key + '</a></small></h1>';
-	  html += '<span class="no-margin"><small><a style="color:#777;font-size:18px" class="ng-binding">生活</a></small></span>';
-       html += '<hr style="margin-top: 5px; margin-bottom: 15px">';
-       html += '<ul style="margin-top:0px;margin-bottom:0;padding-left: 7px;height:50px; overflow-y:hidden" class="list-inline">';
-       for(i=0;i<6;i++){
-	   /*
-	   for (i = 0; i<data['domain_top_user'][key].length; i++){
-          var s = i.toString();
-           if (data20domain_top_user'][key][s]['1'] == 'unknown'){
-              domain_top_username = '未知';
-           }else{
-              domain_top_username = data['domain_top_user'][key][s]['1'];
-                  };
-           if (data['domain_top_user'][key][s]['2'] == 'unknown'){
-              domain_top_user_portrait = "http://tp2.sinaimg.cn/1878376757/50/0/1";
-           }else{
-              domain_top_user_portrait = data['domain_top_user'][key][s]['2'];
-                  };
-		
-          html += '<li ng-repeat="result in t.result" target="_blank" style="margin-bottom: 10px" class="index-small-photo-wrap no-padding ng-scope"><a target="_blank" href="/index/personal/?uid=' + data['domain_top_user'][key][s]['0'] +'" title="' + domain_top_username +'">';
-          html += '<div class="small-photo shadow-5"><span class="helper"></span><img src="' + domain_top_user_portrait + '" alt="' + domain_top_username +'"></div></a></li>';         
-       */
-	   html += '<li ng-repeat="result in t.result" target="_blank" style="margin-bottom: 10px" class="index-small-photo-wrap no-padding ng-scope">';
-	    html += '<div class="small-photo shadow-5"><span class="helper"></span><img src="http://tp2.sinaimg.cn/1878376757/50/0/1" alt="xxx"></div></a></li>';
+function drawTopic(div_name, more_div_name, rank_data){
+    $('#'+div_name).empty();
+    var num = 0; 
+    for (var key in rank_data){ 
+        num ++;
+        if (num > 6){
+            break;
+        }
+        var html = '';
+        html += '<div ng-repeat="t in hotTopics" class="col-md-4 ng-scope"><div style="padding:20px; padding-left:15px; padding-right:15px; margin-bottom:15px" class="section-block">';
+        html += '<span class="no-margin"><small><a style="color:#777;font-size:18px" class="ng-binding">' + key + '</a></small></span>';
+        html += '<hr style="margin-top: 5px; margin-bottom: 15px">';
+        html += '<ul style="margin-top:0px;margin-bottom:0;padding-left: 7px;height:50px; overflow-y:hidden" class="list-inline">';
+        var topic_list = rank_data[key];
+        var min_num = Math.min(4, topic_list.length);
+        for(var i = 0;i < min_num; i++){
+            var person_data = topic_list[i];
+            var domain_top_username;
+            if ((person_data[1] == 'unknown') || (person_data[1] == '0')){
+                domain_top_username = '未知';
+            }
+            else{
+                domain_top_username = person_data[1];
+            }
+            var domain_top_user_portrait;
+            if (person_data[2] == 'unknown'){
+                domain_top_user_portrait = "http://tp2.sinaimg.cn/1878376757/50/0/1";
+            }
+            else{
+                domain_top_user_portrait = person_data[2];
+            }
+            html += '<li ng-repeat="result in t.result" target="_blank" style="margin-bottom: 10px" class="index-small-photo-wrap no-padding ng-scope"><a target="_blank" href="/index/personal/?uid=' + person_data[0] +'" title="' + domain_top_username +'">';
+            html += '<div class="small-photo shadow-5"><span class="helper"></span><img src="' + domain_top_user_portrait + '" alt="' + domain_top_username +'"></div></a></li>';
 	   }
        html += '</ul></div></div>';
-       $('#topic_portrait').append(html);
-	   }
-   }	
-}	
+       $('#'+div_name).append(html);
+   }
+   $('#'+more_div_name).empty();
+   for (key in rank_data){ 
+       var html = '';
+       html += '<div ng-repeat="t in hotTopics" class="col-md-4 ng-scope"><div style="padding:5px; padding-left:15px; padding-right:15px; margin-bottom:15px" class="section-block">';
+       html += '<h1 class="no-margin"><small><a style="color:#777;font-size:18px" class="ng-binding">' + key + '</a></small></h1>';
+       html += '<hr style="margin-top: 5px; margin-bottom: 15px">';
+       html += '<ul style="margin-top:0px;margin-bottom:0;padding-left: 7px;height:50px; overflow-y:hidden" class="list-inline">';
+        var topic_list = rank_data[key];
+        var min_num = Math.min(4, topic_list.length);
+       for(var i = 0;i < min_num; i++){
+            var person_data = topic_list[i];
+            var domain_top_username;
+            if ((person_data[1] == 'unknown') || (person_data[1] == '0')){
+                domain_top_username = '未知';
+            }
+            else{
+                domain_top_username = person_data[1];
+            }
+            var domain_top_user_portrait;
+            if (person_data[2] == 'unknown'){
+                domain_top_user_portrait = "http://tp2.sinaimg.cn/1878376757/50/0/1";
+            }
+            else{
+                domain_top_user_portrait = person_data[2];
+            }
+            html += '<li ng-repeat="result in t.result" target="_blank" style="margin-bottom: 10px" class="index-small-photo-wrap no-padding ng-scope"><a target="_blank" href="/index/personal/?uid=' + person_data[0] +'" title="' + domain_top_username +'">';
+            html += '<div class="small-photo shadow-5"><span class="helper"></span><img src="' + domain_top_user_portrait + '" alt="' + domain_top_username +'"></div></a></li>';
+        }
+        html += '</ul></div></div>';
+       $('#'+more_div_name).append(html);
+   }
+}
 	
 //画表格
 function drawRank(div_name, cname, rank_data, more_div){
@@ -281,6 +271,16 @@ function draw(data){
     var cloud_data = global_overview_data.sensitive_hashtag;
     drawSensitiveCloud(div_name, c_title, cloud_data);
     
+    var div_name = 'topic_portrait';
+    var more_div_name = 'topic_more_portrait';
+    var rank_data = global_overview_data.topic_rank;
+    drawTopic(div_name, more_div_name, rank_data);
+    var div_name = 'domain_portrait';
+    var more_div_name = 'domain_more_portrait';
+    var rank_data = global_overview_data.domain_rank;
+    drawTopic(div_name, more_div_name, rank_data);
+
+
     var rank_list = new Array();
     rank_list['top_influence'] = 'influence';
     rank_list['importance'] = 'importance';
@@ -316,5 +316,3 @@ var global_overview_data;
 var overview_url = '/overview/show/?date=2013-09-07';
 call_ajax_request(overview_url, draw);
 drawPsyState();
-drawDomain();
-drawTopic();

@@ -30,6 +30,12 @@
 .dropdown-menu {
     font-size:13px;
 }
+.modal-open .modal {
+    overflow-y : hidden;
+}
+.modal.fade.in {
+    top:10%;
+}
 #nav-bar {
     width:80%;
 }

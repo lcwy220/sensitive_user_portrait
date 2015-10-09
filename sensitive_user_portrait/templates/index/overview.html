@@ -30,9 +30,11 @@
 			
 			<hr style="width:970px;">
 			<h2 >领域重点人物</h2>
+            <span style="float:right;cursor:pointer;margin-top:-30px;margin-right:50px;" type="button" data-toggle="modal" data-target="#more_domain"><u>查看更多</u></span>
             <div class="important" id="domain_portrait"></div>
 			<hr>
             <h2>话题重点人物</h2>
+            <div style="float:right;cursor:pointer;margin-top:-30px;margin-right:50px;" type="button" data-toggle="modal" data-target="#more_topic"><u>查看更多</u></div>
 			<div class="important" id="topic_portrait"></div>
             <div class="clear"></div>
 			
@@ -79,6 +81,35 @@
     </div>
 	
 <!--模态框-->
+<div class="modal fade" id="more_domain" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document" style="width:1000px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        <h4 class="modal-title" id="myModalLabel">领域重点用户</h4>
+      </div>
+      <div id='domain_more_portrait'>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="more_topic" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document" style="width:1000px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        <h4 class="modal-title" id="myModalLabel">话题重点用户</h4>
+      </div>
+      <div id="topic_more_portrait">
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
 <div class="modal fade" id="rank_influence" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
