@@ -8,9 +8,10 @@ import json
 '''
 reload(sys)
 sys.path.append('../')
-from global_utils import G_GROUP as r
-from global_utils import G_GROUP_TASK as r_task
-from global_utils import es_user_portrait as es
+from global_utils import R_GROUP as r
+from global_utils import R_GROUP_TASK as r_task
+from global_utils import es_sensitive_user_portrait as es
+from time_utils import ts2datetime, datetime2ts
 '''
 from sensitive_user_portrait.global_utils import R_GROUP as r
 from sensitive_user_portrait.global_utils import R_GROUP_TASK as r_task
@@ -24,11 +25,13 @@ def submit_track_task(input_data):
     '''
     step1: identify the task_name is not exist
     step2: index new task_name
-    step3: add user list to redis???---should identify
+    step3: add user list to redis---should identify
     step4: add task to redis queue
+    step5: add start_ts to redis hash----monitor_task_time_record
     '''
     status = 0
     task_name = input_data['task_name']
+    submit_date = input_data['submit_date']
     try:
         result = es.get(index=index_name, doc_type=index_type, id=task_name)['_source']
         return 'task_name exist'
@@ -43,7 +46,19 @@ def submit_track_task(input_data):
             if status == 0:
                 return 'add task to redis fail'
             else:
-                return 'success submit'
+                status = add_task_record_time(task_name, submit_date)
+                if status == 0:
+                    return 'add task record time fail'
+                else:
+                    return 'success submit'
+
+# add task record time to redis
+def add_task_record_time(task_name, submit_date):
+    status = 0
+    start_ts = datetime2ts(submit_date)
+    r_task.hset('monitor_task_time_record', task_name, start_ts)
+    status = 1
+    return status
 
 # add track task to reis
 def add_task_redis(task_name):
@@ -210,3 +225,7 @@ def delete_track_task(task_name):
         else:
             return 'success delete task'
 
+if __name__=='__main__':
+    task_name = 'testtask'
+    submit_date = '2013-09-01'
+    add_task_record_time(task_name, submit_date)
