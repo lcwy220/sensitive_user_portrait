@@ -17,7 +17,7 @@ civil_officer = ['1419517335', '1098736570', '1729736051', '2419062270', '136971
 star = ['1687429295', '1195300800', '1997641692', '1746274673', '1223178222']
 commonweal = ['3299094722', '1342829361', '1946798710', '1894477791', '1958321657']
 
-search_dict = {'writer': writer, 'expert': expert, 'grassroot': grassroot, 'religion': religion, \
+domain_dict = {'writer': writer, 'expert': expert, 'grassroot': grassroot, 'religion': religion, \
         'attorney': attorney, 'public_intellectual': public_intellectual, 'non_public_owner': non_public_owner, \
         'independent_media': independent_media, 'public_media': public_media, 'civil_officer': civil_officer, \
         'star': star, 'commonweal': commonweal}
@@ -26,9 +26,9 @@ index_type = 'user'
 
 def get_top_user():
     results = dict()
-    for domain in search_dict:
+    for domain in domain_dict:
         results[domain] = []
-        user_list = search_dict[domain]
+        user_list = domain_dict[domain]
         profile_result = es_user_profile.mget(index=index_name, doc_type=index_type, body={'ids':user_list})['docs']
         for profile in profile_result:
             uid = profile['_id']
@@ -51,8 +51,8 @@ gangaotai = ['1771665174', '2504433601', '2632236847', '1843749702', '1971861621
 shewai = ['2181597154', '1649159940', '2263972354', '1743951792', '2647349703']
 xiejiao = ['3902988319', '1644489953', '2283710290', '5305757517', '1974576991']
 
-search_dict = {'zongjiao': zongjiao, 'yishixingtai': yishi, 'kongbuzhuyi': kongbu, 'minshengwending': wending, 'minyun': minyun, \
-        'gangaotai': gangaotai, 'shewai': shewai, 'xiejiao': xiejiao}
+search_dict = {'宗教': zongjiao, '意识形态': yishi, '民族及恐怖主义': kongbu, '民生稳定': wending, '民运': minyun, \
+        '港澳台': gangaotai, '涉外': shewai, '邪教': xiejiao}
 
 # topic
 def get_topic_user():
