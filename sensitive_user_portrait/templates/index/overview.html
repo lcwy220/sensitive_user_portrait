@@ -9,15 +9,17 @@
 	.box{width:310px;height:300px;float:left;}
     .important{}
     #page {height:2175px;}
+    #basic span {color:red;}
 	</style>
 {% endblock custom_css  %}
 {% block body %}
   <div id="page">
         <div id="content">
             <h2>基本信息</h2>
-            <p style="margin-top:30px;margin-left:10px;">系统总共有<span id="totalNumber">5555</span>人。其中敏感人物有<span id="sensitiveN">55</span>人，高影响力有<span id="hinfluence">79</span>人。</p>
-            <p style="margin-top:30px;margin-left:10px;">截至到昨日，系统总共有<span id="storeNumber">5555</span>人入库。正在监控<span id="groupN">5</span>群组，总计<span id="gtotal">156</span>人。新增敏感词<a href="" id="wordsN">3</a>个。</p>
-
+            <div id='basic'>
+                <p style="margin-top:30px;margin-left:10px;">系统总共有<span id="totalNumber"></span>人。其中敏感人物有<span id="sensitiveN"></span>人，高影响力有<span id="hinfluence"></span>人。</p>
+                <p style="margin-top:30px;margin-left:10px;">近一周内，系统推荐中总共有<span id="storeNumber"></span>人还未入库。正在监控<span id="groupN"></span>个群组，总计<span id="gtotal"></span>人。今日新增敏感词<span><a href="" id="wordsN"></a></span>个。</p>
+            </div>
             <hr>
             <h2>统计信息</h2>
             <div class="count" style="height:300px;margin-top:10px;">
@@ -82,7 +84,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
-        <h4 class="modal-title" id="myModalLabel">重要度排名</h4>
+        <h4 class="modal-title" id="myModalLabel">影响力排名</h4>
       </div>
       <div class="modal-body" id='more_influence'>
       </div>
