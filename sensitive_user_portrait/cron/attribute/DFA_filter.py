@@ -44,7 +44,10 @@ def searchWord(str):
     a = 0
     while a < len(str):
         index = ord(str[a])
-        temp = temp[0][index]
+        try:
+            temp = temp[0][index]
+        except:
+            temp == None
         if temp == None:
             temp = nodeTree
             a = a - len(word)

@@ -42,7 +42,7 @@ def extract_geo(result):
         result_dict.update(ip2geo(item))
     for geo in result_dict:
         result_list.append(geo.split('\t')[-1])
-    geo_string = json.dumps(list(set(result_list)))
+    geo_string = '&'.join(list(set(result_list)))
     return geo_string
 
 def ip_to_geo(result):
@@ -58,7 +58,7 @@ def extract_string(result):
     result_list = []
     for item in date_list:
         result_list.extend(item.keys())
-    result_string = json.dumps(list(set(result_list)))
+    result_string = '&'.join(list(set(result_list)))
     return result_string
 
 def get_flow_information(uid_list):
