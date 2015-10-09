@@ -229,16 +229,16 @@
 </div>
 {% endblock body %}
 {% block end_js %}
-  <script  src="/static/scripts/jquery-jelevator-1.0.2.min.js"></script>
-  <script  src="/static/custom/js/overview.js"></script>
+  <script  src="/static/scripts/jquery-jelevator-1.0.3.min.js"></script>
   <script type="text/javascript">
     jQuery(function($){
         $("h2").jElevator({
-            showTopButton: true,
+            howTopButton: true,
             showBottomButton: true,
             showSectionsMenu: true
         });
     });
  </script>
+  <script  src="/static/custom/js/overview.js"></script>
 {% endblock end_js%}
 
