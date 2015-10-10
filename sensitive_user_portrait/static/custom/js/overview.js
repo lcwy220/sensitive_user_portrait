@@ -203,7 +203,10 @@ function drawTopic(div_name, more_div_name, rank_data){
 	
 //画表格
 function drawRank(div_name, cname, rank_data, more_div){
-     $('#'+ div_name).empty();
+    if (!rank_data){
+        rank_data = new Array();
+    }
+    $('#'+ div_name).empty();
         html = '';
         html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
         html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">昵称</th>';
@@ -227,7 +230,7 @@ function drawRank(div_name, cname, rank_data, more_div){
         html += '</table>'; 
         $('#' + div_name).append(html);  
 
-	//更多
+    //更多
 	$('#' + more_div).empty();
     html = '';
     html += '<table class="table table-striped table-bordered bootstrap-datatable datatype responsive">';

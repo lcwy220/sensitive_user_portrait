@@ -139,14 +139,80 @@ function drawTrack(track_data){
 		
 	}
 }
-/*
+//画表格
+function drawRank(div_name, rank_data, more_div){
+    if (!rank_data){
+        rank_data = new Array();
+    }
+     $('#'+ div_name).empty();
+        html = '';
+        html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
+        html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">昵称</th>';
+        html += '<th style="text-align:center">次数</th>';
+        html += '<th style="text-align:center">是否入库</th></tr>';
+        var min_row = Math.min(5, rank_data.length);
+        for (var i = 0; i < min_row; i++) {
+           var s = i.toString();
+           var m = i + 1;
+           var item = rank_data[i];
+           var nickname;
+           if ((item[1][0] == 'unknown') || (item[1][0] == '0')){
+               nickname = '未知';
+           }
+           else{
+               nickname = item[1][0];
+           }
+           var in_status;
+           if (item[1][2] == 0){
+               in_status = '否';
+           }
+           else{
+               in_status = '是';
+           }
+         html += '<tr><th style="text-align:center">' + m + '</th>';
+         html += '<th style="text-align:center"><a title=' + item[0] +' target="_blank" href="/index/personal/?uid=' + item[0] + '">' + nickname + '</a></th>';
+         html += '<th style="text-align:center">' + item[1][1] + '</th>';
+         html += '<th style="text-align:center">' + in_status + '</th></tr>';
+        };
+        html += '</table>'; 
+        $('#' + div_name).append(html);  
+
+	//更多
+	$('#' + more_div).empty();
+    html = '';
+    html += '<table class="table table-striped table-bordered bootstrap-datatable datatype responsive">';
+    html += '<tr><th style="text-align:center">排名</th>';
+    html += '<th style="text-align:center">昵称</th>';
+    html += '<th style="text-align:center">次数</th>';
+    html += '<th style="text-align:center">是否入库</th></tr>';
+	for (var i = 0; i < rank_data.length; i++) {
+       var s = i.toString();
+       var m = i + 1;
+       var item = rank_data[i];
+       var nickname;
+       if ((item[1][0] == 'unknown') || (item[1][0] == '0')){
+           nickname = '未知';
+       }
+       else{
+           nickname = item[1][0];
+       }
+       var in_status;
+       if (item[1][2] == 0){
+           in_status = '否';
+       }
+       else{
+           in_status = '是';
+       }
+       html += '<tr><th style="text-align:center">' + m + '</th>';
+       html += '<th style="text-align:center"><a title=' + item[0] +' target="_blank" href="/index/personal/?uid=' + item[0] + '">' + nickname + '</a></th>';
+       html += '<th style="text-align:center">' + item[1][1] + '</th>';
+       html += '<th style="text-align:center">' + in_status + '</th></tr>';
+    };
+    html += '</table>'; 
+    $('#' + more_div).append(html);                  
+}
 
 //思想分析
-$(document).ready(function(){
- 		Draw_think_topic();
- 		Draw_think_emotion();
- 	})
-        // 基于准备好的dom，初始化echarts图表
 function Draw_think_topic(){
     // domain_value = [];
     // domain_key = [];
@@ -160,10 +226,9 @@ function Draw_think_topic(){
     //     domain_value.push(data['2'][key]);
     // }
     var myChart = echarts.init(document.getElementById('radar_domain')); 
-        
-        var option = {
+    var option = {
         title : {
-            text: '',
+            text: '倾向性',
             subtext: ''
         },
         tooltip : {
@@ -207,83 +272,84 @@ function Draw_think_topic(){
             }
         ]
     };                
-        // 为echarts对象加载数据 
-        myChart.setOption(option); 
+    myChart.setOption(option); 
 }
 function Draw_think_emotion(){
     var myChart = echarts.init(document.getElementById('pie_emotion')); 
     var option = {
-    tooltip : {
-        trigger: 'item',
-        formatter: "{a} <br/>{b} : {c} ({d}%)"
-    },
-    toolbox: {
-        show : true,
-        feature : {
-            mark : {show: false},
-            dataView : {show: false, readOnly: false},
-            magicType : {
-                show: false, 
-                type: ['pie', 'funnel']
-            },
-            restore : {show: false},
-        }
-    },
-    calculable : false,
-    series : [
-        {
-            name:'',
-            type:'pie',
-            selectedMode: 'single',
-            radius : [0, 35],
-            
-            // for funnel
-            x: '20%',
-            width: '40%',
-            funnelAlign: 'right',
-            max: 1548,
-            
-            itemStyle : {
-                normal : {
-                    label : {
-                        position : 'inner'
-                    },
-                    labelLine : {
-                        show : false
-                    }
-                }
-            },
-            data:[
-                {value:5, name:'积极'},
-                {value:5, name:'中性'},
-                {value:12, name:'消极', selected:true}
-            ]
+        title : {
+            text: '心理状态',
+            subtext: ''
         },
-        {
-            name:'',
-            type:'pie',
-            radius : [50, 70],
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: false},
+                dataView : {show: false, readOnly: false},
+                magicType : {
+                    show: false, 
+                    type: ['pie', 'funnel']
+                },
+                restore : {show: false},
+            }
+        },
+        calculable : false,
+        series : [
+            {
+                name:'',
+                type:'pie',
+                selectedMode: 'single',
+                radius : [0, 35],
+                
+                // for funnel
+                x: '20%',
+                width: '40%',
+                funnelAlign: 'right',
+                max: 1548,
+                
+                itemStyle : {
+                    normal : {
+                        label : {
+                            position : 'inner'
+                        },
+                        labelLine : {
+                            show : false
+                        }
+                    }
+                },
+                data:[
+                    {value:5, name:'积极'},
+                    {value:5, name:'中性'},
+                    {value:12, name:'消极', selected:true}
+                ]
+            },
+            {
+                name:'',
+                type:'pie',
+                radius : [50, 70],
             
-            // for funnel
-            x: '60%',
-            width: '35%',
-            funnelAlign: 'left',
-            max: 1048,
-            
-            data:[
-                {value:5, name:'积极'},
-                {value:5, name:'中性'},
-                {value:3, name:'生气'},
-                {value:4, name:'悲伤'},
-                {value:5, name:'其他'}
-            ]
-        }
-    ]
-}
+                // for funnel
+                x: '60%',
+                width: '35%',
+                funnelAlign: 'left',
+                max: 1048,
+                
+                data:[
+                    {value:5, name:'积极'},
+                    {value:5, name:'中性'},
+                    {value:3, name:'生气'},
+                    {value:4, name:'悲伤'},
+                    {value:5, name:'其他'}
+                ]
+            }
+        ]
+    }
     myChart.setOption(option);  
-                    
 }
-*/
 function drawBasic(personalData){
     var APsum = document.getElementById('APsum');
     APsum.innerHTML = personalData.all_count;
@@ -376,6 +442,23 @@ function draw(data){
     drawInfluenceTrend(personalData.influence_trend);
     drawTimeTrend(personalData.time_trend);
     drawTrack(personalData.activity_geo_distribute);
+
+    var rank_list = new Array();
+    rank_list['repost'] = 'retweet';
+    rank_list['retweeted'] = 'follow';
+    rank_list['top_at'] = 'at';
+    var more_div_list = new Array();
+    more_div_list['repost'] = 'more_repost';
+    more_div_list['retweeted'] = 'more_retweeted';
+    more_div_list['top_at'] = 'more_at';
+    for (var div_name in rank_list){
+        var key = rank_list[div_name];
+        var more_div = more_div_list[div_name];
+        drawRank(div_name, data[key][0], more_div);
+    }
+    // unfinished
+    Draw_think_topic();
+    Draw_think_emotion();
 }
 var person_url = '/attribute/portrait_attribute/?uid=' + uid;
 call_ajax_request(person_url, draw);
