@@ -96,6 +96,10 @@ def sensitive_user_text_mapping():
                         "type": "string",
                         "index": "not_analyzed"
                     },
+                    "sensitive_words":{
+                        "type": "string",
+                        "index": "not_analyzed"
+                    },
                     "message_type":{
                         "type":"string",
                         "index": "not_analyzed"
@@ -116,7 +120,7 @@ def save_text2es():
     count = 0
     bulk_action = []
     user_weibo_dict = dict()
-    csvfile = open('./sensitive_uid_text_1.csv', 'rb')
+    csvfile = open('./sensitive_uid_text_2.csv', 'rb')
     reader = csv.reader(csvfile)
     for line in reader:
         count += 1
@@ -126,6 +130,7 @@ def save_text2es():
         weibo['mid'] = line[2]
         weibo['geo'] = ip2geo(line[3])
         weibo['timestamp'] = line[4]
+        weibo['message_type'] = line[5]
         weibo['uid'] = user
         sentiment = attr_liwc([weibo['text']])
         weibo['sentiment'] = json.dumps(sentiment)
