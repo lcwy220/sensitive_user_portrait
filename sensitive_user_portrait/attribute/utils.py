@@ -560,7 +560,7 @@ def search_attribute_portrait(uid):
             return_results['importance_rank'] = 0
     else:
         return_results['importance_rank'] = 0
-
+    return_results['importance'] = results['importance']
 
     if results['activeness']:
         query_body = {
@@ -580,7 +580,7 @@ def search_attribute_portrait(uid):
             return_results['activeness_rank'] = 0
     else:
         return_results['activeness_rank'] = 0
-
+    return_results['activeness'] = results['activeness']
 
     if results['influence']:
         query_body = {
@@ -600,6 +600,8 @@ def search_attribute_portrait(uid):
             return_results['influence_rank'] = 0
     else:
         return_results['influence_rank'] = 0
+    return_results['influence'] = results['influence']
+
 
     if results['sensitive']:
         query_body = {
@@ -619,6 +621,7 @@ def search_attribute_portrait(uid):
             return_results['sensitive_rank'] = 0
     else:
         return_results['sensitive_rank'] = 0
+    return_results['sensitive'] = results['sensitive']
 
     query_body = {
         'query':{
@@ -666,7 +669,7 @@ def search_attribute_portrait(uid):
                 detail[2] = item.get('origin_weibo_retweeted_total_number', 0) + item.get('retweeted_weibo_retweeted_total_number', 0)
                 detail[3] = item.get('origin_weibo_comment_total_number', 0) + item.get('retweeted_weibo_comment_total_number', 0)
                 attention_number = detail[2] + detail[3]
-                attention = 2/(1+math.exp(-0.01*attention_number)) - 1
+                attention = 2/(1+math.exp(-0.005*attention_number)) - 1
             influence_value.append([date, item['user_index']])
             influence_detail.append([date, detail])
             attention_value.append(attention)

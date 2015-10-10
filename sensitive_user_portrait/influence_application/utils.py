@@ -4,7 +4,7 @@ import sys
 from elasticsearch import Elasticsearch
 from sensitive_user_portrait.global_utils import ES_CLUSTER_FLOW1 as es_cluster
 from sensitive_user_portrait.global_utils import es_sensitive_user_portrait as es
-from sensitive_user_portrait.global_utils import es_user_profile as es_profile
+from sensitive_user_portrait.global_utils import es_user_profile
 
 
 def search_domain(domain, date, number=100):
@@ -25,7 +25,13 @@ def search_domain(domain, date, number=100):
     uid_list = []
     for item in search_results:
         domain_list = (item['_source']['domain_string']).split('&')
-        if domain in set()
+        if domain in set(domain_list):
+            uid_list.append(item['_id'])
+            count += 1
+            if count == int(number):
+                break
+
+    
 
 
 
