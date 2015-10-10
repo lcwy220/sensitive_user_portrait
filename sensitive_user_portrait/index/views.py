@@ -124,6 +124,9 @@ def personal():
     uid = str(uid)
     return render_template('index/personal.html', uid=uid)
 
+@mod.route('/sensitive_person/')
+def sensitive_person():
+    return render_template('index/sensitive_person.html')
 
 @mod.route('/contact/')
 def contact():

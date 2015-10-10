@@ -18,4 +18,6 @@ domain_dict = {'作家写手': writer, '专家学者': expert, '草根红人': g
         '维权律师': attorney, '公知分子': public_intellectual, '非公企业主': non_public_owner, \
         '独立媒体人': independent_media, '官方媒体': public_media, '公职人员': civil_officer, \
         '文体明星': star, '社会公益': commonweal}
-		
+
+
+

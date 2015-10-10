@@ -8,6 +8,7 @@ a#basic_info:hover{cursor:hand;}
 	text-align: center;
 	margin-left: 60px;
 }
+p{font-family:"微软雅黑";}
 .container{
 	background-color:#fff;
 	width: 1010px;
@@ -53,3 +54,15 @@ a#basic_info:hover{cursor:hand;}
   text-align:center;
   margin-left:50px;
 } 
+#sensiword_table{
+	float: left;
+	background-color: gray;
+	width: 500px;
+	height:600px;
+	margin: 20px;
+}
+.sensiword_hashtag{
+	float: left;
+	background-color: blue;
+	width: 350px;
+}
