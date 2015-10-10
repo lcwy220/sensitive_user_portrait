@@ -31,6 +31,14 @@ def ts2HourlyTime(ts, interval):
 def ts2datetime_full(ts):
     return time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(ts))
 
+def date2ts(date):
+    timeArray = time.strptime(date, '%Y-%m-%d %H:%M:%S')
+    timestamp = int(time.mktime(timeArray))
+    return timestamp
+
 if __name__=='__main__':
-    result = ts2date(int('1377964800'))
-    print 'result:', result
+    #result = ts2date(int('1377964800'))
+    #print 'result:', result
+    date = '2013-10-10 23:40:00'
+    timestamp = date2ts(date)
+    print 'timestamp:', timestamp
