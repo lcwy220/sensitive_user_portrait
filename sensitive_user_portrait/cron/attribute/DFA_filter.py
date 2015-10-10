@@ -1,25 +1,27 @@
-#encoding:UTF-8
+# -*- coding:utf-8 -*-
 import sys
 from time import time
-'''
-@author: ahuaxuan 
-@date: 2009-02-20
-'''
+reload(sys)
+sys.path.append('./../../')
+from global_utils import R_RECOMMENTATION as r
+
 
 wordTree = [None for x in range(256)]
 wordTree.append(0)
 nodeTree = [wordTree, 0]
 def readInputText():
     txt = ''
-    for line in open('text.txt', 'rb'):
+    for line in open('./text.txt', 'rb'):
         txt = txt + line
     return txt
 
 def createWordTree():
     awords = []
-    for b in open('./../../sensitive_words.txt', 'rb'):
-        awords.append(b.strip())
-    
+    sensitive_words = r.hkeys('sensitive_words')
+    #for b in open('./../../sensitive_words.txt', 'rb'):
+    #    awords.append(b.strip())
+
+    awords = sensitive_words
     for word in awords:
         temp = wordTree
         for a in range(0,len(word)):
@@ -47,7 +49,7 @@ def searchWord(str):
         try:
             temp = temp[0][index]
         except:
-            temp == None
+            temp = None
         if temp == None:
             temp = nodeTree
             a = a - len(word)
@@ -78,13 +80,10 @@ def sensitive_words_extract(text):
 
 
 if __name__ == '__main__':
-    #reload(sys)  
-    #sys.setdefaultencoding('GBK')  
     input2 = readInputText()
     createWordTree();
     beign=time()
     list2 = searchWord(input2)
-    print "cost time : ",time()-beign
     print list2
     strLst = []
     print 'I have find some words as ', len(list2)

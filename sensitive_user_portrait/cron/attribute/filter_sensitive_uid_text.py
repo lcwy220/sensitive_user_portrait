@@ -24,7 +24,7 @@ with open (os.path.join(uid_csv_path, uid_csv), 'rb') as t:
         uid_set.add(uid)
         count_n += 1
 
-uid_text = file('sensitive_uid_text_2.csv', 'wb')
+uid_text = file('sensitive_uid_text_1.csv', 'wb')
 writer = csv.writer(uid_text)
 count = 0
 count_f = 0
