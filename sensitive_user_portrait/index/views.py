@@ -122,6 +122,9 @@ def group_analysis():
 def personal():
     return render_template('index/personal.html')
 
+@mod.route('/sensitive_person/')
+def sensitive_person():
+    return render_template('index/sensitive_person.html')
 
 @mod.route('/contact/')
 def contact():
