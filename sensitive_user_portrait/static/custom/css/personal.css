@@ -25,11 +25,11 @@ a#basic_info:hover{cursor:hand;}
 .soft_con_icon ul li a p{margin-top:10px;}
 
 /*.PortraitImg{margin-top:0px;margin-bottom:0px;margin-left:auto;margin-right:auto;width:50px;height:50px;overflow: hidden;}*/
-.nickname{margin-top:0px;margin-bottom:0px;margin-left:auto;margin-right:auto;height:30px;overflow: hidden;font-size:16px;text-align:center;}
-/*.power{margin-top:0px;margin-bottom:0px;margin-left:auto;margin-right:auto;height:30px;overflow: hidden;font-size:16px;text-align:center;}*/
-.PersonPre{margin-top:0px;margin-bottom:0px;margin-left:auto;margin-right:auto;overflow: hidden;font-size:16px;text-align:center;}
+.nickname{margin-top:0px;margin-bottom:0px;margin-left:auto;margin-right:auto;height:30px;overflow: hidden;font-size:16px;}
+.power{margin-top:0px;margin-bottom:0px;margin-left:auto;margin-right:auto;height:30px;overflow: hidden;font-size:16px;}
+.PersonPre{margin-top:0px;margin-bottom:0px;margin-left:auto;margin-right:auto;overflow: hidden;font-size:16px;}
 .lightw {color: #808080;}
-.red{color:red;margin-right:5px;}
+.red{color:rgb(50,48,111);margin-right:5px;}
 .tagbg{min-width:50px;}
 #delIcon{background-image:url(/static/custom/images/Delete16.png);width:16px;height:16px;cursor:pointer;display:inline-block;}
 .tagClo:hover{border:#eee solid 1px;cursor:default; }

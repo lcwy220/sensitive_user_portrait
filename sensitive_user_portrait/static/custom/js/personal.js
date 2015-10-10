@@ -335,7 +335,7 @@ function draw(data){
         $('#IPnum').html(value);
         var value = 'influence' in personalData?personalData['influence'].toFixed(2):'无此数据';
         $('#FPnum').html(value);
-        var value = 'sensitiveness' in personalData?personalData['sensitiveness'].toFixed(2):'无此数据';
+        var value = 'sensitive' in personalData?personalData['sensitive'].toFixed(2):'无此数据';
         $('#SPnum').html(value);
         var value = 'activeness_rank' in personalData?personalData['activeness_rank']:'无此数据';
         $('#APrank').html(value);
@@ -357,17 +357,15 @@ function draw(data){
         $('#userFans').html(value);
         var value = 'friendsnum' in personalData?personalData['friendsnum']:'无此数据';
         $('#userFriend').html(value);
-        var value = 'online_pattern' in personalData?personalData['online_pattern']:'无此数据';
+        var value = 'online_pattern' in personalData?personalData['online_pattern'][0][0]:'无此数据';
         $('#userOnline').html(value);
         
-       /* 
         var img = document.getElementById('portraitImg');
-        if(personalData.photo_url && personalData.photo_url == "unknown"){
+        if(personalData.photo_url == "unknown"){
             img.src =  "http://tp2.sinaimg.cn/1878376757/50/0/1";
         }else{
             img.src = personalData.photo_url;
         }
-        */
         var gender = document.getElementById('userGender');
         if(personalData.gender){
             gendernum = personalData.gender;
@@ -382,16 +380,26 @@ function draw(data){
             
         var domain = document.getElementById('userDomain');
         if(personalData.domain){
-                domain.innerHTML = '媒体';
+            var content = personalData.domain;
+            var html = '';
+            for (var i = 0;i < content.length;i++){
+                if (i == (content.length -1)){
+                    html += content[i];
+                }else{
+                    html += content[i] +',';
+                }
+            }
+            domain.innerHTML = html;
+            // domain.innerHTML = '媒体';
         }else{
             domain.innerHTML = "无此数据";
         }
             
         var topic = document.getElementById('userTopic');
         if(personalData.topic){
-            topicdict = personalData.topic;
+            var topicdict = personalData.topic;
             var str = '';
-            for(i=0;i<topicdict.length;i++){
+            for(var i = 0;i < topicdict.length;i++){
                 if (i == (topicdict.length -1)){
                     str += topicdict[i][0];
                 }else{
@@ -399,13 +407,11 @@ function draw(data){
                 }
                 
             }
-            //topic.innerHTML = str;
-            topic.innerHTML = '生活，娱乐';
+            topic.innerHTML = str;
+            // topic.innerHTML = '生活，娱乐';
         }else{
             topic.innerHTML = "无此数据";
         }
-            
-            
     }
     drawBasic(personalData);
 }
