@@ -446,8 +446,19 @@ def search_attribute_portrait(uid):
 
     if results['geo_activity']:
         geo_dict = json.loads(results['geo_activity'])
+        if len(geo_dict) < 7:
+            ts = time.time()
+            ts = datetime2ts('2013-09-08') - 8*24*3600
+            for i in range(7):
+                ts = ts + 24*3600
+                date = ts2datetime(ts).replace('-', '')
+                if geo_dict.has_key(date):
+                    pass
+                else:
+                    geo_dict[date] = {}
+        activity_geo_list = sorted(geo_dict.items(), key=lambda x:x[0], reverse=False)
         geo_list = geo_dict.values()
-        for k,v in geo_dict.items():
+        for k,v in activity_geo_list:
             sort_v = sorted(v.items(), key=lambda x:x[1], reverse=True)
             top_geo = [item[0] for item in sort_v]
             geo_top.append([k, top_geo[0:2]])
@@ -649,9 +660,9 @@ def search_attribute_portrait(uid):
     influence_value = []
     attention_value = []
     ts = time.time()
-    ts = datetime2ts('2013-09-08')
+    ts = datetime2ts('2013-09-08') - 8*24*3600
     for i in range(1,8):
-        date = ts2datetime(ts - i*24*3600).replace('-', '')
+        date = ts2datetime(ts + i*24*3600).replace('-', '')
         detail = [0]*4
         try:
             item = es.get(index=date, doc_type='bci', id=uid)['_source']
@@ -752,8 +763,19 @@ def sensitive_attribute(uid):
         temp_sensitive_geo =  portrait_results['sensitive_geo_activity']
         if temp_sensitive_geo:
             sensitive_geo_dict = json.loads(temp_sensitive_geo)
+            if len(sensitive_geo_dict) < 7:
+                ts = time.time()
+                ts = datetime2ts('2013-09-08') - 8*24*3600
+                for i in range(7):
+                    ts = ts + 24*3600
+                    date = ts2datetime(ts).replace('-', '')
+                    if sensitive_geo_dict.has_key(date):
+                        pass
+                    else:
+                        sensitive_geo_dict[date] = {}
+            sorted_sensitive_geo = sorted(sensitive_geo_dict.items(), key=lambda x:x[0], reverse=False)
             sensitive_geo_list = []
-            for k,v in sensitive_geo_dict.items():
+            for k,v in sorted_sensitive_geo:
                 temp_list = []
                 sorted_geo = sorted(v.items(), key=lambda x:x[1], reverse=True)[0:2]
                 # print sorted_geo
