@@ -4,6 +4,7 @@ import sys
 import json
 from sensitive_user_portrait.global_utils import es_user_profile
 
+# domain
 writer = ['1311967407', '1195347197', '1142648704', '1889213710', '1706987705']
 expert = ['1827652007', '1265965213', '1596329427', '1908195982', '2248789552']
 grassroot = ['1220291284', '1635764393', '2682546440', '3188186580', '1665808371']
@@ -17,10 +18,10 @@ civil_officer = ['1419517335', '1098736570', '1729736051', '2419062270', '136971
 star = ['1687429295', '1195300800', '1997641692', '1746274673', '1223178222']
 commonweal = ['3299094722', '1342829361', '1946798710', '1894477791', '1958321657']
 
-domain_dict = {'writer': writer, 'expert': expert, 'grassroot': grassroot, 'religion': religion, \
-        'attorney': attorney, 'public_intellectual': public_intellectual, 'non_public_owner': non_public_owner, \
-        'independent_media': independent_media, 'public_media': public_media, 'civil_officer': civil_officer, \
-        'star': star, 'commonweal': commonweal}
+domain_dict = {'作家写手': writer, '专家学者': expert, '草根红人': grassroot, '宗教人士': religion, \
+        '维权律师': attorney, '公知分子': public_intellectual, '非公企业主': non_public_owner, \
+        '独立媒体人': independent_media, '官方媒体': public_media, '公职人员': civil_officer, \
+        '文体明星': star, '社会公益': commonweal}
 index_name = 'weibo_user'
 index_type = 'user'
 
