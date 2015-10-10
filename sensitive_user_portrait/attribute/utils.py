@@ -397,6 +397,8 @@ def search_attribute_portrait(uid):
     else:
         return_results['sensitive'] = 0
 
+    return_results['photo_url'] = results['photo_url']
+
     keyword_list = []
     if results['keywords']:
         keywords_dict = json.loads(results['keywords'])
