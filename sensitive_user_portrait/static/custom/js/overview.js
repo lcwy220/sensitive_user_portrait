@@ -203,7 +203,10 @@ function drawTopic(div_name, more_div_name, rank_data){
 	
 //画表格
 function drawRank(div_name, cname, rank_data, more_div){
-     $('#'+ div_name).empty();
+    if (!rank_data){
+        rank_data = new Array();
+    }
+    $('#'+ div_name).empty();
         html = '';
         html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
         html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">昵称</th>';
@@ -227,7 +230,7 @@ function drawRank(div_name, cname, rank_data, more_div){
         html += '</table>'; 
         $('#' + div_name).append(html);  
 
-	//更多
+    //更多
 	$('#' + more_div).empty();
     html = '';
     html += '<table class="table table-striped table-bordered bootstrap-datatable datatype responsive">';
@@ -253,7 +256,7 @@ function drawRank(div_name, cname, rank_data, more_div){
 }
 function draw(data){
     console.log(data);
-    global_overview_data = data;
+    var global_overview_data = data;
     $('#totalNumber').html(global_overview_data.total_number);
     $('#sensitiveN').html(global_overview_data.sensitive_number);
     $('#hinfluence').html(global_overview_data.influence_number);
@@ -271,6 +274,9 @@ function draw(data){
     var cloud_data = global_overview_data.sensitive_hashtag;
     drawSensitiveCloud(div_name, c_title, cloud_data);
     
+    // unfinished
+    drawPsyState();
+
     var div_name = 'topic_portrait';
     var more_div_name = 'topic_more_portrait';
     var rank_data = global_overview_data.topic_rank;
@@ -312,7 +318,5 @@ function draw(data){
         drawRank(div_name, cname, data[key], more_div);
     }
 }
-var global_overview_data;
 var overview_url = '/overview/show/?date=2013-09-07';
 call_ajax_request(overview_url, draw);
-drawPsyState();
