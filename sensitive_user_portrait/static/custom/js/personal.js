@@ -1,4 +1,3 @@
-//微博时间走势图
 
 Date.prototype.format = function(format) {
     var o = {
@@ -21,7 +20,17 @@ Date.prototype.format = function(format) {
     return format;
 }
 
+function call_ajax_request(url, callback){
+    $.ajax({
+        url: url,
+        type: 'get',
+        dataType: 'json',
+        async: false,
+        success: callback
+    });
+}
 
+/*
 	 $('#weiboTime').highcharts({
         chart: {
             type: 'spline',// line,
@@ -96,38 +105,6 @@ Date.prototype.format = function(format) {
         }]
     });
   
-/*
-function point2weibo(xnum, ts){
-	var url ="/weibo/show_user_weibo_ts/?uid="+parent.personalData.uid+"&ts="+ts[0];
-    var delta;
-    //console.log(url);
-	base_call_ajax_request(url, draw_content);
-    $('#date_zh').html(getDate_zh(ts));
-    switch(xnum % 6)
-    {
-        case 0: delta = "00:00-04:00";break;
-        case 1: delta = "04:00-08:00";break;
-        case 2: delta = "08:00-12:00";break;
-        case 3: delta = "12:00-16:00";break;
-        case 4: delta = "16:00-20:00";break;
-        case 5: delta = "20:00-24:00";break;
-    }
-    $('#time_zh').html(delta);
-	function draw_content(data){
-        var html = '';
-        $('#weibo_text').empty();
-        if(data==''){
-            html += "<div style='width:100%;'><span style='margin-left:20px;'>该时段用户未发布任何微博</span></div>";
-        }else{
-            for(i=0;i<data.length;i++){
-                //console.log(data[i].text);
-                html += "<div style='width:100%;'><img src='/static/img/pencil-icon.png' style='height:10px;width:10px;margin:0px;margin-right:10px;'><span>"+data[i].text+"</span></div>";
-            }
-        }
-        $('#weibo_text').append(html);
-    }
-}
-*/
 
 //影响力走势图
 var influenceChart = echarts.init(document.getElementById('influence_chart')); 
@@ -187,7 +164,6 @@ for(i=0;i<7;i++){
     }
     for(i=0;i<7;i++){
 		document.getElementById('city'+(i+1)).innerHTML = '北京';
-		/*
         console.log(citys[i]);
 		if(citys[i]){
 			document.getElementById('city'+(i+1)).innerHTML = citys[i][0];
@@ -195,7 +171,6 @@ for(i=0;i<7;i++){
 			$('#city'+(i+1)).addClass('gray');
 			document.getElementById('city'+(i+1)).innerHTML = '未发布微博';
 		}
-		*/
 		
 	}
 
@@ -341,4 +316,99 @@ function Draw_think_emotion(){
     myChart.setOption(option);  
                     
 }
+*/
+function draw(data){
+    console.log(data);
+    var personalData = data;
+    function drawBasic(personalData){
+        var APsum = document.getElementById('APsum');
+        APsum.innerHTML = personalData.all_count;
+        var IPsum = document.getElementById('IPsum');
+        IPsum.innerHTML = personalData.all_count;
+        var FPsum = document.getElementById('FPsum');
+        FPsum.innerHTML = personalData.all_count;
+        var SPsum = document.getElementById('SPsum');
+        SPsum.innerHTML = personalData.all_count;
+        var value = 'activeness' in personalData?personalData['activeness'].toFixed(2):'无此数据';
+        $('#APnum').html(value);
+        var value = 'importance' in personalData?personalData['importance'].toFixed(2):'无此数据';
+        $('#IPnum').html(value);
+        var value = 'influence' in personalData?personalData['influence'].toFixed(2):'无此数据';
+        $('#FPnum').html(value);
+        var value = 'sensitiveness' in personalData?personalData['sensitiveness'].toFixed(2):'无此数据';
+        $('#SPnum').html(value);
+        var value = 'activeness_rank' in personalData?personalData['activeness_rank']:'无此数据';
+        $('#APrank').html(value);
+        var value = 'importance_rank' in personalData?personalData['importance_rank']:'无此数据';
+        $('#IPrank').html(value);
+        var value = 'influence_rank' in personalData?personalData['influence_rank']:'无此数据';
+        $('#FPrank').html(value);
+        var value = 'sensitive_rank' in personalData?personalData['sensitive_rank']:'无此数据';
+        $('#SPrank').html(value);
+        var value = 'uname' in personalData?personalData['uname']:'无此数据';
+        $('#nickname').html(value);
+        var value = 'description' in personalData?personalData['description']:'无此数据';
+        $('#portraitDetail').html(value);
+        var value = 'uid' in personalData?personalData['uid']:'无此数据';
+        $('#userId').html(value);
+        var value = 'location' in personalData?personalData['location']:'无此数据';
+        $('#userLocation').html(value);
+        var value = 'fansnum' in personalData?personalData['fansnum']:'无此数据';
+        $('#userFans').html(value);
+        var value = 'friendsnum' in personalData?personalData['friendsnum']:'无此数据';
+        $('#userFriend').html(value);
+        var value = 'online_pattern' in personalData?personalData['online_pattern']:'无此数据';
+        $('#userOnline').html(value);
+        
+       /* 
+        var img = document.getElementById('portraitImg');
+        if(personalData.photo_url && personalData.photo_url == "unknown"){
+            img.src =  "http://tp2.sinaimg.cn/1878376757/50/0/1";
+        }else{
+            img.src = personalData.photo_url;
+        }
+        */
+        var gender = document.getElementById('userGender');
+        if(personalData.gender){
+            gendernum = personalData.gender;
+            if (gendernum == 1){
+                gender.innerHTML = '男';
+            }else{
+                gender.innerHTML = '女';
+            }
+        }else{
+            gender.innerHTML = "无此数据";
+        }
+            
+        var domain = document.getElementById('userDomain');
+        if(personalData.domain){
+                domain.innerHTML = '媒体';
+        }else{
+            domain.innerHTML = "无此数据";
+        }
+            
+        var topic = document.getElementById('userTopic');
+        if(personalData.topic){
+            topicdict = personalData.topic;
+            var str = '';
+            for(i=0;i<topicdict.length;i++){
+                if (i == (topicdict.length -1)){
+                    str += topicdict[i][0];
+                }else{
+                    str = str + topicdict[i][0] +',';
+                }
+                
+            }
+            //topic.innerHTML = str;
+            topic.innerHTML = '生活，娱乐';
+        }else{
+            topic.innerHTML = "无此数据";
+        }
+            
+            
+    }
+    drawBasic(personalData);
+}
+var person_url = '/attribute/portrait_attribute/?uid=' + uid;
+call_ajax_request(person_url, draw);
 	

@@ -16,57 +16,50 @@
 	<div id="page">
 		<div class="portait" style="font-family:'Microsoft YaHei UI'; font-size:16px;margin-left:20px;">
 			<div class="PortraitImg" ><img id="portraitImg" src="http://tp2.sinaimg.cn/1878376757/50/0/1" alt="" class="img-"></div>
+            <div class="nickname">
+                <span  id="nickname" class="red"></span>
+            </div>
 			<div style="text-align:left;height:30px;margin-top:20px;">
 				<a id="tag" target='_blank' style="cursor:pointer;">ta的个性标签</a>&nbsp;&nbsp;
 				<a id="homepage" target='_blank' style="cursor:hand;">ta的微博主页</a>&nbsp;&nbsp;
 				<a id="contact" target='_blank' style="cursor:hand;">跟ta相关的人</a>
 			</div>
-			<div class="power">
+			<div class="power" style="font-size:13px;">
 				<span class="activePower lightw">活跃度：</span><span class=" red" id="APnum">100</span>（No.<span id="APrank"></span>/<span id="APsum"></span>）
 				<span class="importantPower lightw">重要度：</span><span class=" red" id="IPnum">100</span>（No.<span id="IPrank"></span>/<span id="IPsum"></span>）
 				<span class="influencePower lightw">影响力：</span><span class=" red" id="FPnum">100</span>（No.<span id="FPrank"></span>/<span id="FPsum"></span>）
+				<span class="sensitivePower lightw">敏感度：</span><span class=" red" id="SPnum">100</span>（No.<span id="SPrank"></span>/<span id="SPsum"></span>）
 			</div>
+            <div class="PersonPre"><span class="lightw">个人描述：</span><span class="" style="font-family: "宋体";" id="portraitDetail">【请勿关注此账号】此账号信息由微博系统自动发出，并无人工管理。</sapn></div>
 		</div>
 		<hr>
         <div id="content">
             <h2>基本信息</h2>
 			<div class="basic_information" style="margin-top:10px;">
-				<ul class="clearfix">
-					<li class="li_1">
+                <div class="clearfix">
+                    <div class="cols">
 						<span class="pt_title">用户ID</span>
 						<span class="pt_detail" id="userId">1828183230</span>
-					</li>
-					<li class="li_1">
 						<span class="pt_title">注册地</span>
 						<span class="pt_detail" id="userLocation">江苏 苏州</span>
-					</li>
-					<li class="li_1">
 						<span class="pt_title">性别</span>
 						<span class="pt_detail" id="userGender">男</span>
-					</li>
-			<!--
-			<li class="li_1">
-				<span class="pt_title">领域</span>
-				<span class="pt_detail" id="userDomain" ></span>
-			</li>
-			<li class="li_1">
-				<span class="pt_title">话题</span>
-				<span class="pt_detail" id="userTopic" ></span>
-			</li>
-			-->
-					<li class="li_1">
+                    </div>    
+					<div class="cols">
 						<span class="pt_title">粉丝数</span>
 						<span class="pt_detail" id="userFans">21663</span>
-					</li>
-					<li class="li_1">
 						<span class="pt_title">关注数</span>
 						<span class="pt_detail" id="userFriend">470</span>
-					</li>
-					<li class="li_1">
 						<span class="pt_title">在线方式</span>
 						<span class="pt_detail" id="userOnline">weibo.com</span>
-					</li>
-				</ul>
+					</div>
+                    <div class="cols">
+                        <span class="pt_title">领域</span>
+                        <span class="pt_detail" id="userDomain" ></span>
+                        <span class="pt_title">话题</span>
+                        <span class="pt_detail" id="userTopic" ></span>
+                    </div>
+				</div>
 			</div>
             <hr>
             <h2>时空分析</h2>
@@ -136,7 +129,20 @@
             <h2>交互分析</h2>
 			<div class="" id=""></div>
             <div class="clear"></div>
-			
+                <div style="padding:10px;">
+                    <span style='font-size:16px;color:#777'>转发排名</span>
+                    <span type="button" data-toggle="modal" data-target="#rank_repost" style='font-size:16px;margin-left:140px;cursor:pointer'><u>查看更多</u></span>
+                    <span style="margin-left:30px;font-size:16px;color:#777">被转发排名</span>
+                    <span data-toggle="modal" type="button"data-target="#rank_retweeted"  style='font-size:16px;margin-left:130px;cursor: pointer'><u>查看更多</u></span>
+                    <span style="margin-left:35px;font-size:16px;color:#777">@排名</span>
+                    <span type="button"data-toggle="modal" data-target="#rank_at" style='font-size:16px;margin-left:130px;cursor: pointer'><u>查看更多</u></span>
+                </div>	
+                <div class="table-responsive"id='repost' style='overflow-x:hidden;width:300px;height:250px;float:left;'>
+                </div>
+                <div class="table-responsive"id='retweeted' style='overflow-x:hidden;width:300px;height:250px;float:left;margin-left:25px;'>
+                </div>
+                <div class="table-responsive"id='top_at' style='overflow-x:hidden;width:300px;height:250px;float:left;margin-left:25px;'>
+                </div>
 			<hr>
 			
             <h2>思想分析</h2>
@@ -157,20 +163,110 @@
         </div>
     </div>
 	
+<!--个人标签-->
+<div id="float-wrap" class="hidden"></div>
+<div id="tagInfo" class="hidden" style="position: fixed;margin-top: -200px;padding-bottom:20px;left: 70%;top: 50%;z-index: 1005;width: 420px;background: #FFF none repeat scroll 0% 0%;border: 1px solid #999;margin-left: -460px;font_family: "Microsoft YaHei UI";">
+	<h3 class="title" style="margin-top:10px;padding-left:30px;padding-bottom:10px;border-bottom:solid 1px lightgrey;">标签信息<a href="javascript:void(0)" class="Tagclose" id="close"></a></h3>
+	<div class="m-wrap" style="margin-top:30px;font-size:16px;" >
+		<div id="ptag" class="fleft" style="width:420px;">
+			<div class="tagClo fleft" ><span style="color:red;">test1</span>:<span class="tagbg"><span>tag1<span><a id="delIcon"></a></span></div>
+			<div class="tagClo fleft" ><span style="color:red;">test1</span>:<span class="tagbg"><span>tag1<span><a id="delIcon"></a></span></div>
+			<div class="tagClo fleft" ><span style="color:red;">test1</span>:<span class="tagbg"><span>tag1<span><a id="delIcon"></a></span></div>
+			<div class="tagClo fleft" ><span style="color:red;">test1</span>:<span class="tagbg"><span>tag1<span><a id="delIcon"></a></span></div>
+			<div class="tagClo fleft" ><span style="color:red;">test1</span>:<span class="tagbg"><span>tag1<span><a id="delIcon"></a></span></div>
+		</div>
+		<div id="addM" style="margin-top:20px;border-top:solid 1px lightgrey;width:418px;padding-top:20px;padding-right:25px;" class="fleft">
+			<div >
+				<span style="margin-left:30px;">选择类别：</span>
+				<span id="attribute_name_zh" style="margin-left:10px">
+					
+				</span>
+			</div>
+			<div style="margin-top:20px;">
+				<span style="margin-left:30px">选择标签：</span>
+				<span id="attribute_value_zh" style="margin-left:10px">
+					
+				</span>
+			</div>
+			<span style=""><button class="btn btn-primary btn-sm" style="width:80px;height:30px;margin-top:30px;margin-left:30px;float:right;" id="add_person_tag_button" title="确定选择" onclick="add_person_tag()">添加</button></span>
+		</div>
+	</div>
+</div>
 <!--模态框-->
+<div class="modal fade" id="rank_repost" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        <h4 class="modal-title" id="myModalLabel">转发排名</h4>
+      </div>
+      <div class="modal-body" id='more_repost'>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="rank_retweeted" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        <h4 class="modal-title" id="myModalLabel">被转发排名</h4>
+      </div>
+      <div class="modal-body" id='more_retweeted'>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="rank_at" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        <h4 class="modal-title" id="myModalLabel">转发排名</h4>
+      </div>
+      <div class="modal-body" id='more_at'>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock body %}
 {% block end_js %}
   <script  src="/static/scripts/jquery-jelevator-1.0.3.min.js"></script>
   <script type="text/javascript">
     jQuery(function($){
-        $("h1,h2").jElevator({
+        $("h2").jElevator({
             howTopButton: true,
             showBottomButton: true,
             showSectionsMenu: true
         });
     });
- </script>
+	$("#tag").off("click").click(function(){
+		$("#float-wrap").removeClass("hidden");
+		$("#tagInfo").removeClass("hidden");
+		return false;
+	});
+	$(".Tagclose").off("click").click(function(){
+		$("#float-wrap").addClass("hidden");
+		$("#tagInfo").addClass("hidden");
+		return false;
+	});
+
+    var uid = {{ uid }};
+    var contact_url = "/index/contact/?uid=" + uid;
+    $('#contact').attr('href', contact_url);
+    var homepage_url = "http://weibo.com/u/" + uid;
+    $('#homepage').attr('href', homepage_url);
+</script>
  <script  src="/static/custom/js/personal.js"></script>
-{% endblock end_js%}
+ {% endblock end_js%}
 
