@@ -1,3 +1,18 @@
+var name = '哈'
+var stime = '1'
+var etime = '2'
+var remark = '111'
+function basic_influence(div){
+    $(div).empty();
+    var domain_html = '';
+    domain_html += '<p style="margin-top:30px;margin-left:10px;">群体名称：';
+    domain_html += '<span id="groupName">' + name + '</span>';
+    domain_html += '；开始时间：<span id="startTime">' + stime + '</span>';
+    domain_html += '；结束时间：<span id="endTime">' + etime + '</span>';
+    domain_html += '；备注：<span id="remarks">' + remark + '</span>';
+    domain_html += '<span type="button"data-toggle="modal" data-target="#user_list" style="font-size:16px;cursor: pointer"><u>用户列表1</u></span></p>';
+    $(div).append(domain_html);
+}
 function draw_linechart(id){
     var myChart = echarts.init(document.getElementById(id)); 
     var option = {
@@ -80,7 +95,7 @@ function draw_linechart(id){
 
 function draw_barchart(id){
     console.log("fsdfsd")
-    var myChart1 = echarts.init(document.getElementById(id)); 
+    var myChart = echarts.init(document.getElementById(id)); 
     option = {
     timeline:{
         data:[
@@ -231,11 +246,12 @@ function draw_barchart(id){
     ]
 };
                     
-    myChart1.setOption(option);                
+    myChart.setOption(option);                
 }
 
 
 $(document).ready(function(){
+    basic_influence('#basic')
     draw_linechart('active');
     draw_linechart('emotion');
     draw_linechart('sensitivity');
