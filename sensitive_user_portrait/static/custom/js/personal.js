@@ -458,37 +458,49 @@ function drawBasic(personalData){
 }
 // 自定义微博列表
 function page_group_weibo(start_row,end_row,data){
-    weibo_num = end_row - start_row;
+    console.log(data);
+    console.log(start_row);
+    console.log(end_row);
+    var weibo_num = end_row - start_row;
     $('#personal_weibo').empty();
     var html = "";
     html += '<div class="group_weibo_font">';
-    for (var i = start_row; i < end_row; i += 1){
-        s=i.toString();
-        uid = data[s]['uid'];
-        text = data[s]['text'];
-        uname = data[s]['uname'];
-        timestamp = data[s]['timestamp'];
-        date = new Date(parseInt(timestamp)*1000).format("yyyy-MM-dd hh:mm:ss");
-        if (i%2 ==0){
+    for (var s = start_row; s < end_row; s++){
+        var timestamp = data[s][2];
+        var geo = data[s][3];
+        var text = data[s][4];
+        // uid = data[s]['uid'];
+        // uname = data[s]['uname'];
+        // var date = new Date(parseInt(timestamp)*1000).format("yyyy-MM-dd hh:mm:ss");
+        if (data[s][0] == 0){
+            var type = '普通微博';
+        }
+        else{
+            var type = '敏感微博';
+        }
+
+        if (s%2 ==0){
             html += '<div style="background:whitesmoke;font-size:14px">';
-            html += '<p><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
-            html += '<p style="margin-top:-5px"><font color:#e0e0e0>' + date + '</font></p>';
+            // html += '<p><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
+            html += '<p style="color:black;">' + timestamp + '&nbsp;&nbsp;' + geo + '&nbsp;&nbsp;' + text + '</p>';
+            html += '<p style="margin-top:-5px;color:darkred;text-align:right">' + type + '</p>';
             html += '</div>'
     }
         else{
-            html += '<div>';
-            html += '<p><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';    
-            html += '<p style="margin-top:-5px"><font color:#e0e0e0>' + date + '</font></p>';
-            html += '</div>';
+            html += '<div style="font-size:14px">';
+            // html += '<p><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
+            html += '<p style="color:black;">' + timestamp + '&nbsp;&nbsp;' + geo + '&nbsp;&nbsp;' + text + '</p>';
+            html += '<p style="margin-top:-5px;color:darkred;text-align:right">' + type + '</p>';
+            html += '</div>'
         }
     }
     html += '</div>'; 
     $('#personal_weibo').append(html);
 }
 
-function draw_weibo(weibo_data){
-    console.log(weibo_data);
+function draw_statistic(attention_data, detail){
     $('#statistic').empty();
+    var detail_data = detail[1];
     var html = '';
     html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
     html += '<tr><th style="text-align:center">原创微博数</th><th style="text-align:center">转发微博数</th>';
@@ -497,13 +509,15 @@ function draw_weibo(weibo_data){
     html += '<th style="text-align:center">关注度</th></tr>';
     
     html += '<tr>';
-    for (var i = 0;i < 7; i++){
-        html += '<th style="text-align:center">' + i + '</th>';
-    }
+    html += '<th style="text-align:center">' + detail_data[0] + '</th>';
+    html += '<th style="text-align:center">' + detail_data[1] + '</th>';
+    html += '<th style="text-align:center">' + detail_data[2] + '</th>';
+    html += '<th style="text-align:center">' + detail_data[3] + '</th>';
+    html += '<th style="text-align:center"><a style="cursor:pointer;" title=' + detail_data[5] + '>' + detail_data[6] + '</a></th>';
+    html += '<th style="text-align:center"><a style="cursor:pointer;" title=' + detail_data[8] + '>' + detail_data[9] + '</a></th>';
+    html += '<th style="text-align:center">' + attention_data + '</th>';
     html += '</tr></table>';
     $('#statistic').append(html);
-    //unfinished
-    //Draw_global_weibo(weibo_data);
 }
 function point2weibo(xnum, ts){
 	var url ="/weibo/show_user_weibo_ts/?uid="+parent.personalData.uid+"&ts="+ts[0];
@@ -555,7 +569,7 @@ function Draw_personal_weibo_date(){
 
 function draw(data){
     console.log(data);
-    var personalData = data;
+    personalData = data;
     drawBasic(personalData);
     drawInfluenceTrend(personalData.influence_trend);
     drawTimeTrend(personalData.time_trend);
@@ -574,13 +588,18 @@ function draw(data){
         var more_div = more_div_list[div_name];
         drawRank(div_name, data[key][0], more_div);
     }
+
     // unfinished
     Draw_think_topic();
     Draw_think_emotion();
 }
+
+var personalData;
 var person_url = '/attribute/portrait_attribute/?uid=' + uid;
 call_ajax_request(person_url, draw);
 
 Draw_personal_weibo_date();
+var initial_index = 0;
+draw_statistic(personalData.attention_degree[initial_index], personalData.common_influence_detail[initial_index]);
 var weibo_url = '/attribute/detail_weibo_text/?uid=' + uid + '&date=2013-09-01';
-call_ajax_request(weibo_url, draw_weibo);
+call_ajax_request(weibo_url, Draw_global_weibo);
