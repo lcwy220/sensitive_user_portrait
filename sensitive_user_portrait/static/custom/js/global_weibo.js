@@ -93,8 +93,7 @@ function Draw_global_weibo(data){
         page_icon(1,pageCount,0);
     }
     
-    // $("#pageGro li").live("click",function(){
-    $("#pageGro li").click(function(){
+     $("#pageGro li").live("click",function(){
         if(pageCount > 5){
             var pageNum = parseInt($(this).html());
             pageGroup(pageNum,pageCount);
