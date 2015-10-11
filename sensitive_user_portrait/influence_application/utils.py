@@ -104,6 +104,15 @@ def influence_distribute():
         result.append(detail)
     return result
 
+def test_influence_rank(domain, date):
+    uid_list = domain_dict[domain]
+    search_result = es.mget(index='copy_sensitive_user_portrait', doc_type="user", body={"ids": uid_list})['docs']
+    portrait_result = es.mget(index=)
+    for item in search_result:
+        
+
+
+
 if __name__ == '__main__':
     #print search_domain('art', '20130907', number=10)
     #print search_current_es('art', 'sensitive_user_portrait', number=10)

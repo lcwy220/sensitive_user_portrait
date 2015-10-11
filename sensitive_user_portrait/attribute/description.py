@@ -85,7 +85,7 @@ def hashtag_description(result):
     hashtag_dict = {}
     hashtag_list = result.values()
     for item in hashtag_list:
-        for k,v in item.items():
+        for k,v in item:
             if hashtag_dict.has_key(k):
                 hashtag_dict[k] += v
             else:
