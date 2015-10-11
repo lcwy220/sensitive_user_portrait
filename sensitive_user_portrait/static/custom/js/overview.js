@@ -207,7 +207,7 @@ function drawRank(div_name, cname, rank_data, more_div){
         rank_data = new Array();
     }
     $('#'+ div_name).empty();
-        html = '';
+        var html = '';
         html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
         html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">昵称</th>';
         html += '<th style="text-align:center">' + cname + '</th></tr>';

@@ -1,3 +1,24 @@
+// Date format
+Date.prototype.format = function(format) {
+    var o = {
+        "M+" : this.getMonth()+1, //month
+        "d+" : this.getDate(), //day
+        "h+" : this.getHours(), //hour
+        "m+" : this.getMinutes(), //minute
+        "s+" : this.getSeconds(), //second
+        "q+" : Math.floor((this.getMonth()+3)/3), //quarter
+        "S" : this.getMilliseconds() //millisecond
+    }
+    if(/(y+)/.test(format)){
+        format=format.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+    }
+    for(var k in o){
+        if(new RegExp("("+ k +")").test(format)){
+            format = format.replace(RegExp.$1, RegExp.$1.length==1 ? o[k] : ("00"+ o[k]).substr((""+ o[k]).length));
+        }
+    }
+    return format;
+}
 function call_ajax_request(url, callback){
     $.ajax({
         url: url,
@@ -145,7 +166,7 @@ function drawRank(div_name, rank_data, more_div){
         rank_data = new Array();
     }
      $('#'+ div_name).empty();
-        html = '';
+        var html = '';
         html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
         html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">昵称</th>';
         html += '<th style="text-align:center">次数</th>';
@@ -434,10 +455,119 @@ function drawBasic(personalData){
     }else{
         topic.innerHTML = "无此数据";
     }
+    personalData.user_type = 1;
+    if(personalData.user_type){
+        if (personalData.user_type == 1){
+            $('#sensitive_type').attr("title", "此用户为敏感用户，点击查看敏感性分析")
+                .attr("href", "/index/personal/?uid=" + uid)
+                .removeClass("hidden");
+        }
+    }
+
+
 }
+// 自定义微博列表
+function page_group_weibo(start_row,end_row,data){
+    var weibo_num = end_row - start_row;
+    $('#personal_weibo').empty();
+    if (weibo_num == 0){
+        $('#personal_weibo').html('暂无微博数据');
+        return;
+    }
+    var html = "";
+    html += '<div class="group_weibo_font">';
+    var colors = ['white', 'whitesmoke'];
+    for (var s = start_row; s < end_row; s++){
+        var timestamp = data[s][2];
+        var geo = data[s][3];
+        var text = data[s][4];
+        var repost = data[s][5];
+        var comment = data[s][6];
+        // uid = data[s]['uid'];
+        // uname = data[s]['uname'];
+        // var date = new Date(parseInt(timestamp)*1000).format("yyyy-MM-dd hh:mm:ss");
+        if (data[s][0] == 0){
+            var type = '普通微博';
+        }
+        else{
+            var type = '敏感微博';
+        }
+
+        html += '<div style="height:80px;background:' + colors[s%2] + ';font-size:13px">';
+        // html += '<p><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
+        html += '<p style="color:black;">' + timestamp + '&nbsp;&nbsp;' + geo + '&nbsp;&nbsp;' + text + '</p>';
+        html += '<p style="margin-top:-5px;color:darkred;text-align:right">' + type + '&nbsp;&nbsp;转发(' + repost + ')&nbsp;&nbsp;评论(' + comment + ')</p>';
+        html += '</div>'
+    }
+    html += '</div>'; 
+    $('#personal_weibo').append(html);
+}
+
+function draw_statistic(attention_data, detail){
+    $('#statistic').empty();
+    var detail_data = detail[1];
+    var html = '';
+    html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
+    html += '<tr><th style="text-align:center">原创微博数</th><th style="text-align:center">转发微博数</th>';
+    html += '<th style="text-align:center">被转发总数</th><th style="text-align:center">被评论总数</th>';
+    html += '<th style="text-align:center">单条被转发最大值</th><th style="text-align:center">单条被评论最大值</th>';
+    html += '<th style="text-align:center">关注度</th></tr>';
+    
+    html += '<tr>';
+    html += '<th style="text-align:center">' + detail_data[0] + '</th>';
+    html += '<th style="text-align:center">' + detail_data[1] + '</th>';
+    html += '<th style="text-align:center">' + detail_data[2] + '</th>';
+    html += '<th style="text-align:center">' + detail_data[3] + '</th>';
+    html += '<th style="text-align:center"><a style="cursor:pointer;" title=' + detail_data[5] + '>' + detail_data[6] + '</a></th>';
+    html += '<th style="text-align:center"><a style="cursor:pointer;" title=' + detail_data[8] + '>' + detail_data[9] + '</a></th>';
+    html += '<th style="text-align:center">' + attention_data + '</th>';
+    html += '</tr></table>';
+    $('#statistic').append(html);
+}
+function Draw_personal_weibo_date(){
+    $('#personal_weibo_date').empty();
+    var html = '';
+    html += '<select id="select_personal_weibo_date" style="width:120px;">';
+    //var timestamp = Date.parse(new Date());
+    var timestamp = 1378555200000;
+    var date = new Date(parseInt(timestamp)).format("yyyy-MM-dd");
+    html += '<option value="' + date + '" selected="selected">' + date + '</option>';      
+    date2index[date] = 6;
+    for (var i = 0; i < 6; i++) {
+        timestamp = timestamp-24*3600*1000;
+        date = new Date(parseInt(timestamp)).format("yyyy-MM-dd");
+        html += '<option value="' + date + '">' + date + '</option>';
+        date2index[date] = 5 - i;
+    }
+    html += '</select>';
+    $('#personal_weibo_date').append(html);
+
+
+    $('#confirm_date').click(function(){
+        var value = $('#select_personal_weibo_date').val();
+        // weibo
+        var weibo_url = "/attribute/detail_weibo_text/?uid=" + uid + "&date=" + value;
+        call_ajax_request(weibo_url, Draw_global_weibo);
+        // statistic
+        var index = date2index[value];
+        draw_statistic(personalData.attention_degree[index], personalData.common_influence_detail[index]);
+        
+    });
+
+    // initial weibo
+    var value = $('#select_personal_weibo_date').val();
+    var weibo_url = "/attribute/detail_weibo_text/?uid=" + uid + "&date=" + value;
+    call_ajax_request(weibo_url, Draw_global_weibo);
+
+    // initial statistic
+    var index = date2index[value];
+    draw_statistic(personalData.attention_degree[index], personalData.common_influence_detail[index]);
+}
+
+
 function draw(data){
     console.log(data);
-    var personalData = data;
+    personalData = data;
     drawBasic(personalData);
     drawInfluenceTrend(personalData.influence_trend);
     drawTimeTrend(personalData.time_trend);
@@ -456,10 +586,15 @@ function draw(data){
         var more_div = more_div_list[div_name];
         drawRank(div_name, data[key][0], more_div);
     }
+
     // unfinished
     Draw_think_topic();
     Draw_think_emotion();
 }
+
+var personalData;
 var person_url = '/attribute/portrait_attribute/?uid=' + uid;
 call_ajax_request(person_url, draw);
-	
+
+var date2index  = new Array();
+Draw_personal_weibo_date();
