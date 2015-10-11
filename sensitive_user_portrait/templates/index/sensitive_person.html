@@ -78,49 +78,52 @@
 				</div>
 			</div>
 		</div>
-		<div id="language" style="float:left">
+		<div id="language" style="float:left;width:990px;">
 			<hr />
 			<h2>语言属性</h2>
 			<div style="margin:20px;font-size:18px;">今日敏感词：<strong><span id="sensi_words"></span></strong></div>
-			等级：
-			<select name="level" id="sensi_word_level" style="width:100px; margin-right:10px;">   
+			<div id="language_left">
+			<div>等级:
+			<select name="level" id="sensi_word_level" style="width:90px; margin-right:5px;">   
 				<option value="0">所有等级</option> 
 		        <option value="1">level 1</option>   
 		        <option value="2">level 2</option>   
 		        <option value="3">level 3</option>           
 		    </select>
-		    类别：
-		    <select name="classify" id="sensi_word_class" style="width:150px; margin-right:10px;"> 
-		        <option value="1">所有类别</option>   
-		        <option value="2">class 1</option>   
-		        <option value="3">class 2</option>   
+		    类别:
+		    <select name="classify" id="sensi_word_class" style="width:90px; margin-right:5px;"> 
+		        <option value="0">所有类别</option>   
+		        <option value="1">a类词</option>   
+		        <option value="2">b类词</option>   
+		        <option value="3">class 3</option>
 		        <option value="4">class 3</option>
-		        <option value="5">class 3</option>
-		     	<option value="6">class 3</option>	                 
+		     	<option value="5">class 3</option>	                 
 		    </select>
-		    <button id="show_sensi_word">确定</button>
+		    <button id="show_sensi_word" style="min-width: 50px;">确定</button></div>
 		   	<!--敏感词  -->
-		    <div id="sensiword_table">111</div>
-
+		    <div id="sensiword_table"></div>
+		    </div>
+		    <div id="language_right">
 
 		    <div id="sensiword_hashtag">
-			    <div style="padding-top:10px">
-			    	<span style="font-size:18px;margin-top:20px;"><strong>hashtag云</strong></span>
-			    	<span id="hash_word_detail" style="margin-right: 150px; margin-top: 10px;z-index:99;float:right;">
-			    		<a data-toggle="modal" href="remote.html" data-target="#hash_detail">详情</a>
+			    <div style="width:330px;float:left;">
+			    	<span id="hash_word_detail" style="margin-right: 80px; margin-top: 10px;float:right;">
+			    		<a data-toggle="modal" data-target="#hash_detail">详情</a>
 			    	</span>
-			    	<div id="hashtag_cloud" style="width:350px;height:300px;float:left;z-index:20"></div>
+			    	<span style="font-size:18px;float:left;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hashtag云</strong></span>
+			    	<div id="hashtag_cloud" style="width:330px;height:330px;float:left;margin-left:-20px;z-index:20"></div>
 			    	
 			    </div>
-			    <div>
-			    	<span id="hash_word_detail" style="margin-right: 150px; margin-top: 10px;z-index:99;float:right;">
-			    		<a data-toggle="modal" href="remote.html" data-target="#sensi_detail">详情</a>
+			    <div style="width:320px;float:left;">
+			    	<span id="hash_word_detail" style="margin-right: 20px; margin-top: 10px;float:right;">
+			    		<a data-toggle="modal"  data-target="#sensi_detail">详情</a>
 			    	</span>
-			    	<span style="font-size:18px;margin-top:10px;float:left;"><strong>敏感词云</strong></span>
-					<div id="sensi_word_cloud" style="width:350px;height:300px;float:left;"></div>
+			    	<span style="font-size:18px;float:left;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;敏感词云</strong></span>
+					<div id="sensi_word_cloud" style="width:330px;height:330px;float:left;margin-left:-20px;"></div>
 			    	<br>
 			    </div>	
 		    </div> 
+		    </div>
 		</div>
 		<div id="social_info" style="float:left">
 			<hr />
@@ -163,7 +166,7 @@
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
 		        <h4 class="modal-title" id="hash_detail_content">hashtag排名</h4>
 		      </div>
-		      <div class="modal-body">
+		      <div class="modal-body" id="hash_detail_body">
 		        ...
 		      </div>
 		      <div class="modal-footer">
@@ -180,7 +183,7 @@
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
 		        <h4 class="modal-title" id="sensi_detail_content">敏感词排名</h4>
 		      </div>
-		      <div class="modal-body">
+		      <div class="modal-body" id="sensi_detail_body">
 		        ...
 		      </div>
 		      <div class="modal-footer">
@@ -209,7 +212,7 @@
 		<!--end  模态框：hashtag云和敏感词云  -->
 {% endblock body %}
 {% block end_js %}
-  <script  src="/static/scripts/jquery-jelevator-1.0.2.min.js"></script>
+  <script  src="/static/scripts/jquery-jelevator-1.0.3.min.js"></script>
   <script type="text/javascript">
     jQuery(function($){
         $("h1,h2").jElevator({

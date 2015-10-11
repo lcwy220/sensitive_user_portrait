@@ -56,12 +56,19 @@ p{font-family:"微软雅黑";}
 } 
 #sensiword_table{
 	float: left;
-	width: 500px;
-	height:600px;
+	width: 300px;
 	margin: 20px;
 }
 .sensiword_hashtag{
 	float: left;
 	background-color: blue;
 	width: 350px;
+}
+#language_right{
+	float: left;
+	width: 650px;
+}
+#language_left{
+	float: left;
+	width: 330px;
 }
