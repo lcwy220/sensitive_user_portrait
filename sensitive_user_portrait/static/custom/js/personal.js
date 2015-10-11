@@ -1,3 +1,24 @@
+// Date format
+Date.prototype.format = function(format) {
+    var o = {
+        "M+" : this.getMonth()+1, //month
+        "d+" : this.getDate(), //day
+        "h+" : this.getHours(), //hour
+        "m+" : this.getMinutes(), //minute
+        "s+" : this.getSeconds(), //second
+        "q+" : Math.floor((this.getMonth()+3)/3), //quarter
+        "S" : this.getMilliseconds() //millisecond
+    }
+    if(/(y+)/.test(format)){
+        format=format.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+    }
+    for(var k in o){
+        if(new RegExp("("+ k +")").test(format)){
+            format = format.replace(RegExp.$1, RegExp.$1.length==1 ? o[k] : ("00"+ o[k]).substr((""+ o[k]).length));
+        }
+    }
+    return format;
+}
 function call_ajax_request(url, callback){
     $.ajax({
         url: url,
@@ -145,7 +166,7 @@ function drawRank(div_name, rank_data, more_div){
         rank_data = new Array();
     }
      $('#'+ div_name).empty();
-        html = '';
+        var html = '';
         html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
         html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">昵称</th>';
         html += '<th style="text-align:center">次数</th>';
@@ -435,6 +456,70 @@ function drawBasic(personalData){
         topic.innerHTML = "无此数据";
     }
 }
+function draw_weibo(weibo_data){
+   $('#statistic').empty();
+    var html = '';
+    html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
+    html += '<tr><th style="text-align:center">原创微博数</th><th style="text-align:center">转发微博数</th>';
+    html += '<th style="text-align:center">被转发总数</th><th style="text-align:center">被评论总数</th>';
+    html += '<th style="text-align:center">单条被转发最大值</th><th style="text-align:center">单条被评论最大值</th>';
+    html += '<th style="text-align:center">关注度</th></tr>';
+    
+    html += '<tr>';
+    for (var i = 0;i < 7; i++){
+        html += '<th style="text-align:center">' + i + '</th>';
+    }
+    html += '</tr></table>';
+    $('#statistic').append(html);
+}
+function point2weibo(xnum, ts){
+	var url ="/weibo/show_user_weibo_ts/?uid="+parent.personalData.uid+"&ts="+ts[0];
+    var delta;
+    //console.log(url);
+	base_call_ajax_request(url, draw_content);
+    $('#date_zh').html(getDate_zh(ts));
+    switch(xnum % 6)
+    {
+        case 0: delta = "00:00-04:00";break;
+        case 1: delta = "04:00-08:00";break;
+        case 2: delta = "08:00-12:00";break;
+        case 3: delta = "12:00-16:00";break;
+        case 4: delta = "16:00-20:00";break;
+        case 5: delta = "20:00-24:00";break;
+    }
+    $('#time_zh').html(delta);
+	function draw_content(data){
+        var html = '';
+        $('#weibo_text').empty();
+        if(data==''){
+            html += "<div style='width:100%;'><span style='margin-left:20px;'>该时段用户未发布任何微博</span></div>";
+        }else{
+            for(i=0;i<data.length;i++){
+                //console.log(data[i].text);
+                html += "<div style='width:100%;'><img src='/static/img/pencil-icon.png' style='height:10px;width:10px;margin:0px;margin-right:10px;'><span>"+data[i].text+"</span></div>";
+            }
+
+        }
+        $('#weibo_text').append(html);
+    }
+}
+function Draw_personal_weibo_date(){
+    $('#personal_weibo_date').empty();
+    html = '';
+    html += '<select id="select_personal_weibo_date" style="width:120px;">';
+    var timestamp = Date.parse(new Date());
+    date = new Date(parseInt(timestamp)).format("yyyy-MM-dd");
+    html += '<option value="' + date + '" selected="selected">' + date + '</option>';      
+    for (var i = 0; i < 6; i++) {
+        timestamp = timestamp-24*3600*1000;
+        date = new Date(parseInt(timestamp)).format("yyyy-MM-dd");
+        html += '<option value="' + date + '">' + date + '</option>';
+    }
+    html += '</select>';
+    $('#personal_weibo_date').append(html);
+}
+
+
 function draw(data){
     console.log(data);
     var personalData = data;
@@ -459,7 +544,9 @@ function draw(data){
     // unfinished
     Draw_think_topic();
     Draw_think_emotion();
+    draw_weibo('ere');
 }
 var person_url = '/attribute/portrait_attribute/?uid=' + uid;
 call_ajax_request(person_url, draw);
-	
+
+Draw_personal_weibo_date();

@@ -9,6 +9,18 @@
 	<style>
 	.box{width:310px;height:300px;float:left;}
 	li{list-style:none;}
+	#pageGro{ width:400px; height:25px; margin:0px auto; padding-top:30px;}
+	#pageGro div,#pageGro div ul li{ font-size:12px; color:#999; line-height:23px; float:left; margin-left:5px;}
+	#pageGro div ul li{ width:22px; text-align:center; border:1px solid #999; cursor:pointer;}
+	#pageGro div ul li.on{ color:#fff; background:#3c90d9; border:1px solid #3c90d9;}
+	#pageGro .pageUp{ border:1px solid #999; cursor:pointer;}
+	#pageGro .pageDown{ width:63px; border:1px solid #999; cursor:pointer;}
+	#pageGro .pageUp{ text-indent:23px;background:url(/static/custom/images/pageUp.png) 5px 7px no-repeat;}
+	#pageGro .pageDown{ text-indent:5px;background:url(/static/custom/images/pageDown.png) 46px 6px no-repeat;}
+	#group_weibo_font{ 
+        font-family: '微软雅黑';
+        font-size: 14px; 
+    }
 	</style>
 {% endblock custom_css  %}
 {% block body %}
@@ -69,64 +81,51 @@
             </div>    
             <div style="text-align:center;width:100%;font-size:20px;">一周活动轨迹</div>
 			<div class="clearfix course_nr">
-	<ul class="course_nr2">
-		<li>
-			<div class="shiji">
-				<p class="ico" id="d1" >1993</p>
-				<p  id="city1">内容描述1。</p>
-			</div>
-		</li>
-		<li>
-			<div class="shiji">
-				<p class="ico" id="d2" >1999</p>
-				<p  id="city2">内容描述2；</p>
-			</div>
-		</li>
-		<li>
-			<div class="shiji">
-				<p class="ico" id="d3" >2003</p>
-				<p  id="city3">内容描述3</p>
-			</div>
-		</li>
-		<li>
-			<div class="shiji">
-				<p class="ico" id="d4" >2007</p>
-				<p  id="city4">内容描述4</p>
-			</div>
-		</li>
-		<li>
-			<div class="shiji">
-				<p class="ico" id="d5" >2008</p>
-				<p  id="city5">内容描述5</p>
-			</div>
-		</li>
-		<li>
-			<div class="shiji">
-				<p class="ico" id="d6" >2009</p>
-				<p  id="city6">内容描述6</p>
-			</div>
-		</li>
-		<li>
-			<div class="shiji">
-				<p class="ico" id="d7" >2013</p>
-				<p  id="city7">内容描述7</p>
-			</div>
-		</li>
-	</ul>
-</div>
-			<hr>
-			<h2 >微博分析</h2>
-			<div id="weibo_text" style="height:300px;width:900px;margin-top:20px;font-size:10px;background-color:whitesmoke;overflow-y:auto;margin-left:auto;margin-right:auto;">
-				 <div style="margin-left:20px;float:left;">
-					<span >当前选择日期</span>
-					<span id="date_zh" value="" >09-01</span>
-				</div>
-				<div style="float:left;margin-left:10px;width:200px;">
-					<span>时间段</span>
-					<span id="time_zh" value="00:00:00">00:00-04:00</span>
-				</div>
-				<div id="weibo_content" style="width:900px;float:left;">eftretgreytrytrytr</div>
-			</div>
+                <ul class="course_nr2">
+                    <li>
+                        <div class="shiji">
+                            <p class="ico" id="d1" >1993</p>
+                            <p  id="city1">内容描述1。</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="shiji">
+                            <p class="ico" id="d2" >1999</p>
+                            <p  id="city2">内容描述2；</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="shiji">
+                            <p class="ico" id="d3" >2003</p>
+                            <p  id="city3">内容描述3</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="shiji">
+                            <p class="ico" id="d4" >2007</p>
+                            <p  id="city4">内容描述4</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="shiji">
+                            <p class="ico" id="d5" >2008</p>
+                            <p  id="city5">内容描述5</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="shiji">
+                            <p class="ico" id="d6" >2009</p>
+                            <p  id="city6">内容描述6</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="shiji">
+                            <p class="ico" id="d7" >2013</p>
+                            <p  id="city7">内容描述7</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
 			<hr>
             <h2>交互分析</h2>
             <div class="clear" style= "height:260px;margin-top:20px;">
@@ -158,10 +157,28 @@
 					</div>
 				</div>	
 			</div>
-			
-            
+			<hr>
+			<h2 >微博分析</h2>
+            <div>
+                <span>选择日期：</span><span id='personal_weibo_date' style="margin-left:10px"></span>
+                <span style="margin-left:10px"><button class="btn btn-primary btn-sm" style="width:80px;height:30px" id="" title="确定选择" onclick=";">确定</button></span>
+            </div>
+            <div class="table-responsive"id='statistic' style='overflow-x:hidden;width:920px;height:100px;margin:20px;'></div>
+            <div id="personal_weibo" style="width:960px;margin-top:20px"></div>
+            <div id="pageGro" class="cb" style="float:left;width:990px;height:60px;margin-left:350px">
+                <div class="pageUp">上一页</div>
+                <div class="pageList">
+                    <ul>
+                        <li>1</li>
+                        <li>2</li>
+                        <li>3</li>
+                        <li>4</li>
+                        <li>5</li>
+                    </ul>
+                </div>
+                <div class="pageDown">下一页</div>
+            </div>
         </div>
-    </div>
 	
 <!--个人标签-->
 <div id="float-wrap" class="hidden"></div>
@@ -267,6 +284,8 @@
     var homepage_url = "http://weibo.com/u/" + uid;
     $('#homepage').attr('href', homepage_url);
 </script>
+ <script  src="/static/custom/js/global_weibo.js"></script>
  <script  src="/static/custom/js/personal.js"></script>
+ <script  src="/static/custom/js/show_tag.js"></script>
  {% endblock end_js%}
 
