@@ -24,7 +24,7 @@ with open (os.path.join(uid_csv_path, uid_csv), 'rb') as t:
         uid_set.add(uid)
         count_n += 1
 
-uid_text = file('sensitive_uid_text_2.csv', 'wb')
+uid_text = file('sensitive_uid_text_1.csv', 'wb')
 writer = csv.writer(uid_text)
 count = 0
 count_f = 0
@@ -60,11 +60,12 @@ for each in file_list:
                         continue
                     if not isinstance(write_text, str):
                         text = text.encode('utf-8', 'ignore')
-                    sw_dict = sensitive_words_extract(text)
-                    if not sw_dict:
-                        sensitive = 0
-                    else:
-                        seneitive = 1
+                    if text:
+                        sw_dict = sensitive_words_extract(text)
+                        if not sw_dict:
+                            sensitive = 0
+                        else:
+                            seneitive = 1
                     item = [str(weibo_item_bin['uid']), write_text, str(weibo_item_bin['mid']), str(weibo_item_bin['send_ip']), str(weibo_item_bin['timestamp']), message_type, sensitive ]
 
                     if write_text != "":
@@ -80,4 +81,6 @@ for each in file_list:
             print "system error"
 
         except Exception, r:
-            pass
+            print Exception, r
+
+

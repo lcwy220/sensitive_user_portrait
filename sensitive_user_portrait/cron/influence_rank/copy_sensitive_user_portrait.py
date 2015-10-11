@@ -14,8 +14,8 @@ sys.path.append('./../../')
 from global_utils import ES_CLUSTER_FLOW1, es_user_profile
 
 es = ES_CLUSTER_FLOW1
-user_portrait = "sensitive_user_portrait" # act as portrait database
-user_portrait_doctype = "user"
+sensitive_user_portrait = "sensitive_user_portrait" # act as portrait database
+sensitive_user_portrait_doctype = "user"
 index_destination = 'copy_sensitive_user_portrait'
 index_destination_doctype = "user"
 
@@ -37,7 +37,6 @@ def co_search(es, user_list, bulk_action, count_n, tb):
         if not item['found']:
             user_info = {}
             user_info['uid'] = item['_id']
-            user_info['low_number'] = 0
             xdata = expand_index_action(user_info)
             bulk_action.extend([xdata[0], xdata[1]])
             count_n += 1
@@ -63,7 +62,7 @@ if __name__ == "__main__":
     if not index_exist:
         es.indices.create(index=index_destination, ignore=400)
 
-    s_re = scan(es, query={"query":{"match_all":{}},"size":1000}, index=user_portrait, doc_type=user_portrait_doctype)
+    s_re = scan(es, query={"query":{"match_all":{}},"size":1000}, index=sensitive_user_portrait, doc_type=sensitive_user_portrait_doctype)
     bulk_action = []
     count = 0
     count_n = 0

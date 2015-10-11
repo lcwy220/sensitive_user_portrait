@@ -11,7 +11,7 @@ from csv2json import itemLine2Dict, csv2bin
 
 reload(sys)
 sys.path.append('../../')
-from global_config import ZMQ_VENT_PORT_FLOW4, ZMQ_CTRL_VENT_PORT_FLOW4,\
+from global_config import ZMQ_VENT_PORT_FLOW5, ZMQ_CTRL_VENT_PORT_FLOW5,\
                           ZMQ_VENT_HOST_FLOW1, ZMQ_CTRL_HOST_FLOW1, BIN_FILE_PATH, FIRST_FILE_PART
 
 def load_items_from_bin(bin_path):

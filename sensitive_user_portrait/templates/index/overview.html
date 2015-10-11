@@ -9,15 +9,17 @@
 	.box{width:310px;height:300px;float:left;}
     .important{}
     #page {height:2175px;}
+    #basic span {color:red;}
 	</style>
 {% endblock custom_css  %}
 {% block body %}
   <div id="page">
         <div id="content">
             <h2>基本信息</h2>
-            <p style="margin-top:30px;margin-left:10px;">系统总共有<span id="totalNumber">5555</span>人。其中敏感人物有<span id="sensitiveN">55</span>人，高影响力有<span id="hinfluence">79</span>人。</p>
-            <p style="margin-top:30px;margin-left:10px;">截至到昨日，系统总共有<span id="storeNumber">5555</span>人入库。正在监控<span id="groupN">5</span>群组，总计<span id="gtotal">156</span>人。新增敏感词<a href="" id="wordsN">3</a>个。</p>
-
+            <div id='basic'>
+                <p style="margin-top:30px;margin-left:10px;">系统总共有<span id="totalNumber"></span>人。其中敏感人物有<span id="sensitiveN"></span>人，高影响力有<span id="hinfluence"></span>人。</p>
+                <p style="margin-top:30px;margin-left:10px;">近一周内，系统推荐中总共有<span id="storeNumber"></span>人还未入库。正在监控<span id="groupN"></span>个群组，总计<span id="gtotal"></span>人。今日新增敏感词<span><a href="" id="wordsN"></a></span>个。</p>
+            </div>
             <hr>
             <h2>统计信息</h2>
             <div class="count" style="height:300px;margin-top:10px;">
@@ -28,9 +30,11 @@
 			
 			<hr style="width:970px;">
 			<h2 >领域重点人物</h2>
+            <span style="float:right;cursor:pointer;margin-top:-30px;margin-right:50px;" type="button" data-toggle="modal" data-target="#more_domain"><u>查看更多</u></span>
             <div class="important" id="domain_portrait"></div>
 			<hr>
             <h2>话题重点人物</h2>
+            <div style="float:right;cursor:pointer;margin-top:-30px;margin-right:50px;" type="button" data-toggle="modal" data-target="#more_topic"><u>查看更多</u></div>
 			<div class="important" id="topic_portrait"></div>
             <div class="clear"></div>
 			
@@ -43,8 +47,7 @@
 				<span style="margin-left:30px;font-size:16px;color:#777">重要度排名</span>
 				<span data-toggle="modal" type="button"data-target="#rank_important"  style='font-size:16px;margin-left:130px;cursor: pointer'><u>查看更多</u></span>
 				<span style="margin-left:35px;font-size:16px;color:#777">活跃度排名</span>
-				<span type="button"data-toggle="modal" data-target="#rank_activeness" style='font-size:16px;margin-left:130px;cursor: pointer'><u>查看更多</u>
-				</span>
+				<span type="button"data-toggle="modal" data-target="#rank_activeness" style='font-size:16px;margin-left:130px;cursor: pointer'><u>查看更多</u></span>
 			</div>
 			<div class="table-responsive"id='top_influence' style='overflow-x:hidden;width:300px;height:250px;float:left;'>
 			</div>
@@ -77,12 +80,41 @@
     </div>
 	
 <!--模态框-->
+<div class="modal fade" id="more_domain" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document" style="width:1000px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        <h4 class="modal-title" id="myModalLabel">领域重点用户</h4>
+      </div>
+      <div class="modal-body" id='domain_more_portrait'>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="more_topic" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document" style="width:1000px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        <h4 class="modal-title" id="myModalLabel">话题重点用户</h4>
+      </div>
+      <div class="modal-body" id="topic_more_portrait">
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
 <div class="modal fade" id="rank_influence" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
-        <h4 class="modal-title" id="myModalLabel">重要度排名</h4>
+        <h4 class="modal-title" id="myModalLabel">影响力排名</h4>
       </div>
       <div class="modal-body" id='more_influence'>
       </div>
@@ -196,16 +228,16 @@
 </div>
 {% endblock body %}
 {% block end_js %}
-  <script  src="/static/scripts/jquery-jelevator-1.0.2.min.js"></script>
-  <script  src="/static/custom/js/overview.js"></script>
+  <script  src="/static/scripts/jquery-jelevator-1.0.3.min.js"></script>
   <script type="text/javascript">
     jQuery(function($){
         $("h2").jElevator({
-            showTopButton: true,
+            howTopButton: true,
             showBottomButton: true,
             showSectionsMenu: true
         });
     });
  </script>
+  <script  src="/static/custom/js/overview.js"></script>
 {% endblock end_js%}
 

@@ -1,0 +1,206 @@
+{% extends "index/base.html" %} 
+{% block title %}敏感人物属性{% endblock title %}
+{% block subtitle %}敏感人物属性{% endblock subtitle %}
+{% block custom_css %}
+{{ super() }}
+	<link rel="stylesheet" href="/static/custom/css/overview.css" media="screen" />
+    <link rel="stylesheet" href="/static/custom/css/jelevator.css"  media="screen" />
+	<link rel="stylesheet" href="/static/custom/css/sensitive_person.css" media="screen" />
+	<style>
+	.box{width:310px;height:300px;float:left;}
+	li{list-style:none;}
+	</style>
+{% endblock custom_css  %}
+{% block body %}
+<div id="page">
+		<div class="portait" style="font-family:'Microsoft YaHei UI'; font-size:16px;margin-top:10px">
+			<div class="PortraitImg" ><span class="sensitive_name">姓名</span></div>
+			<div style="text-align:left;height:30px;margin-top:20px;float:left;">
+				<span style="margin-right:30px">政治倾向:<span>倾左</span></span>
+				<span style="margin-right:20px">敏感度:<span>高级</span></span>
+				<span style="margin-right:20px">领域类别:<span>****</span></span>
+			</div>
+		</div>
+            <br />
+        <div style="float:left;margin-top:20px;">
+            <h2>统计信息</h2>            
+            <table class="statictics" width="750" border="1">
+				<tr>
+				    <td class="col_1">统计信息</td>
+				    <td>敏感/微博总数</td>
+				    <td>敏感/总转发</td>
+				    <td>敏感/总评论</td>
+				</tr>
+				<tr>
+				    <td class="col_1">原创</td>
+				    <td><span id="origin_sensitive" style="color:red">123</span>/<span id="origin_total">4567</span></td>
+				    <td><span id="origin_sensitive" style="color:red">123</span>/<span id="origin_total">4567</span></td>
+				    <td><span id="origin_sensitive" style="color:red">123</span>/<span id="origin_total">4567</span></td>
+				</tr>
+				<tr>
+				    <td class="col_1">转发</td>
+				    <td><span class="re_sensitive" style="color:red">123</span>/<span class="re_total">4567</span></td>
+				    <td><span class="re_sensitive" style="color:red">123</span>/<span class="re_total">4567</span></td>
+				    <td><span class="re_sensitive" style="color:red">123</span>/<span class="re_total">4567</span></td>
+				</tr>
+			</table>
+		</div>
+
+		<div style="float:left">
+			<hr />
+			<h2>活动信息</h2>
+			<div id="influence_chart" style="height:300px;width:730px;float:left;"></div>
+			<div id="location_7"><h3>一周活动轨迹</h3>
+				<div class="clearfix course_nr">
+					<ul class="course_nr2">
+						<li class="shiji">
+							<p><span class="ico" id="d1" >1993</span>&nbsp&nbsp&nbsp&nbsp&nbsp-----<span  id="city1">内容描述1。</span></p>
+						</li>
+						<li class="shiji">
+							<p><span class="ico" id="d2" >1993</span>&nbsp&nbsp&nbsp&nbsp&nbsp-----<span  id="city2">内容描述1。</span></p>
+						</li>
+						<li class="shiji">
+							<p><span class="ico" id="d3" >1993</span><span  id="city3">内容描述1。</span></p>
+						</li>
+						<li class="shiji">
+							<p><span class="ico" id="d4" >1993</span><span  id="city4">内容描述1。</span></p>
+						</li>
+						<li class="shiji">
+							<p><span class="ico" id="d5" >1993</span><span  id="city5">内容描述1。</span></p>
+						</li>
+						<li class="shiji">
+							<p><span class="ico" id="d6" >1993</span><span  id="city6">内容描述1。</span></p>
+						</li>
+						<li class="shiji">
+							<p><span class="ico" id="d7" >1993</span><span  id="city7">内容描述1。</span></p>
+						</li>
+							</ul>
+				</div>
+			</div>
+		</div>
+		<div id="language" style="float:left">
+			<hr />
+			<h2>语言属性</h2>
+			<div style="margin:20px;font-size:18px;">今日敏感词：<strong><span id="sensi_words"></span></strong></div>
+			等级：
+			<select name="level" id="sensi_word_level" style="width:100px; margin-right:10px;">   
+				<option value="1">所有等级</option> 
+		        <option value="2">level 1</option>   
+		        <option value="3">level 2</option>   
+		        <option value="4">level 3</option>           
+		    </select>
+		    类别：
+		    <select name="classify" id="sensi_word_class" style="width:150px; margin-right:10px;"> 
+		        <option value="1">所有类别</option>   
+		        <option value="2">class 1</option>   
+		        <option value="3">class 2</option>   
+		        <option value="4">class 3</option>
+		        <option value="5">class 3</option>
+		     	<option value="6">class 3</option>	                 
+		    </select>
+		    <button id="show_sensi_word">确定</button>
+		   	<!--敏感词  -->
+		    <div id="sensiword_table">111</div>
+
+
+		    <div id="sensiword_hashtag">
+			    <div style="padding-top:10px">
+			    	<span style="font-size:18px;margin-top:20px;"><strong>hashtag云</strong></span>
+			    	<span id="hash_word_detail" style="margin-right: 150px; margin-top: 10px;z-index:99;float:right;">
+			    		<a data-toggle="modal" href="remote.html" data-target="#hash_detail">详情</a>
+			    	</span>
+			    	<div id="hashtag_cloud" style="width:350px;height:300px;float:left;z-index:20"></div>
+			    	
+			    </div>
+			    <div>
+			    	<span id="hash_word_detail" style="margin-right: 150px; margin-top: 10px;z-index:99;float:right;">
+			    		<a data-toggle="modal" href="remote.html" data-target="#sensi_detail">详情</a>
+			    	</span>
+			    	<span style="font-size:18px;margin-top:10px;float:left;"><strong>敏感词云</strong></span>
+					<div id="sensi_word_cloud" style="width:350px;height:300px;float:left;"></div>
+			    	<br>
+			    </div>	
+		    </div> 
+		</div>
+		<div id="social_info" style="float:left">
+			<hr />
+			<h2>交互信息</h2>
+			
+
+		</div>
+		<div id="emotion_analysis" style="float:left">
+			<hr />
+			<h2>情绪分析</h2>
+			<div id="emotion_chart" style="height:300px;width:950px;float:left;"></div>
+
+		</div>
+		<div id="weibo_text" style="float:left;width:950px;font-size:16px;">
+			<hr />
+			<h2>微博文本</h2>
+			<div style="margin-left:20px;margin-top:10px;">类型：
+				<input type="radio" style="opacity:1; position:static;" name="origin_re" checked value="1" />原创
+				<input type="radio" style="opacity:1; position:static;margin-left:10px;" name="origin_re" value="2" />转发
+			</div>
+			<div style="margin-left:20px;margin-top:10px;">排序方式：
+				<input type="radio" style="opacity:1; position:static;" name="time_seq" checked value='1'>时间
+				<input type="radio" style="opacity:1; position:static;margin-left:10px;" name="re_number" value='2'>转发量
+				<input type="radio" style="opacity:1; position:static;margin-left:10px;" name="cmt_number" value='3'>评论量
+			</div>
+			<div id="weibo_content">
+				<div id="weibo_content2"></div>
+
+			</div>
+			
+
+		</div>
+
+</div>
+<!--模态框：hashtag云和敏感词云  -->
+		<div class="modal fade" id="hash_detail" tabindex="-1" role="dialog" aria-labelledby="hash_detail_content">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+		        <h4 class="modal-title" id="hash_detail_content">hashtag排名</h4>
+		      </div>
+		      <div class="modal-body">
+		        ...
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
+		<div class="modal fade" id="sensi_detail" tabindex="-1" role="dialog" aria-labelledby="sensi_detail_content">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+		        <h4 class="modal-title" id="sensi_detail_content">敏感词排名</h4>
+		      </div>
+		      <div class="modal-body">
+		        ...
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<!--end  模态框：hashtag云和敏感词云  -->
+{% endblock body %}
+{% block end_js %}
+  <script  src="/static/scripts/jquery-jelevator-1.0.2.min.js"></script>
+  <script type="text/javascript">
+    jQuery(function($){
+        $("h1,h2").jElevator({
+            howTopButton: true,
+            showBottomButton: true,
+            showSectionsMenu: true
+        });
+    });
+ </script>
+ <script  src="/static/custom/js/sensitive_person.js"></script>
+{% endblock end_js%}

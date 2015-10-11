@@ -10,11 +10,12 @@ from utils import submit_task, search_task, get_group_results, get_group_list, d
 #track utils
 from track_utils import submit_track_task, search_track_task,\
                         end_track_task, delete_track_task
-from track_result_utils import get_track_result
+from track_result_utils import get_track_result, get_count_weibo, get_sentiment_weibo, \
+                               get_sensitive_word, get_geo_user, get_geo_weibo
 
 from sensitive_user_portrait.global_config import UPLOAD_FOLDER, ALLOWED_EXTENSIONS
 from sensitive_user_portrait.search_user_profile import es_get_source
-from sensitive_user_portrait.time_utils import ts2datetime
+from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts, ts2date, date2ts
 
 mod = Blueprint('group', __name__, url_prefix='/group')
 
@@ -126,11 +127,14 @@ def ajax_upload_track_file():
     task_name = request.form['task_name']
     state = request.args.form['state']
     now_ts = time.time()
-    now_Date = ts2datetime(now_ts)
+    now_date = ts2datetime(now_ts)
+    now_date_ts = datetime2ts(now_date)
+    time_segment = int((now_ts - now_Date_ts) / 900) + 1
+    trans_ts = now_date_ts + time_segment * 900
     line_list = upload_data.split('\n')
     input_data = {}
-    #submit task and start at what time?!should identify
-    input_data['submit_date'] = now_date
+    #submit task and start time is 15min multiple
+    input_data['submit_date'] = trans_ts
     input_data['task_name'] = task_name
     uid_list = []
     for line in line_list:
@@ -150,10 +154,17 @@ def ajax_submit_track_task():
     #input_data = request.get_json()
     # test
     input_data = {'task_name':'testtask', 'state':'it is a test', 'uid_list':['1311967407', '1671386130', '1653255165']}
-    #now_ts = time.time()
-    #now_date = ts2datetime(now_ts)
-    #input_data['submit_date'] = now_date
-    input_data['submit_date'] = '2013-09-01'
+    '''
+    now_ts = time.time()
+    now_date = ts2datetime(now_ts)
+    now_date_ts = datetime2ts(now_date)
+    timesegment = int((now_ts - now_date_ts) / 900) + 1
+    trans_ts = now_date_ts + timesegment * 900
+    trans_date = ts2date(trans_date)
+    input_data['submit_date'] = trans_date
+    '''
+    #test
+    input_data['submit_date'] = '2013-09-01 00:00:00'
     input_data['status'] = 1 # show track task is doing; doing 1, end 0
     len_uid_list = len(input_data['uid_list'])
     input_data['count'] = len_uid_list
@@ -177,7 +188,7 @@ def ajax_search_track_task():
 def ajax_get_track_results():
     results = {}
     task_name = request.args.get('task_name', '')
-    module = request.args.get('module', 'basic')
+    module = request.args.get('module', 'basic') #module=basic/comment_retweet/network
     results = get_track_result(task_name, module)
     return json.dumps(results)
 
@@ -196,3 +207,60 @@ def ajax_delete_track_tresults():
     task_name = request.args.get('task_name', '')
     status = delete_track_task(task_name)
     return json.dumps(status)
+
+# show weibo when click count node
+@mod.route('/get_count_weibo/')
+def ajax_get_node_weibo():
+    results = {}
+    task_name = request.args.get('task_name', '')
+    sensitive_status = request.args.get('sensitive_status', '') # 0 unsensitive 1 sensitive
+    sensitive_status = int(sensitive_status)
+    timestamp = request.args.get('timestamp', '')
+    timestamp = int(timestamp)
+    results = get_count_weibo(task_name, sensitive_status, timestamp)
+    return json.dumps(results)
+
+# show weibo when click sentiment node
+@mod.route('/get_sentiment_weibo/')
+def ajax_get_sentiment_weibo():
+    results = {}
+    task_name = request.args.get('task_name', '')
+    #sensitive_status = request.args.get('sensitive_status', '') # 0 unsensitive 1 sensitive
+    #sensitive_status = int(sensitive_status)
+    sentiment = request.args.get('sentiment', '') # sentiment 126, 127, 128, 129, 130
+    timestamp = request.args.get('timestamp', '')
+    timestamp = int(timestamp)
+    results = get_sentiment_weibo(task_name, sentiment, timestamp)
+    return json.dumps(results)
+
+# show sensitive_word when click sensitive score
+@mod.route('/get_sensitive_word/')
+def ajax_get_sensitive_word():
+    results = {}
+    task_name = request.args.get('task_name', '')
+    timestamp = request.args.get('timestamp', '')
+    timestamp = int(timestamp)
+    results = get_sensitive_word(task_name, timestamp)
+    return json.dumps(results)
+
+# show user when click geo
+@mod.route('/get_geo_user/')
+def ajax_get_geo_user():
+    results = {}
+    task_name = request.args.get('task_name', '')
+    geo = request.args.get('geo', '')
+    timestamp = request.args.get('timestamp', '')
+    timestamp = int(timestamp)
+    results = get_geo_user(task_name, geo, timestamp)
+    return json.dumps(results)
+
+# show weibo when click geo
+@mod.route('/get_geo_weibo/')
+def ajax_get_geo_ewibo():
+    results = {}
+    task_name = request.args.get('task_name', '')
+    geo = request.args.get('geo', '')
+    timestamp = request.args.get('timestamp', '')
+    timestamp = int(timestamp)
+    results = get_geo_weibo(task_name, geo, timestamp)
+    return json.dumps(results)

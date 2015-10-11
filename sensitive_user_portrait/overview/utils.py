@@ -92,6 +92,7 @@ def get_attr(date):
 
     query_body = query_body_module('sensitive_words_string')
     sw_list =  es.search(index='sensitive_user_portrait', doc_type='user', body=query_body)['aggregations']['all_interests']['buckets']
+    print sw_list
     sensitive_words = []
     for item in sw_list:
         temp = []

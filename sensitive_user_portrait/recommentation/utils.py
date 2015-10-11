@@ -232,9 +232,9 @@ def get_user_trend(uid):
         else:
             pass
         if sensitive_string:
-            result_dict = json.loads(sensitive_string)
-            for key in result_dict.keys():
-                sensitive_results[int(key)*900+ts] = result_dict[key]
+            sensitive_result_dict = json.loads(sensitive_string)
+            for key in sensitive_result_dict.keys():
+                sensitive_results[int(key)*900+ts] = sensitive_result_dict[key]
         else:
             pass
 

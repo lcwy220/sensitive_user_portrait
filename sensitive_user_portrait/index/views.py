@@ -124,8 +124,13 @@ def group_analysis():
 
 @mod.route('/personal/')
 def personal():
-    return render_template('index/personal.html')
+    uid = request.args.get('uid', '1215031834')
+    uid = str(uid)
+    return render_template('index/personal.html', uid=uid)
 
+@mod.route('/sensitive_person/')
+def sensitive_person():
+    return render_template('index/sensitive_person.html')
 
 @mod.route('/contact/')
 def contact():
