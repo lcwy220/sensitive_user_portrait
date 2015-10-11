@@ -1,3 +1,62 @@
 {% extends "index/base.html" %} 
 {% block title %}影响力分析{% endblock title %}
 {% block subtitle %}影响力分析{% endblock subtitle %}
+{% block custom_css %}
+{{ super() }}
+    <link rel="stylesheet" href="/static/custom/css/jelevator.css"  media="screen" />
+    <style>
+    	input[type='radio'] {margin:4px; line-height: normal;opacity: 1; position: static;}
+    	.container{width: 820px;}
+    </style>
+{% endblock custom_css  %}
+{% block body %}
+    	<h2>影响力排名</h2>
+        <div class="tab-pane" id="custom" style="margin-top:10px">
+        	<span>选择日期：</span>
+            <span id="domain_date" style="margin-left:10px">
+
+            </span>
+        	<span style="margin-left:15px">选择领域：</span>
+                <select id="domain_select">';
+                    <option value="1" selected="selected">高校微博</option>';
+                    <option value="2">境内机构</option>';
+                    <option value="3">境外机构</option>';
+                    <option value="4">媒体</option>';
+                    <option value="5">境外媒体</option>';
+                    <option value="6">民间组织</option>';
+                    <option value="7">律师</option>';
+                    <option value="8">政府机构人士</option>';
+                    <option value="9">媒体人士</option>';
+                    <option value="10">活跃人士</option>';
+                    <option value="11">草根</option>';
+                    <option value="12">商业人士</option>';
+                    <option value="13">其他</option>';
+                </select>';
+        	<div id="domain_rank" style="margin-top:10px"></div>
+        	<div class="tab-pane" id="custom" style="margin-top:10px">
+        		<span>排名指标:</span>
+        		<span id="domain_date" style="margin-left:10px">
+        			<span id="index" style="margin-left:10px">
+        				<input type="radio" name="index_select" checked="" value="1"> 影响力
+        				<input type="radio" name="index_select" value="2" style="margin-left:5px"> 转发量
+        				<input type="radio" name="index_select" value="3" style="margin-left:5px"> 评论量
+        				<input type="radio" name="index_select" value="4" style="margin-left:5px"> 转发爆发度
+        				<input type="radio" name="index_select" value="5" style="margin-left:5px"> 评论爆发度
+        			</span>
+        			<span style="margin-left:55px">
+        				<button class="btn btn-primary btn-sm" style="width:80px;height:30px;float:right;" id="domain_button" title="确定选择">确定</button>	
+	        		</span>
+    	    	</span>
+        	</div>
+    	</div>
+    	<div id="total_table0" >    	</div>
+        <h2>影响力分布</h2>
+        <div id="distribute"></div>
+
+{% endblock body %}
+
+{% block end_js %}
+<script type="text/javascript" src="/static/custom/js/rank_extra.js"></script>
+<script type="text/javascript" src="/static/custom/js/rank_table.js"></script>
+<script type="text/javascript" src="/static/custom/js/influence.js"></script>
+{% endblock end_js %}

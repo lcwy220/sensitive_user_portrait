@@ -9,7 +9,7 @@ from sensitive_user_portrait.global_utils import es_user_profile
 from sensitive_user_portrait.global_utils import R_RECOMMENTATION as r
 from utils import search_attribute_portrait,search_portrait
 from utils import extract_uname, search_sensitive_text, sensitive_attribute
-from utils import user_sentiment_trend, sort_sensitive_words, search_sensitive_text, sort_sensitive_text
+from utils import user_sentiment_trend, sort_sensitive_words, search_sensitive_text, sort_sensitive_text, sensitive_attribute, search_full_text
 
 category = ['politics', 'military', 'law', 'ideology', 'democracy']
 
@@ -20,12 +20,30 @@ def ajax_portrait_attribute():
     uid = request.args.get('uid', '')
     uid = str(uid)
     results = search_attribute_portrait(uid)
-    #results = sensitive_attribute(uid)
-    #results = user_sentiment_trend(uid)
     if results:
         return json.dumps(results)
     else:
         return '0'
+
+@mod.route('/portrait_sensitive_attribute/')
+def ajax_portrait_sensitive_attribute():
+    uid = request.args.get('uid', '')
+    uid = str(uid)
+    results = sensitive_attribute(uid)
+    if results:
+        return json.dumps(results)
+    else:
+        return '0'
+
+# weibo text of every day
+@mod.route('/detail_weibo_text/')
+def ajax_detail_weibo_text():
+    uid = str(request.args.get('uid', ''))
+    date = request.args.get('date', '') # date: 2013-09-01
+    results = []
+    results = search_full_text(uid, date)
+    return json.dumps(results)
+
 
 @mod.route('/search_portrait/')
 def ajax_search_portrait():
@@ -110,7 +128,8 @@ def ajax_search_portrait():
 
 @mod.route('/sort_sensitive_words/')
 def ajax_sort_sensitive_words():
-    order = request.args.get('order', '') 
+    level_order = request.args.get('level', '') # 0:all, 1:level 1, 2:level2, 3:level3
+    category_order =  request.args.get('category', '') # '': all
     uid = request.args.get('uid', '')
     words_dict = es.get(index='sensitive_user_portrait', doc_type='user', id=uid)['_source']['sensitive_words_dict']
     words_dict = json.loads(words_dict)
@@ -124,30 +143,52 @@ def ajax_sort_sensitive_words():
     sorted_words = sorted(all_words_dict.items(), key = lambda x:x[1], reverse=True)
     new_words_list = sort_sensitive_words(sorted_words)
     print new_words_list
-    if order == 'level':
+    if 1:
         level_1 = []
         level_2 = []
         level_3 = []
         for item in new_words_list:
             if int(item[2]) == 1:
-                level_1.append(item)
+                if not category_order:
+                    level_1.append(item)
+                else:
+                    if item[3] == category_order:
+                        level_1.append(item)
+                    else:
+                        pass
             elif int(item[2]) == 2:
-                level_2.append(item)
+                if not category_order:
+                    level_2.append(item)
+                else:
+                    if item[3] == category_order:
+                        level_2.append(item)
+                    else:
+                        pass
             elif int(item[2]) == 3:
-                level_3.append(item)
-        new_level = []
-        new_level.extend(level_3)
-        new_level.extend(level_2)
-        new_level.extend(level_1)
-        return json.dumps(new_level)
-    elif order == 'category':
-        new_level = [[], [], [], [], []]
-        for item in new_words_list:
-            index = category.index(item[3])
-            new_level[index].append(item)
-        return json.dumps(new_level)
+                if not category_order:
+                    level_3.append(item)
+                else:
+                    if item[3] == category_order:
+                        level_3.append(item)
+                    else:
+                        pass
+    new_list = []
+    if int(level_order) == 0:
+        if not category_order:
+            return json.dumps(new_words_list)
+        else:
+            new_list.extend(level_1)
+            new_list.extend(level_2)
+            new_list.extend(level_3)
+    elif int(level_order) == 1:
+        new_list = level_1
+    elif int(level_order) == 2:
+        new_list = level_2
     else:
-        return '0'
+        new_list = level_3
+
+    return json.dumps(new_list)
+
 
 
 @mod.route('/sort_sensitive_text/')
