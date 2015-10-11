@@ -7,6 +7,7 @@ import json
 from flask import Blueprint, url_for, render_template, request, abort, flash, session, redirect
 from sensitive_user_portrait.global_utils import ES_CLUSTER_FLOW1 as es
 from influence_description import influence_description
+from utils import test_influence_rank, influence_distribute
 
 portrait_index = "copy_user_portrait" # user_portrait_database
 portrait_type = "user"
@@ -17,12 +18,22 @@ mod = Blueprint('influence_application', __name__, url_prefix='/influence_applic
 def ajax_search_influence():
     date = request.args.get('date', '') # '2013-09-01'
     number = request.args.get('number', 100) # "100"
-    domain = request.args.get('domain', 0) # 0: all active rank, 1: portrait active rank
+    domain = request.args.get('domain', '') # 0: all active rank, 1: portrait active rank
 
     index_name = str(date).replace('-','')
     number = int(number)
-    domain = int(domain)
-
+    domain = domain.encode('utf-8', 'ignore')
     if not index_name:
-        return 0
+        return '0'
+
+    results = test_influence_rank(domain, index_name)
+    return json.dumps(results)
+
+
+@mod.route('/influence_distribution/')
+def ajax_influence_distribution():
+    results = []
+    results = influence_distribute()
+    return json.dumps(results)
+
 
