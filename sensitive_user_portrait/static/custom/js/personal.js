@@ -455,7 +455,6 @@ function drawBasic(personalData){
     }else{
         topic.innerHTML = "无此数据";
     }
-    personalData.user_type = 1;
     if(personalData.user_type){
         if (personalData.user_type == 1){
             $('#sensitive_type').attr("title", "此用户为敏感用户，点击查看敏感性分析")
