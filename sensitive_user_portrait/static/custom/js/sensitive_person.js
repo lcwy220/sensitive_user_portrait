@@ -405,48 +405,308 @@ var emotion_data = {
 };               
 emotion_charts.setOption(emotion_data);
 
-origin=[['a','aa'],['b','bb'],['c','cc'],['d','dd'],['e','ee'],['f','ff'],['g','gg'],['h','hh']]
-retweeted=[['a1','aa'],['b1','bb'],['c1','cc'],['d1','dd'],['e1','ee'],['f1','ff'],['g1','gg'],['h1','hh']]
+//敏感微博
+var origin_time=[['origin_time','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链'],['name','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链'],['name','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链'],['name','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链'],['name','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链']]
+var origin_cmt=[['origin_cmt','新闻新闻新闻新新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链'],['name','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链'],['name','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链'],['name','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链'],['name','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链']]
+var origin_re=[['origin_re','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链'],['name','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链'],['name','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链'],['name','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链'],['name','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链']]
+var retweeted_time=[['retweeted_time','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链'],['name','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链'],['name','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链'],['name','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链'],['name','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链']]
+var retweeted_cmt=[['retweeted_cmt','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链'],['name','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链'],['name','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链'],['name','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链'],['name','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链']]
+var retweeted_re=[['retweeted_re','新闻闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链'],['name','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链'],['name','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链'],['name','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链'],['name','新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻新闻','palce','date','情绪','转发链']]
 
 
-$('input[name="origin_re"]').click(function(){
 $('#weibo_content2').empty();
 var html = "";
-if($('input[name="origin_re"]:checked').val()==1){
-    data = origin;
-    weibo_num = origin.length;
-}else{
-    data = retweeted;
-    weibo_num = retweeted.length;
-}
+var data = origin_time;
+var weibo_num = origin_time.length;
     html += '<div class="group_weibo_font">';
     for (var i = 0; i < weibo_num; i += 1){
         var s=i.toString();
         var uname = data[s][0]
         var text = data[s][1]
-        //uid = data[s]['uid'];
-        //text = data[s]['text'];
-        //uname = data[s]['uname'];
+        var palce = data[s][2];
+        var date = data[s][3];
+        var emotin = data[s][4];
         timestamp = data[s]['timestamp'];
         //date = new Date(parseInt(timestamp)*1000).format("yyyy-MM-dd hh:mm:ss");
         if (i%2 ==0){
-            html += '<div style="background:whitesmoke;font-size:14px">';
-            //html += '<p><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
-            html += '<p>' + uname + '&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
-            //html += '<p style="margin-top:-5px"><font color:#e0e0e0>' + date + '</font></p>';
-            html += '</div>';
-    }
-        else{
-            html += '<div style="font-size:14px">';
-            //html += '<p><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
-            html += '<p>' + uname + '&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
-            //html += '<p style="margin-top:-5px"><font color:#e0e0e0>' + date + '</font></p>';
-            html += '</div>';
+            html += '<div style="background:whitesmoke;font-size:14px;padding:10px;">';
         }
+        else{
+            html += '<div style="font-size:14px;padding:10px;">';
+        }
+            //html += '<p><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
+            html += '<p><strong style="color:red;margin-right:10px;">' + emotin +'</strong>' + uname + '&nbsp;&nbsp;发布:&nbsp;&nbsp;<font color=black>' + text + '</font></p>';
+            html += '<p style="margin-top:5px"><font color:#e0e0e0>' + date + '</font><span style="margin-left:20px;"><img src="/static/custom/images/location.png" style="width:10px;" />&nbsp;&nbsp;'+ palce +'</span></p>';
+            html += '</div>';
+        
     }
     html += '</div>'; 
     $('#weibo_content2').append(html);
-}
+
+$('input[name="origin_re"]').click(function(){
+    var html = "";
+    if($('input[name="origin_re"]:checked').val()==2){
+        if($('input[name="seq_method"]:checked').val()==1){
+            data = retweeted_time;
+            weibo_num = retweeted_time.length;
+        }else if($('input[name="seq_method"]:checked').val()==2){
+            data = retweeted_re;
+            weibo_num = retweeted_re.length;
+        }else if($('input[name="seq_method"]:checked').val()==3){
+            data = retweeted_cmt;
+            weibo_num = retweeted_cmt.length;
+        }
+        
+        $('#weibo_content2').empty();
+
+        html += '<div class="group_weibo_font">';
+        for (var i = 0; i < weibo_num; i += 1){
+            var s=i.toString();
+            var uname = data[s][0]
+            var text = data[s][1]
+            var palce = data[s][2];
+            var date = data[s][3];
+            var emotin = data[s][4];
+            timestamp = data[s]['timestamp'];
+            //date = new Date(parseInt(timestamp)*1000).format("yyyy-MM-dd hh:mm:ss");
+            if (i%2 ==0){
+                html += '<div style="background:whitesmoke;font-size:14px;padding:10px;">';
+            }
+            else{
+                html += '<div style="font-size:14px;padding:10px;">';
+            }
+                //html += '<p><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
+                html += '<p><strong style="color:red;margin-right:10px;">' + emotin +'</strong>' + uname + '&nbsp;&nbsp;发布:&nbsp;&nbsp;<font color=black>' + text + '</font></p>';
+                html += '<p style="margin-top:5px"><font color:#e0e0e0>' + date + '</font><span style="margin-left:20px;"><img src="/static/custom/images/location.png" style="width:10px;" />&nbsp;&nbsp;'+ palce +'</span><a style="float:right;margin-right:30px;" data-toggle="modal" data-target="#retweeted_line" href="remote.html">转发链</a></p>';
+                html += '</div>';
+            
+        }
+        html += '</div>'; 
+        $('#weibo_content2').append(html);
+    }else{
+        if($('input[name="seq_method"]:checked').val()==1){
+            data = origin_time;
+            weibo_num = origin_time.length;
+        }else if($('input[name="seq_method"]:checked').val()==2){
+            data = origin_re;
+            weibo_num = origin_re.length;
+        }else if($('input[name="seq_method"]:checked').val()==3){
+            data = origin_cmt;
+            weibo_num = origin_cmt.length;
+        }
+        $('#weibo_content2').empty();
+        html += '<div class="group_weibo_font">';
+        for (var i = 0; i < weibo_num; i += 1){
+            var s=i.toString();
+            var uname = data[s][0]
+            var text = data[s][1]
+            var palce = data[s][2];
+            var date = data[s][3];
+            var emotin = data[s][4];
+            timestamp = data[s]['timestamp'];
+            //date = new Date(parseInt(timestamp)*1000).format("yyyy-MM-dd hh:mm:ss");
+            if (i%2 ==0){
+                html += '<div style="background:whitesmoke;font-size:14px;padding:10px;">';
+            }else{
+                html += '<div style="font-size:14px;padding:10px;">';
+            }
+            //html += '<p><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
+            html += '<p><strong style="color:red;margin-right:10px;">' + emotin +'</strong>' + uname + '&nbsp;&nbsp;发布:&nbsp;&nbsp;<font color=black>' + text + '</font></p>';
+            html += '<p style="margin-top:5px"><font color:#e0e0e0>' + date + '</font><span style="margin-left:20px;"><img src="/static/custom/images/location.png" style="width:10px;" />&nbsp;&nbsp;'+ palce +'</span></p>';
+            html += '</div>'; 
+        }    
+        html += '</div>'; 
+        $('#weibo_content2').append(html);}
+})
+
+
+$('input[name="seq_method"]').click(function(){
+    var html = "";
+    if($('input[name="origin_re"]:checked').val()==2){
+        if($('input[name="seq_method"]:checked').val()==1){
+            data = retweeted_time;
+            weibo_num = retweeted_time.length;
+        }else if($('input[name="seq_method"]:checked').val()==2){
+            data = retweeted_re;
+            weibo_num = retweeted_re.length;
+        }else if($('input[name="seq_method"]:checked').val()==3){
+            data = retweeted_cmt;
+            weibo_num = retweeted_cmt.length;
+        }
+        $('#weibo_content2').empty();
+
+        html += '<div class="group_weibo_font">';
+        for (var i = 0; i < weibo_num; i += 1){
+            var s=i.toString();
+            var uname = data[s][0]
+            var text = data[s][1]
+            var palce = data[s][2];
+            var date = data[s][3];
+            var emotin = data[s][4];
+            timestamp = data[s]['timestamp'];
+            //date = new Date(parseInt(timestamp)*1000).format("yyyy-MM-dd hh:mm:ss");
+            if (i%2 ==0){
+                html += '<div style="background:whitesmoke;font-size:14px;padding:10px;">';
+            }
+            else{
+                html += '<div style="font-size:14px;padding:10px;">';
+            }
+                //html += '<p><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
+                html += '<p><strong style="color:red;margin-right:10px;">' + emotin +'</strong>' + uname + '&nbsp;&nbsp;发布:&nbsp;&nbsp;<font color=black>' + text + '</font></p>';
+                html += '<p style="margin-top:5px"><font color:#e0e0e0>' + date + '</font><span style="margin-left:20px;"><img src="/static/custom/images/location.png" style="width:10px;" />&nbsp;&nbsp;'+ palce +'</span><a style="float:right;margin-right:30px;" data-toggle="modal" data-target="#retweeted_line" href="remote.html">转发链</a></p>';
+                html += '</div>';
+            
+        }
+        html += '</div>'; 
+        $('#weibo_content2').append(html);
+    }else{
+        if($('input[name="seq_method"]:checked').val()==1){
+            data = origin_time;
+            weibo_num = origin_time.length;
+        }else if($('input[name="seq_method"]:checked').val()==2){
+            data = origin_re;
+            weibo_num = origin_re.length;
+        }else if($('input[name="seq_method"]:checked').val()==3){
+            data = origin_cmt;
+            weibo_num = origin_cmt.length;
+        }
+        $('#weibo_content2').empty();
+        html += '<div class="group_weibo_font">';
+        for (var i = 0; i < weibo_num; i += 1){
+            var s=i.toString();
+            var uname = data[s][0]
+            var text = data[s][1]
+            var palce = data[s][2];
+            var date = data[s][3];
+            var emotin = data[s][4];
+            timestamp = data[s]['timestamp'];
+            //date = new Date(parseInt(timestamp)*1000).format("yyyy-MM-dd hh:mm:ss");
+            if (i%2 ==0){
+                html += '<div style="background:whitesmoke;font-size:14px;padding:10px;">';
+            }else{
+                html += '<div style="font-size:14px;padding:10px;">';
+            }
+            //html += '<p><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
+            html += '<p><strong style="color:red;margin-right:10px;">' + emotin +'</strong>' + uname + '&nbsp;&nbsp;发布:&nbsp;&nbsp;<font color=black>' + text + '</font></p>';
+            html += '<p style="margin-top:5px"><font color:#e0e0e0>' + date + '</font><span style="margin-left:20px;"><img src="/static/custom/images/location.png" style="width:10px;" />&nbsp;&nbsp;'+ palce +'</span></p>';
+            html += '</div>'; 
+        }    
+        html += '</div>'; 
+        $('#weibo_content2').append(html);}
+})
+var table_data=[{'word':'敏感词1','frency':20,'word_level':'leve1','word_class':'b类词'},{'word':'敏感词2','frency':18,'word_level':'leve2','word_class':'b类词'},{'word':'敏感词3','frency':17,'word_level':'leve2','word_class':'b类词'},{'word':'敏感词4','frency':12,'word_level':'leve2','word_class':'a类词'},{'word':'敏感词5','frency':10,'word_level':'leve1','word_class':'b类词'},{'word':'敏感词6','frency':9,'word_level':'leve2','word_class':'b类词'},{'word':'敏感词7','frency':8,'word_level':'leve1','word_class':'a类词'},]   
+//敏感词表格
+//画表格
+
+
+$('#show_sensi_word').click(function (){
+    var word_level=$("#sensi_word_level").val();
+    var word_class=$("#sensi_word_class").val();
+    var choose_data=[];
+    alert(word_level);
+    //var need_data=[]
+    if (word_level==0){
+        if (word_class==1){
+            choose_data = table_data;
+        }else if (word_class==2){
+            for (var i = 0; i < table_data.length; i++) {
+                if (table_data[i]['word_class']=='a类词'){
+                    choose_data.push(table_data[i])
+                }
+
+            }
+        }else if (word_class==3){
+            for (var i = 0; i < table_data.length; i++) {
+                if (table_data[i]['word_class']=='a类词'){
+                    choose_data.push(table_data[i])
+                }
+
+            }
+        }
+    }else if(word_level==1){
+        if (word_class==1){
+            for (var i = 0; i < table_data.length; i++) {
+                if (table_data[i]['word_level']=='leve1'){
+                    choose_data.push(table_data[i])
+                }
+
+            }
+            choose_data = table_data;
+        }else if (word_class==2){
+            for (var i = 0; i < table_data.length; i++) {
+                if (table_data[i]['word_level']=='leve1' & table_data[i]['word_class']=='a类词'){
+                    choose_data.push(table_data[i])
+                }
+
+            }
+        }else if (word_class==3){
+            for (var i = 0; i < table_data.length; i++) {
+                if (table_data[i]['word_level']=='leve1' & table_data[i]['word_level']=='b类词'){
+                    choose_data.push(table_data[i])
+                }
+
+            }
+        }
+
+        }else if(word_level==2){
+        if (word_class==1){
+            for (var i = 0; i < table_data.length; i++) {
+                if (table_data[i]['word_level']=='leve2'){
+                    choose_data.push(table_data[i])
+                }
+
+            }
+        }else if (word_class==2){
+            for (var i = 0; i < table_data.length; i++) {
+                if (table_data[i]['word_level']=='leve2' & table_data[i]['word_class']=='a类词'){
+                    choose_data.push(table_data[i])
+                }
+
+            }
+        }else if (word_class==3){
+            for (var i = 0; i < table_data.length; i++) {
+                if (table_data[i]['word_level']=='leve2' & table_data[i]['word_level']=='b类词'){
+                    choose_data.push(table_data[i])
+                }
+
+            }
+        }
+
+    }
+drawRank('sensiword_table',choose_data);   
+
+    })
+
+function drawRank(div_name, rank_data){
+    if (!rank_data){
+        rank_data = new Array();
+    }
+    $('#'+ div_name).empty();
+        html = '';
+        html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
+        html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">敏感词</th>';
+        //html += '<th style="text-align:center">' + cname + '</th></tr>';
+        var min_row = Math.min(10, rank_data.length);
+        for (var i = 0; i < min_row; i++) {
+           var s = i.toString();
+           var m = i + 1;
+           var item = rank_data[i];
+           var nickname;
+           if ((item['word'] == 'unknown') || (item['word'] == '0')){
+               nickname = '未知';
+           }
+           else{
+               nickname = item['word'];
+           }
+         html += '<tr><th style="text-align:center">' + m + '</th>';
+         html += '<th style="text-align:center">' + nickname + '</a></th>';
+         //html += '<th style="text-align:center">' + item[2].toFixed(2) + '</th></tr>';
+        };
+        html += '</table>'; 
+        $('#' + div_name).append(html);
+        }  
+drawRank('sensiword_table',table_data)
+
 
 
 
