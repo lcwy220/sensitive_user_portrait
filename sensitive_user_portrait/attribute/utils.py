@@ -472,8 +472,10 @@ def search_attribute_portrait(uid):
     if user_sensitive:
         #return_results.update(sensitive_attribute(uid))
         return_results['user_type'] = 1
+        return_results['sensitive'] = 1
     else:
         return_results['user_type'] = 0
+        return_results['sensitive'] = 0
 
     return_results['photo_url'] = results['photo_url']
     return_results['uid'] = results['uid']
