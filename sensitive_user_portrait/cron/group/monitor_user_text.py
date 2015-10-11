@@ -10,6 +10,7 @@ sys.path.append('../../')
 from global_utils import es_sensitive_user_portrait as es
 from global_utils import R_GROUP as r
 from global_utils import R_GROUP_TASK as r_task
+from global_utils import MONITOR_INNER_REDIS as monitor_inner_r
 from time_utils import datetime2ts, ts2datetime, ts2date
 
 text_index_name = 'monitor_user_text'
@@ -51,7 +52,7 @@ def compute_mid_result_one(task_name, task_user, start_ts):
     result = []
     #step1: count the sensitive or not weibo count
     #step2: count the sensitive or not weibo geo count
-    #step3: sensitive words score
+    #step3: sentiment in sensitive / unsensitive
     #step4: compute hashtag
     #step5: compute sensitive_word
     #save mid_result
@@ -278,6 +279,55 @@ def identify_task_doing(task_name):
     return task_doing_status
 
 
+# use to merge to dict
+def merge_dict(*objs):
+    _keys = set(sum([obj.keys() for obj in objs], []))
+    _total = {}
+    for _key in _keys:
+        _total[_key] = sum([obj.get(_key, 0) for obj in objs])
+    return _total
+
+
+# use to compute inner group polarization
+def compute_group_inner(task_name, task_user, start_ts):
+    #step1: get task_user in-monitor task user retweet relation from monitor_inner_r
+    #step2: get task_user in-task user retweet relation
+    #step3: compute every inner user be-retweet ratio in task
+    #step4: save top5 to es--monitor_result, doc_type=task_name, _id='inner_'+date  e:'inner_2013-09-01'
+    group_status = 0
+    time_segment = 3600*24
+    iter_ts = start_ts - time_segment
+    inner_group_dict = {}
+    user_count_dict = {}
+    for root_uid in task_user:
+        inner_group_dict[root_uid] = {}
+        while True:
+            if iter_ts >= start_ts:
+                break
+            key = 'inner_' + str(iter_ts) 
+            try:
+                inner_retweet_dict = json.loads(monitor_inner_r.hget(root_uid, key))
+            except:
+                inner_retweet_dict = None
+            if inner_retweet_dict:
+                inner_group_dict[root_uid] = merge_dict(inner_group_dict[root_uid], inner_retweet_dict)
+        user_inner_retweet_count = sum(inner_group_dict[root_uid].values())
+        user_count_dict[root_uid] = user_inner_retweet_count
+    all_be_retweet_count = sum(user_count_dict.values())
+    sort_user_inner_retweet_count = sorted(user_count_dict.items(), key=lambda x:x[1], reverse=True)
+    top5_user = sort_user_inner_retweet_count[:5]
+
+    # timestamp: '2013-09-01'
+    date = ts2datetime(start_ts)
+    index_body = {'date': date}
+    for rank in range(1,6):
+        key = 'top' + str(rank)
+        index_body[key] = json.dumps(top5_user[rank-1])
+    key = 'inner_' + date
+    es.index(index=monitor_result_name, doc_type=task_name, id=key, body=index_body)
+    group_status = 1
+    return group_status
+
 def main():
     #step1: get task from redis queue (rpop)
     #step2: get monitor task time record from redis----data: {'monitor_task_time_record':{task_name, compute_start_ts}}
@@ -313,6 +363,11 @@ def main():
                 else:
                     print 'compute %s start_ts %s' % (task_name, ts2date(start_ts))
                     status = compute_mid_result_group(task_name, task_user, start_ts)
+                    #compute group polarization----compute once a day
+                    if datetime2ts(ts2datetime(start_ts)) == start_ts:
+                        group_status = compute_group_inner(task_name, task_user, start_ts)
+                        status += group_status
+
                 if status == 0:
                     print 'there is a bug about %s task' % task_name
                 else:
