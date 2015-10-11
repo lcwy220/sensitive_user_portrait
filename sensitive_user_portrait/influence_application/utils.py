@@ -34,7 +34,7 @@ def search_domain(domain, date, number=100):
             uid_list.append(item['_id'])
         portrait_results = es.mget(index='sensitive_user_portrait', doc_type='user', body={"ids":uid_list})['docs']
         for item in portrait_results:
-            domain_list = (item['_source']['topic_string']).split('&')
+            domain_list = (item['_source']['topic_string']).split('&')  # attention
             if domain in set(domain_list):
                 result_list.append([item['_id'], item['_source']['uname'], item['_source']['photo_url'], item['_source']['influence'], item['_source']['sensitive'], item['_source']['importance'], item['_source']['activeness']])
                 count_n += 1
@@ -76,7 +76,7 @@ def influence_distribute():
     row = [0, 200, 500, 700, 900, 1100, 10000]
     result = []
     ts = time.time()
-    ts = datetime2ts('2013-09-08')
+    ts = datetime2ts('2013-09-08') # test
     ts = ts - 8*3600*24
     for j in range(7):
         detail = []
@@ -102,19 +102,30 @@ def influence_distribute():
             number = es.count(index='copy_sensitive_user_portrait', doc_type="user", body=query_body)['count']
             detail.append(number)
         result.append(detail)
-    return result
+    return [row, result]
 
 def test_influence_rank(domain, date):
     uid_list = domain_dict[domain]
     search_result = es.mget(index='copy_sensitive_user_portrait', doc_type="user", body={"ids": uid_list})['docs']
-    portrait_result = es.mget(index=)
-    for item in search_result:
-        
-
+    portrait_result = es.mget(index='sensitive_user_portrait', doc_type='user',  body={"ids": uid_list})['docs']
+    results = []
+    for i in range(len(search_result)):
+        detail = []
+        try:
+            detail.append(search_result[i]['_source'][date])
+        except:
+            print uid_list[i]
+            detail.append(0)
+        temp = portrait_result[i]['_source']
+        detail.extend([temp['uid'], temp['uname'], temp['photo_url'], temp['activeness'], temp['importance'], temp['sensitive']])
+        results.append(detail)
+    sorted_list = sorted(results, key=lambda x:x[0], reverse=True)
+    return sorted_list
 
 
 if __name__ == '__main__':
     #print search_domain('art', '20130907', number=10)
     #print search_current_es('art', 'sensitive_user_portrait', number=10)
-    print influence_distribute()
+    #print influence_distribute()
+    print test_influence_rank('公知分子', '20130907')
 
