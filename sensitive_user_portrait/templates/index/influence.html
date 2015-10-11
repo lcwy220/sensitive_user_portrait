@@ -10,8 +10,8 @@
     </style>
 {% endblock custom_css  %}
 {% block body %}
-	<div class="container" sytle="padding-top:0px; min-height:600px; width:836px;">
-    	<div class="tab-pane" id="custom" style="margin-top:10px">
+    	<h2>影响力排名</h2>
+        <div class="tab-pane" id="custom" style="margin-top:10px">
         	<span>选择日期：</span>
             <span id="domain_date" style="margin-left:10px">
 
@@ -49,9 +49,10 @@
     	    	</span>
         	</div>
     	</div>
-
     	<div id="total_table0" >    	</div>
-	</div>
+        <h2>影响力分布</h2>
+        <div id="distribute"></div>
+
 {% endblock body %}
 
 {% block end_js %}
