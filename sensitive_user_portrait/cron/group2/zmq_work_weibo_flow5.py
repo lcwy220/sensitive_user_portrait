@@ -18,6 +18,7 @@ from global_config import ZMQ_VENT_PORT_FLOW5, ZMQ_CTRL_VENT_PORT_FLOW5,\
                           ZMQ_VENT_HOST_FLOW1, ZMQ_CTRL_HOST_FLOW1
 from global_utils import R_GROUP as r
 from global_utils import MONITOR_REDIS as monitor_r
+from global_utils import MONITOR_INNER_REDIS as monitor_inner_r
 
 # use to get track user by hour
 def get_track_task_user():
@@ -48,6 +49,29 @@ def add_retweet(item):
     start_ts = date_ts + time_segment * 900
     key = 'retweet_' + str(start_ts)
     monitor_r.hincrby(str(root_uid), key, 1)
+
+def inner_group_retweet(item):
+    root_uid = str(item['root_uid'])
+    uid = str(item['uid'])
+    timestamp = item['timestamp']
+    date = ts2datetime(timestamp)
+    date_ts = datetime2ts(date)
+    time_segment = int((timestamp - date_ts) / 900)
+    start_ts = date_ts + time_segment * 900
+    key = 'inner_' + str(start_ts)
+    try:
+        inner_retweet_exist = monitor_inner_r.hget(root_uid, key)
+    except:
+        inner_retweet_exist = None
+        monitor_inner_r.hset(root_uid, key, json.dumps({uid: 1}))
+    if inner_retweet_exist:
+        inner_retweet_dict = json.loads(inner_retweet_exist)
+        if uid in inner_retweet_dict:
+            inner_retweet_dict[uid] += 1
+        else:
+            inner_retweet_dict[uid] = 1
+        monitor_inner_r.hset(root_uid, key, json.dumps(inner_retweet_dict))
+
 
 
 if __name__ == "__main__":
@@ -86,12 +110,21 @@ if __name__ == "__main__":
         
         if item['sp_type'] == '1':
             read_count += 1
-            #print 'item:', item
+            #accumulate the retweet and comment count of monitor_task_user from all weibo user
+            #----outer retweet/comment
+            
             if str(item['root_uid']) in monitor_user_list:
-                if item['message_type'] != 2:
+                if item['message_type'] == 2:
                     add_comment(item)
-                elif item['message_type'] != 3:
+                elif item['message_type'] == 3:
                     add_retweet(item)
+           
+            #accumulate the retweet relation in monitor_task_user
+            #----inner retweet
+            if item['message_type'] == 3:
+                if item['root_uid'] in monitor_user_list:
+                    if item['uid'] in monitor_user_list:
+                        inner_group_retweet(item)
 
         if read_count % 10000 == 0:
             te = time.time()
