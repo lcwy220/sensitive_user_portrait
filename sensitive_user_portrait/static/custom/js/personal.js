@@ -492,7 +492,7 @@ function page_group_weibo(start_row,end_row,data){
             var type = '敏感微博';
         }
 
-        html += '<div style="height:80px;background:' + colors[s%2] + ';font-size:13px">';
+        html += '<div style="height:60px;background:' + colors[s%2] + ';font-size:13px">';
         // html += '<p><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
         html += '<p style="color:black;">' + timestamp + '&nbsp;&nbsp;' + geo + '&nbsp;&nbsp;' + text + '</p>';
         html += '<p style="margin-top:-5px;color:darkred;text-align:right">' + type + '&nbsp;&nbsp;转发(' + repost + ')&nbsp;&nbsp;评论(' + comment + ')</p>';
