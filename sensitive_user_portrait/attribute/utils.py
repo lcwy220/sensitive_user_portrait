@@ -107,8 +107,6 @@ def search_full_text(uid, date):
     for item in search_results:
         detail = []
         source = item['_source']
-        if source['sensitive']:
-            print item
         detail.append(source['sensitive'])
         detail.append(source['message_type'])
         ts =source['timestamp']
@@ -131,6 +129,7 @@ def search_full_text(uid, date):
         retweeted_number = 0
         comment_number = 0
         if source['sensitive']:
+            print source
             if int(source['message_type']) == 1:
                 if weibo_bci:
                     print weibo_bci['s_origin_weibo_retweeted_detail']
@@ -472,9 +471,9 @@ def search_attribute_portrait(uid):
     user_sensitive = user_type(uid)
     if user_sensitive:
         #return_results.update(sensitive_attribute(uid))
-        return_results['sensitive'] = 1
+        return_results['user_type'] = 1
     else:
-        return_results['sensitive'] = 0
+        return_results['user_type'] = 0
 
     return_results['photo_url'] = results['photo_url']
     return_results['uid'] = results['uid']
@@ -664,12 +663,13 @@ def search_attribute_portrait(uid):
                 'range':{
                     'activeness':{
                         'from':results['activeness'],
-                        'to': 100000
+                        'to': 10000
                     }
                 }
             }
         }
         activeness_rank = es.count(index='sensitive_user_portrait', doc_type='user', body=query_body)
+        print activeness_rank
         if activeness_rank['_shards']['successful'] != 0:
             return_results['activeness_rank'] = activeness_rank['count']
         else:

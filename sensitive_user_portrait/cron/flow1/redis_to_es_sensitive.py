@@ -247,7 +247,7 @@ def compute(user_set, es):
         user_item['origin_weibo_retweeted_brust_average'] = origin_weibo_retweeted_brust[1]
         user_item['origin_weibo_top_retweeted_id'] = origin_weibo_top_retweeted_id
         user_item['origin_weibo_retweeted_brust_n'] = origin_weibo_retweeted_brust[0]
-        #user_item['origin_weibo_retweeted_detail'] = origin_weibo_retweeted_detail
+        user_item['origin_weibo_retweeted_detail'] = origin_weibo_retweeted_detail
 
         user_item['s_origin_weibo_retweeted_total_number'] = s_origin_weibo_retweeted_total_number
         user_item['s_origin_weibo_retweeted_average_number'] = s_origin_weibo_retweeted_average_number
@@ -262,7 +262,7 @@ def compute(user_set, es):
         user_item['origin_weibo_comment_brust_n'] = origin_weibo_comment_brust[0]
         user_item['origin_weibo_comment_brust_average'] = origin_weibo_comment_brust[1]
         user_item['origin_weibo_top_comment_id'] = origin_weibo_top_comment_id
-        #user_item['origin_weibo_comment_detail'] = origin_weibo_comment_detail
+        user_item['origin_weibo_comment_detail'] = origin_weibo_comment_detail
 
         user_item['s_origin_weibo_comment_total_number'] = s_origin_weibo_comment_total_number
         user_item['s_origin_weibo_comment_average_number'] = s_origin_weibo_comment_average_number
@@ -277,7 +277,7 @@ def compute(user_set, es):
         user_item['retweeted_weibo_retweeted_brust_n'] = retweeted_weibo_retweeted_brust[0]
         user_item['retweeted_weibo_retweeted_brust_average'] = retweeted_weibo_retweeted_brust[1]
         user_item['retweeted_weibo_top_retweeted_id'] = retweeted_weibo_top_retweeted_id
-        #user_item['retweeted_weibo_retweeted_detail'] = retweeted_weibo_retweeted_detail
+        user_item['retweeted_weibo_retweeted_detail'] = retweeted_weibo_retweeted_detail
 
         user_item['s_retweeted_weibo_retweeted_total_number'] = s_retweeted_weibo_retweeted_total_number
         user_item['s_retweeted_weibo_retweeted_average_number'] = s_retweeted_weibo_retweeted_average_number
@@ -292,7 +292,7 @@ def compute(user_set, es):
         user_item['retweeted_weibo_comment_brust_n'] = retweeted_weibo_comment_brust[0]
         user_item['retweeted_weibo_comment_brust_average'] = retweeted_weibo_comment_brust[1]
         user_item['retweeted_weibo_top_comment_id'] = retweeted_weibo_top_comment_id
-        #user_item['retweeted_weibo_comment_detail'] = retweeted_weibo_comment_detail
+        user_item['retweeted_weibo_comment_detail'] = retweeted_weibo_comment_detail
 
         user_item['s_retweeted_weibo_comment_total_number'] = s_retweeted_weibo_comment_total_number
         user_item['s_retweeted_weibo_comment_average_number'] = s_retweeted_weibo_comment_average_number
