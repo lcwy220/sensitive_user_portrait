@@ -12,8 +12,26 @@
 {% block body %}
 	<div class="container" sytle="padding-top:0px; min-height:600px; width:836px;">
     	<div class="tab-pane" id="custom" style="margin-top:10px">
-        	<span>选择日期：</span><span id="domain_date" style="margin-left:10px"></span>
-        	<span style="margin-left:15px">选择领域：</span><span id="domain" style="margin-left:10px"></span>
+        	<span>选择日期：</span>
+            <span id="domain_date" style="margin-left:10px">
+
+            </span>
+        	<span style="margin-left:15px">选择领域：</span>
+                <select id="domain_select">';
+                    <option value="1" selected="selected">高校微博</option>';
+                    <option value="2">境内机构</option>';
+                    <option value="3">境外机构</option>';
+                    <option value="4">媒体</option>';
+                    <option value="5">境外媒体</option>';
+                    <option value="6">民间组织</option>';
+                    <option value="7">律师</option>';
+                    <option value="8">政府机构人士</option>';
+                    <option value="9">媒体人士</option>';
+                    <option value="10">活跃人士</option>';
+                    <option value="11">草根</option>';
+                    <option value="12">商业人士</option>';
+                    <option value="13">其他</option>';
+                </select>';
         	<div id="domain_rank" style="margin-top:10px"></div>
         	<div class="tab-pane" id="custom" style="margin-top:10px">
         		<span>排名指标:</span>
@@ -25,22 +43,19 @@
         				<input type="radio" name="index_select" value="4" style="margin-left:5px"> 转发爆发度
         				<input type="radio" name="index_select" value="5" style="margin-left:5px"> 评论爆发度
         			</span>
-        			<span style="margin-left:10px">
-        				<button class="btn btn-primary btn-sm" style="width:80px;height:30px" id="domain_button" title="确定选择">确定</button>	
+        			<span style="margin-left:55px">
+        				<button class="btn btn-primary btn-sm" style="width:80px;height:30px;float:right;" id="domain_button" title="确定选择">确定</button>	
 	        		</span>
     	    	</span>
         	</div>
     	</div>
-    	<table id="total_table" class="table table-striped table-bordered bootstrap-datatable datatable responsive">
-    		<thead><tr><th style="text-align:center;vertical-align:middle">排名</th><th style="text-align:center;vertical-align:middle">头像</th><th style="text-align:center;vertical-align:middle">用户ID</th><th style="text-align:center;vertical-align:middle">昵称</th><th style="text-align:center;vertical-align:middle">影响力</th><th style="text-align:center;vertical-align:middle">入库状态</th><th style="text-align:center;vertical-align:middle">敏感度</th></tr></thead>
-    			<tbody>
-    				<tr><td class="center" style="text-align:center;vertical-align:middle"></td></tr>  
-    			</tbody>
-    		</thead>
-    	</table>
+
+    	<div id="total_table0" >    	</div>
 	</div>
 {% endblock body %}
 
 {% block end_js %}
+<script type="text/javascript" src="/static/custom/js/rank_extra.js"></script>
+<script type="text/javascript" src="/static/custom/js/rank_table.js"></script>
 <script type="text/javascript" src="/static/custom/js/influence.js"></script>
 {% endblock end_js %}
