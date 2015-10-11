@@ -43,6 +43,10 @@ def sensitive_words():
 def group():
     return render_template('index/group.html')
 
+@mod.route('/group_results')
+def group_results():
+    return render_template('index/group_results.html')
+
 @mod.route('/group_task/')
 def group_task():
     return render_template('index/group_task.html')
