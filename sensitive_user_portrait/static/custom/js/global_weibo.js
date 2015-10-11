@@ -93,7 +93,8 @@ function Draw_global_weibo(data){
         page_icon(1,pageCount,0);
     }
     
-    $("#pageGro li").live("click",function(){
+    // $("#pageGro li").live("click",function(){
+    $("#pageGro li").click(function(){
         if(pageCount > 5){
             var pageNum = parseInt($(this).html());
             pageGroup(pageNum,pageCount);
@@ -155,32 +156,3 @@ function Draw_global_weibo(data){
     });
 }
 
-// 自定义微博列表
-function page_group_weibo(start_row,end_row,data){
-    weibo_num = end_row - start_row;
-    $('#group_weibo').empty();
-var html = "";
-    html += '<div class="group_weibo_font">';
-    for (var i = start_row; i < end_row; i += 1){
-        s=i.toString();
-        uid = data[s]['uid'];
-        text = data[s]['text'];
-        uname = data[s]['uname'];
-        timestamp = data[s]['timestamp'];
-        date = new Date(parseInt(timestamp)*1000).format("yyyy-MM-dd hh:mm:ss");
-        if (i%2 ==0){
-            html += '<div style="background:whitesmoke;font-size:14px">';
-            html += '<p><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
-            html += '<p style="margin-top:-5px"><font color:#e0e0e0>' + date + '</font></p>';
-            html += '</div>'
-    }
-        else{
-            html += '<div>';
-            html += '<p><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';    
-            html += '<p style="margin-top:-5px"><font color:#e0e0e0>' + date + '</font></p>';
-            html += '</div>';
-        }
-    }
-    html += '</div>'; 
-    $('#group_weibo').append(html);
-}

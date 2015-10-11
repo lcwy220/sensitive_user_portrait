@@ -456,8 +456,39 @@ function drawBasic(personalData){
         topic.innerHTML = "无此数据";
     }
 }
+// 自定义微博列表
+function page_group_weibo(start_row,end_row,data){
+    weibo_num = end_row - start_row;
+    $('#personal_weibo').empty();
+    var html = "";
+    html += '<div class="group_weibo_font">';
+    for (var i = start_row; i < end_row; i += 1){
+        s=i.toString();
+        uid = data[s]['uid'];
+        text = data[s]['text'];
+        uname = data[s]['uname'];
+        timestamp = data[s]['timestamp'];
+        date = new Date(parseInt(timestamp)*1000).format("yyyy-MM-dd hh:mm:ss");
+        if (i%2 ==0){
+            html += '<div style="background:whitesmoke;font-size:14px">';
+            html += '<p><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
+            html += '<p style="margin-top:-5px"><font color:#e0e0e0>' + date + '</font></p>';
+            html += '</div>'
+    }
+        else{
+            html += '<div>';
+            html += '<p><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';    
+            html += '<p style="margin-top:-5px"><font color:#e0e0e0>' + date + '</font></p>';
+            html += '</div>';
+        }
+    }
+    html += '</div>'; 
+    $('#personal_weibo').append(html);
+}
+
 function draw_weibo(weibo_data){
-   $('#statistic').empty();
+    console.log(weibo_data);
+    $('#statistic').empty();
     var html = '';
     html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
     html += '<tr><th style="text-align:center">原创微博数</th><th style="text-align:center">转发微博数</th>';
@@ -471,6 +502,8 @@ function draw_weibo(weibo_data){
     }
     html += '</tr></table>';
     $('#statistic').append(html);
+    //unfinished
+    //Draw_global_weibo(weibo_data);
 }
 function point2weibo(xnum, ts){
 	var url ="/weibo/show_user_weibo_ts/?uid="+parent.personalData.uid+"&ts="+ts[0];
@@ -544,9 +577,10 @@ function draw(data){
     // unfinished
     Draw_think_topic();
     Draw_think_emotion();
-    draw_weibo('ere');
 }
 var person_url = '/attribute/portrait_attribute/?uid=' + uid;
 call_ajax_request(person_url, draw);
 
 Draw_personal_weibo_date();
+var weibo_url = '/attribute/detail_weibo_text/?uid=' + uid + '&date=2013-09-01';
+call_ajax_request(weibo_url, draw_weibo);
