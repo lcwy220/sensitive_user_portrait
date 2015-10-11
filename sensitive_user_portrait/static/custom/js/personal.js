@@ -455,20 +455,34 @@ function drawBasic(personalData){
     }else{
         topic.innerHTML = "无此数据";
     }
+    personalData.user_type = 1;
+    if(personalData.user_type){
+        if (personalData.user_type == 1){
+            $('#sensitive_type').attr("title", "此用户为敏感用户，点击查看敏感性分析")
+                .attr("href", "/index/personal/?uid=" + uid)
+                .removeClass("hidden");
+        }
+    }
+
+
 }
 // 自定义微博列表
 function page_group_weibo(start_row,end_row,data){
-    console.log(data);
-    console.log(start_row);
-    console.log(end_row);
     var weibo_num = end_row - start_row;
     $('#personal_weibo').empty();
+    if (weibo_num == 0){
+        $('#personal_weibo').html('暂无微博数据');
+        return;
+    }
     var html = "";
     html += '<div class="group_weibo_font">';
+    var colors = ['white', 'whitesmoke'];
     for (var s = start_row; s < end_row; s++){
         var timestamp = data[s][2];
         var geo = data[s][3];
         var text = data[s][4];
+        var repost = data[s][5];
+        var comment = data[s][6];
         // uid = data[s]['uid'];
         // uname = data[s]['uname'];
         // var date = new Date(parseInt(timestamp)*1000).format("yyyy-MM-dd hh:mm:ss");
@@ -479,20 +493,11 @@ function page_group_weibo(start_row,end_row,data){
             var type = '敏感微博';
         }
 
-        if (s%2 ==0){
-            html += '<div style="background:whitesmoke;font-size:14px">';
-            // html += '<p><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
-            html += '<p style="color:black;">' + timestamp + '&nbsp;&nbsp;' + geo + '&nbsp;&nbsp;' + text + '</p>';
-            html += '<p style="margin-top:-5px;color:darkred;text-align:right">' + type + '</p>';
-            html += '</div>'
-    }
-        else{
-            html += '<div style="font-size:14px">';
-            // html += '<p><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
-            html += '<p style="color:black;">' + timestamp + '&nbsp;&nbsp;' + geo + '&nbsp;&nbsp;' + text + '</p>';
-            html += '<p style="margin-top:-5px;color:darkred;text-align:right">' + type + '</p>';
-            html += '</div>'
-        }
+        html += '<div style="height:80px;background:' + colors[s%2] + ';font-size:13px">';
+        // html += '<p><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
+        html += '<p style="color:black;">' + timestamp + '&nbsp;&nbsp;' + geo + '&nbsp;&nbsp;' + text + '</p>';
+        html += '<p style="margin-top:-5px;color:darkred;text-align:right">' + type + '&nbsp;&nbsp;转发(' + repost + ')&nbsp;&nbsp;评论(' + comment + ')</p>';
+        html += '</div>'
     }
     html += '</div>'; 
     $('#personal_weibo').append(html);
@@ -519,51 +524,44 @@ function draw_statistic(attention_data, detail){
     html += '</tr></table>';
     $('#statistic').append(html);
 }
-function point2weibo(xnum, ts){
-	var url ="/weibo/show_user_weibo_ts/?uid="+parent.personalData.uid+"&ts="+ts[0];
-    var delta;
-    //console.log(url);
-	base_call_ajax_request(url, draw_content);
-    $('#date_zh').html(getDate_zh(ts));
-    switch(xnum % 6)
-    {
-        case 0: delta = "00:00-04:00";break;
-        case 1: delta = "04:00-08:00";break;
-        case 2: delta = "08:00-12:00";break;
-        case 3: delta = "12:00-16:00";break;
-        case 4: delta = "16:00-20:00";break;
-        case 5: delta = "20:00-24:00";break;
-    }
-    $('#time_zh').html(delta);
-	function draw_content(data){
-        var html = '';
-        $('#weibo_text').empty();
-        if(data==''){
-            html += "<div style='width:100%;'><span style='margin-left:20px;'>该时段用户未发布任何微博</span></div>";
-        }else{
-            for(i=0;i<data.length;i++){
-                //console.log(data[i].text);
-                html += "<div style='width:100%;'><img src='/static/img/pencil-icon.png' style='height:10px;width:10px;margin:0px;margin-right:10px;'><span>"+data[i].text+"</span></div>";
-            }
-
-        }
-        $('#weibo_text').append(html);
-    }
-}
 function Draw_personal_weibo_date(){
     $('#personal_weibo_date').empty();
-    html = '';
+    var html = '';
     html += '<select id="select_personal_weibo_date" style="width:120px;">';
-    var timestamp = Date.parse(new Date());
-    date = new Date(parseInt(timestamp)).format("yyyy-MM-dd");
+    //var timestamp = Date.parse(new Date());
+    var timestamp = 1378555200000;
+    var date = new Date(parseInt(timestamp)).format("yyyy-MM-dd");
     html += '<option value="' + date + '" selected="selected">' + date + '</option>';      
+    date2index[date] = 6;
     for (var i = 0; i < 6; i++) {
         timestamp = timestamp-24*3600*1000;
         date = new Date(parseInt(timestamp)).format("yyyy-MM-dd");
         html += '<option value="' + date + '">' + date + '</option>';
+        date2index[date] = 5 - i;
     }
     html += '</select>';
     $('#personal_weibo_date').append(html);
+
+
+    $('#confirm_date').click(function(){
+        var value = $('#select_personal_weibo_date').val();
+        // weibo
+        var weibo_url = "/attribute/detail_weibo_text/?uid=" + uid + "&date=" + value;
+        call_ajax_request(weibo_url, Draw_global_weibo);
+        // statistic
+        var index = date2index[value];
+        draw_statistic(personalData.attention_degree[index], personalData.common_influence_detail[index]);
+        
+    });
+
+    // initial weibo
+    var value = $('#select_personal_weibo_date').val();
+    var weibo_url = "/attribute/detail_weibo_text/?uid=" + uid + "&date=" + value;
+    call_ajax_request(weibo_url, Draw_global_weibo);
+
+    // initial statistic
+    var index = date2index[value];
+    draw_statistic(personalData.attention_degree[index], personalData.common_influence_detail[index]);
 }
 
 
@@ -598,8 +596,5 @@ var personalData;
 var person_url = '/attribute/portrait_attribute/?uid=' + uid;
 call_ajax_request(person_url, draw);
 
+var date2index  = new Array();
 Draw_personal_weibo_date();
-var initial_index = 0;
-draw_statistic(personalData.attention_degree[initial_index], personalData.common_influence_detail[initial_index]);
-var weibo_url = '/attribute/detail_weibo_text/?uid=' + uid + '&date=2013-09-01';
-call_ajax_request(weibo_url, Draw_global_weibo);

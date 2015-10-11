@@ -82,7 +82,7 @@ function Draw_global_weibo(data){
             total_pages = data.length / page_num;
         }
         else {
-            total_pages = Math.round(data.length / page_num) + 1;
+            total_pages = Math.ceil(data.length / page_num);
         }
     }
     var pageCount = total_pages;

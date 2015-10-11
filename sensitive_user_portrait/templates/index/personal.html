@@ -7,27 +7,25 @@
     <link rel="stylesheet" href="/static/custom/css/jelevator.css"  media="screen" />
 	<link rel="stylesheet" href="/static/custom/css/personal.css" media="screen" />
 	<style>
-	.box{width:310px;height:300px;float:left;}
-	li{list-style:none;}
-	#pageGro{ width:400px; height:25px; margin:0px auto; padding-top:30px;}
-	#pageGro div,#pageGro div ul li{ font-size:12px; color:#999; line-height:23px; float:left; margin-left:5px;}
-	#pageGro div ul li{ width:22px; text-align:center; border:1px solid #999; cursor:pointer;}
-	#pageGro div ul li.on{ color:#fff; background:#3c90d9; border:1px solid #3c90d9;}
-	#pageGro .pageUp{ border:1px solid #999; cursor:pointer;}
-	#pageGro .pageDown{ width:63px; border:1px solid #999; cursor:pointer;}
-	#pageGro .pageUp{ text-indent:23px;background:url(/static/custom/images/pageUp.png) 5px 7px no-repeat;}
-	#pageGro .pageDown{ text-indent:5px;background:url(/static/custom/images/pageDown.png) 46px 6px no-repeat;}
-	#group_weibo_font{ 
-        font-family: '微软雅黑';
-        font-size: 14px; 
-    }
-	</style>
+        .box{width:310px;height:300px;float:left;}
+        li{list-style:none;}
+        #pageGro{ width:400px; height:25px; margin:0px auto; padding-top:30px;}
+        #pageGro div,#pageGro div ul li{ font-size:12px; color:#999; line-height:23px; float:left; margin-left:5px;}
+        #pageGro div ul li{ width:22px; text-align:center; border:1px solid #999; cursor:pointer;}
+        #pageGro div ul li.on{ color:#fff; background:#3c90d9; border:1px solid #3c90d9;}
+        #pageGro .pageUp{ border:1px solid #999; cursor:pointer;}
+        #pageGro .pageDown{ width:63px; border:1px solid #999; cursor:pointer;}
+        #pageGro .pageUp{ text-indent:23px;background:url(/static/custom/images/pageUp.png) 5px 7px no-repeat;}
+        #pageGro .pageDown{ text-indent:5px;background:url(/static/custom/images/pageDown.png) 46px 6px no-repeat;}
+        .pageList ul{margin-left:0px;} 
+    </style>
 {% endblock custom_css  %}
 {% block body %}
 
 	<div id="page">
 		<div class="portait" style="font-family:'Microsoft YaHei UI'; font-size:16px;margin-left:20px;">
-			<div class="PortraitImg" ><img id="portraitImg" src="http://tp2.sinaimg.cn/1878376757/50/0/1" alt="" class="img-thumbnail"></div>
+            <div><a id ="sensitive_type" class="hidden"><img src="/static/custom/images/warning-icon.png" alt="" style="width:70px;float:right;margin-right:10px;"></a></div>
+			<div class="PortraitImg" ><img id="portraitImg" alt="" class="img-thumbnail"></div>
             <div class="nickname">
                 <span  id="nickname" class="red"></span>
             </div>
@@ -161,11 +159,11 @@
 			<h2 >微博分析</h2>
             <div style="margin:20px;">
                 <span>选择日期：</span><span id='personal_weibo_date' style="margin-left:10px"></span>
-                <span style="margin-left:10px"><button class="btn btn-primary btn-sm" style="width:80px;height:30px" id="" title="确定选择" onclick=";">确定</button></span>
+                <span style="margin-left:10px"><button class="btn btn-primary btn-sm" style="width:80px;height:30px" id="confirm_date" title="确定选择">确定</button></span>
             </div>
             <div class="table-responsive"id='statistic' style='overflow-x:hidden;width:920px;height:100px;margin:20px;'></div>
             <div id="personal_weibo" style="width:920px;margin:20px;margin-top:-20px"></div>
-            <div id="pageGro" class="cb" style="float:left;width:990px;height:60px;margin-left:350px">
+            <div id="pageGro" style="height:60px;margin-left:350px">
                 <div class="pageUp">上一页</div>
                 <div class="pageList">
                     <ul>
@@ -205,7 +203,7 @@
 					
 				</span>
 			</div>
-			<span style=""><button class="btn btn-primary btn-sm" style="width:80px;height:30px;margin-top:30px;margin-left:30px;float:right;" id="add_person_tag_button" title="确定选择" onclick="add_person_tag()">添加</button></span>
+			<span style=""><button class="btn btn-primary btn-sm" style="width:80px;height:30px;margin-top:30px;margin-left:30px;float:right;" id="add_person_tag_button" title="确定选择">添加</button></span>
 		</div>
 	</div>
 </div>
@@ -267,16 +265,6 @@
             showSectionsMenu: true
         });
     });
-	$("#tag").off("click").click(function(){
-		$("#float-wrap").removeClass("hidden");
-		$("#tagInfo").removeClass("hidden");
-		return false;
-	});
-	$(".Tagclose").off("click").click(function(){
-		$("#float-wrap").addClass("hidden");
-		$("#tagInfo").addClass("hidden");
-		return false;
-	});
 
     var uid = {{ uid }};
     var contact_url = "/index/contact/?uid=" + uid;
