@@ -26,6 +26,10 @@ index_info = {
                 'submit_date':{
                     'type':'string',
                     'index': 'not_analyzed'
+                    },
+                'end_date':{
+                    'type': 'string',
+                    'index': 'not_analyzed'
                     }
                 }
             }

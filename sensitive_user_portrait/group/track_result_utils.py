@@ -10,6 +10,7 @@ from sensitive_user_portrait.global_utils import es_sensitive_user_portrait as e
 from sensitive_user_portrait.global_utils import MONITOR_REDIS as monitor_r
 from sensitive_user_portrait.global_utils import R_RECOMMENTATION as word_r
 from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts, ts2date, date2ts
+from sensitive_user_portrait.global_utils import es_user_profile
 
 task_index_name = 'group_result'
 task_index_type = 'group'
@@ -36,11 +37,12 @@ def compute_mid_result(task_name, task_submit_date):
     #geo & hashtag: day
     #other: 15min
     search_time_segment = 3600 * 4
-    start_ts = datetime2ts(task_submit_date)
+    #start_ts = datetime2ts(task_submit_date)
+    start_ts = date2ts(task_submit_date)
     now_ts = time.time()
     now_date = ts2datetime(now_ts)
     #test
-    now_date = '2013-09-02'
+    now_ts = datetime2ts('2013-09-02')
     date_ts = datetime2ts(now_date)
     segment = int((now_ts - date_ts) / 900) + 1
     end_ts = date_ts + segment * 900
@@ -50,33 +52,47 @@ def compute_mid_result(task_name, task_submit_date):
     while True:
         if begin_ts >= end_ts:
             break
-        query_body = {'range':{'timestamp':{'from': begin_ts, 'to':beigin_ts+search_time_segment}}}
+        compute_ts = ts2date(begin_ts)
+        print 'compute ts:', compute_ts
+        query_body = {'range':{'timestamp':{'from': begin_ts, 'to':begin_ts+search_time_segment}}}
         try:
             mid_result_list = es.search(index=monitor_index_name, doc_type=task_name, body={'query':query_body, 'size':100000, 'sort':[{'timestamp':{'order': 'asc'}}]})['hits']['hits']
         except Exception, e:
             raise e
         if mid_result_list:
-            for mid_result_item in mie_result_list:
+            for mid_result_item in mid_result_list:
                 result_item = mid_result_item['_source']
                 timestamp = result_item['timestamp']
                 #attr_count
+                print 'compute_count'
                 count_dict = json.loads(result_item['count'])
                 for sensitive in count_dict:
                     count_key = 'count_' + sensitive
                     result[count_key][str(timestamp)] = count_dict[sensitive]
                 #attr_sentiment
-                sentiment_dict = json.loads(result_item['sentiment'])
-                for sentiment in sentiment_dict:
-                    sentiment_key = 'sentiment_'+sentiment
-                    result[sentiment_key][str(timestamp)] = sentiment_dict[sentiment]
+                print 'compute_sentiment'
+                sensitive_sentiment_dict = json.loads(result_item['sentiment'])
+                for sensitive in sensitive_sentiment_dict:
+                    sentiment_dict = sensitive_sentiment_dict[sensitive]
+                    for sentiment in sentiment_dict:
+                        sentiment_key = 'sentiment_'+sentiment
+                        result[sentiment_key][str(timestamp)] = sentiment_dict[sentiment]
                 #attr_sensitive_score
-                sensitive_word_dict = json.loads(result_item['sensitive_word'])
+                print 'compute_sensitive_word'
+                if 'sensitive_word' in result_item:
+                    sensitive_word_dict = json.loads(result_item['sensitive_word'])
+                else:
+                    sensitive_word_dict = {}
                 ts_word_score = 0
                 for word in sensitive_word_dict:
-                    word_identify = json.loads(word_r.hget('sensitive_word', str(word)))
+                    #print 'word:', json.dumps(word.encode('utf-8')), word.encode('utf-8'), type(word.encode('utf-8'))
+                    search_word = word.encode('utf-8')
+                    #print 'search_word:', search_word, type(search_word)
+                    word_identify = json.loads(word_r.hget('sensitive_words', search_word))
                     ts_word_score += sensitive_word_dict[word] * word_identify[0]
                 result['sensitive_score'][str(timestamp)] = ts_word_score
                 #attr_geo
+                print 'compute geo'
                 timestamp_date = ts2datetime(timestamp)
                 sensitive_geo_dict = json.loads(result_item['geo'])
                 for sensitive in sensitive_geo_dict:
@@ -89,7 +105,11 @@ def compute_mid_result(task_name, task_submit_date):
                         except:
                             result['geo_'+sensitive][timestamp_date][geo] = geo_dict[geo]
                 #attr_hashtag
-                sensitive_hashtag_dict = json.loads(result_item['hashtag'])
+                print 'compute hashtag'
+                if 'hashtag' in result_item:
+                    sensitive_hashtag_dict = json.loads(result_item['hashtag'])
+                else:
+                    sensitive_hashtag_dict = {}
                 for sensitive in sensitive_hashtag_dict:
                     for sensitive in sensitive_hashtag_dict:
                         if timestamp_date not in result['hashtag_'+sensitive]:
@@ -101,14 +121,16 @@ def compute_mid_result(task_name, task_submit_date):
                             except:
                                 result['hashtag_'+sensitive][timestamp_date][hashtag] = hashtag_dict[hashtag]
 
-        beigin_ts += search_time_segment
+        begin_ts += search_time_segment
     # compute peak for count/sentiment/sensitive_score
     peak_compute_field = ['count_0', 'count_1', 'sentiment_126', 'sentiment_127', 'sentiment_128',\
                           'sentiment_129', 'sentiment_130', 'sensitive_score']
+    print 'compute_peak'
     for field in peak_compute_field:
         complement_item = complement_ts(result[field], start_ts, end_ts)
         sort_complement_item = sorted(complement_item.items(), key=lambda x:int(x[0]))
         detect_peaks_input = [item[1] for item in sort_complement_item]
+        print 'start_detect_peaks'
         result[field+'_peak'] = detect_peaks(detect_peaks_input)
         result[field] = sort_complement_item
         
@@ -118,12 +140,16 @@ def compute_mid_result(task_name, task_submit_date):
 def complement_ts(result_dict,start_ts, end_ts):
     ts = start_ts
     time_segment = 900
+    print 'start_ts:', ts2date(ts)
+    print 'end_ts:', ts2date(end_ts)
+    print 'result_dict:', result_dict
     while True:
         if ts > end_ts:
             break
+        print 'ts:', ts2date(ts)
         if str(ts) not in result_dict:
             result_dict[str(ts)] = 0
-            ts += time_segment
+        ts += time_segment
     return result_dict
 
 
@@ -174,17 +200,44 @@ def get_network(task_exist):
     result = {}
     return result
 
+
+# get user information from user_profile
+def get_user_info(uid_list):
+    result = []
+    for uid in uid_list:
+        try:
+            uid_profile = es_user_profile(index='weibo_user', doc_type='user', id=uid)['_source']
+        except:
+            uid_profile = {}
+        if uid_profile:
+            uname = uid_profile['nick_name']
+            location = uid_profile['location']
+            friendsnum = uid_profile['friendsnum']
+            fansnum = uid_profile['fansnum']
+            statusnum = uid_profile['statusnum']
+        else:
+            uname = u'未知'
+            location = u'未知'
+            friendsnum = u'未知'
+            fansnum = u'未知'
+            statusnum = u'未知'
+        result.append([uid, uname, location, friendsnum, fansnum, statusnum])
+    return result
+
+
 def get_track_result(task_name, module):
     #step1: identify the task_name is in ES(group_result)
     #step2: based on the module to get result
-
+    result = {}
     task_exist = identify_task(task_name)
     if task_exist == None:
         return 'the task is not exist'
     if module=='basic':
+        user_info_list = get_user_info(task_exist['uid_list'])
+        task_exist['uid_list'] = user_info_list
         result['basic'] = task_exist
         task_submit_date = task_exist['submit_date']
-        mid_result = comput_mid_result(task_name, task_submit_date)
+        mid_result = compute_mid_result(task_name, task_submit_date)
         result = dict(result, **mid_result)
     elif module=='comment_retweet':
         result = get_user_comment_retweet(task_exist)
@@ -197,7 +250,14 @@ def get_track_result(task_name, module):
 
 # based on uid to get uname
 def uid2uname(uid):
-    uname = ''
+    try:
+        user_item = es_user_profile.get(index=profile_index_name, doc_type=profile_index_type,\
+                  id=uid)['_source']
+    except:
+        user_item = None
+    if not user_item:
+        return u'未知'
+    uname = user_item['nick_name']
     return uname
 
 
@@ -217,7 +277,7 @@ def get_count_weibo(task_name, sensitive_status, timestamp):
         nest_body_list.append({'term':{'uid': uid}})
     query_body.append({'bool':{'should':nest_body_list}})
     # range search: timestamp timestamp+900
-    query_body.append({'range':{'timestamp':{'from':timstamp, 'to':timestamp+900}}})
+    query_body.append({'range':{'timestamp':{'from':timestamp, 'to':timestamp+900}}})
     # match search: sensitive_status
     query_body.append({'term':{'sensitive': sensitive_status}})
     try:
@@ -227,7 +287,7 @@ def get_count_weibo(task_name, sensitive_status, timestamp):
         raise e
     for weibo_item in weibo_result:
         weibo_dict = weibo_item['_source']
-        uid = weibo_dict['user']
+        uid = weibo_dict['uid']
         uname = uid2uname(uid)
         timestamp = weibo_dict['timestamp']
         date = ts2date(timestamp)
@@ -238,7 +298,7 @@ def get_count_weibo(task_name, sensitive_status, timestamp):
     return result
 
 # show weibo when click sentiment node
-def get_sentiment_weibo(task_name, sensitive_status, sentiment, timestamp):
+def get_sentiment_weibo(task_name, sentiment, timestamp):
     result = []
     #step1: get task user
     #step2: search weibo by condition: task_user, sensitive_status, sentiment, timestamp
@@ -255,7 +315,7 @@ def get_sentiment_weibo(task_name, sensitive_status, sentiment, timestamp):
     # range search: timestamo timestamp+900
     query_body.append({'range':{'timestamp':{'from': timestamp, 'to':timestamp+900}}})
     # match search: sensitive_status
-    query_body.append({'term': {'sensitive': sensitive_status}})
+    #query_body.append({'term': {'sensitive': sensitive_status}})
     # match search: sentiment
     query_body.append({'term': {'sentiment': sentiment}})
     try:
@@ -265,9 +325,9 @@ def get_sentiment_weibo(task_name, sensitive_status, sentiment, timestamp):
         raise e
     for weibo_item in weibo_result:
         weibo_dict = weibo_item['_source']
-        uid = weibo_dict['user']
+        uid = weibo_dict['uid']
         uname = uid2uname(uid)
-        text = weibo_item['text']
+        text = weibo_dict['text']
         timestamp = weibo_dict['timestamp']
         date = ts2date(timestamp)
         geo = weibo_dict['geo']
@@ -307,9 +367,11 @@ def get_geo_user(task_name, geo, timestamp):
         nest_body_list.append({'term':{'uid': user}})
     query_body.append({'bool':{'should':nest_body_list}})
     # term search: geo
-    query_body.append({'term':{'geo': geo}})
+    geo_list = geo.split('\t')
+    city = geo_list[-1]
+    query_body.append({'wildcard':{'geo': '*' + city + '*'}})
     # range search: timestamp timestamp+900
-    query_body.append({'range':{'timestamp':{'from': timestamp, 'to':timestamp+9000}}})
+    query_body.append({'range':{'timestamp':{'from': timestamp, 'to':timestamp+3600*24}}})
     try:
         weibo_dict_result = es.search(index=text_index_name, doc_type=text_index_type, \
                 body={'query':{'bool':{'must': query_body}}, 'size':10000})['hits']['hits']
@@ -343,13 +405,15 @@ def get_geo_weibo(task_name, geo, timestamp):
     query_body = []
     # multi-search: task user
     nest_body_list = []
-    for user in task_user:
+    for uid in task_user:
         nest_body_list.append({'term':{'uid': uid}})
     query_body.append({'bool':{'should': nest_body_list}})
     # range-search: task user
-    query_body.append({'range':{'timestamp':{'from': timestamp, 'to': timestamp+900}}})
+    query_body.append({'range':{'timestamp':{'from': timestamp, 'to': timestamp+24*3600}}})
     # term-search: geo
-    query_body.append({'term': {'geo': geo}})
+    geo_list = geo.split('\t')
+    city = geo_list[-1]
+    query_body.append({'wildcard': {'geo': '*' + city + '*'}})
     try:
         weibo_dict_list = es.search(index=text_index_name, doc_type=text_index_type, \
                 body={'query':{'bool':{'must': query_body}}, 'sort':[{'timestamp':{'order': 'asc'}}], 'size':10000})['hits']['hits']

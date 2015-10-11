@@ -477,6 +477,12 @@ def search_attribute_portrait(uid):
         return_results['sensitive'] = 0
 
     return_results['photo_url'] = results['photo_url']
+    return_results['uid'] = results['uid']
+    return_results['uname'] = results['uname']
+    return_results['location'] = results['location']
+    return_results['fansnum'] = results['fansnum']
+    return_results['friendsnum'] = results['friendsnum']
+    return_results['gender'] = results['gender']
 
     keyword_list = []
     if results['keywords']:
