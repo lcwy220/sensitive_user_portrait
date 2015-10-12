@@ -18,19 +18,15 @@ function Draw_resultTable(data){
 	html += '<tbody>';
 	for (i=0;i<item.length;i++){
 		html += '<tr>';
-		for(j=0;j<item[i].length-1;j++){
-			if (j==0){
-				html += '<td name="task_name">'+item[i][j]+'</td>';
-			}else{
-				html += '<td>'+item[i][j]+'</td>';
-			}
-		}
+        html += '<td name="task_name">'+item[i][0]+'</td>';
+        html += '<td>'+item[i][1]+'</td>';
+        html += '<td>'+item[i][2]+'-' item[i][3] +'</td>';
 		if(item[i][4]==1){
-			html += '<td><a style="cursor:hand;" href="/index/group_analysis/?name=' + item[i][0]+ '">已完成</a></td>';
+			html += '<td><a style="cursor:hand;" href="/index/group_analysis/?name=' + item[i][0]+ '">正在监控</a></td>';
 		}else{
-			html += '<td>正在计算</td>';
+			html += '<td><a style="cursor:hand;" href="/index/group_analysis/?name=' + item[i][0]+ '">监控停止</a></td>';
 		}
-		html +='<td><a href="javascript:void(0)" id="del">删除</a></td>';
+		html +='<td><a href="javascript:void(0)" id="del">删除</a><a href="javascript:void(0)" id="stop"></a></td>';
 		html += '</tr>';
 	}
 	html += '</tbody>';
@@ -45,7 +41,15 @@ function self_refresh(){
 }
 function deleteGroup(){
 	$('a[id^="del"]').click(function(e){
-		var url = "/group/delete_track_attribute/?";
+		var url = "/group/delete_track_results/?";
+		var temp = $(this).parent().prev().prev().prev().prev().prev().html();
+		url = url + 'task_name=' + temp;
+		console.log(url);
+		//window.location.href = url;
+		call_ajax_request(url,self_refresh);
+	});
+	$('a[id^="stop"]').click(function(e){
+		var url = "/group/end_track_task/?";
 		var temp = $(this).parent().prev().prev().prev().prev().prev().html();
 		url = url + 'task_name=' + temp;
 		console.log(url);
