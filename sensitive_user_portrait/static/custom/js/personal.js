@@ -519,7 +519,7 @@ function draw_statistic(attention_data, detail){
     html += '<th style="text-align:center">' + detail_data[3] + '</th>';
     html += '<th style="text-align:center"><a style="cursor:pointer;" title=' + detail_data[5] + '>' + detail_data[6] + '</a></th>';
     html += '<th style="text-align:center"><a style="cursor:pointer;" title=' + detail_data[8] + '>' + detail_data[9] + '</a></th>';
-    html += '<th style="text-align:center">' + attention_data + '</th>';
+    html += '<th style="text-align:center">' + attention_data.toFixed(2) + '</th>';
     html += '</tr></table>';
     $('#statistic').append(html);
 }
