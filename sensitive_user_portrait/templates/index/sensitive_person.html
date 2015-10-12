@@ -52,7 +52,7 @@
 			<div id="influence_chart" style="height:300px;width:730px;float:left;"></div>
 			<div id="location_7"><h3>一周活动轨迹</h3>
 				<div class="clearfix course_nr">
-					<ul class="course_nr2">
+					<ul class="course_nr2" style="margin:0px;">
 						<li class="shiji">
 							<p><span class="ico" id="d1" >1993</span>&nbsp&nbsp&nbsp&nbsp&nbsp-----<span  id="city1">内容描述1。</span></p>
 						</li>
@@ -60,71 +60,90 @@
 							<p><span class="ico" id="d2" >1993</span>&nbsp&nbsp&nbsp&nbsp&nbsp-----<span  id="city2">内容描述1。</span></p>
 						</li>
 						<li class="shiji">
-							<p><span class="ico" id="d3" >1993</span><span  id="city3">内容描述1。</span></p>
+							<p><span class="ico" id="d3" >1993</span>&nbsp&nbsp&nbsp&nbsp&nbsp-----<span  id="city3">内容描述1。</span></p>
 						</li>
 						<li class="shiji">
-							<p><span class="ico" id="d4" >1993</span><span  id="city4">内容描述1。</span></p>
+							<p><span class="ico" id="d4" >1993</span>&nbsp&nbsp&nbsp&nbsp&nbsp-----<span  id="city4">内容描述1。</span></p>
 						</li>
 						<li class="shiji">
-							<p><span class="ico" id="d5" >1993</span><span  id="city5">内容描述1。</span></p>
+							<p><span class="ico" id="d5" >1993</span>&nbsp&nbsp&nbsp&nbsp&nbsp-----<span  id="city5">内容描述1。</span></p>
 						</li>
 						<li class="shiji">
-							<p><span class="ico" id="d6" >1993</span><span  id="city6">内容描述1。</span></p>
+							<p><span class="ico" id="d6" >1993</span>&nbsp&nbsp&nbsp&nbsp&nbsp-----<span  id="city6">内容描述1。</span></p>
 						</li>
 						<li class="shiji">
-							<p><span class="ico" id="d7" >1993</span><span  id="city7">内容描述1。</span></p>
+							<p><span class="ico" id="d7" >1993</span>&nbsp&nbsp&nbsp&nbsp&nbsp-----<span  id="city7">内容描述1。</span></p>
 						</li>
 							</ul>
 				</div>
 			</div>
 		</div>
-		<div id="language" style="float:left">
+		<div id="language" style="float:left;width:990px;">
 			<hr />
 			<h2>语言属性</h2>
 			<div style="margin:20px;font-size:18px;">今日敏感词：<strong><span id="sensi_words"></span></strong></div>
-			等级：
-			<select name="level" id="sensi_word_level" style="width:100px; margin-right:10px;">   
+			<div id="language_left">
+			<div>等级:
+			<select name="level" id="sensi_word_level" style="width:90px; margin-right:5px;">   
 				<option value="0">所有等级</option> 
 		        <option value="1">level 1</option>   
 		        <option value="2">level 2</option>   
 		        <option value="3">level 3</option>           
 		    </select>
-		    类别：
-		    <select name="classify" id="sensi_word_class" style="width:150px; margin-right:10px;"> 
-		        <option value="1">所有类别</option>   
-		        <option value="2">class 1</option>   
-		        <option value="3">class 2</option>   
+		    类别:
+		    <select name="classify" id="sensi_word_class" style="width:90px; margin-right:5px;"> 
+		        <option value="0">所有类别</option>   
+		        <option value="1">a类词</option>   
+		        <option value="2">b类词</option>   
+		        <option value="3">class 3</option>
 		        <option value="4">class 3</option>
-		        <option value="5">class 3</option>
-		     	<option value="6">class 3</option>	                 
+		     	<option value="5">class 3</option>	                 
 		    </select>
-		    <button id="show_sensi_word">确定</button>
+		    <button id="show_sensi_word" style="min-width: 50px;">确定</button></div>
 		   	<!--敏感词  -->
-		    <div id="sensiword_table">111</div>
-
+		    <div id="sensiword_table"></div>
+		    </div>
+		    <div id="language_right" >
 
 		    <div id="sensiword_hashtag">
-			    <div style="padding-top:10px">
-			    	<span style="font-size:18px;margin-top:20px;"><strong>hashtag云</strong></span>
-			    	<span id="hash_word_detail" style="margin-right: 150px; margin-top: 10px;z-index:99;float:right;">
-			    		<a data-toggle="modal" href="remote.html" data-target="#hash_detail">详情</a>
+			    <div style="width:320px;float:left;">
+			    	<span id="hash_word_detail" style="margin-right: 80px; margin-top: 10px;float:right;">
+			    		<a data-toggle="modal" data-target="#hash_detail">详情</a>
 			    	</span>
-			    	<div id="hashtag_cloud" style="width:350px;height:300px;float:left;z-index:20"></div>
+			    	<span style="font-size:18px;float:left;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hashtag云</strong></span>
+			    	<div id="hashtag_cloud" style="width:320px;height:300px;float:left;margin-left:-20px;z-index:20"></div>
 			    	
 			    </div>
-			    <div>
-			    	<span id="hash_word_detail" style="margin-right: 150px; margin-top: 10px;z-index:99;float:right;">
-			    		<a data-toggle="modal" href="remote.html" data-target="#sensi_detail">详情</a>
+			    <div style="width:320px;float:left;">
+			    	<span id="hash_word_detail" style="margin-right: 20px; margin-top: 10px;float:right;">
+			    		<a data-toggle="modal"  data-target="#sensi_detail">详情</a>
 			    	</span>
-			    	<span style="font-size:18px;margin-top:10px;float:left;"><strong>敏感词云</strong></span>
-					<div id="sensi_word_cloud" style="width:350px;height:300px;float:left;"></div>
+			    	<span style="font-size:18px;float:left;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;敏感词云</strong></span>
+					<div id="sensi_word_cloud" style="width:320px;height:300px;float:left;margin-left:-20px;"></div>
 			    	<br>
 			    </div>	
 		    </div> 
+		    </div>
 		</div>
 		<div id="social_info" style="float:left">
 			<hr />
 			<h2>交互信息</h2>
+			            <div class="clear" style= "height:260px;margin-top:20px;">
+                <div style="padding:10px;">
+                    <span style='font-size:16px;color:#777'>转发排名</span>
+                    <span type="button" data-toggle="modal" data-target="#rank_repost" style='font-size:16px;margin-left:140px;cursor:pointer'><u>查看更多</u></span>
+                    <span style="margin-left:50px;font-size:16px;color:#777">被转发排名</span>
+                    <span data-toggle="modal" type="button"data-target="#rank_retweeted"  style='font-size:16px;margin-left:135px;cursor: pointer'><u>查看更多</u></span>
+                    <span style="margin-left:45px;font-size:16px;color:#777">@排名</span>
+                    <span type="button"data-toggle="modal" data-target="#rank_at" style='font-size:16px;margin-left:150px;cursor: pointer'><u>查看更多</u></span>
+                </div>	
+                <div class="table-responsive"id='repost' style='overflow-x:hidden;width:300px;height:250px;float:left;'>
+                </div>
+                <div class="table-responsive"id='retweeted' style='overflow-x:hidden;width:300px;height:250px;float:left;margin-left:25px;'>
+                </div>
+                <div class="table-responsive"id='top_at' style='overflow-x:hidden;width:300px;height:250px;float:left;margin-left:25px;'>
+                </div>
+            </div>
 			
 
 		</div>
@@ -148,6 +167,19 @@
 			</div>
 			<div id="weibo_content">
 				<div id="weibo_content2"></div>
+				<div id="pageGro" style="height:60px;margin-left:350px">
+                <div class="pageUp">上一页</div>
+                <div class="pageList">
+                    <ul>
+                        <li>1</li>
+                        <li>2</li>
+                        <li>3</li>
+                        <li>4</li>
+                        <li>5</li>
+                    </ul>
+                </div>
+                <div class="pageDown">下一页</div>
+            </div>
 
 			</div>
 			
@@ -163,7 +195,7 @@
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
 		        <h4 class="modal-title" id="hash_detail_content">hashtag排名</h4>
 		      </div>
-		      <div class="modal-body">
+		      <div class="modal-body" id="hash_detail_body">
 		        ...
 		      </div>
 		      <div class="modal-footer">
@@ -180,7 +212,7 @@
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
 		        <h4 class="modal-title" id="sensi_detail_content">敏感词排名</h4>
 		      </div>
-		      <div class="modal-body">
+		      <div class="modal-body" id="sensi_detail_body">
 		        ...
 		      </div>
 		      <div class="modal-footer">
@@ -189,7 +221,7 @@
 		    </div>
 		  </div>
 		</div>
-
+<div id="weibo_re_modal">
 		<div class="modal fade" id="retweeted_line" tabindex="-1" role="dialog" aria-labelledby="sensi_detail_content">
 		  <div class="modal-dialog" role="document">
 		    <div class="modal-content">
@@ -206,10 +238,11 @@
 		    </div>
 		  </div>
 		</div>
+</div>
 		<!--end  模态框：hashtag云和敏感词云  -->
 {% endblock body %}
 {% block end_js %}
-  <script  src="/static/scripts/jquery-jelevator-1.0.2.min.js"></script>
+  <script  src="/static/scripts/jquery-jelevator-1.0.3.min.js"></script>
   <script type="text/javascript">
     jQuery(function($){
         $("h1,h2").jElevator({
@@ -219,5 +252,6 @@
         });
     });
  </script>
+ <script  src="/static/custom/js/global_weibo.js"></script>
  <script  src="/static/custom/js/sensitive_person.js"></script>
 {% endblock end_js%}
