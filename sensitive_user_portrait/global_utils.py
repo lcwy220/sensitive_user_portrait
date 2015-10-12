@@ -47,7 +47,8 @@ R_GROUP = _default_redis(host=REDIS_HOST, port=REDIS_PORT, db=14)
 
 # use to save monitor user be_retweet and be_count result
 MONITOR_REDIS = _default_redis(host=MONITOR_REDIS_HOST, port=MONITOR_REDIS_PORT, db=1)
-
+# use to save monitor user inner group retweet
+MONITOR_INNER_REDIS = _default_redis(host=MONITOR_REDIS_HOST, port=MONITOR_REDIS_PORT, db=2)
 
 # use to recomment 
 #two types hash
