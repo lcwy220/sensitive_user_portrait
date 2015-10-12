@@ -39,6 +39,14 @@ def tag_manage():
 def sensitive_words():
     return render_template('index/sensitive.html')
 
+@mod.route('/sensiwords_manage/')
+def sensiwords_manage():
+    return render_template('index/sensiwords_manage.html')
+    
+@mod.route('/words_recommend/')
+def word_recommend():
+    return render_template('index/words_recommend.html')
+
 @mod.route('/group/')
 def group():
     return render_template('index/group.html')

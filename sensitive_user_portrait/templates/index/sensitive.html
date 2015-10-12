@@ -1,3 +1,18 @@
 {% extends "index/base.html" %} 
 {% block title %}敏感词管理{% endblock title %}
 {% block subtitle %}敏感词管理{% endblock subtitle %}
+{% block custom_css %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="/static/custom/css/group.css">
+{% endblock custom_css  %}
+{% block body %}
+<div class="" style="width:100%;height:420px;background-image:url('/static/custom/images/bgcolor.png');background-repeat:repeat;">
+	<div class="circle" id="" style="margin-left:250px;float:left;">
+		<a class="wordtitle" href="/index/sensiwords_manage/">敏感词管理</a>
+	</div>
+	<div class="circle" id="" style="margin-left:200px;float:left;">
+		<a class="wordtitle" href="/index/words_recommend/">热词推荐</a>
+	</div>
+</div>
+
+{% endblock %}

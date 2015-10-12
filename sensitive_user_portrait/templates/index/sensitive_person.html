@@ -52,7 +52,7 @@
 			<div id="influence_chart" style="height:300px;width:730px;float:left;"></div>
 			<div id="location_7"><h3>一周活动轨迹</h3>
 				<div class="clearfix course_nr">
-					<ul class="course_nr2">
+					<ul class="course_nr2" style="margin:0px;">
 						<li class="shiji">
 							<p><span class="ico" id="d1" >1993</span>&nbsp&nbsp&nbsp&nbsp&nbsp-----<span  id="city1">内容描述1。</span></p>
 						</li>
@@ -60,19 +60,19 @@
 							<p><span class="ico" id="d2" >1993</span>&nbsp&nbsp&nbsp&nbsp&nbsp-----<span  id="city2">内容描述1。</span></p>
 						</li>
 						<li class="shiji">
-							<p><span class="ico" id="d3" >1993</span><span  id="city3">内容描述1。</span></p>
+							<p><span class="ico" id="d3" >1993</span>&nbsp&nbsp&nbsp&nbsp&nbsp-----<span  id="city3">内容描述1。</span></p>
 						</li>
 						<li class="shiji">
-							<p><span class="ico" id="d4" >1993</span><span  id="city4">内容描述1。</span></p>
+							<p><span class="ico" id="d4" >1993</span>&nbsp&nbsp&nbsp&nbsp&nbsp-----<span  id="city4">内容描述1。</span></p>
 						</li>
 						<li class="shiji">
-							<p><span class="ico" id="d5" >1993</span><span  id="city5">内容描述1。</span></p>
+							<p><span class="ico" id="d5" >1993</span>&nbsp&nbsp&nbsp&nbsp&nbsp-----<span  id="city5">内容描述1。</span></p>
 						</li>
 						<li class="shiji">
-							<p><span class="ico" id="d6" >1993</span><span  id="city6">内容描述1。</span></p>
+							<p><span class="ico" id="d6" >1993</span>&nbsp&nbsp&nbsp&nbsp&nbsp-----<span  id="city6">内容描述1。</span></p>
 						</li>
 						<li class="shiji">
-							<p><span class="ico" id="d7" >1993</span><span  id="city7">内容描述1。</span></p>
+							<p><span class="ico" id="d7" >1993</span>&nbsp&nbsp&nbsp&nbsp&nbsp-----<span  id="city7">内容描述1。</span></p>
 						</li>
 							</ul>
 				</div>
@@ -103,15 +103,15 @@
 		   	<!--敏感词  -->
 		    <div id="sensiword_table"></div>
 		    </div>
-		    <div id="language_right">
+		    <div id="language_right" >
 
 		    <div id="sensiword_hashtag">
-			    <div style="width:330px;float:left;">
+			    <div style="width:320px;float:left;">
 			    	<span id="hash_word_detail" style="margin-right: 80px; margin-top: 10px;float:right;">
 			    		<a data-toggle="modal" data-target="#hash_detail">详情</a>
 			    	</span>
 			    	<span style="font-size:18px;float:left;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hashtag云</strong></span>
-			    	<div id="hashtag_cloud" style="width:330px;height:330px;float:left;margin-left:-20px;z-index:20"></div>
+			    	<div id="hashtag_cloud" style="width:320px;height:300px;float:left;margin-left:-20px;z-index:20"></div>
 			    	
 			    </div>
 			    <div style="width:320px;float:left;">
@@ -119,7 +119,7 @@
 			    		<a data-toggle="modal"  data-target="#sensi_detail">详情</a>
 			    	</span>
 			    	<span style="font-size:18px;float:left;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;敏感词云</strong></span>
-					<div id="sensi_word_cloud" style="width:330px;height:330px;float:left;margin-left:-20px;"></div>
+					<div id="sensi_word_cloud" style="width:320px;height:300px;float:left;margin-left:-20px;"></div>
 			    	<br>
 			    </div>	
 		    </div> 
@@ -128,6 +128,22 @@
 		<div id="social_info" style="float:left">
 			<hr />
 			<h2>交互信息</h2>
+			            <div class="clear" style= "height:260px;margin-top:20px;">
+                <div style="padding:10px;">
+                    <span style='font-size:16px;color:#777'>转发排名</span>
+                    <span type="button" data-toggle="modal" data-target="#rank_repost" style='font-size:16px;margin-left:140px;cursor:pointer'><u>查看更多</u></span>
+                    <span style="margin-left:50px;font-size:16px;color:#777">被转发排名</span>
+                    <span data-toggle="modal" type="button"data-target="#rank_retweeted"  style='font-size:16px;margin-left:135px;cursor: pointer'><u>查看更多</u></span>
+                    <span style="margin-left:45px;font-size:16px;color:#777">@排名</span>
+                    <span type="button"data-toggle="modal" data-target="#rank_at" style='font-size:16px;margin-left:150px;cursor: pointer'><u>查看更多</u></span>
+                </div>	
+                <div class="table-responsive"id='repost' style='overflow-x:hidden;width:300px;height:250px;float:left;'>
+                </div>
+                <div class="table-responsive"id='retweeted' style='overflow-x:hidden;width:300px;height:250px;float:left;margin-left:25px;'>
+                </div>
+                <div class="table-responsive"id='top_at' style='overflow-x:hidden;width:300px;height:250px;float:left;margin-left:25px;'>
+                </div>
+            </div>
 			
 
 		</div>
@@ -151,6 +167,19 @@
 			</div>
 			<div id="weibo_content">
 				<div id="weibo_content2"></div>
+				<div id="pageGro" style="height:60px;margin-left:350px">
+                <div class="pageUp">上一页</div>
+                <div class="pageList">
+                    <ul>
+                        <li>1</li>
+                        <li>2</li>
+                        <li>3</li>
+                        <li>4</li>
+                        <li>5</li>
+                    </ul>
+                </div>
+                <div class="pageDown">下一页</div>
+            </div>
 
 			</div>
 			
@@ -192,7 +221,7 @@
 		    </div>
 		  </div>
 		</div>
-
+<div id="weibo_re_modal">
 		<div class="modal fade" id="retweeted_line" tabindex="-1" role="dialog" aria-labelledby="sensi_detail_content">
 		  <div class="modal-dialog" role="document">
 		    <div class="modal-content">
@@ -209,6 +238,7 @@
 		    </div>
 		  </div>
 		</div>
+</div>
 		<!--end  模态框：hashtag云和敏感词云  -->
 {% endblock body %}
 {% block end_js %}
@@ -222,5 +252,6 @@
         });
     });
  </script>
+ <script  src="/static/custom/js/global_weibo.js"></script>
  <script  src="/static/custom/js/sensitive_person.js"></script>
 {% endblock end_js%}
