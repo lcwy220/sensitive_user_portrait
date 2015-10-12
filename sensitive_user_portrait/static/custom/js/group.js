@@ -18,19 +18,15 @@ function Draw_resultTable(data){
 	html += '<tbody>';
 	for (i=0;i<item.length;i++){
 		html += '<tr>';
-		for(j=0;j<item[i].length-1;j++){
-			if (j==0){
-				html += '<td name="task_name">'+item[i][j]+'</td>';
-			}else{
-				html += '<td>'+item[i][j]+'</td>';
-			}
-		}
+        html += '<td name="task_name">'+item[i][0]+'</td>';
+        html += '<td>'+item[i][1]+'</td>';
+        html += '<td>'+item[i][2]+'-' item[i][3] +'</td>';
 		if(item[i][4]==1){
-			html += '<td><a style="cursor:hand;" href="/index/group_analysis/?name=' + item[i][0]+ '">已完成</a></td>';
+			html += '<td><a style="cursor:hand;" href="/index/group_analysis/?name=' + item[i][0]+ '">正在监控</a></td>';
 		}else{
-			html += '<td>正在计算</td>';
+			html += '<td><a style="cursor:hand;" href="/index/group_analysis/?name=' + item[i][0]+ '">监控停止</a></td>';
 		}
-		html +='<td><a href="javascript:void(0)" id="del">删除</a></td>';
+		html +='<td><a href="javascript:void(0)" id="del">删除</a><a href="javascript:void(0)" id="stop"></a></td>';
 		html += '</tr>';
 	}
 	html += '</tbody>';
@@ -45,7 +41,15 @@ function self_refresh(){
 }
 function deleteGroup(){
 	$('a[id^="del"]').click(function(e){
-		var url = "/tag/delete_attribute/?";
+		var url = "/group/delete_track_results/?";
+		var temp = $(this).parent().prev().prev().prev().prev().prev().html();
+		url = url + 'task_name=' + temp;
+		console.log(url);
+		//window.location.href = url;
+		call_ajax_request(url,self_refresh);
+	});
+	$('a[id^="stop"]').click(function(e){
+		var url = "/group/end_track_task/?";
 		var temp = $(this).parent().prev().prev().prev().prev().prev().html();
 		url = url + 'task_name=' + temp;
 		console.log(url);
@@ -62,7 +66,7 @@ function page_init(){
         }
     });
 }
-var url = '/group/show_task/'; 
+var url = '/group/search_track_task/'; 
 call_ajax_request(url, Draw_resultTable);
 bindButtonClick();
 
@@ -72,7 +76,7 @@ function bindButtonClick(){
         window.location.reload();
     });
     $('#searchbtn').off("click").click(function(){
-        var url = "/group/show_task/?";
+        var url = "/group/search_track_task/?";
         console.log('clicked');
 		url += get_input_data();
 		call_ajax_request(url, Draw_resultTable);
@@ -92,18 +96,18 @@ function handleFileSelect(evt){
 			console.log(a);
 			$.ajax({   
 				type:"POST",  
-				url:"/group/upload_file/",
+				url:"/group/upload_track_file/",
 				dataType: "json",
 				async:false,
 				data:{upload_data:a,task_name:task_name,state:state},
 					
 				success: function(){
-					var show_url = "/group/show_task/";
-					Group_result.call_sync_ajax_request(show_url,Group_result.ajax_method,Group_result.Draw_resultTable);
+					var show_url = "/group/search_track_task/";
+					call_ajax_request(show_url,Draw_resultTable);
+                    page_init();
 				}
-					
 			});
-			location.reload();
+			// window.location.reload();
 		};            
 		reader.readAsText(f,'GB2312');                                                        
     }

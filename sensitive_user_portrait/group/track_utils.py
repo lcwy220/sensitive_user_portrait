@@ -144,7 +144,7 @@ def search_track_task(task_name, submit_date, state, status):
     #print 'task_dict_list:', task_dict_list
     for task_dict in task_dict_list:
         #print 'task_dict:', task_dict['_source'], type(task_dict)
-        if 'end_date' not in track_dict:
+        if 'end_date' not in task_dict:
             task_dict['_source']['end_date'] = u'至今'
         result.append([task_dict['_source']['task_name'], task_dict['_source']['submit_date'], task_dict['_source']['submit_date'] ,task_dict['_source']['count'], task_dict['_source']['state'],task_dict['_source']['status']])
     #print 'result:', result
