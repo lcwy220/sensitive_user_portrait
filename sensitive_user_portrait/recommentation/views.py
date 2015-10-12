@@ -27,8 +27,10 @@ def ajax_recommentation_in_sensitive_list():
         results = recommend_in_sensitive(date)
     """
     results = recommend_in_sensitive(date)
-
-    return json.dumps(results)
+    if results:
+        return json.dumps(results)
+    else:
+        return json.dumps([])
 
 
 # top influence user recommentation
@@ -44,8 +46,10 @@ def ajax_recommentation_in_influence_list():
         results = recommend_in_top_influence(date)
     '''
     results = recommend_in_top_influence(date)
-
-    return json.dumps(results)
+    if results:
+        return json.dumps(results)
+    else:
+        return json.dumps([])
 
 
 # top influence user show more information
@@ -53,7 +57,10 @@ def ajax_recommentation_in_influence_list():
 def ajax_influence_recommentation_in_more():
     uid = request.args.get('uid','')
     results = influence_recommentation_more_information(uid)
-    return json.dumps(results)
+    if results:
+        return json.dumps(results)
+    else:
+        return json.dumps([])
 
 
 # sensitive user show more info
@@ -61,7 +68,10 @@ def ajax_influence_recommentation_in_more():
 def ajax_sensitive_recommentation_in_more():
     uid = request.args.get('uid','')
     results = sensitive_recommentation_more_information(uid)
-    return json.dumps(results)
+    if results:
+        return json.dumps(results)
+    else:
+        return json.dumps([])
 
 # identify in
 @mod.route('/identify_in/')
@@ -78,7 +88,7 @@ def ajax_identify_in():
             data.append([date, uid, status, source])
         result = identify_in(data)
     else:
-        result = '0'
+        result = []
     return json.dumps(result)
 
 
@@ -89,7 +99,10 @@ def ajax_show_sensitive_history_in():
     date = request.args.get('date', now_date) # in date:2013-09-01
     date = str(date).replace('-','')
     results = show_in_history(date, 1) # history in, include status
-    return json.dumps(results)
+    if results:
+        return json.dumps(results)
+    else:
+        return json.dumps([])
 
 #show influence user history in
 @mod.route('/show_influence_history_in/')
@@ -98,5 +111,8 @@ def ajax_show_influence_history_in():
     date = request.args.get('date', now_date)
     date = str(date).replace('-','')
     results = show_in_history(date, 0) # history in, include status
-    return json.dumps(results)
+    if results:
+        return json.dumps(results)
+    else:
+        return json.dumps([])
 
