@@ -45,7 +45,7 @@ function self_refresh(){
 }
 function deleteGroup(){
 	$('a[id^="del"]').click(function(e){
-		var url = "/tag/delete_attribute/?";
+		var url = "/group/delete_track_attribute/?";
 		var temp = $(this).parent().prev().prev().prev().prev().prev().html();
 		url = url + 'task_name=' + temp;
 		console.log(url);
@@ -62,7 +62,7 @@ function page_init(){
         }
     });
 }
-var url = '/group/show_task/'; 
+var url = '/group/search_track_task/'; 
 call_ajax_request(url, Draw_resultTable);
 bindButtonClick();
 
@@ -72,7 +72,7 @@ function bindButtonClick(){
         window.location.reload();
     });
     $('#searchbtn').off("click").click(function(){
-        var url = "/group/show_task/?";
+        var url = "/group/search_track_task/?";
         console.log('clicked');
 		url += get_input_data();
 		call_ajax_request(url, Draw_resultTable);
@@ -92,18 +92,18 @@ function handleFileSelect(evt){
 			console.log(a);
 			$.ajax({   
 				type:"POST",  
-				url:"/group/upload_file/",
+				url:"/group/upload_track_file/",
 				dataType: "json",
 				async:false,
 				data:{upload_data:a,task_name:task_name,state:state},
 					
 				success: function(){
-					var show_url = "/group/show_task/";
-					Group_result.call_sync_ajax_request(show_url,Group_result.ajax_method,Group_result.Draw_resultTable);
+					var show_url = "/group/search_track_task/";
+					call_ajax_request(show_url,Draw_resultTable);
+                    page_init();
 				}
-					
 			});
-			location.reload();
+			// window.location.reload();
 		};            
 		reader.readAsText(f,'GB2312');                                                        
     }
