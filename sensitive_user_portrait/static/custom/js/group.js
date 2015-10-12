@@ -14,19 +14,20 @@ function Draw_resultTable(data){
 	var item = data;
 	var html = '';
 	html += '<table class="table table-bordered table-striped table-condensed datatable" >';
-	html += '<thead><tr style="text-align:center;">	<th>群组名称</th><th>时间</th><th>群组人数</th><th>备注</th><th>计算状态</th><th>操作</th></tr></thead>';
+	html += '<thead><tr style="text-align:center;">	<th>群组名称</th><th>起止时间</th><th>群组人数</th><th>备注</th><th>计算状态</th><th>操作</th></tr></thead>';
 	html += '<tbody>';
 	for (i=0;i<item.length;i++){
 		html += '<tr>';
         html += '<td name="task_name">'+item[i][0]+'</td>';
-        html += '<td>'+item[i][1]+'</td>';
-        html += '<td>'+item[i][2]+'-' item[i][3] +'</td>';
-		if(item[i][4]==1){
+        html += '<td>'+item[i][1]+ '&nbsp;——&nbsp;' + item[i][2] + '</td>';
+        html += '<td>'+item[i][3] +'</td>';
+        html += '<td>'+item[i][4] +'</td>';
+		if(item[i][5]==1){
 			html += '<td><a style="cursor:hand;" href="/index/group_analysis/?name=' + item[i][0]+ '">正在监控</a></td>';
 		}else{
 			html += '<td><a style="cursor:hand;" href="/index/group_analysis/?name=' + item[i][0]+ '">监控停止</a></td>';
 		}
-		html +='<td><a href="javascript:void(0)" id="del">删除</a><a href="javascript:void(0)" id="stop">停止监控</a></td>';
+		html +='<td><a href="javascript:void(0)" id="del">删除&nbsp;&nbsp;</a><a href="javascript:void(0)" id="stop">停止监控</a></td>';
 		html += '</tr>';
 	}
 	html += '</tbody>';
