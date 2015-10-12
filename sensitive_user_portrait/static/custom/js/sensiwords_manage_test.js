@@ -1,9 +1,6 @@
 function Draw_sensi_manage_table(data){
 	//console.log(data);
-	
-
-
-    $('#sensi_manage_table').empty();
+	$('#sensi_manage_table').empty();
     var item = data;
     console.log(item);
     var html = '';
@@ -34,27 +31,30 @@ function Draw_sensi_manage_table(data){
   }
 
 
-var table_data = [{'words':'敏感词1','level':'A','sensi_class':'a类','date':'09-01'},{'words':'敏感词2','level':'A','sensi_class':'b类','date':'09-01'},{'words':'敏感词3','level':'B','sensi_class':'a类','date':'09-01'},{'words':'敏感词4','level':'B','sensi_class':'b类','date':'09-01'}];
-Draw_sensi_manage_table(table_data);	
-$('#show_sensi_word').click(function (){
-    var word_level=$("#sensi_word_level").val();
-    var word_class=$("#sensi_word_class").val();
+var table_data1 = [{'words':'敏感词1','level':'A','sensi_class':'a类','date':'09-01'},{'words':'敏感词2','level':'A','sensi_class':'b类','date':'09-01'},{'words':'敏感词3','level':'B','sensi_class':'a类','date':'09-01'},{'words':'敏感词4','level':'B','sensi_class':'b类','date':'09-01'}];
+Draw_sensi_manage_table(table_data1);	
+
+$('#show_sensi_manage').click(function (){
+    var word_level=$("#sensi_manage_level").val();
+    var word_class=$("#sensi_manage_class").val();
+    alert(word_level);
     var choose_data=[];
     //var need_data=[]
     if (word_level==0){
         if (word_class==0){
-            choose_data = table_data;
+            choose_data = table_data1;
+            alert(choose_data);
         }else if (word_class==1){
             for (var i = 0; i < table_data.length; i++) {
-                if (table_data[i]['word_class']=='a类'){
-                    choose_data.push(table_data[i])
+                if (table_data[i]['sensi_class']=='a类'){
+                    choose_data.push(table_data1[i])
                 }
 
             }
         }else if (word_class==2){
             for (var i = 0; i < table_data.length; i++) {
-                if (table_data[i]['word_class']=='b类'){
-                    choose_data.push(table_data[i])
+                if (table_data[i]['sensi_class']=='b类'){
+                    choose_data.push(table_data1[i])
                 }
 
             }
@@ -62,23 +62,23 @@ $('#show_sensi_word').click(function (){
     }else if(word_level==1){
         if (word_class==0){
             for (var i = 0; i < table_data.length; i++) {
-                if (table_data[i]['word_level']=='A'){
-                    choose_data.push(table_data[i])
+                if (table_data[i]['sensi_class']=='A'){
+                    choose_data.push(table_data1[i])
                 }
 
             }
 
         }else if (word_class==1){
             for (var i = 0; i < table_data.length; i++) {
-                if (table_data[i]['word_level']=='A' & table_data[i]['word_class']=='a类'){
-                    choose_data.push(table_data[i])
+                if (table_data[i]['level']=='A' & table_data[i]['sensi_class']=='a类'){
+                    choose_data.push(table_data1[i])
                 }
 
             }
         }else if (word_class==2){
             for (var i = 0; i < table_data.length; i++) {
-                if (table_data[i]['word_level']=='A' & table_data[i]['word_class']=='b类'){
-                    choose_data.push(table_data[i])
+                if (table_data[i]['level']=='A' & table_data[i]['sensi_class']=='b类'){
+                    choose_data.push(table_data1[i])
                 }
 
             }
@@ -87,22 +87,22 @@ $('#show_sensi_word').click(function (){
         }else if(word_level==2){
         if (word_class==0){
             for (var i = 0; i < table_data.length; i++) {
-                if (table_data[i]['word_level']=='B'){
-                    choose_data.push(table_data[i])
+                if (table_data[i]['level']=='B'){
+                    choose_data.push(table_data1[i])
                 }
 
             }
         }else if (word_class==1){
             for (var i = 0; i < table_data.length; i++) {
-                if (table_data[i]['word_level']=='B' & table_data[i]['word_class']=='a类'){
-                    choose_data.push(table_data[i])
+                if (table_data[i]['level']=='B' & table_data[i]['sensi_class']=='a类'){
+                    choose_data.push(table_data1[i])
                 }
 
             }
         }else if (word_class==2){
             for (var i = 0; i < table_data.length; i++) {
-                if (table_data[i]['word_level']=='B' & table_data[i]['word_class']=='b类'){
-                    choose_data.push(table_data[i])
+                if (table_data[i]['level']=='B' & table_data[i]['sensi_class']=='b类'){
+                    choose_data.push(table_data1[i])
                 }
 
             }
@@ -111,4 +111,4 @@ $('#show_sensi_word').click(function (){
     }
 Draw_sensi_manage_table(choose_data);   
 
-    })
+})
