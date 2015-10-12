@@ -116,10 +116,11 @@ function Draw_global_weibo(data){
             pageUp(pageNum,pageCount);
         }else{
             var index = $("#pageGro ul li.on").index();
-            if(index > 0){
-                $("#pageGro li").removeClass("on");
-                $("#pageGro ul li").eq(index-1).addClass("on");
+            if (index == -1){
+                return false;
             }
+            $("#pageGro li").removeClass("on");
+            $("#pageGro ul li").eq(index-1).addClass("on");
         }
       page = parseInt($("#pageGro li.on").html())  
       console.log(page);
@@ -139,6 +140,9 @@ function Draw_global_weibo(data){
             pageDown(pageNum,pageCount);
         }else{
             var index = $("#pageGro ul li.on").index();
+            if (index == -1){
+                return false;
+            }
             if(index+1 < pageCount){
                 $("#pageGro li").removeClass("on");
                 $("#pageGro ul li").eq(index+1).addClass("on");
