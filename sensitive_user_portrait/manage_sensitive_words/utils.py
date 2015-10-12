@@ -36,35 +36,30 @@ def identify_in(date, words_list):
     return '1'
 
 
-def search_sensitive_words(state):
+def search_sensitive_words(level, category): # level: 0, 1, 2, 3; category: '', or other category
+    if not level and not category:
+        return '0'
     results = dict()
-    words_list = []
+    word_list = []
     words_dict = r.hgetall('sensitive_words')
     if words_dict:
-        if state == "level":
-            level_1 = []
-            level_2 = []
-            level_3 = []
+        if level and category:
+            word_list = []
             for k,v in words_dict.items():
                 word_state = json.loads(v)
-                if int(word_state[0]) == 1:
-                    level_1.append(k)
-                elif int(word_state[0]) == 2:
-                    level_2.append(k)
-                else:
-                    level_3.append(k)
-            results['level_1'] = level_1
-            results['level_2'] = level_2
-            results['level_3'] = level_3
-        elif state == "category":
+                if int(level) == int(word_state[0]) and category == word_state[1]:
+                    word_list.extend([k, word_state[0], word_state[1]])
+        elif not level and category:
             for k,v in words_dict.items():
                 word_state = json.loads(v)
-                try:
-                    results[word_state[1]].append(k)
-                except:
-                    results[word_state[1]] = [k]
+                if catetory == word_state[1]:
+                    word_list.append([k, word_state[0], word_state[1]])
         else:
-            pass
+            for k,v in words_dict.items():
+                word_state = json.loads(v)
+                if int(level) == int(word_state[0]):
+                    word_list.append([k, word_state[0], word_state[1]])
+    return word_list
 
     return results
 

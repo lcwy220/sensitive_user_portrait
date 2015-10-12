@@ -43,11 +43,14 @@ def ajax_identify_in():
 
     return results
 
+# level: {0: all, 1: level_1, 2: level_2, 3: level_3}
+# category: {'': all, category}
 @mod.route('/search_sensitive_words/')
 def ajax_search_sensitive_words():
-    state = request.args.get('state', '')
-    if state:
-        results = search_sensitive_words(state)
+    level = request.args.get('level', 0)
+    category = request.args.get('category', '')
+    if level or category:
+        results = search_sensitive_words(level, category)
         return json.dumps(results)
     else:
         return '0'

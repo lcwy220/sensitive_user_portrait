@@ -864,6 +864,9 @@ def sensitive_attribute(uid):
 
     if 1:
         portrait_results = es.get(index="sensitive_user_portrait", doc_type='user', id=uid)['_source']
+        results['politics_trend'] = portrait_results['politics_trend']
+        results['domain'] = portrait_results['domain']
+        results['sensitive'] = portrait_results['sensitive']
         temp_hashtag = portrait_results['sensitive_hashtag_dict']
         temp_sensitive_words = portrait_results['sensitive_words_dict']
         temp_sensitive_geo =  portrait_results['sensitive_geo_activity']
