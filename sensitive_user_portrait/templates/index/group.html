@@ -6,7 +6,9 @@
 <link rel="stylesheet" type="text/css" href="/static/content/css/bootmetro-tiles.css">
 <link rel="stylesheet" type="text/css" href="/static/custom/css/group.css">
 <style>
-       .metro-sections {margin-top:10%;margin-left:20%;}
+       .metro-sections {margin-top:10%;margin-left:10%;}
+       #section1 {width:900px;}
+       #section1 a {width:270px;}
 </style>
 {% endblock custom_css  %}
 {% block body %}
@@ -19,18 +21,18 @@
                      </div>
                      <div class="app-label">系统监控管理</div>
                  </a>
-                <a class="tile wide imagetext bg-color-blueDark" data-toggle="modal" data-target="#upload_file" href="/index/tag_search/">
-                     <div class="image-wrapper">
-                        <img src="/static/content/img/My Apps.png" />
-                     </div>
-                     <div class="app-label">上传用户监控</div>
-                </a>
                 <a class="tile wide imagetext bg-color-blueDark" href="/index/group_search/">
                      <div class="image-wrapper">
                         <img src="/static/content/img/My Apps.png" />
                      </div>
                      <div class="app-label">系统用户监控</div>
                  </a>
+                <a class="tile wide imagetext bg-color-blueDark" data-toggle="modal" data-target="#upload_file">
+                     <div class="image-wrapper">
+                        <img src="/static/content/img/My Apps.png" />
+                     </div>
+                     <div class="app-label">上传用户监控</div>
+                </a>
              </div>
          </div>
      </div>
