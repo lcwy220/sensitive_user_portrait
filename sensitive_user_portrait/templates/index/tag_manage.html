@@ -44,9 +44,11 @@ li{list-style-type:none;}
 #SearchTab{position: fixed;margin-top: -200px;left: 50%;top: 50%;z-index: 1002;width: 620px;background: #FFF none repeat scroll 0% 0%;
 border: 1px solid #AA8BE8;height: 320px;margin-left: -300px;}
 #pageTitle{font-size:20px;text-indent:20px;font-family:"Microsoft YaHei UI";}
+/*
 #DataTables_Table_0_filter{display:none;}
 #DataTables_Table_0_length{display:none;}
-#del{color:black;}
+
+*/#del{color:black;}
 .lineh{line-height:30px;}
 table th{text-align:center;}
 tbody td{text-align:center;}
@@ -76,47 +78,47 @@ tbody td{text-align:center;}
     <div id="pageTitle">标签管理</div>
     -->
     <div id="float-wrap" class="hidden"></div>
-<div id="SearchTab"  class="hidden">
-	<h3 class="title" style="font-size:18px;color:inherit;padding-top:10px;padding-bottom:10px;">搜索条件<a href="javascript:void(0)" id="close" class="close2"></a></h3>
-	<div class="decoration">
-		<ul class="">
-			<li><span class="p_title">标签类别</span><input type="text"  id="groupName" class="input searchinput" name="attribute_name" placeholder="请输入标签类别"/></li>
-			<li><span class="p_title">标签名</span><input type="text" id="groupState" class="input searchinput" name="attribute_value" placeholder="请输入标签名"/></li>
-			<li><span class="p_title">时间</span><input type="text" id="groupState" class="input searchinput" name="date" placeholder="请输入时间2015-07-15"/></li>
-			<li><span class="p_title">创建者</span><input type="text" id="groupState" class="input searchinput" name="user" placeholder="aa"/></li>
-			<li><input name="submit" type="submit" class="bluebtn" id="searchbtn" value="确定"></li>
-		</ul>
-	</div>
-</div>
-<div class="ch-container" style="width:1000px;">
-
-    <div class="row">
-        <div id="content" class="col-lg-10 col-sm-10">
-            <!-- content starts -->
-			<div class="row">
-        <div class="box col-md-12">
-            <div class="box-inner" style="background-color:white;margin-left:25px;width:980px;min-height:150px;">
-                <div class="box-header well" data-original-title="" style="padding-top:5px;">
-                   <span class="TabTitle"  >标签管理列表</span>
-                </div>
-				<div class="fleft">
-</div>
-<a id="turnback" href="" style="float:right;margin-right:40px;margin-top:12px;">查看全部标签</a>
-<a class="searchTable"id="searchTable" href="" style="margin-bottom:10px;margin-top:12px;">表单搜索</a>
-<a class="searchTable" href="" data-toggle="modal" data-target="#add" style="margin-bottom:10px;margin-top:12px;">添加</a>
-                <div class="box-content" id="Tagtable" >
-                    
-                </div>
-            </div>
+    <div id="SearchTab"  class="hidden">
+        <h3 class="title" style="font-size:18px;color:inherit;padding-top:10px;padding-bottom:10px;">搜索条件<a href="javascript:void(0)" id="close" class="close2"></a></h3>
+        <div class="decoration">
+            <ul class="">
+                <li><span class="p_title">标签类别</span><input type="text"  id="groupName" class="input searchinput" name="attribute_name" placeholder="请输入标签类别"/></li>
+                <li><span class="p_title">标签名</span><input type="text" id="groupState" class="input searchinput" name="attribute_value" placeholder="请输入标签名"/></li>
+                <li><span class="p_title">时间</span><input type="text" id="groupState" class="input searchinput" name="date" placeholder="请输入时间2015-07-15"/></li>
+                <li><span class="p_title">创建者</span><input type="text" id="groupState" class="input searchinput" name="user" placeholder="aa"/></li>
+                <li><input name="submit" type="submit" class="bluebtn" id="searchbtn" value="确定"></li>
+            </ul>
         </div>
-    </div><!--/span-->
+    </div>
+    <div class="ch-container" style="width:1000px;">
 
-    <!-- content ends -->
-		</div><!--/#content.col-md-0-->
-	</div><!--/fluid-row-->
+        <div class="row">
+            <div id="content" class="col-lg-10 col-sm-10">
+                <!-- content starts -->
+                <div class="row">
+                <div class="box col-md-12">
+                    <div class="box-inner" style="background-color:white;margin-left:25px;width:980px;min-height:150px;">
+                        <div class="box-header well" data-original-title="" style="padding-top:5px;">
+                           <span class="TabTitle"  >标签管理列表</span>
+                        </div>
+                        <div class="fleft">
+                        </div>
+                        <a id="turnback" href="" style="float:right;margin-right:40px;margin-top:12px;">查看全部标签</a>
+                        <a class="searchTable"id="searchTable" href="" style="margin-bottom:10px;margin-top:12px;">表单搜索</a>
+                        <a class="searchTable" href="" data-toggle="modal" data-target="#add" style="margin-bottom:10px;margin-top:12px;">添加</a>
+                        <div class="box-content" id="Tagtable" >
+                            
+                        </div>
+                    </div>
+                </div>
+        </div><!--/span-->
+
+        <!-- content ends -->
+            </div><!--/#content.col-md-0-->
+        </div><!--/fluid-row-->
 
 
-</div><!--/.fluid-container-->
+    </div><!--/.fluid-container-->
 
 
 <div class="modal fade" id="editor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
