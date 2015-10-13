@@ -6,10 +6,15 @@
     <link rel="stylesheet" href="/static/custom/css/jelevator.css"  media="screen" />
     <style>
     	input[type='radio'] {margin:4px; line-height: normal;opacity: 1; position: static;}
-    	.container{width: 820px;}
+    .box{width:310px;height:300px;float:left;}
+    .important{}
+    #page {width:990px;padding:10px;background-color:#fff;margin:auto}}
+    #basic span {color:red;}
     </style>
 {% endblock custom_css  %}
 {% block body %}
+  <div id="page">
+        <div id="content">
     	<h2>影响力排名</h2>
         <div class="tab-pane" id="custom" style="margin-top:10px">
         	<span>选择日期：</span>
@@ -39,6 +44,8 @@
         <h2>影响力分布</h2>
         <div id="distribute"  style="width:900px;height:400px;"></div>
         <div style=" width:900px;">0-200：极低影响力；200-500：较低影响力；500-700：一般影响力；700-900：较高影响力；900-1100：高影响力；1100以上：极高影响力</div>
+    </div>
+</div>
 {% endblock body %}
 
 {% block end_js %}

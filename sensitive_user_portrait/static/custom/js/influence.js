@@ -1,3 +1,24 @@
+// Date format
+Date.prototype.format = function(format) {
+    var o = {
+        "M+" : this.getMonth()+1, //month
+        "d+" : this.getDate(), //day
+        "h+" : this.getHours(), //hour
+        "m+" : this.getMinutes(), //minute
+        "s+" : this.getSeconds(), //second
+        "q+" : Math.floor((this.getMonth()+3)/3), //quarter
+        "S" : this.getMilliseconds() //millisecond
+    }
+    if(/(y+)/.test(format)){
+        format=format.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+    }
+    for(var k in o){
+        if(new RegExp("("+ k +")").test(format)){
+            format = format.replace(RegExp.$1, RegExp.$1.length==1 ? o[k] : ("00"+ o[k]).substr((""+ o[k]).length));
+        }
+    }
+    return format;
+}
 function call_ajax_request(url, callback){
     $.ajax({
         url: url,
@@ -30,21 +51,18 @@ function select_init(){
 }
 
 function date_initial(){
-  var total_date = [];
-  for(var i=0;i<7;i++){
-    var today = new Date(tomorrow-24*60*60*1000*(7-i));
-    total_date[i] = today.getFullYear()+"-"+((today.getMonth()+1)<10?"0":"")+(today.getMonth()+1)+"-"+((today.getDate())<10?"0":"")+(today.getDate());
-  }
   $("#domain_date").empty();
   var total_date_html = '';
   total_date_html += '<select id="total_date_select">';
-  total_date_html += '<option value="' + total_date[0] + '">' + total_date[0] + '</option>';
-  total_date_html += '<option value="' + total_date[1] + '">' + total_date[1] + '</option>';
-  total_date_html += '<option value="' + total_date[2] + '">' + total_date[2] + '</option>';
-  total_date_html += '<option value="' + total_date[3] + '">' + total_date[3] + '</option>';
-  total_date_html += '<option value="' + total_date[4] + '">' + total_date[4] + '</option>';
-  total_date_html += '<option value="' + total_date[5] + '">' + total_date[5] + '</option>';
-  total_date_html += '<option value="' + total_date[6] + '" selected="selected">' + total_date[6] + '</option>';
+    //var timestamp = Date.parse(new Date());
+    var timestamp = 1378483200000;
+    var date = new Date(parseInt(timestamp)).format("yyyy-MM-dd");
+    total_date_html += '<option value="' + date + '" selected="selected">' + date + '</option>';      
+    for (var i = 0; i < 6; i++) {
+        timestamp = timestamp-24*3600*1000;
+        date = new Date(parseInt(timestamp)).format("yyyy-MM-dd");
+        total_date_html += '<option value="' + date + '">' + date + '</option>';
+    }
   total_date_html += '</select>';
   $("#domain_date").append(total_date_html);
 }
@@ -94,7 +112,7 @@ function draw_table(data){
       html += '<tr>';
       html += '<td class="center" style="text-align:center;vertical-align:middle"><img src="'+ item[i][3] +'" class="img-circle"></td>';
       html += '<td class="center" style="text-align:center;vertical-align:middle">'+ item[i][1] +'</td>';
-      html += '<td class="center" style="text-align:center;vertical-align:middle"><a href="/index/personal/?uid='+ item[i][2] +'" target="_blank">'+ item[i][2] +'</td>';
+      html += '<td class="center" style="text-align:center;vertical-align:middle"><a href="/index/personal/?uid='+ item[i][1] +'" target="_blank">'+ item[i][2] +'</td>';
       html += '<td class="center" style="text-align:center;vertical-align:middle">'+ item[i][0] +'</td>';
       //html += '<td class="center" style="text-align:center;vertical-align:middle">'+ 'wait...' +'</td>';      
       html += '<td class="center" style="text-align:center;vertical-align:middle">'+ item[i][4] +'</td>';
@@ -117,19 +135,24 @@ function draw_table(data){
 function draw_graph(data){
   var myChart = echarts.init(document.getElementById("distribute")); 
   var item = data;
+  var total_date = [];
+      //var timestamp = Date.parse(new Date());
+  var timestamp = 1378483200000;
+  total_date[6] = new Date(parseInt(timestamp)).format("yyyy-MM-dd");    
+  for (var i = 0; i < 6; i++) {
+        timestamp = timestamp-24*3600*1000;
+        total_date[i] = new Date(parseInt(timestamp)).format("yyyy-MM-dd");
+  }
+
   var option = {
-    title : {
-        text: '7天用户影响力分布',
-        subtext: 'XXX'
-    },
     tooltip : {
         trigger: 'axis'
     },
     legend: {
-        data:['一天前','两天前','三天前','四天前','五天前','六天前','七天前']
+        data:[total_date[6],total_date[5],total_date[4],total_date[3],total_date[2],total_date[1],total_date[0]]
     },
     toolbox: {
-        show : true,
+        show : false,
         feature : {
             mark : {show: true},
             dataView : {show: true, readOnly: false},
@@ -155,37 +178,37 @@ function draw_graph(data){
     ],
     series : [
         {
-            name:'一天前',
+            name:total_date[6],
             type:'line',
             data:item[1][0]
         },
         {
-            name:'两天前',
+            name:total_date[5],
             type:'line',
             data:item[1][1]
         },
         {
-            name:'三天前',
+            name:total_date[4],
             type:'line',
             data:item[1][2]
         },
         {
-            name:'四天前',
+            name:total_date[3],
             type:'line',
             data:item[1][3]
         },
         {
-            name:'五天前',
+            name:total_date[2],
             type:'line',
             data:item[1][4]
         },
         {
-            name:'六天前',
+            name:total_date[1],
             type:'line',
             data:item[1][5]
         },
         {
-            name:'七天前',
+            name:total_date[0],
             type:'line',
             data:item[1][6]
         }
@@ -203,10 +226,14 @@ $('#domain_button').click(function(){
   var select_index = $('input[name="index_select"]:checked').val();
   var url1 = '/influence_application/search_domain_influence/?date='+select_date+'&domain='+domain_text+'&order='+select_index;
   call_ajax_request(url1,draw_table);
-  console.log(select_date,domain_text);
   //draw_table(data);
 });
 
 $(document).ready(function(){
+  var select_date = $('#total_date_select option:selected').val();
+  var domain_text = $('#domain_select option:selected').text();  
+  var select_index = $('input[name="index_select"]:checked').val();
+  var url1 = '/influence_application/search_domain_influence/?date='+select_date+'&domain='+domain_text+'&order='+select_index;
+  call_ajax_request(url1,draw_table);
   call_ajax_request(url2,draw_graph);
 })
