@@ -18,7 +18,7 @@ mod = Blueprint('influence_application', __name__, url_prefix='/influence_applic
 def ajax_search_influence():
     date = request.args.get('date', '') # '2013-09-01'
     number = request.args.get('number', 100) # "100"
-    domain = request.args.get('domain', '') # 0: all active rank, 1: portrait active rank
+    domain = request.args.get('domain', '') # 维权律师
     order = request.args.get('order', '') # 1: influence, 2: retweeted, 3, comment, 4: retweeted_brust. 5: comment_brust
 
     index_name = str(date).replace('-','')

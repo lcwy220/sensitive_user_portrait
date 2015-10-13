@@ -58,7 +58,7 @@ def recommend_in_top_influence(date):
     date = date.replace('-','')
     results = r.hget('recommend_influence', date)
     if not results:
-        return '0'
+        return []
     else:
         uid_list = json.loads(results)
     sensitive = 0
