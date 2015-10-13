@@ -5,10 +5,6 @@ index_info = {
     "mappings":{
         "bci":{
             "properties":{
-                "uid": {
-                    "type": "string",
-                    "index": "not_analyzed"
-                },
                 "s_origin_weibo_retweeted_detail":{
                     "type": "string",
                     "index": "not_analyzed"

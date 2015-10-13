@@ -8,18 +8,36 @@
 import redis
 import time
 import json
+from elasticsearch import Elasticsearch
 from sensitive_user_portrait.global_utils import R_RECOMMENTATION as r
+from sensitive_user_portrait.global_utils import es_user_profile
 from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts
 
 def recommend_new_words(date_list):
-    results = dict()
+    results = []
     for date in date_list:
         date = date.replace('-', '')
         words_dict = r.hgetall('recommend_sensitive_words_'+date)
         if words_dict:
-            #words_dict = json.loads(words_dict)
-            results[date] = words_dict
-    return results
+            for key, value in words_dict.items():
+                detail = []
+                detail.append(key)
+                value = json.loads(value)
+                uid_list = value[0]
+                uname = []
+                try:
+                    search_results = es_user_profile.mget(index='weibo_user', doc_type='user', body={'ids': uid_list})['docs']
+                    for item in search_results: 
+                        if item['found']:
+                            uname.append(item['_source']['nick_name'])
+                        else:
+                            uname.append('unknown')
+                except:
+                    uname = uid_list
+                detail.extend([uname,value[1]])
+                results.append(detail)
+    sorted_results = sorted(results, key=lambda x:x[2], reverse=True)
+    return sorted_results
 
 def identify_in(date, words_list):
     # identify_in date and words_list(include level and category, [word, level, category])

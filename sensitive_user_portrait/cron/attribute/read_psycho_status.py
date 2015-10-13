@@ -53,5 +53,5 @@ with open ('1010_domain.csv', 'rb') as f:
 
 '''
 
-print type(es.get(index='20130907', doc_type="bci", id='2516316500')['_source']['retweeted_weibo_comment_detail'])
+print json.loads(es.get(index='20130907', doc_type="bci", id='2988136341')['_source']['retweeted_weibo_comment_detail'])
 
