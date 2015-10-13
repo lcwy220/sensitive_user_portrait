@@ -525,27 +525,6 @@ def search_attribute_portrait(uid):
     else:
         return_results['keywords'] = []
 
-    if return_results['sensitive']:
-        sentiment_trend = user_sentiment_trend(uid)
-        emotion_number = sentiment_trend[0]
-        return_results['negetive_index'] = float(emotion_number[2])/(emotion_number[2]+emotion_number[1]+emotion_number[0])
-        return_results['negetive_influence'] = float(emotion_number[1])/(emotion_number[2]+emotion_number[1]+emotion_number[0])
-        sentiment_dict = sentiment_trend[1]
-        datetime = ts2datetime(time.time()).replace('-', '')
-        return_sentiment = dict()
-        return_sentiment['positive'] = []
-        return_sentiment['neutral'] = []
-        return_sentiment['negetive'] = []
-        ts = time.time()
-        ts = datetime2ts('2013-09-08') - 8*24*3600
-        for i in range(1,8):
-            ts = ts + 24*3600
-            date = ts2datetime(ts).replace('-', '')
-            temp = sentiment_dict.get(date, {})
-            return_sentiment['positive'].append(temp.get('positive', 0))
-            return_sentiment['negetive'].append(temp.get('negetive', 0))
-            return_sentiment['neutral'].append(temp.get('neutral', 0))
-        return_results['sentiment_trend'] = return_sentiment
 
     return_results['retweet'] = search_retweet(uid, 0)
     return_results['follow'] = search_follower(uid, 0)
@@ -906,6 +885,27 @@ def sensitive_attribute(uid, date):
     results['sensitive_hashtag_dict'] = []
     results['sensitive_words_dict'] = []
     results['sensitive_hashtag_description'] = ''
+
+    sentiment_trend = user_sentiment_trend(uid)
+    emotion_number = sentiment_trend[0]
+    return_results['negetive_index'] = float(emotion_number[2])/(emotion_number[2]+emotion_number[1]+emotion_number[0])
+    return_results['negetive_influence'] = float(emotion_number[1])/(emotion_number[2]+emotion_number[1]+emotion_number[0])
+    sentiment_dict = sentiment_trend[1]
+    datetime = ts2datetime(time.time()).replace('-', '')
+    return_sentiment = dict()
+    return_sentiment['positive'] = []
+    return_sentiment['neutral'] = []
+    return_sentiment['negetive'] = []
+    ts = time.time()
+    ts = datetime2ts('2013-09-08') - 8*24*3600
+    for i in range(1,8):
+        ts = ts + 24*3600
+        date = ts2datetime(ts).replace('-', '')
+        temp = sentiment_dict.get(date, {})
+        return_sentiment['positive'].append(temp.get('positive', 0))
+        return_sentiment['negetive'].append(temp.get('negetive', 0))
+        return_sentiment['neutral'].append(temp.get('neutral', 0))
+    return_results['sentiment_trend'] = return_sentiment
 
     if 1:
         portrait_results = es.get(index="sensitive_user_portrait", doc_type='user', id=uid)['_source']
