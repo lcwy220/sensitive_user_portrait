@@ -15,7 +15,7 @@ mod = Blueprint('recommentation', __name__, url_prefix='/recommentation')
 
 
 # sensitive weibo user recommendtation
-@mod.route('/show_in/sensitive_list')
+@mod.route('/show_sensitive_list/')
 def ajax_recommentation_in_sensitive_list():
     date = request.args.get('date', '') # 2013-09-01
     """
@@ -34,7 +34,7 @@ def ajax_recommentation_in_sensitive_list():
 
 
 # top influence user recommentation
-@mod.route('/show_in/influence_list')
+@mod.route('/show_influence_list/')
 def ajax_recommentation_in_influence_list():
     date = request.args.get('date', '') # 2013-09-01
     '''
