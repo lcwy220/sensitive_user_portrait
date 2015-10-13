@@ -129,10 +129,8 @@ def search_full_text(uid, date):
         retweeted_number = 0
         comment_number = 0
         if source['sensitive']:
-            print source
             if int(source['message_type']) == 1:
                 if weibo_bci:
-                    print weibo_bci['s_origin_weibo_retweeted_detail']
                     if weibo_bci.get('s_origin_weibo_retweeted_detail', {}):
                         retweeted_detail = json.loads(weibo_bci['s_origin_weibo_retweeted_detail'])
                     else:
@@ -512,11 +510,12 @@ def search_attribute_portrait(uid):
 
     return_results['photo_url'] = results['photo_url']
     return_results['uid'] = results['uid']
-    return_results['uname'] = results['uname'].encode('utf-8', 'ignore')
+    return_results['uname'] = results['uname']
     return_results['location'] = results['location']
     return_results['fansnum'] = results['fansnum']
     return_results['friendsnum'] = results['friendsnum']
     return_results['gender'] = results['gender']
+    return_results['psycho_status'] = json.loads(results['psycho_status'])
 
     keyword_list = []
     if results['keywords']:
@@ -648,13 +647,6 @@ def search_attribute_portrait(uid):
         return_results['online_pattern'] = []
 
 
-    # psycho_status
-    if results['psycho_status']:
-        psycho_status_dict = json.loads(results['psycho_status'])
-        sort_psycho_status_dict = sorted(psycho_status_dict.items(), key=lambda x:x[1], reverse=True)
-        return_results['psycho_status'] = sort_psycho_status_dict[:5]
-    else:
-        return_results['psycho_status'] = []
 
     '''
     #psycho_feature

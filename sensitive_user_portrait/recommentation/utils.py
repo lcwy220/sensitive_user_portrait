@@ -314,21 +314,21 @@ def identify_in(data):
             appoint_list.append([uid, source])
 
     sensitive_results = r.hget('recommend_sensitive', date)
-    if sensitive_results:
+    if sensitive_results and sensitive_results != '0':
         sensitive_results = json.loads(sensitive_results)
         revise_set = set(sensitive_results) - sensitive_list
         if revise_set:
-            r.hset('recommend_sensitive', date, json.dumps(revise_set))
+            r.hset('recommend_sensitive', date, json.dumps(list(revise_set)))
         else:
-            r.hset('recommend_sensitive', date, '0')
+            r.hdel('recommend_sensitive', date)
     influence_results = r.hget('recommend_influence', date)
-    if influence_results:
+    if influence_results and influence_results != '0':
         influence_results = json.loads(influence_results)
         revise_set = set(influence_results) - influence_list
         if revise_set:
-            r.hset('recommend_influence', date, json.dumps(revise_set))
+            r.hset('recommend_influence', date, json.dumps(list(revise_set)))
         else:
-            r.hset('recommend_influence', date, '0')
+            r.hdel('recommend_influence', date)
 
     # about compute
     compute_now_list = r.hget('compute_now', date)
