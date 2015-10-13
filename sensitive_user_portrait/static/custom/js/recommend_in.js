@@ -37,7 +37,7 @@ function replace_space(data){
   return data;
 }
 function confirm_ok(data){
-  //console.log(data);
+  console.log(data);
   if(data)
     alert('操作成功！');
 }
@@ -196,6 +196,7 @@ function draw_recommend(data){
       }
       call_ajax_request(detail_url, show_details);
       function show_details(data){
+          console.log(data);
         if(data['time_trend'].length==0){
           $('#line_chart').empty();
           $('#line_chart').append('<div style="text-align:center">暂无数据！</div>');
@@ -203,10 +204,13 @@ function draw_recommend(data){
         else{
           //$('#line_chart').empty();
           var line_chart_xaxis = [];
-          for(var k in data['time_trend'][0])
-            line_chart_xaxis.push(new Date(parseInt(data['time_trend'][0][k])*1000).format("MM-dd hh:mm"));
-          var line_chart_yaxis = data['time_trend'][1];
-          draw_line_chart(line_chart_xaxis.reverse(), line_chart_yaxis.reverse(), 'line_chart', detail_uname);
+          var line_chart_yaxis = [];
+          for (var i = 0;i < data['time_trend'].length; i++){
+              var trend_data = data['time_trend'][i];
+              line_chart_xaxis.push(new Date(parseInt(trend_data[0])*1000).format("MM-dd hh:mm"));
+              line_chart_yaxis.push(trend_data[1]);
+          }
+          draw_line_chart(line_chart_xaxis, line_chart_yaxis, 'line_chart', detail_uname);
         }
 
         $('#place').empty();
@@ -339,6 +343,7 @@ function bindButtonClick(){
       console.log(global_index);
         
       date_initial();
+      var date = $('#recommend_date_select').val();
       call_ajax_request(recommend_url_list[global_index]+date, draw_recommend);
       call_ajax_request(history_url_list[global_index]+date, draw_history);
 
@@ -439,8 +444,8 @@ recommend_url_list[2] = '/recommentation/show_sensitive_list/?date=';
 var history_url_list = new Array();
 history_url_list[1] = '/recommentation/show_influence_history_in/?date=';
 history_url_list[2] = '/recommentation/show_sensitive_history_in/?date=';
-var date = '';
 date_initial();
+var date = $('#recommend_date_select').val();
 call_ajax_request(recommend_url_list[global_index]+date, draw_recommend);
 call_ajax_request(history_url_list[global_index]+date, draw_history);
 bindButtonClick();

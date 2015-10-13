@@ -51,6 +51,11 @@
    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/static/content/ico/apple-touch-icon-114-precomposed.png">
    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/static/content/ico/apple-touch-icon-72-precomposed.png">
    <link rel="apple-touch-icon-precomposed" href="/static/content/ico/apple-touch-icon-57-precomposed.png">
+   <style>
+       #nav-bar .dropdown-menu .divider{
+         height:2px;
+     }
+   </style>
    {% block custom_css %}
    
    {% endblock custom_css %}
@@ -121,14 +126,21 @@
                   </a>
                   <ul class="dropdown-menu">
                   <li><a href="/index/overview/">整体概览</a></li>
-                  <li><a href="/index/recommend_in/">入库管理</a></li>
-                  <li><a href="/index/tag/">自定义标签</a></li>
-                  <li><a href="/index/sensitive_words/">敏感词管理</a></li>
-                  <!--<li><a href="/index/group/">群体分析</a></li>-->
                   <li><a href="/index/search/">人物检索</a></li>
                   <li><a href="/index/influence/">影响力分析</a></li>
-                  <li><a href="/index/group/">重点人物监控</a></li>
+                  <li class="divider"></li>
+                  <li><a href="/index/recommend_in/">入库管理</a></li>
+                  <li><a href="/index/sensitive_words/">敏感词管理</a></li>
+                  <li class="divider"></li>
+                  <!--<li><a href="/index/tag/">自定义标签</a></li>-->
+                  <!--<li><a href="/index/group/">群体分析</a></li>-->
+                  <!--<li><a href="/index/group/">重点人物监控</a></li>-->
                   <!-- <li><a href="/index/contrast/">对比分析</a></li>-->
+                  <li><a href="/index/tag_manage/">系统标签管理</a></li>
+                  <li><a href="/index/tag_search/">用户标签标注</a></li>
+                  <li class="divider"></li>
+                  <li><a href="/index/group_task/">系统监控管理</a></li>
+                  <li><a href="/index/group_search/">系统用户监控</a></li>
                   <li class="divider"></li>
                   <li><a href="/index/">主页Home</a></li>
                </ul>
