@@ -880,7 +880,7 @@ def sensitive_attribute(uid, date):
         influence_results = es.get(index=date, doc_type='bci', id=uid)['_source']
         results['sensitive_origin_weibo_number'] = influence_results.get('s_origin_weibo_number', 0)
         results['sensitive_retweeted_weibo_number'] = influence_results.get('s_retweeted_weibo_number', 0)
-        results['sensitive_comment_weibo_number'] = influence_results.get('s_comment_weibo_number', 0)
+        results['sensitive_comment_weibo_number'] = int(influence_results.get('s_comment_weibo_number', 0))
         results['sensitive_retweeted_weibo_retweeted_total_number'] = influence_results.get('s_retweeted_weibo_retweeted_total_number', 0)
         results['sensitive_origin_weibo_retweeted_total_number'] = influence_results.get('s_origin_weibo_retweeted_total_number', 0)
         results['sensitive_origin_weibo_comment_total_number'] = influence_results.get('s_origin_weibo_comment_total_number', 0) 
@@ -900,7 +900,7 @@ def sensitive_attribute(uid, date):
         item = {}
     results['origin_weibo_total_number'] = item.get('origin_weibo_number', 0) + results['sensitive_origin_weibo_number']
     results['retweeted_weibo_total_number'] = item.get('retweeted_weibo_number', 0) + results['sensitive_retweeted_weibo_number']
-    results['comment_weibo_total_number'] = int(item.get('comment_weibo_number', 0)) + results['sensitive_comment_weibo_number']
+    results['comment_weibo_total_number'] = int(item.get('comment_weibo_number', 0)) + int(results['sensitive_comment_weibo_number'])
     results['origin_weibo_retweeted_total_number'] = item.get('origin_weibo_retweeted_total_number', 0) + results['sensitive_origin_weibo_retweeted_total_number']
     results['origin_weibo_comment_total_number'] = item.get('origin_weibo_comment_total_number', 0) + results['sensitive_origin_weibo_comment_total_number']
     results['retweeted_weibo_retweeted_total_number'] = item.get('retweeted_weibo_retweeted_total_number', 0)+ results['sensitive_retweeted_weibo_retweeted_total_number']
