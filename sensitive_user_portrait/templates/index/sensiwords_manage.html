@@ -76,7 +76,7 @@ tbody td{text-align:center;}
 <div class="ch-container" style="width:1000px;">
 
     <div class="row">
-        <div id="content" class="col-lg-10 col-sm-10">
+      <div id="content" class="col-lg-10 col-sm-10">
             <!-- content starts -->
 			<div class="row">
         <div class="box col-md-12">
@@ -88,7 +88,7 @@ tbody td{text-align:center;}
 </div>
 <a id="free_add_class" href="" data-toggle="modal" data-target="#free_add" style="float:right;margin-bottom:10px;margin-top:12px;margin-right:40px;">自定义类别</a>
 <a id="add_sensi_tag" href="" data-toggle="modal" data-target="#add_sensiword" style="float:right;margin-bottom:10px;margin-top:12px;margin-right:40px;">添加敏感词</a>
-<div style="margin-top:12px;">等级:
+    <div style="margin-top:12px;">等级:
 			<select name="level" id="sensi_manage_level" style="width:90px; margin-right:5px;">   
 				<option value="0">所有等级</option> 
 		        <option value="1">level 1</option>   
@@ -98,16 +98,17 @@ tbody td{text-align:center;}
 		    类别:
 		    <select name="classify" id="sensi_manage_class" style="width:90px; margin-right:5px;"> 
 		        <option value="0">所有类别</option>   
-		        <option value="1">a类词</option>   
-		        <option value="2">b类词</option>   
-		        <option value="3">class 3</option>
-		        <option value="4">class 3</option>
-		     	<option value="5">class 3</option>	                 
+		        <option value="politics">politics</option>   
+		        <option value="military">military</option>   
+		        <option value="law">law</option>
+		        <option value="ideology">ideology</option>
+		     	<option value="democracy">democracy</option>	                 
 		    </select>
-		    <button id="show_sensi_manage" style="min-width: 50px;">确定</button></div>
-                <div class="box-content" id="sensi_manage_table" >
+		    <button id="show_sensi_manage" style="min-width: 50px;">确定</button>
+    </div>
+    <div class="box-content" id="sensi_manage_table" >
                     
-                </div>
+    </div>
             </div>
         </div>
     </div><!--/span-->
@@ -144,8 +145,46 @@ tbody td{text-align:center;}
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" style=".alert .close:after{content='';height:0;width:0;}">&nbsp;</span></button>
         <h4 class="modal-title" id="myModalLabel">添加敏感词</h4>
       </div>
+      <div class="modal-body" id="add_snesiword" style="padding:30px;">
+      <div class="add_word_model" style="margin-top:12px;">等级:
+      <select name="level" class="add_sensi_level" style="width:90px; margin-right:5px;">   
+            <option value="0">所有等级</option> 
+            <option value="1">level 1</option>   
+            <option value="2">level 2</option>   
+            <option value="3">level 3</option>           
+      </select>
+        类别:
+        <select name="classify" class="add_sensi_class" style="width:90px; margin-right:5px;"> 
+            <option value="0">所有类别</option>   
+            <option value="politics">politics</option>   
+            <option value="military">military</option>   
+            <option value="law">law</option>
+            <option value="ideology">ideology</option>
+          <option value="democracy">democracy</option>                   
+        </select><br>
+        <input class="input_sensi" style="min-width: 50px;margin-top:20px;" placeholder="输入敏感词">
+        <span class="addIcon" id="addTag" style="margin-bottom:-10px;margin-top:20px;">
+      </span>
+
+    </div>
+    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" id="add_words_Save">添加</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="word_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" style=".alert .close:after{content='';height:0;width:0;}">&nbsp;</span></button>
+        <h4 class="modal-title" id="myModalLabel">敏感词修改</h4>
+      </div>
       <div class="modal-body" id="edit_snesiword" style="padding:30px;">
-        555
+        
     
       </div>
       <div class="modal-footer">
