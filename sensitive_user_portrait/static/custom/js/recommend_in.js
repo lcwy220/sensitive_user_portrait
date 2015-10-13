@@ -104,20 +104,22 @@ function draw_line_chart(xaxis, yaxis, div, uname){
 }
 function draw_recommend(data){
     var div = '#recommend';
+    console.log(data);
     //console.log(div);
     $(div).empty();
     var user_url;
     //console.log(user_url);
     var html = '';
     html += '<table id="recommend_table_new" class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
-    html += '<thead><tr><th style="width:140px">用户ID</th><th>昵称</th><th>注册地</th>';
-    html += '<th style="width:100px">粉丝数</th><th style="width:100px">微博数</th><th style="width:100px">影响力</th>';
+    html += '<thead><tr><th style="width:100px">用户ID</th><th style=width:150px;"">昵称</th><th style="width:100px;">注册地</th>';
+    html += '<th style="width:50px">粉丝数</th><th style="width:50px">微博数</th><th style="width:50px">影响力</th>';
     // global_index
     if(global_index == 2){
         html += '<th style="width:100px">敏感词</th>';
     }
     html += '<th style="width:100px">用户详情</th>';
-    html += '<th style="width:18px;"><input name="recommend_all" id="recommend_all" type="checkbox" value="" onclick="recommend_all()" />' + '</th></tr></thead>';
+    html += '<th style="width:18px;"><input name="recommend_all" id="recommend_all" type="checkbox" value="" onclick="recommend_all()" />' + '</th>';
+    html += '</tr></thead>';
     html += '<tbody>';
 
     var item = data;
@@ -259,25 +261,24 @@ function draw_recommend(data){
     });
 }
 function draw_history(data){
-    //console.log(data);
+    console.log(data);
     var div = "#history";
     $(div).empty();
     var user_url ;
     //console.log(user_url);
     var html = '';
     html += '<table id="history_table_new" class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
-    html += '<thead><tr><th style="width:140px">用户ID</th><th>昵称</th><th>注册地</th><th style="width:100px">粉丝数</th>';
-    html += '<th style="width:100px">微博数</th><th style="width:100px">影响力</th>';
+    html += '<thead><tr><th style="width:100px">用户ID</th><th style="150px;">昵称</th><th style="100px;">注册地</th><th style="width:50px">粉丝数</th>';
+    html += '<th style="width:50px">微博数</th><th style="width:50px">影响力</th>';
     // global_index
     if(global_index == 2){
-        html += '<th style="width:100px">敏感度</th>';
+        html += '<th style="width:100px">敏感词</th>';
     }
-    html = '<th>计算状态</th></tr></thead>';
+    html += '<th>计算状态</th></tr></thead>';
     html += '<tbody>';
     var item = data;
     for(var i in item){
       item[i] = replace_space(item[i]);
-      console.log('here2');
       if(item[i][5]!='未知'){
         //item[i][5] = item[i][5].toFixed(2);
       }
@@ -314,11 +315,9 @@ function draw_history(data){
       html += '<td class="center">'+ in_status +'</td>';
       html += '</tr>';
     }
-    console.log('here2');
     html += '</tbody>';
     html += '</table>';
     $(div).append(html);
-    console.log('here3');
     $('#history_table_new').dataTable({
         "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
         "sPaginationType": "history_boot",
@@ -341,7 +340,7 @@ function bindButtonClick(){
         
       date_initial();
       call_ajax_request(recommend_url_list[global_index]+date, draw_recommend);
-      //call_ajax_request(history_url_list[global_index]+date, draw_history);
+      call_ajax_request(history_url_list[global_index]+date, draw_history);
 
   });
   $('#recommend_date_button').click(function(){
@@ -353,7 +352,7 @@ function bindButtonClick(){
       //console.log($("#history_date_select").val());
       var url_history_new = history_url_list[global_index] + $("#history_date_select").val();
       //console.log(url_history_new);
-      //call_ajax_request(url_history_new, draw_history);
+      call_ajax_request(url_history_new, draw_history);
   });
     $('#recommend_button').click(function(){
           var cur_uids = [];
@@ -403,49 +402,30 @@ function bindButtonClick(){
                   call_ajax_request(url_recommend_new, draw_recommend);
 
                   var url_history_new = history_url_list[global_index] + $("#history_date_select").val();
-                  // call_ajax_request(url_history_new, draw_history);
+                  call_ajax_request(url_history_new, draw_history);
             }
           }
     });
 }
 
 function date_initial(){
-  var recommend_date = [];
-  for(var i=0;i<7;i++){
-    var today = new Date(tomorrow-24*60*60*1000*(7-i));
-    recommend_date[i] = today.getFullYear()+"-"+((today.getMonth()+1)<10?"0":"")+(today.getMonth()+1)+"-"+((today.getDate())<10?"0":"")+(today.getDate());
-  }
-  $("#recommend_date_select").empty();
-  var recommend_date_html = '';
-  recommend_date_html += '<option value="' + recommend_date[0] + '">' + recommend_date[0] + '</option>';
-  recommend_date_html += '<option value="' + recommend_date[1] + '">' + recommend_date[1] + '</option>';
-  recommend_date_html += '<option value="' + recommend_date[2] + '">' + recommend_date[2] + '</option>';
-  recommend_date_html += '<option value="' + recommend_date[3] + '">' + recommend_date[3] + '</option>';
-  recommend_date_html += '<option value="' + recommend_date[4] + '">' + recommend_date[4] + '</option>';
-  recommend_date_html += '<option value="' + recommend_date[5] + '">' + recommend_date[5] + '</option>';
-  recommend_date_html += '<option value="' + recommend_date[6] + '" selected="selected">' + recommend_date[6] + '</option>';
-  $("#recommend_date_select").append(recommend_date_html);
+    $("#recommend_date_select").empty();
+    $("#history_date_select").empty();
+    //var timestamp = Date.parse(new Date());
+    var timestamp = 1378555200000;
+    var date = new Date(parseInt(timestamp)).format("yyyy-MM-dd");
+    var html;
+    html += '<option value="' + date + '" selected="selected">' + date + '</option>';      
+    for (var i = 0; i < 6; i++) {
+        timestamp = timestamp-24*3600*1000;
+        date = new Date(parseInt(timestamp)).format("yyyy-MM-dd");
+        html += '<option value="' + date + '">' + date + '</option>';
+    }
 
-  var history_date = [];
-  for(var i=0;i<7;i++){
-    var today = new Date(tomorrow-24*60*60*1000*(7-i));
-    history_date[i] = today.getFullYear()+"-"+((today.getMonth()+1)<10?"0":"")+(today.getMonth()+1)+"-"+((today.getDate())<10?"0":"")+(today.getDate());
-  }
-  $("#history_date_select").empty();
-  var history_date_html = '';
-  history_date_html += '<option value="' + history_date[0] + '">' + history_date[0] + '</option>';
-  history_date_html += '<option value="' + history_date[1] + '">' + history_date[1] + '</option>';
-  history_date_html += '<option value="' + history_date[2] + '">' + history_date[2] + '</option>';
-  history_date_html += '<option value="' + history_date[3] + '">' + history_date[3] + '</option>';
-  history_date_html += '<option value="' + history_date[4] + '">' + history_date[4] + '</option>';
-  history_date_html += '<option value="' + history_date[5] + '">' + history_date[5] + '</option>';
-  history_date_html += '<option value="' + history_date[6] + '" selected="selected">' + history_date[6] + '</option>';
-  history_date_html += '<option value="all">全部</option>';
-  $("#history_date_select").append(history_date_html);
+    $("#recommend_date_select").append(html);
+    html += '<option value="all">全部</option>';
+    $("#history_date_select").append(html);
 }
-var tomorrow = new Date(2013,8,8);
-var now_date = new Date(tomorrow-24*60*60*1000);
-var now = now_date.getFullYear()+"-"+((now_date.getMonth()+1)<10?"0":"")+(now_date.getMonth()+1)+"-"+((now_date.getDate())<10?"0":"")+(now_date.getDate());
 
 // page control start
 var recommend_pre_page = 1;
@@ -462,5 +442,5 @@ history_url_list[2] = '/recommentation/show_sensitive_history_in/?date=';
 var date = '';
 date_initial();
 call_ajax_request(recommend_url_list[global_index]+date, draw_recommend);
-//call_ajax_request(history_url_list[global_index]+date, draw_history);
+call_ajax_request(history_url_list[global_index]+date, draw_history);
 bindButtonClick();

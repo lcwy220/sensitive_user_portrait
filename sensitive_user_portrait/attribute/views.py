@@ -28,8 +28,10 @@ def ajax_portrait_attribute():
 @mod.route('/portrait_sensitive_attribute/')
 def ajax_portrait_sensitive_attribute():
     uid = request.args.get('uid', '')
+    date = request.args.get('date', '')
+    date = str(date).replace('-', '')
     uid = str(uid)
-    results = sensitive_attribute(uid)
+    results = sensitive_attribute(uid, date)
     if results:
         return json.dumps(results)
     else:
