@@ -1,0 +1,136 @@
+{% extends "index/base.html" %} 
+{% block title %}敏感热词推荐{% endblock title %}
+{% block subtitle %}敏感热词推荐{% endblock subtitle %}
+      {% block custom_css %}
+<style type="text/css">
+    .hidden{display:none;}
+	#file-upload{margin-left:50px;border:1px solid #999;}
+	.fleft{float:left;}
+#uploadFile{position: fixed;margin-top: -200px;left: 50%;top: 50%;z-index: 1002;width: 620px;background: #FFF none repeat scroll 0% 0%;
+border: 1px solid #AA8BE8;height: 230px;margin-left: -300px;}
+#float-wrap {position: fixed;top: 0px;left: 0px;opacity: 0.6;z-index: 1001;width: 100%;height: 100%; background: #000 none repeat scroll 0% 0%;}
+#uploadFile .title{color:black;border-bottom:1px solid #999;}
+.title{color:black;border-bottom:1px solid #999;padding-left:20px;}
+.decoration ul{margin-top:30px;}
+li{list-style-type:none;}
+.decoration ul li{width:100%;float:left;margin-bottom:10px;}
+.p_title {float: left;width: 260px;margin-right:30px;white-space: nowrap;overflow: hidden; font-weight: normal;text-align: right;color: #808080;}
+#searchbtn {
+  display: inline-block;
+  background: #4f8fff none repeat scroll 0% 0%;
+  color: #FFF;
+  border: 1px solid #334EE3;
+  border-radius: 2px;
+  width: 108px;
+  float: right;
+  margin-right: 10px;
+  height:30px;
+}
+#close {
+  width: 12px;
+  height: 12px;
+  float: right;
+  display: inline;
+  vertical-align: middle;
+  background-attachment: scroll;
+  background-color: transparent;
+  background-image: url(/static/custom/images/close.jpg);
+  background-repeat: no-repeat;
+    margin-right:10px;
+    margin-top:10px;
+}
+
+#searchTable {float:right;margin-right:20px;}
+#SearchTab{position: fixed;margin-top: -200px;left: 50%;top: 50%;z-index: 1002;width: 620px;background: #FFF none repeat scroll 0% 0%;
+border: 1px solid #AA8BE8;height: 300px;margin-left: -300px;}
+#pageTitle{font-size:20px;text-indent:20px;font-family:"Microsoft YaHei UI";}
+#DataTables_Table_0_filter{display:none;}
+#DataTables_Table_0_length{display:none;}
+#del{color:black;}
+.lineh{line-height:30px;}
+table th{text-align:center;}
+tbody td{text-align:center;}
+.tagCols{width:550px;margin:auto 0;  text-align: center;margin-bottom: 10px;height:50px;line-height: 45px;}
+.tagCols span{font-size:20px;}
+.addIcon{background-image:url(/static/content/img/add.png);width:32px;display:inline-block;height:32px;cursor:pointer;padding-top:10px;}
+#editAdd{background-image:url(/static/content/img/add.png);width:32px;display:inline-block;height:32px;cursor:pointer;padding-top:10px;}
+.tagbg{background-color:lightblue;min-width:50px;border:soild 1px #eee;margin-right:10px;}
+#delIcon{background-image:url(/static/content/img/delete16.png);width:16px;height:14px;cursor:pointer;display:inline-block;}
+#EDIT{font-size:18px;}
+.smallAdd{background-image:url(/static/content/img/smallAdd.png);width:16px;height:16px;cursor:pointer;display:inline-block;}
+.input_tag_box{
+    color: #5f5f5f;
+    border-width: 1px;
+    border-style: solid;
+    border-image: none;
+    border-color: #9b9b9d #dcdcdc #dce7eb;
+    border-radius: 3px;
+    background-color: #fbfcfc;margin-right: 20px;}
+
+</style>
+
+  {% endblock custom_css %}
+
+    {% block body %}
+
+<div class="ch-container" style="width:1000px;">
+
+    <div class="row">
+      <div id="content" class="col-lg-10 col-sm-10">
+            <!-- content starts -->
+			<div class="row">
+        <div class="box col-md-12">
+            <div class="box-inner" style="width:980px;min-height:150px;">
+                <div class="box-header well" data-original-title="" style="padding-top:5px;">
+                   <span class="TabTitle"  >敏感热词推荐</span>
+                </div>
+				<div class="fleft">
+    <div style="margin-top:12px;">选择日期:
+      <select name="level" id="recommend_date_select" style="width:180px; margin-right:5px;"></select>
+      <button id="show_recommend_word" style="min-width: 50px;">确定</button>
+    </div>
+</div>
+
+    <div class="box-content" id="sensi_manage_table" >
+                    
+    </div>
+
+            </div>
+        </div>
+    </div><!--/span-->
+
+    <!-- content ends -->
+		</div><!--/#content.col-md-0-->
+	</div><!--/fluid-row-->
+
+
+</div><!--/.fluid-container-->
+
+<!-- 模态框：添加敏感词入库 -->
+<div class="modal fade" id="confirm_add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" style=".alert .close:after{content='';height:0;width:0;}">&nbsp;</span></button>
+        <h4 class="modal-title" id="myModalLabel">敏感词修改</h4>
+      </div>
+      <div class="modal-body" id="edit_snesiword" style="padding:30px;">
+        555
+    
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" id="modifySave">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock body %}
+
+{% block end_js %}
+<script type="text/javascript" src="/static/custom/js/words_recommend.js"></script> 
+
+<script src="/static/custom/js/charisma.js"></script>
+{% endblock end_js %}
