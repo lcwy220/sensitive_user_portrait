@@ -32,11 +32,15 @@ def get_sensitive_user_detail(uid_list, date, sensitive):
             personal_info[4] = profile_dict['statusnum']
         if user_bci_results[i]['found']:
             personal_info[5] = user_bci_results[i]['_source'].get('user_index', 0)
+        else:
+            personal_info[5] = 0
         if sensitive:
             sensitive_words = r_cluster.hget('sensitive_' + index_name, str(uid))
             if sensitive_words:
                 sensitive_dict = json.loads(sensitive_words)
                 personal_info.append(sensitive_dict.keys())
+            else:
+                personal_info.append([])
         results.append(personal_info)
     return results
 
