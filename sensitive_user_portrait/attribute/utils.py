@@ -512,7 +512,7 @@ def search_attribute_portrait(uid):
 
     return_results['photo_url'] = results['photo_url']
     return_results['uid'] = results['uid']
-    return_results['uname'] = results['uname']
+    return_results['uname'] = results['uname'].encode('utf-8', 'ignore')
     return_results['location'] = results['location']
     return_results['fansnum'] = results['fansnum']
     return_results['friendsnum'] = results['friendsnum']
@@ -870,7 +870,6 @@ def sensitive_attribute(uid, date):
     portrait_result = es.get(index='sensitive_user_portrait', doc_type='user', id=uid)['_source']
     results['uname'] = portrait_result['uname']
     results['photo_url'] = portrait_result['photo_url']
-    results['politics_trand'] = portrait_result['politics_trend']
 
     # sensitive weibo number statistics
     date = ts2datetime(time.time()-24*3600).replace('-', '')
@@ -907,7 +906,6 @@ def sensitive_attribute(uid, date):
     results['retweeted_weibo_comment_total_number'] = item.get('retweeted_weibo_comment_total_number', 0) + results['sensitive_retweeted_weibo_comment_total_number']
 
     results['sensitive_text'] = sort_sensitive_text(uid)
-    results['sensitive_time_trend'] = get_user_trend(uid)[1]
 
     results['sensitive_geo_distribute'] = []
     results['sensitive_time_distribute'] = get_user_trend(uid)[1]
