@@ -83,7 +83,7 @@ function draw_table(data){
       item[i] = replace_space(item[i]);
       if(item[i][3]=="未知")
         item[i][3] = 'http://tp2.sinaimg.cn/1878376757/50/0/1';
-      if(item[i][0]!='未知')
+      if(item[i][0]!='未知'&&select_index==1)
         item[i][0] = item[i][0].toFixed(2);      
       if(item[i][4]!='未知')
         item[i][4] = item[i][4].toFixed(2);
@@ -200,7 +200,8 @@ select_init();
 $('#domain_button').click(function(){
   var select_date = $('#total_date_select option:selected').val();
   var domain_text = $('#domain_select option:selected').text();  
-  var url1 = '/influence_application/search_domain_influence/?date='+select_date+'&domain='+domain_text;
+  var select_index = $('input[name="index_select"]:checked').val();
+  var url1 = '/influence_application/search_domain_influence/?date='+select_date+'&domain='+domain_text+'&order='+select_index;
   call_ajax_request(url1,draw_table);
   console.log(select_date,domain_text);
   //draw_table(data);
