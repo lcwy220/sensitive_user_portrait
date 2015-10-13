@@ -196,6 +196,7 @@ function draw_recommend(data){
       }
       call_ajax_request(detail_url, show_details);
       function show_details(data){
+          console.log(data);
         if(data['time_trend'].length==0){
           $('#line_chart').empty();
           $('#line_chart').append('<div style="text-align:center">暂无数据！</div>');
@@ -339,6 +340,7 @@ function bindButtonClick(){
       console.log(global_index);
         
       date_initial();
+      var date = $('#recommend_date_select').val();
       call_ajax_request(recommend_url_list[global_index]+date, draw_recommend);
       call_ajax_request(history_url_list[global_index]+date, draw_history);
 
@@ -439,8 +441,8 @@ recommend_url_list[2] = '/recommentation/show_sensitive_list/?date=';
 var history_url_list = new Array();
 history_url_list[1] = '/recommentation/show_influence_history_in/?date=';
 history_url_list[2] = '/recommentation/show_sensitive_history_in/?date=';
-var date = '';
 date_initial();
+var date = $('#recommend_date_select').val();
 call_ajax_request(recommend_url_list[global_index]+date, draw_recommend);
 call_ajax_request(history_url_list[global_index]+date, draw_history);
 bindButtonClick();
