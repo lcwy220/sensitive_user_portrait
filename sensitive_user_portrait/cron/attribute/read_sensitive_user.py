@@ -57,4 +57,4 @@ def read_sensitive_user_portrait():
     return user_set
 
 if __name__ == "__main__":
-    read_sensitive_user_portrait()
+    print read_sensitive_user_portrait()

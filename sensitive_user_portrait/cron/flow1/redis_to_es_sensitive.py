@@ -3,11 +3,13 @@
 import redis
 import math
 import sys
+import json
 import os
 import time
 from elasticsearch import Elasticsearch
 from index_cal import influence_weibo_cal, user_index_cal, deliver_weibo_brust, activity_weibo, statistic_weibo, expand_index_action 
 from rediscluster import RedisCluster
+from bci_mappings import mappings
 
 reload(sys)
 sys.path.append('../../')
@@ -16,14 +18,25 @@ from global_utils import  ES_CLUSTER_FLOW1, R_CLUSTER_FLOW1
 es = ES_CLUSTER_FLOW1
 cluster_redis = R_CLUSTER_FLOW1
 
-def compute(user_set, es):
+def read_sensitive_uid():
+    uid_set = set()
+    with open ('sensitive_uid_list.txt', 'rb') as f:
+        for line in f:
+            uid_set.add(line.strip())
+    return uid_set
+
+
+def compute(user_set, es, sensitive_uid_set):
     ts = time.time()
     bulk_action = []
     count_c = 0
+    sensitive = 0
 
     weibo_redis = R_CLUSTER_FLOW1
     for user in user_set:
-        t2 = time.time()
+        if user in sensitive_uid_set:
+            sensitive = 1
+            print user
         user_info = weibo_redis.hgetall(user)#dict
         sensitive_user_info = weibo_redis.hgetall('s_' + user)
         origin_weibo_retweeted_timestamp = []
@@ -54,6 +67,10 @@ def compute(user_set, es):
         s_origin_weibo_comment_detail={}
         s_retweeted_weibo_retweeted_detail={}
         s_retweeted_weibo_comment_detail = {}
+        origin_weibo_retweeted_detail={}
+        origin_weibo_comment_detail={}
+        retweeted_weibo_retweeted_detail={}
+        retweeted_weibo_comment_detail = {}
 
 
         for key in user_info.iterkeys():
@@ -226,6 +243,8 @@ def compute(user_set, es):
 
 
         user_item = {}
+        user_item['ordinary_influence'] = user_index
+        user_item['sensitive_influence'] = s_user_index
         user_item['user_index'] = 0.8*user_index + 0.2*s_user_index
         user_item['uid'] = user
         user_item['user_fansnum'] = int(user_fansnum)
@@ -236,10 +255,11 @@ def compute(user_set, es):
         user_item['s_origin_weibo_number'] = len(s_origin_weibo_list)
         user_item['s_comment_weibo_number'] = s_comment_weibo_number
         user_item['s_retweeted_weibo_number'] = len(s_retweeted_weibo_list)
-        user_item['s_origin_weibo_retweeted_detail'] = s_origin_weibo_retweeted_detail
-        user_item['s_origin_weibo_comment_detail'] = s_origin_weibo_comment_detail
-        user_item['s_retweeted_weibo_retweeted_detail'] = s_retweeted_weibo_retweeted_detail
-        user_item['s_retweeted_weibo_comment_detail'] = s_retweeted_weibo_comment_detail
+        if sensitive:
+            user_item['s_origin_weibo_retweeted_detail'] = s_origin_weibo_retweeted_detail
+            user_item['s_origin_weibo_comment_detail'] = s_origin_weibo_comment_detail
+            user_item['s_retweeted_weibo_retweeted_detail'] = s_retweeted_weibo_retweeted_detail
+            user_item['s_retweeted_weibo_comment_detail'] = s_retweeted_weibo_comment_detail
 
         user_item['origin_weibo_retweeted_total_number'] = origin_weibo_retweeted_total_number
         user_item['origin_weibo_retweeted_average_number'] = origin_weibo_retweeted_average_number
@@ -247,7 +267,8 @@ def compute(user_set, es):
         user_item['origin_weibo_retweeted_brust_average'] = origin_weibo_retweeted_brust[1]
         user_item['origin_weibo_top_retweeted_id'] = origin_weibo_top_retweeted_id
         user_item['origin_weibo_retweeted_brust_n'] = origin_weibo_retweeted_brust[0]
-        user_item['origin_weibo_retweeted_detail'] = origin_weibo_retweeted_detail
+        if sensitive:
+            user_item['origin_weibo_retweeted_detail'] = origin_weibo_retweeted_detail
 
         user_item['s_origin_weibo_retweeted_total_number'] = s_origin_weibo_retweeted_total_number
         user_item['s_origin_weibo_retweeted_average_number'] = s_origin_weibo_retweeted_average_number
@@ -262,7 +283,8 @@ def compute(user_set, es):
         user_item['origin_weibo_comment_brust_n'] = origin_weibo_comment_brust[0]
         user_item['origin_weibo_comment_brust_average'] = origin_weibo_comment_brust[1]
         user_item['origin_weibo_top_comment_id'] = origin_weibo_top_comment_id
-        user_item['origin_weibo_comment_detail'] = origin_weibo_comment_detail
+        if sensitive:
+            user_item['origin_weibo_comment_detail'] = origin_weibo_comment_detail
 
         user_item['s_origin_weibo_comment_total_number'] = s_origin_weibo_comment_total_number
         user_item['s_origin_weibo_comment_average_number'] = s_origin_weibo_comment_average_number
@@ -277,7 +299,8 @@ def compute(user_set, es):
         user_item['retweeted_weibo_retweeted_brust_n'] = retweeted_weibo_retweeted_brust[0]
         user_item['retweeted_weibo_retweeted_brust_average'] = retweeted_weibo_retweeted_brust[1]
         user_item['retweeted_weibo_top_retweeted_id'] = retweeted_weibo_top_retweeted_id
-        user_item['retweeted_weibo_retweeted_detail'] = retweeted_weibo_retweeted_detail
+        if sensitive:
+            user_item['retweeted_weibo_retweeted_detail'] = retweeted_weibo_retweeted_detail
 
         user_item['s_retweeted_weibo_retweeted_total_number'] = s_retweeted_weibo_retweeted_total_number
         user_item['s_retweeted_weibo_retweeted_average_number'] = s_retweeted_weibo_retweeted_average_number
@@ -292,7 +315,8 @@ def compute(user_set, es):
         user_item['retweeted_weibo_comment_brust_n'] = retweeted_weibo_comment_brust[0]
         user_item['retweeted_weibo_comment_brust_average'] = retweeted_weibo_comment_brust[1]
         user_item['retweeted_weibo_top_comment_id'] = retweeted_weibo_top_comment_id
-        user_item['retweeted_weibo_comment_detail'] = retweeted_weibo_comment_detail
+        if sensitive:
+            user_item['retweeted_weibo_comment_detail'] = retweeted_weibo_comment_detail
 
         user_item['s_retweeted_weibo_comment_total_number'] = s_retweeted_weibo_comment_total_number
         user_item['s_retweeted_weibo_comment_average_number'] = s_retweeted_weibo_comment_average_number
@@ -316,22 +340,18 @@ if __name__ == "__main__":
     bool = es.indices.exists(index=es_index)
     print bool
     if not bool:
-        es.indices.create(index=es_index, ignore=400)
-
+        mappings(es, es_index)
     count = 0
     tb = time.time()
+    sensitive_uid_set = read_sensitive_uid()
 
     while 1:
         id_set=[]
         user_set = cluster_redis.rpop('active_user_id')
         if user_set:
-            temp = user_set.split(",")
-            for item in temp:
-                user = item.split("'")[1]
-                count += 1
-                id_set.append(user)
-            compute(id_set, es)
-            print "ok"
+            temp = json.loads(user_set)
+            compute(temp, es, sensitive_uid_set)
+            count += 10000
 
             ts = time.time()
             print "%s : %s" %(count, ts - tb)

@@ -8,6 +8,7 @@ import json
 from peak_detection import detect_peaks
 from sensitive_user_portrait.global_utils import es_sensitive_user_portrait as es
 from sensitive_user_portrait.global_utils import MONITOR_REDIS as monitor_r
+from sensitive_user_portrait.global_utils import MONITOR_INNER_REDIS as monitor_inner_r
 from sensitive_user_portrait.global_utils import R_RECOMMENTATION as word_r
 from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts, ts2date, date2ts
 from sensitive_user_portrait.global_utils import es_user_profile
@@ -31,9 +32,10 @@ def identify_task(task_name):
     return task_exist
 
 def compute_mid_result(task_name, task_submit_date):
-    result = {'count_0':{}, 'count_1':{}, 'sentiment_126':{}, 'sentiment_127':{}, 'sentiment_128':{},\
-            'sentiment_129':{}, 'sentiment_130':{}, 'sensitive_score':{}, 'geo_0':{}, 'geo_1':{},\
-            'hashtag_0':{}, 'hashtag_1':{}}
+    result = {'count_0':{}, 'count_1':{}, 'sentiment_0_126':{}, 'sentiment_0_127':{}, 'sentiment_0_128':{},\
+            'sentiment_0_129':{}, 'sentiment_0_130':{}, 'sensitive_score':{}, 'geo_0':{}, 'geo_1':{},\
+            'hashtag_0':{}, 'hashtag_1':{}, 'sentiment_1_126':{}, 'sentiment_1_127':{}, \
+            'sentiment_1_128':{}, 'sentiment_1_129':{}, 'sentiment_1_130':{}}
     #geo & hashtag: day
     #other: 15min
     search_time_segment = 3600 * 4
@@ -75,7 +77,7 @@ def compute_mid_result(task_name, task_submit_date):
                 for sensitive in sensitive_sentiment_dict:
                     sentiment_dict = sensitive_sentiment_dict[sensitive]
                     for sentiment in sentiment_dict:
-                        sentiment_key = 'sentiment_'+sentiment
+                        sentiment_key = 'sentiment_'+sensitive+'_'+sentiment
                         result[sentiment_key][str(timestamp)] = sentiment_dict[sentiment]
                 #attr_sensitive_score
                 print 'compute_sensitive_word'
@@ -123,8 +125,10 @@ def compute_mid_result(task_name, task_submit_date):
 
         begin_ts += search_time_segment
     # compute peak for count/sentiment/sensitive_score
-    peak_compute_field = ['count_0', 'count_1', 'sentiment_126', 'sentiment_127', 'sentiment_128',\
-                          'sentiment_129', 'sentiment_130', 'sensitive_score']
+    peak_compute_field = ['count_0', 'count_1', 'sentiment_0_126', 'sentiment_0_127', 'sentiment_0_128',\
+                          'sentiment_0_129', 'sentiment_0_130', 'sensitive_score',\
+                          'sentiment_1_126', 'sentiment_1_127', 'sentiment_1_128', 'sentiment_1_129', \
+                          'sentiment_1_130']
     print 'compute_peak'
     for field in peak_compute_field:
         complement_item = complement_ts(result[field], start_ts, end_ts)
@@ -195,11 +199,46 @@ def get_user_comment_retweet(task_exist):
         
     return result
 
-# get monitor user social network
+# get monitor task user inner group polarization
+# time range: the latest 7 day
+# output: time is in reversed order
 def get_network(task_exist):
-    result = {}
-    return result
+    task_name = task_exist['_id']
+    submit_date = task_exist['submit_date']
+    submit_ts = date2ts(submit_date)
 
+    time_segment = 24*3600
+    now_ts = time.time()
+    now_date = ts2datetime(now_ts)
+    now_date_ts = datetime2ts(now_date)
+    iter_date_ts = now_date_ts
+    iter_count = 1
+    date_list = []
+    top_list_dict = {}
+    while True:
+        if iter_count >= 8 or iter_date_ts < submit_ts:
+            break
+        iter_date = ts2datetime(iter_date_ts)
+        date_list.append(iter_date)
+        key = 'inner_' + str(iter_date)
+        try:
+            task_date_result = es.search(index=monitor_index_name, doc_type=task_name, id=key)['_source']
+        except:
+            task_date_result = {}
+        iter_field = ['top1', 'top2', 'top3', 'top4', 'top5']
+        for filed in iter_field:
+            user_count_item = json.loads(task_date_result[field])
+            uid = user_count_item[0]
+            uname = uid2uname(uid)
+            count = user_count_item[1]
+            try:
+                top_list_dict[field].append([uid, uname, count])
+            except:
+                top_list_dict[field] = [[uid, uname, count]]
+        
+        iter_date_ts -= time_segment
+    
+    return [date_list, top_list_dict]
 
 # get user information from user_profile
 def get_user_info(uid_list):
@@ -430,3 +469,38 @@ def get_geo_weibo(task_name, geo, timestamp):
         result.append([uid, uname, geo, date, text])
     return result
 
+# use to get weibo about inner_group_polarization
+def get_inner_top_weibo(task_name, date, uid):
+    result = []
+    # step1: identify the task exist
+    # step2: search weibo from monitor_user_text by condition: task_user, date
+    task_exist = identify_task(task_name)
+    if not task_exist:
+        return 'the task is not exist'
+    task_user = task_exist['uid_list']
+    if uid not in task_user:
+        return 'the user is not exist'
+    end_ts = datetime2ts(date)
+    time_segment = 24*3600
+    start_ts = end_ts - time_segment
+    query_body = []
+    #term search: uid
+    query_body.append({'term': uid})
+    #range search: date-24*3600, date
+    query_body.append({'range':{'timestamp': {'from': start_ts, 'to': end_ts}}})
+    try:
+        weibo_result = es.search(index=text_index_name, doc_type=text_index_type, \
+                body={'query':{'bool':{'must': query_body}}, 'sort':[{'timestamp':{'order':'asc'}}], 'size':10000})['hits']['hits']
+    except Exception, e:
+        raise e
+    uname = uid2uname(uid)
+
+    for weibo_dict in weibo_result:
+        weibo_item = weibo_dict['_source']
+        text = weibo_item['text']
+        timestamp = weibo_item['timestamp']
+        weibo_date = ts2date(timestamp)
+        geo = weibo_item['geo']
+        result.append([uid, uname, geo, weibo_date, text])
+
+    return result

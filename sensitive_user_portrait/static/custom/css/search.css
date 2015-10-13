@@ -43,9 +43,11 @@ a#showBtn.webpage:hover{
 	color: #CCCCCC;
 	float:left;
 	width:220px;
+    height:33px;
 	line-height:20px;
 	padding:6px 0 5px 3px;
-	 *+margin-top:-1px;
+	margin-top:-1px;
+    margin-bottom:0px;
 	border-radius:2px;
 	background-color:#fff;
 	box-shadow:0px 0px 1px #6c6c6c inset;
@@ -78,7 +80,8 @@ margin-right:5px;
 	height:33px;
 	font-size:16px;
 	color:#FFF;
-	background-image: url(../img/images/btn-bg.jpg);
+    background-color:#337ab7;
+    border-color:#2e6da4;
 	background-repeat: repeat;
 	background-position: top;
 	font-family: "Microsoft YaHei UI";
@@ -186,16 +189,20 @@ text-indent:40px;
 	height: auto;
 	width: auto;
 }
+#textsearch {
+    margin-left:35%;
+    margin-top:45px;
+}
 #supersearch {
 	/*position: fixed;*/
-	margin-top: 80px;
+	margin-top: 150px;
 	left: 50%;
 	top: 50%;
 	z-index: 1002;
 	width: 980px;
 	background: #FFF none repeat scroll 0% 0%;
 	border: 1px solid #AA8BE8;
-margin-left: 0px;
+    margin-left: 60px;
     font_family:"Microsoft YaHei UI";
 }
 #supersearch .title {

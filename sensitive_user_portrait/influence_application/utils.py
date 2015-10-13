@@ -9,31 +9,33 @@ from sensitive_user_portrait.global_utils import es_sensitive_user_portrait as e
 from sensitive_user_portrait.global_utils import es_user_profile
 from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts
 
+search_order = {"1": "user_index", "2": 's_origin_weibo_retweeted_total_number', '3': 's_origin_weibo_comment_total_number', '4': 's_origin_weibo_retweeted_brust_n', '5': 's_origin_weibo_comment_brust_n'}
 
-
-def search_domain(domain, date, number=100):
+def search_domain(domain, date, order, number=100):
     # top influence user in domain
     count = 0
     count_n = 0
     result_list = []
     date = str(date).replace('-', '')
+    order = str(order)
 
     query_body = {
         "query":{
             "match_all": {}
         },
-        "sort": {date: {"order": "desc"}},
+        "sort": {search_order[order]: {"order": "desc"}},
         "size": 1+count
     }
 
     while 1:
-        search_results = es.search(index='copy_sensitive_user_portrait', doc_type='user', body=query_body)['hits']['hits']
+        search_results = es.search(index=date, doc_type='bci', body=query_body)['hits']['hits']
         uid_list = []
         count += 1
         for item in search_results:
             uid_list.append(item['_id'])
         portrait_results = es.mget(index='sensitive_user_portrait', doc_type='user', body={"ids":uid_list})['docs']
         for item in portrait_results:
+            print item
             domain_list = (item['_source']['topic_string']).split('&')  # attention
             if domain in set(domain_list):
                 result_list.append([item['_id'], item['_source']['uname'], item['_source']['photo_url'], item['_source']['influence'], item['_source']['sensitive'], item['_source']['importance'], item['_source']['activeness']])
@@ -104,19 +106,30 @@ def influence_distribute():
         result.append(detail)
     return [row, result]
 
-def test_influence_rank(domain, date):
+def test_influence_rank(domain, date, order):
     uid_list = domain_dict[domain]
-    search_result = es.mget(index='copy_sensitive_user_portrait', doc_type="user", body={"ids": uid_list})['docs']
+    order = str(order)
+    query_body = {
+        "query":{
+            "match_all": {}
+        },
+        "sort": {search_order[order]: {"order": "desc"}},
+        "size": 100
+    }
+    search_result = es.search(index=date, doc_type="bci", body=query_body)['hits']['hits']
     portrait_result = es.mget(index='sensitive_user_portrait', doc_type='user',  body={"ids": uid_list})['docs']
     results = []
     for i in range(len(search_result)):
         detail = []
         try:
-            detail.append(search_result[i]['_source'][date])
+            detail.append(search_result[i]['_source'][search_order[order]])
         except:
             print uid_list[i]
             detail.append(0)
-        temp = portrait_result[i]['_source']
+        try:
+            temp = portrait_result[i]['_source']
+        except:
+            continue
         detail.extend([temp['uid'], temp['uname'], temp['photo_url'], temp['activeness'], temp['importance'], temp['sensitive']])
         results.append(detail)
     sorted_list = sorted(results, key=lambda x:x[0], reverse=True)
@@ -124,8 +137,8 @@ def test_influence_rank(domain, date):
 
 
 if __name__ == '__main__':
-    #print search_domain('art', '20130907', number=10)
+    print search_domain('art', '20130907',1, number=10)
     #print search_current_es('art', 'sensitive_user_portrait', number=10)
     #print influence_distribute()
-    print test_influence_rank('公知分子', '20130907')
+    #print test_influence_rank('公知分子', '20130907')
 
