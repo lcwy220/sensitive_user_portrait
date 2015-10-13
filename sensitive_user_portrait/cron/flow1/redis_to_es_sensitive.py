@@ -30,12 +30,12 @@ def compute(user_set, es, sensitive_uid_set):
     ts = time.time()
     bulk_action = []
     count_c = 0
-    sensitive = 0
+    sensitive_user = 0
 
     weibo_redis = R_CLUSTER_FLOW1
     for user in user_set:
         if user in sensitive_uid_set:
-            sensitive = 1
+            sensitive_user = 1
             print user
         user_info = weibo_redis.hgetall(user)#dict
         sensitive_user_info = weibo_redis.hgetall('s_' + user)
@@ -246,7 +246,7 @@ def compute(user_set, es, sensitive_uid_set):
         user_item['ordinary_influence'] = user_index
         user_item['sensitive_influence'] = s_user_index
         user_item['user_index'] = 0.8*user_index + 0.2*s_user_index
-        user_item['uid'] = user
+        user_item['uid'] = str(user)
         user_item['user_fansnum'] = int(user_fansnum)
         user_item["user_friendsnum"] = int(user_friendsnum)
         user_item['origin_weibo_number'] = len(origin_weibo_list)
@@ -255,11 +255,11 @@ def compute(user_set, es, sensitive_uid_set):
         user_item['s_origin_weibo_number'] = len(s_origin_weibo_list)
         user_item['s_comment_weibo_number'] = s_comment_weibo_number
         user_item['s_retweeted_weibo_number'] = len(s_retweeted_weibo_list)
-        if sensitive:
-            user_item['s_origin_weibo_retweeted_detail'] = s_origin_weibo_retweeted_detail
-            user_item['s_origin_weibo_comment_detail'] = s_origin_weibo_comment_detail
-            user_item['s_retweeted_weibo_retweeted_detail'] = s_retweeted_weibo_retweeted_detail
-            user_item['s_retweeted_weibo_comment_detail'] = s_retweeted_weibo_comment_detail
+        if sensitive_user:
+            user_item['s_origin_weibo_retweeted_detail'] = json.dumps(s_origin_weibo_retweeted_detail)
+            user_item['s_origin_weibo_comment_detail'] = json.dumps(s_origin_weibo_comment_detail)
+            user_item['s_retweeted_weibo_retweeted_detail'] = json.dumps(s_retweeted_weibo_retweeted_detail)
+            user_item['s_retweeted_weibo_comment_detail'] = json.dumps(s_retweeted_weibo_comment_detail)
 
         user_item['origin_weibo_retweeted_total_number'] = origin_weibo_retweeted_total_number
         user_item['origin_weibo_retweeted_average_number'] = origin_weibo_retweeted_average_number
@@ -267,8 +267,8 @@ def compute(user_set, es, sensitive_uid_set):
         user_item['origin_weibo_retweeted_brust_average'] = origin_weibo_retweeted_brust[1]
         user_item['origin_weibo_top_retweeted_id'] = origin_weibo_top_retweeted_id
         user_item['origin_weibo_retweeted_brust_n'] = origin_weibo_retweeted_brust[0]
-        if sensitive:
-            user_item['origin_weibo_retweeted_detail'] = origin_weibo_retweeted_detail
+        if sensitive_user:
+            user_item['origin_weibo_retweeted_detail'] = json.dumps(origin_weibo_retweeted_detail)
 
         user_item['s_origin_weibo_retweeted_total_number'] = s_origin_weibo_retweeted_total_number
         user_item['s_origin_weibo_retweeted_average_number'] = s_origin_weibo_retweeted_average_number
@@ -283,8 +283,8 @@ def compute(user_set, es, sensitive_uid_set):
         user_item['origin_weibo_comment_brust_n'] = origin_weibo_comment_brust[0]
         user_item['origin_weibo_comment_brust_average'] = origin_weibo_comment_brust[1]
         user_item['origin_weibo_top_comment_id'] = origin_weibo_top_comment_id
-        if sensitive:
-            user_item['origin_weibo_comment_detail'] = origin_weibo_comment_detail
+        if sensitive_user:
+            user_item['origin_weibo_comment_detail'] = json.dumps(origin_weibo_comment_detail)
 
         user_item['s_origin_weibo_comment_total_number'] = s_origin_weibo_comment_total_number
         user_item['s_origin_weibo_comment_average_number'] = s_origin_weibo_comment_average_number
@@ -299,8 +299,8 @@ def compute(user_set, es, sensitive_uid_set):
         user_item['retweeted_weibo_retweeted_brust_n'] = retweeted_weibo_retweeted_brust[0]
         user_item['retweeted_weibo_retweeted_brust_average'] = retweeted_weibo_retweeted_brust[1]
         user_item['retweeted_weibo_top_retweeted_id'] = retweeted_weibo_top_retweeted_id
-        if sensitive:
-            user_item['retweeted_weibo_retweeted_detail'] = retweeted_weibo_retweeted_detail
+        if sensitive_user:
+            user_item['retweeted_weibo_retweeted_detail'] = json.dumps(retweeted_weibo_retweeted_detail)
 
         user_item['s_retweeted_weibo_retweeted_total_number'] = s_retweeted_weibo_retweeted_total_number
         user_item['s_retweeted_weibo_retweeted_average_number'] = s_retweeted_weibo_retweeted_average_number
@@ -315,8 +315,8 @@ def compute(user_set, es, sensitive_uid_set):
         user_item['retweeted_weibo_comment_brust_n'] = retweeted_weibo_comment_brust[0]
         user_item['retweeted_weibo_comment_brust_average'] = retweeted_weibo_comment_brust[1]
         user_item['retweeted_weibo_top_comment_id'] = retweeted_weibo_top_comment_id
-        if sensitive:
-            user_item['retweeted_weibo_comment_detail'] = retweeted_weibo_comment_detail
+        if sensitive_user:
+            user_item['retweeted_weibo_comment_detail'] = json.dumps(retweeted_weibo_comment_detail)
 
         user_item['s_retweeted_weibo_comment_total_number'] = s_retweeted_weibo_comment_total_number
         user_item['s_retweeted_weibo_comment_average_number'] = s_retweeted_weibo_comment_average_number

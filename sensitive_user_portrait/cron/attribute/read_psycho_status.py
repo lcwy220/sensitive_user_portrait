@@ -51,7 +51,16 @@ with open ('1010_domain.csv', 'rb') as f:
     if bulk_action:
         es.bulk(bulk_action, index='sensitive_user_portrait', doc_type='user', timeout=60)
 
-'''
 
-print type(es.get(index='20130907', doc_type="bci", id='2516316500')['_source']['retweeted_weibo_comment_detail'])
+csv_file = file('domain1013.csv', 'rb')
+reader = csv.reader(csv_file)
+for line in reader:
+    print line
+    print line[1][1]
+    sys.exit(0)
+'''
+es.delete(index= 'custom_attribute', doc_type='attribute', id='AVBa32QMGk0Kt7GIxCQW')
+es.delete(index= 'custom_attribute', doc_type='attribute', id='AVBa32rwGk0Kt7GIxCQX')
+es.delete(index= 'custom_attribute', doc_type='attribute', id='AVBa4Qx7y3nG3t1ED6gr')
+
 

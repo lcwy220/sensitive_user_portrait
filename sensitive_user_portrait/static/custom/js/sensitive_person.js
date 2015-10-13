@@ -1,3 +1,51 @@
+function Search_weibo(){
+  this.ajax_method = 'GET';
+}
+
+
+
+Search_weibo.prototype = {
+  call_sync_ajax_request:function(url, method, callback){
+    $.ajax({
+      url: url,
+      type: method,
+      dataType: 'json',
+      async: false,
+      success:callback
+    });
+  },
+  Draw_basic: function(data){
+    if (data['politics_trend'] = 'left'){
+        politics_trend = '偏左';
+    }
+    else if(data['politics_trend'] = 'right'){
+        politics_trend = '偏右'; 
+    }
+    else{
+        politics_trend = '中性';
+    }
+    $('#portrait_info').empty();
+    html = '';
+    html += '<div class="PortraitImg" ><span class="sensitive_name">姓名</span></div>';
+    html += '<div style="text-align:left;height:30px;margin-top:20px;float:left;">';
+    html += '<span style="margin-right:30px">政治倾向:<span>' + politics_trend + '</span></span>';
+    html += '<span style="margin-right:20px">敏感度:<span>' + data['sensitive'].toFixed(2) + '</span></span>';
+    html += '<span style="margin-right:20px">领域类别:<span>' + data['domain'] + '</span></span>';
+    html += '</div>';
+    $('#portrait_info').append(html);
+  draw_statictics_info_table(data);
+  },
+}
+  function draw_statictics_info_table(data){
+    console.log(data);
+  }
+//请求数据
+var Search_weibo = new Search_weibo(); 
+$(document).ready(function(){
+    var sensitive_attribute_url = "/attribute/portrait_sensitive_attribute/?uid=1009362117";
+    Search_weibo.call_sync_ajax_request(sensitive_attribute_url, Search_weibo.ajax_method, Search_weibo.Draw_basic);
+})
+
 //情绪分析
 var emotion_charts = echarts.init(document.getElementById('emotion_chart'));
 var pos_emotion=[120, 132, 101, 134, 90, 230,  210];
@@ -174,10 +222,7 @@ function createRandomItemStyle() {
     };
 }
 function drawSensitiveCloud(div_name, c_title, cloud_data){
-    var sensitiveChart = echarts.init(document.getElementById(div_name)); 
-    
-    
-    
+    var sensitiveChart = echarts.init(document.getElementById(div_name));     
     var optionSensitive = {
         title: {
             text: c_title,
@@ -204,11 +249,6 @@ function drawSensitiveCloud(div_name, c_title, cloud_data){
     sensitiveChart.setOption(optionSensitive);
 }
 //敏感词详情
-
-
-
-
-
 
 //敏感词表格
 //画表格
