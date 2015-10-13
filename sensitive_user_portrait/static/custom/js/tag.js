@@ -72,13 +72,6 @@ function editTag(){
 		$('a[id^="delIcon"]').click(function(e){
 			$(this).parent().remove();
 		});
-        /*
-        $(".addIcon").off("click").click(function(){
-            var html = '';
-            html += '<div class="tagCols"><span style="margin-left:65px;">标签名</span><input name="attribute_value" class="inputbox " type="text" value="" style="margin-left:35px;line-height:36px;"></div>';
-            $('#ADDTAG').append(html);
-        });
-        */
 	});
 }
 function addNew(){
@@ -182,6 +175,11 @@ function bindButtonClick(){
         //page_init();
         //$('#editor').modal("hide");
 	});
+    $(".addIcon").off("click").click(function(){
+        var html = '';
+        html += '<div class="tagCols"><span style="margin-left:65px;">标签名</span><input name="user_attribute_value" class="inputbox " type="text" value="" style="margin-left:35px;"></div>';
+        $('#ADDTAG').append(html);
+    });
 }
 
 
