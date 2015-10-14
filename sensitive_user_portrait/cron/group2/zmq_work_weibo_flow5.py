@@ -95,6 +95,10 @@ if __name__ == "__main__":
     print 'monitor_user_list:', monitor_user_list
     update_user_ts = time.time()
     bulk_action = []
+
+    #test
+    not_compute_comment_retweet_user = ['1311967407', '1671386130', '1653255165']
+
     while 1:
         '''
         use to update user list by 15min

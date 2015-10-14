@@ -162,6 +162,7 @@ if __name__ == "__main__":
             monitor_user_list = get_track_task_user()
 
         item = receiver.recv_json()
+        #test
         if not item:
             continue 
         

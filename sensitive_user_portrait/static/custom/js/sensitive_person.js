@@ -1,8 +1,27 @@
+Date.prototype.format = function(format) {
+    var o = {
+        "M+" : this.getMonth()+1, //month
+        "d+" : this.getDate(), //day
+        "h+" : this.getHours(), //hour
+        "m+" : this.getMinutes(), //minute
+        "s+" : this.getSeconds(), //second
+        "q+" : Math.floor((this.getMonth()+3)/3), //quarter
+        "S" : this.getMilliseconds() //millisecond
+    }
+    if(/(y+)/.test(format)){
+        format=format.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+    }
+    for(var k in o){
+        if(new RegExp("("+ k +")").test(format)){
+            format = format.replace(RegExp.$1, RegExp.$1.length==1 ? o[k] : ("00"+ o[k]).substr((""+ o[k]).length));
+        }
+    }
+    return format;
+}
+
 function Search_weibo(){
   this.ajax_method = 'GET';
 }
-
-
 
 Search_weibo.prototype = {
   call_sync_ajax_request:function(url, method, callback){
@@ -15,6 +34,7 @@ Search_weibo.prototype = {
     });
   },
   Draw_basic: function(data){
+    console.log(data);
     if (data['politics_trend'] = 'left'){
         politics_trend = '偏左';
     }
@@ -28,30 +48,261 @@ Search_weibo.prototype = {
     html = '';
     html += '<div class="PortraitImg" ><span class="sensitive_name">姓名</span></div>';
     html += '<div style="text-align:left;height:30px;margin-top:20px;float:left;">';
+    html += '<span style="margin-right:30px"><img src=' + data['photo_url'] + '></span>';
+    html += '<span style="margin-right:30px">昵称:<span>' + data['uname'] + '</span></span>';
     html += '<span style="margin-right:30px">政治倾向:<span>' + politics_trend + '</span></span>';
     html += '<span style="margin-right:20px">敏感度:<span>' + data['sensitive'].toFixed(2) + '</span></span>';
     html += '<span style="margin-right:20px">领域类别:<span>' + data['domain'] + '</span></span>';
     html += '</div>';
     $('#portrait_info').append(html);
   draw_statictics_info_table(data);
+  draw_influence_chart_info(data);
+  draw_location_7_info(data);
+  draw_today_sensi_word(data);
+  // draw_hashtag_cloud(data);
+  draw_sensi_word_cloud(data);
+  draw_sentiment_trend(data);
+  var hashtag_table = data['sensitive_hashtag'];
+  var sensiword_table = data['sensitive_words'];
+  draw_hashtag_sensiword_table('hash_detail_body',hashtag_table);
+  draw_hashtag_sensiword_table('sensi_detail_body',sensiword_table);
+  var repost_table = data['sensitive_follow'];
+  var retweeted_table = data['sensitive_retweet'];
+  var top_at_table = data['sensitive_at'];
+  draw_mutual_info('repost', repost_table);
+  draw_mutual_info('retweeted', retweeted_table);
+  draw_mutual_info('top_at', top_at_table);
   },
+  Draw_sensi_word_table: function(data){
+    $('#sensi_word_table').empty();
+    html = '';
+    html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive" style="width:450px">';
+    html += '<tr><th style="text-align:center;width:50px;">排名</th><th style="text-align:center;width:50px;">敏感词</th>';
+    html += '<th style="text-align:center;width:50px;">词频</th><th style="text-align:center;width:50px;">等级</th><th style="text-align:center;width:50px;">类别</th></tr>';
+    var min_row = Math.min(10, data.length);
+    for (var i = 0; i < min_row; i++){
+       var s = (i+1).toString();
+       var m = i.toString();
+       html += '<tr><th style="text-align:center;">' + s + '</th>';
+       html += '<th style="text-align:center;">' + data[m]['0'] + '</th>';
+       html += '<th style="text-align:center;">' + data[m]['1'] + '</th>';
+       html += '<th style="text-align:center;">' + data[m]['2'] + '</th>';
+       html += '<th style="text-align:center;">' + data[m]['3'] + '</th></tr>';      
+    };
+    html += '</table>'; 
+    $('#sensi_word_table').append(html);
+  }
 }
   function draw_statictics_info_table(data){
-    console.log(data);
+    $('#statictics_info').empty();
+    html = '';
+    html += '<h2>统计信息</h2>';
+    html += '<table class="statictics" width="750" border="1">';
+    html += ' <tr>';
+    html += '<td style="text-align:center" class="col_1">统计信息</td><td style="text-align:center">敏感/微博总数</td><td style="text-align:center">敏感/总转发</td><td style="text-align:center" >敏感/总评论</td>';
+    html += '</tr>';
+    html += '<tr>';
+    html += '<td style="text-align:center"  class="col_1">原创</td>';
+    html += '<td style="text-align:center"><span style="color:red">' + data['sensitive_origin_weibo_number'] + '</span>/<span>' + data['origin_weibo_total_number'] + '</span></td>';
+    html += '<td style="text-align:center"><span style="color:red">' + data['sensitive_origin_weibo_retweeted_total_number'] + '</span>/<span>' + data['origin_weibo_retweeted_total_number'] + '</span></td>';
+    html += '<td style="text-align:center"><span style="color:red">' + data['sensitive_origin_weibo_comment_total_number'] + '</span>/<span>' + data['origin_weibo_comment_total_number'] + '</span></td>';
+    html += '</tr>';
+    html += '<tr>';
+    html += '<td style="text-align:center"  class="col_1">转发</td>';
+    html += '<td style="text-align:center"> <span class="re_sensitive" style="color:red">' + data['sensitive_retweeted_weibo_number'] + '</span>/<span class="re_total">' + data['retweeted_weibo_total_number'] + '</span></td>';
+    html += '<td style="text-align:center"><span class="re_sensitive" style="color:red">' + data['sensitive_retweeted_weibo_retweeted_total_number'] + '</span>/<span class="re_total">' + data['retweeted_weibo_retweeted_total_number'] + '</span></td>';
+    html += '<td style="text-align:center"><span class="re_sensitive" style="color:red">' + data['sensitive_retweeted_weibo_comment_total_number'] + '</span>/<span class="re_total">' + data['retweeted_weibo_comment_total_number'] + '</span></td>';
+    html += '</tr>';
+    html += '</table>';
+    $('#statictics_info').append(html);
   }
-//请求数据
-var Search_weibo = new Search_weibo(); 
-$(document).ready(function(){
-    var sensitive_attribute_url = "/attribute/portrait_sensitive_attribute/?uid=1009362117";
-    Search_weibo.call_sync_ajax_request(sensitive_attribute_url, Search_weibo.ajax_method, Search_weibo.Draw_basic);
-})
+function draw_influence_chart_info(data){
+    data_x = [];
+    data_y = [];
+    for (var i = 0; i < data['sensitive_time_distribute'].length; i++) {
+        var s = i.toString();
+        value_x = new Date(parseInt(data['sensitive_time_distribute'][s]['0'])*1000).format("MM-dd hh:mm");
+        value_y = data['sensitive_time_distribute'][s]['1'];
+        data_x.push(value_x);
+        data_y.push(value_y);
+       }
+    console.log(data_x);
+    console.log(data_y);
+    var influenceChart = echarts.init(document.getElementById('influence_chart_info'));         
+    var Influenceoption = {
+        title : {
+            text: '敏感微博量时间走势',
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['微博量']
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                //data : line_chart_dates
+                data:data_x
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value',
+            }
+        ],
+        series : [
+            {
+                name:'微博量',
+                type:'line',
+                //data:dataFixed,
+                data:data_y,
+                
+                markPoint : {
+                    data : [
+                        {type : 'max', name: '最大值'},
+                        {type : 'min', name: '最小值'}
+                    ]
+                },
+                markLine : {
+                    data : [
+                        {type : 'average', name: '平均值'}
+                    ]
+                }
+            },
+        ]
+    };
+        // 为echarts对象加载数据
+    influenceChart.setOption(Influenceoption); 
+}
 
-//情绪分析
-var emotion_charts = echarts.init(document.getElementById('emotion_chart'));
-var pos_emotion=[120, 132, 101, 134, 90, 230,  210];
-var neg_emotion=[220, 182, 191, 234, 290, 330, 310];
-var neu_emotion=[150, 232, 201, 154, 190, 330, 410];
-var emotion_data = {
+function draw_location_7_info(data){
+    $('#location_7_info').empty();
+    html = '';
+    html += '<h3>一周活动轨迹</h3><div class="clearfix course_nr"><ul class="course_nr2" style="margin:0px;">';
+    for (var i =0;i < data['sensitive_geo_distribute'].length; i++){
+        s = i.toString();
+        distribute_date = data['sensitive_geo_distribute'][s]['0'];
+        console.log(data['sensitive_geo_distribute'][s]['1']);
+        if (data['sensitive_geo_distribute'][s]['1'].length == 0){
+            distribute_geo = '无地理位置数据';
+        }
+        else{
+            distribute_geo_total = data['sensitive_geo_distribute'][s]['1'];
+            distribute_geo = distribute_geo_total['0']['0'];
+        }      
+        html += '<li class="shiji">';
+        html += '<p><span class="ico">' + distribute_date + '</span>&nbsp&nbsp&nbsp---<span>' + distribute_geo + '</span></p>';
+        html += '</li>';
+    }
+    html += '</ul></div>';
+    $('#location_7_info').append(html);
+}
+
+function draw_today_sensi_word(data){
+    $('#today_sensitive_word').empty();
+    html = ''
+    html += '今日敏感词：<strong>';
+    for (var key in data['today_sensitive_words']){
+        html += '<span>' + key + '&nbsp&nbsp</span>';
+    }
+    html += '</strong>'
+    $('#today_sensitive_word').append(html);
+}
+
+
+function draw_hashtag_cloud(data){
+    keyword = [];
+    for (i=0;i<data['sensitive_hashtag'].length;i++){
+      s=i.toString();
+      word = {};
+      word['name'] = data['sensitive_hashtag'][s]['0'];
+      word['value'] = data['sensitive_hashtag'][s]['1']*60;
+      word['itemStyle'] = createRandomItemStyle();
+      keyword.push(word);
+    }
+    var myChart = echarts.init(document.getElementById('hashtag_cloud'));
+    var option = {
+    title: {
+        text: '',
+    },
+    tooltip: {
+        show: true
+    },
+    series: [{
+        name: '关键词',
+        type: 'wordCloud',
+        size: ['80%', '80%'],
+        textRotation : [0, 45, 90, -45],
+        textPadding: 0,
+        autoSize: {
+            enable: true,
+            minSize: 15
+        },
+        data:keyword
+    }]
+};
+                    
+      myChart.setOption(option);
+}
+
+
+function draw_sensi_word_cloud(data){
+    keyword = [];
+    for (i=0;i<data['sensitive_words'].length;i++){
+      s=i.toString();
+      word = {};
+      word['name'] = data['sensitive_words'][s]['0'];
+      word['value'] = data['sensitive_words'][s]['1']*60;
+      word['itemStyle'] = createRandomItemStyle();
+      keyword.push(word);
+    }
+    var myChart = echarts.init(document.getElementById('sensi_word_cloud'));
+    var option = {
+    title: {
+        text: '',
+    },
+    tooltip: {
+        show: true
+    },
+    series: [{
+        name: '关键词',
+        type: 'wordCloud',
+        size: ['80%', '80%'],
+        textRotation : [0, 45, 90, -45],
+        textPadding: 0,
+        autoSize: {
+            enable: true,
+            minSize: 15
+        },
+        data:keyword
+    }]
+};
+                    
+      myChart.setOption(option);
+}
+
+function createRandomItemStyle(){
+      
+    return {
+        normal: {
+            color: 'rgb(' + [
+                Math.round(Math.random() * 160),
+                Math.round(Math.random() * 160),
+                Math.round(Math.random() * 160)
+            ].join(',') + ')'
+        }
+    };
+}
+
+function draw_sentiment_trend(data){
+   negative_trend = data['sentiment_trend']['nagetive'];
+   neutral_trend = data['sentiment_trend']['neutral'];
+   positive_trend = data['sentiment_trend']['positive'];
+   var emotion_charts = echarts.init(document.getElementById('emotion_chart'));
+   var emotion_data = {
     tooltip : {
         trigger: 'axis'
     },
@@ -86,19 +337,19 @@ var emotion_data = {
             name:'积极',
             type:'line',
             stack: '总量',
-            data:[]
+            data:positive_trend
         },
         {
             name:'消极',
             type:'line',
             stack: '总量',
-            data:[]
+            data:negative_trend
         },
         {
             name:'中性',
             type:'line',
             stack: '总量',
-            data:[]
+            data:neutral_trend
         }
     ]
 };        
@@ -106,148 +357,80 @@ var emotion_data = {
 emotion_data["series"][0]["data"]=pos_emotion;
 emotion_data["series"][1]["data"]=neg_emotion;
 emotion_data["series"][2]["data"]=neu_emotion;
-emotion_charts.setOption(emotion_data);
+emotion_charts.setOption(emotion_data); 
+}
+//请求数据
+var Search_weibo = new Search_weibo(); 
+$(document).ready(function(){
+    var sensitive_attribute_url = "/attribute/portrait_sensitive_attribute/?uid=1009362117";
+    Search_weibo.call_sync_ajax_request(sensitive_attribute_url, Search_weibo.ajax_method, Search_weibo.Draw_basic);
+    get_level = $("#sensi_word_level").val();
+    get_category = $("#sensi_word_class").val();
+    console.log(get_level);
+    console.log(get_category);
+    var level_category_url = "/attribute/sort_sensitive_words/?uid=1009362117&level=" + get_level + "&category=" + get_category;
+    Search_weibo.call_sync_ajax_request(level_category_url, Search_weibo.ajax_method, Search_weibo.Draw_sensi_word_table);
+})
+
+function draw_hashtag_sensiword_table(div,data){
+    $('#'+div).empty();
+    html = '';
+    if (data.length == 0){
+        $('#'+div).html('暂无数据');
+    }
+    else{
+        html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
+        html += '<tr><th style="text-align:center">序号</th><th style="text-align:center">敏感词</th>';
+        html += '<th style="text-align:center">词频</th><th style="text-align:center">等级</th><th style="text-align:center">类别</th></tr>';
+        for (var i = 0; i < data.length; i++) {
+           var s = (i+1).toString();
+           var m = i.toString();
+           html += '<tr><th style="text-align:center;">' + s + '</th>';
+           html += '<th style="text-align:center;">' + data[m]['0'] + '</th>';
+           html += '<th style="text-align:center;">' + data[m]['1'] + '</th>';
+           html += '<th style="text-align:center;">' + data[m]['2'] + '</th>';
+           html += '<th style="text-align:center;">' + data[m]['3'] + '</th></tr>';      
+        };
+        html += '</table>'; 
+    }
+    $('#'+div).append(html);
+  }
+
+function draw_mutual_info(div,data){
+    console.log(data);
+    $('#'+div).empty();
+    html = '';
+    if (data['1'] == 0){
+        $('#'+div).html('暂无数据');
+    }
+    else
+    {
+        html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
+        html += '<tr><th style="text-align:center">昵称</th>';
+        html += '<th style="text-align:center">交互次数</th>';
+        html += '<th style="text-align:center">是否入库</th></tr>';
+        for (var i = 0; i < data.length; i++) {
+           var s = (i+1).toString();
+           var m = i.toString();
+           html += '<tr>';
+           html += '<th style="text-align:center;">' + data['0'][m]['1']['0'] + '</th>';
+           html += '<th style="text-align:center;">' + data['0'][m]['1']['1'] + '</th>';
+           html += '<th style="text-align:center;">' + data['0'][m]['1']['2'] + '</th></tr>';      
+        };
+    }
+    $('#'+div).append(html);
+}
+
+
+//情绪分析
+
 
 //影响力走势图
-var influenceChart = echarts.init(document.getElementById('influence_chart')); 
-        
-    var Influenceoption = {
-        title : {
-            text: '影响力走势图',
-        },
-        tooltip : {
-            trigger: 'axis'
-        },
-        legend: {
-            data:['影响力']
-        },
-        calculable : true,
-        xAxis : [
-            {
-                type : 'category',
-                boundaryGap : false,
-                //data : line_chart_dates
-				data:['2015-09-01','2015-09-02','2015-09-03','2015-09-04','2015-09-05','2015-09-06','2015-09-07']
-            }
-        ],
-        yAxis : [
-            {
-                type : 'value',
-            }
-        ],
-        series : [
-            {
-                name:'影响力',
-                type:'line',
-                //data:dataFixed,
-				data:[],
-				
-                markPoint : {
-                    data : [
-                        {type : 'max', name: '最大值'},
-                        {type : 'min', name: '最小值'}
-                    ]
-                },
-                markLine : {
-                    data : [
-                        {type : 'average', name: '平均值'}
-                    ]
-                }
-            },
-        ]
-    };
-        // 为echarts对象加载数据
-Influenceoption["series"][0]["data"] = [345,23,55,25,897,34,88,100]
-influenceChart.setOption(Influenceoption); 
-//一周轨迹分布
-$('.course_nr2').find('.shiji').slideDown(600);
-
-for(i=0;i<7;i++){
-		document.getElementById('d'+(i+1)).innerHTML = '09-01';
-
-		document.getElementById('city'+(i+1)).innerHTML = '北京';
-		/*
-        var item = track_data[i];
-        var date = item[0];
-        var city = item[1];
-        document.getElementById('d'+(i+1)).innerHTML = date.substring(4,6) + '-' + date.substring(6,9);
-        if(city.length > 0){
-            document.getElementById('city'+(i+1)).innerHTML = city.join(',');
-        }else{
-            $('#city'+(i+1)).addClass('gray');
-            document.getElementById('city'+(i+1)).innerHTML = '未发布微博';
-        }
-		*/
-		
-	}// JavaScript Document
-
-//敏感词
-var sensitive_words = ['a1', 'b1', '1c', '1d'];
-var word_length = sensitive_words.length;
-var addwords = ''
-for(i=0;i<word_length;i++){
-    addwords = addwords+'<span>'+sensitive_words[i]+',</span>'
-}
-document.getElementById('sensi_words').innerHTML = addwords
-
-//hashtag和敏感词云
-var sensi_cloud_list = [['但是',23], ['345',78], ['是的',167], ['和你',90]];
-var hash_cloud_list = [['但是',23], ['345',78], ['是的',167], ['和你',90]];
-//var hash_cloud_list = [{'但是':23}, {'345':78}, {'是的':167}, {'和你':90}, {'请问':233}, {'你':320}, {'热':99},{'新材':210} , {'突然':150}, {'速度';330}, {'朋友':139}];
-drawSensitiveCloud('hashtag_cloud', '', hash_cloud_list);
-drawSensitiveCloud('sensi_word_cloud', '', sensi_cloud_list);
-
-function getCloudData(cloud_data){
-        var chart_data = new Array();
-        for (var i = 0;i < cloud_data.length;i++){
-            var item = cloud_data[i];
-            var item_dict =  {
-                name: item[0],
-                value: item[1] * 100,
-                itemStyle: createRandomItemStyle()
-            };
-            chart_data.push(item_dict);
-        }
-        return chart_data;
-}
-function createRandomItemStyle() {
-    return {
-        normal: {
-            color: 'rgb(' + [
-                Math.round(Math.random() * 160),
-                Math.round(Math.random() * 160),
-                Math.round(Math.random() * 160)
-            ].join(',') + ')'
-        }
-    };
-}
-function drawSensitiveCloud(div_name, c_title, cloud_data){
-    var sensitiveChart = echarts.init(document.getElementById(div_name));     
-    var optionSensitive = {
-        title: {
-            text: c_title,
-        },
-        tooltip: {
-            show: true
-        },
-        series: [{
-            type: 'wordCloud',
-            size: ['80%', '80%'],
-            textRotation : [0, 45, 90, -45],
-            textPadding: 0,
-            autoSize: {
-                enable: true,
-                minSize: 14
-            },
-            data: []
-        }]
-    };
-    var chart_data = getCloudData(cloud_data);
 
 
-    optionSensitive["series"][0]["data"] = chart_data;
-    sensitiveChart.setOption(optionSensitive);
-}
+
+
+
 //敏感词详情
 
 //敏感词表格
@@ -255,8 +438,7 @@ function drawSensitiveCloud(div_name, c_title, cloud_data){
 var table_data=[{'word':'敏感词1','frency':20,'word_level':'leve2','word_class':'b类词'},{'word':'敏感词2','frency':18,'word_level':'leve2','word_class':'b类词'},{'word':'敏感词3','frency':17,'word_level':'leve2','word_class':'b类词'},{'word':'敏感词4','frency':12,'word_level':'leve2','word_class':'a类词'},{'word':'敏感词5','frency':10,'word_level':'leve1','word_class':'b类词'},{'word':'敏感词6','frency':9,'word_level':'leve2','word_class':'b类词'},{'word':'敏感词7','frency':8,'word_level':'leve1','word_class':'a类词'},]   
 
 $('#show_sensi_word').click(function (){
-    var word_level=$("#sensi_word_level").val();
-    var word_class=$("#sensi_word_class").val();
+
     var choose_data=[];
     //var need_data=[]
     if (word_level==0){
@@ -331,39 +513,6 @@ drawRank('sensiword_table','敏感词', choose_data, 'word');
 
     })
 //画表格：语言属性
-function drawRank(div_name,c_name, rank_data, item_name){
-    if (!rank_data){
-        rank_data = new Array();
-    }
-    $('#'+ div_name).empty();
-        html = '';
-        html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
-        html += '<tr><th style="text-align:center;width:50px;">排名</th><th style="text-align:center;width:150px;">'+c_name+'</th>';
-        //html += '<th style="text-align:center">' + cname + '</th></tr>';
-        var min_row = Math.min(10, rank_data.length);
-        for (var i = 0; i < min_row; i++) {
-           var s = i.toString();
-           var m = i + 1;
-           var item = rank_data[i];
-           var sensitive_word;
-           if ((item[item_name] == 'unknown') || (item[item_name] == '0')){
-               sensitive_word = '未知';
-           }
-           else{
-               sensitive_word = item[item_name];
-           }
-         html += '<tr><th style="text-align:center;width:50px;">' + m + '</th>';
-         html += '<th style="text-align:center;width:150px;">' + sensitive_word + '</a></th>';
-         //html += '<th style="text-align:center">' + item[2].toFixed(2) + '</th></tr>';
-        };
-        html += '</table>'; 
-        $('#' + div_name).append(html);
-        }  
-drawRank('sensiword_table','敏感词',table_data, 'word');
-var dict_sensi_cloud = getCloudData(sensi_cloud_list);
-var dict_hash_cloud = getCloudData(hash_cloud_list);
-drawRank('sensi_detail_body','敏感词', dict_sensi_cloud, 'name');
-drawRank('hash_detail_body','敏感词', dict_hash_cloud, 'name');
 
 
 // 敏感微博列表

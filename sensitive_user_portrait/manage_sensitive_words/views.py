@@ -49,11 +49,8 @@ def ajax_identify_in():
 def ajax_search_sensitive_words():
     level = request.args.get('level', 0)
     category = request.args.get('category', '')
-    if level or category:
-        results = search_sensitive_words(level, category)
-        return json.dumps(results)
-    else:
-        return '0'
+    results = search_sensitive_words(level, category)
+    return json.dumps(results)
 
 @mod.route('/self_add_in/')
 def ajax_self_add_in():
