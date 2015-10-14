@@ -17,7 +17,7 @@ def ajax_imagine():
     weight_list = query_weight.split(',')
 
     if len(keywords_list) != len(weight_list):
-        return '0'
+        return json.dumps([])
 
     query_fields_dict = {}
     for i in range(len(keywords_list)):
