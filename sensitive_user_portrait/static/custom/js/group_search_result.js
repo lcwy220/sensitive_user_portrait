@@ -56,7 +56,7 @@ function group_confirm_button(){
       return;
   }
   console.log(group_confirm_uids);
-  var group_ajax_url = '/group/submit_task/';
+  var group_ajax_url = '/group/submit_track_task/';
   var group_url = '/index/group_task/';
   var group_name = $('input[name="group_name"]').val();
   var remark = $('input[name="remark"]').val();

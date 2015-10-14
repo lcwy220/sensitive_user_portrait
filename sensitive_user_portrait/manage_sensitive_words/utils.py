@@ -8,18 +8,36 @@
 import redis
 import time
 import json
+from elasticsearch import Elasticsearch
 from sensitive_user_portrait.global_utils import R_RECOMMENTATION as r
+from sensitive_user_portrait.global_utils import es_user_profile
 from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts
 
 def recommend_new_words(date_list):
-    results = dict()
+    results = []
     for date in date_list:
         date = date.replace('-', '')
         words_dict = r.hgetall('recommend_sensitive_words_'+date)
         if words_dict:
-            #words_dict = json.loads(words_dict)
-            results[date] = words_dict
-    return results
+            for key, value in words_dict.items():
+                detail = []
+                detail.append(key)
+                value = json.loads(value)
+                uid_list = value[0]
+                uname = []
+                try:
+                    search_results = es_user_profile.mget(index='weibo_user', doc_type='user', body={'ids': uid_list})['docs']
+                    for item in search_results: 
+                        if item['found']:
+                            uname.append(item['_source']['nick_name'])
+                        else:
+                            uname.append('unknown')
+                except:
+                    uname = uid_list
+                detail.extend([uname,value[1]])
+                results.append(detail)
+    sorted_results = sorted(results, key=lambda x:x[2], reverse=True)
+    return sorted_results
 
 def identify_in(date, words_list):
     # identify_in date and words_list(include level and category, [word, level, category])
@@ -36,35 +54,30 @@ def identify_in(date, words_list):
     return '1'
 
 
-def search_sensitive_words(state):
+def search_sensitive_words(level, category): # level: 0, 1, 2, 3; category: '', or other category
+    if not level and not category:
+        return []
     results = dict()
-    words_list = []
+    word_list = []
     words_dict = r.hgetall('sensitive_words')
     if words_dict:
-        if state == "level":
-            level_1 = []
-            level_2 = []
-            level_3 = []
+        if level and category:
+            word_list = []
             for k,v in words_dict.items():
                 word_state = json.loads(v)
-                if int(word_state[0]) == 1:
-                    level_1.append(k)
-                elif int(word_state[0]) == 2:
-                    level_2.append(k)
-                else:
-                    level_3.append(k)
-            results['level_1'] = level_1
-            results['level_2'] = level_2
-            results['level_3'] = level_3
-        elif state == "category":
+                if int(level) == int(word_state[0]) and category == word_state[1]:
+                    word_list.extend([k, word_state[0], word_state[1]])
+        elif not level and category:
             for k,v in words_dict.items():
                 word_state = json.loads(v)
-                try:
-                    results[word_state[1]].append(k)
-                except:
-                    results[word_state[1]] = [k]
+                if catetory == word_state[1]:
+                    word_list.append([k, word_state[0], word_state[1]])
         else:
-            pass
+            for k,v in words_dict.items():
+                word_state = json.loads(v)
+                if int(level) == int(word_state[0]):
+                    word_list.append([k, word_state[0], word_state[1]])
+    return word_list
 
     return results
 

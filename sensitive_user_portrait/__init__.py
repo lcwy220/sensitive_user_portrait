@@ -19,7 +19,6 @@ from sensitive_user_portrait.influence_application.views import mod as influence
 """
 from sensitive_user_portrait.attribute.views import mod as attributeModule
 from sensitive_user_portrait.manage.views import mod as manageModule
-from sensitive_user_portrait.recommentation.views import mod as recommentationModule
 from sensitive_user_portrait.profile.views import mod as profileModule
 from sensitive_user_portrait.overview.views import mod as overviewModule
 from sensitive_user_portrait.influence_application.views import mod as influenceModule
@@ -70,7 +69,6 @@ def create_app():
 
 def register_blueprints(app):
     app.register_blueprint(indexModule)
-    app.register_blueprint(indexModule)
     app.register_blueprint(recommentationModule)
     app.register_blueprint(groupModule)
     app.register_blueprint(tagModule)
@@ -84,7 +82,6 @@ def register_blueprints(app):
     """
     app.register_blueprint(attributeModule)
     app.register_blueprint(manageModule)
-    app.register_blueprint(recommentationModule)
     app.register_blueprint(profileModule)
     app.register_blueprint(overviewModule)
     app.register_blueprint(influenceModule)

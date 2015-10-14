@@ -6,10 +6,15 @@
     <link rel="stylesheet" href="/static/custom/css/jelevator.css"  media="screen" />
     <style>
     	input[type='radio'] {margin:4px; line-height: normal;opacity: 1; position: static;}
-    	.container{width: 820px;}
+    .box{width:310px;height:300px;float:left;}
+    .important{}
+    #page {width:990px;padding:10px;background-color:#fff;margin:auto}}
+    #basic span {color:red;}
     </style>
 {% endblock custom_css  %}
 {% block body %}
+  <div id="page">
+        <div id="content">
     	<h2>影响力排名</h2>
         <div class="tab-pane" id="custom" style="margin-top:10px">
         	<span>选择日期：</span>
@@ -17,21 +22,7 @@
 
             </span>
         	<span style="margin-left:15px">选择领域：</span>
-                <select id="domain_select">';
-                    <option value="1" selected="selected">高校微博</option>';
-                    <option value="2">境内机构</option>';
-                    <option value="3">境外机构</option>';
-                    <option value="4">媒体</option>';
-                    <option value="5">境外媒体</option>';
-                    <option value="6">民间组织</option>';
-                    <option value="7">律师</option>';
-                    <option value="8">政府机构人士</option>';
-                    <option value="9">媒体人士</option>';
-                    <option value="10">活跃人士</option>';
-                    <option value="11">草根</option>';
-                    <option value="12">商业人士</option>';
-                    <option value="13">其他</option>';
-                </select>';
+                <span id="domain"></span>
         	<div id="domain_rank" style="margin-top:10px"></div>
         	<div class="tab-pane" id="custom" style="margin-top:10px">
         		<span>排名指标:</span>
@@ -49,14 +40,26 @@
     	    	</span>
         	</div>
     	</div>
-    	<div id="total_table0" >    	</div>
+    	<div id="total_table0"> <br><br><br><br><br>       </div>
         <h2>影响力分布</h2>
-        <div id="distribute"></div>
-
+        <div id="distribute"  style="width:900px;height:400px;"></div>
+        <div style=" width:900px;">0-200：极低影响力；200-500：较低影响力；500-700：一般影响力；700-900：较高影响力；900-1100：高影响力；1100以上：极高影响力</div>
+    </div>
+</div>
 {% endblock body %}
 
 {% block end_js %}
+<script  src="/static/scripts/jquery-jelevator-1.0.3.min.js"></script>
 <script type="text/javascript" src="/static/custom/js/rank_extra.js"></script>
 <script type="text/javascript" src="/static/custom/js/rank_table.js"></script>
+<script type="text/javascript">
+    jQuery(function($){
+        $("h2").jElevator({
+            showTopButton: true,
+            showBottomButton: true,
+            showSectionsMenu: true
+        });
+    });
+ </script>
 <script type="text/javascript" src="/static/custom/js/influence.js"></script>
 {% endblock end_js %}

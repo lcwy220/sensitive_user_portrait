@@ -49,7 +49,10 @@
       body {
          padding-top: 50px;
          background-color: #333;
-      }   
+     }
+     #nav-bar .dropdown-menu .divider{
+         height:2px;
+     }
    </style>
 </head>
 
@@ -71,14 +74,21 @@
                   </a>
                   <ul class="dropdown-menu">
                   <li><a href="/index/overview/">整体概览</a></li>
-                  <li><a href="/index/recommend_in/">入库管理</a></li>
-                  <li><a href="/index/tag/">自定义标签</a></li>
-                  <li><a href="/index/sensitive_words/">敏感词管理</a></li>
-                  <!--<li><a href="/index/group/">群体分析</a></li>-->
                   <li><a href="/index/search/">人物检索</a></li>
                   <li><a href="/index/influence/">影响力分析</a></li>
-                  <li><a href="/index/group/">重点人物监控</a></li>
+                  <li class="divider"></li>
+                  <li><a href="/index/recommend_in/">入库管理</a></li>
+                  <li><a href="/index/sensitive_words/">敏感词管理</a></li>
+                  <li class="divider"></li>
+                  <!--<li><a href="/index/tag/">自定义标签</a></li>-->
+                  <!--<li><a href="/index/group/">群体分析</a></li>-->
+                  <!--<li><a href="/index/group/">重点人物监控</a></li>-->
                   <!-- <li><a href="/index/contrast/">对比分析</a></li>-->
+                  <li><a href="/index/tag_manage/">系统标签管理</a></li>
+                  <li><a href="/index/tag_search/">用户标签标注</a></li>
+                  <li class="divider"></li>
+                  <li><a href="/index/group_task/">系统监控管理</a></li>
+                  <li><a href="/index/group_search/">系统用户监控</a></li>
                   <li class="divider"></li>
                   <li><a href="/index/">主页Home</a></li>
                </ul>
@@ -106,11 +116,8 @@
    <div class="container-fluid">
       <div class="row-fluid">
          <div class="metro span12">
-            <div class="metro-sections">
-   
+            <div class="metro-sections" style="height:350px";>
                <div id="section1" class="metro-section tile-span-4">
-					<h2>Bootstrap Metro</h2>
-					
                   <a class="tile wide imagetext bg-color-blueDark" href="/index/overview/">
                      <div class="image-wrapper">
                         <img src="/static/content/img/metro-tiles.jpg" />
@@ -124,6 +131,13 @@
                  </a>
                  -->
    
+                  <a class="tile wide imagetext bg-color-blue" href="/index/search/">
+                     <div class="image-wrapper">
+                        <img src="/static/content/img/My Apps.png" />
+                     </div>
+                    
+                     <span class="app-label">人物检索</span>
+                  </a>
                   <a class="tile app wide bg-color-greenDark" href="/index/influence/">
                      <div class="image-wrapper">
                         <img src="/static/content/img/My Apps.png" alt=""/>
@@ -137,28 +151,17 @@
                      </div>
                      <span class="app-label">对比分析</span>
                   </a>
-                -->
                   <a class="tile app bg-color-red" href="/index/group/">
                      <div class="image-wrapper">
                         <span class="icon icon-publish"></span>
                      </div>
                      <span class="app-label">重点人物监控</span>
                   </a>
+                -->
 
                </div>
    
                <div id="section2" class="metro-section tile-span-4">
-   
-                  <h2>Bootstrap Metro</h2>
-   
-                  <a class="tile wide imagetext bg-color-blue" href="/index/search/">
-                     <div class="image-wrapper">
-                        <img src="/static/content/img/My Apps.png" />
-                     </div>
-                    
-                     <span class="app-label">人物检索</span>
-                  </a>
-   
                   <a class="tile wide imagetext bg-color-blueDark" href="/index/recommend_in/">
                      <div class="image-wrapper">
                         <img src="/static/content/img/Coding app.png" />
@@ -173,13 +176,53 @@
                      <span class="app-label">敏感词管理</span>
                   </a>
    
-                  <a class="tile app bg-color-red" href="/index/tag/">
+                  <!--<a class="tile app bg-color-red" href="/index/tag/">
                      <div class="image-wrapper">
                         <img src="/static/content/img/Devices.png" alt="" />
                      </div>
                      <span class="app-label">自定义标签</span>
-                  </a>
+                 </a>-->
    
+             </div>
+         </div> 
+            <div class="metro-sections" style="height:350px;">
+               <div id="section3" class="metro-section tile-span-4">
+                  <h2>自定义标签</h2>
+                    <a class="tile wide imagetext bg-color-blueDark" href="/index/tag_manage/">
+                         <div class="image-wrapper">
+                            <img src="/static/content/img/My Apps.png" />
+                         </div>
+                         <div class="app-label">系统标签管理</div>
+                     </a>
+                    <a class="tile wide imagetext bg-color-Darkblue" href="/index/tag_search/">
+                         <div class="image-wrapper">
+                        <img src="/static/content/img/My Apps.png" />
+                         </div>
+                         <div class="app-label">用户标签标注</div>
+                    </a>
+               </div>
+               <div id="section4" class="metro-section tile-span-4">
+                  <h2>重点人物监控</h2>
+                <a class="tile wide imagetext bg-color-blueDark" href="/index/group_task/">
+                     <div class="image-wrapper">
+                        <img src="/static/content/img/My Apps.png" />
+                     </div>
+                     <div class="app-label">系统监控管理</div>
+                 </a>
+                <a class="tile app bg-color-orange" href="/index/group_search/">
+                     <div class="image-wrapper">
+                        <img src="/static/content/img/RegEdit.png" />
+                     </div>
+                     <div class="app-label">系统用户监控</div>
+                 </a>
+                 <!--
+                 <a class="tile wide imagetext bg-color-blueDark" data-toggle="modal" data-target="#upload_file">
+                     <div class="image-wrapper">
+                        <img src="/static/content/img/My Apps.png" />
+                     </div>
+                     <div class="app-label">上传用户监控</div>
+                 </a>
+                 -->
                </div>
             </div>
          </div>

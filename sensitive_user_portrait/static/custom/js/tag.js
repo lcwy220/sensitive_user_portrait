@@ -1,29 +1,25 @@
-function Tag(){
-  this.ajax_method = 'GET';
-}
-Tag.prototype = {   //获取数据，重新画表
-  call_sync_ajax_request:function(url, method, callback){
+
+function call_ajax_request(url, callback){
     $.ajax({
       url: url,
-      type: method,
+      type: 'get',
       dataType: 'json',
       async: false,
       success:callback
     });
-  },
+}
 
-Draw_tag_table:function(data){
+function Draw_tag_table(data){
 	//console.log(data);
     $('#Tagtable').empty();
     var item = data;
-    console.log(item);
     var html = '';
 	html += '<table class="table table-bordered table-striped table-condensed datatable" >';
 	html += '<thead><tr style="text-align:center;">';
 	html += '<th>标签类别</th><th>标签名</th><th>创建者</th><th>时间</th><th>操作</th></tr>';
 	html += '</thead>';
 	html += '<tbody>';
-	for(i=0;i<item.length;i++){
+	for(var i=0;i<item.length;i++){
 		html += '<tr>'
 		html += '<td name="attribute_name">'+item[i].attribute_name+'</td>';
 		var item_value = item[i].attribute_value.split('&').join('/');
@@ -41,47 +37,75 @@ Draw_tag_table:function(data){
 	html += '</tbody>';
 	html += '</table>';
 	$('#Tagtable').append(html);
-  }
+    
+    editTag();
+    deleteGroup();
 }
-var url ="/tag/search_attribute/";
-var Tag = new Tag();
-Tag.call_sync_ajax_request(url, Tag.ajax_method, Tag.Draw_tag_table);
-
-function Tag_search(){
-
-	 this.url = "/tag/search_attribute/?";
+function editTag(){
+    var tagname = new Array();
+    $('a[id^="currentEdit"]').click(function(e){
+        add_flag = false;
+        var tagNames =  $(this).text();
+        if (tagNames.indexOf('/') > -1){
+            tagname = tagNames.split('/');
+        }
+        console.log(tagname);
+		$('#EDIT').empty();
+		var html = '';
+		html += '<div class="" style="margin-bottom:10px;"><span style="">标签类别&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+		html += '<span style="color:blue;" id="attributeName">'+$(this).parent().prev().html()+'</span ></div>';
+		html += '<div class="" id=""><span style="margin-right:15px;">标签名</span>';
+		for(i=0;i<tagname.length;i++){
+			html += '<span class="tagbg" id="" name="attrName"><span class="tagName">'+tagname[i]+'</span><a  class="delCon" id="delIcon"></a></span>';
+		}
+		//html += '<input name="attribute_value" class="inputbox " type="text" value="" style="line-height:36px;">'
+		html += '<span class="smallAdd"></span>'
+		html += '</div>';
+		$('#EDIT').append(html);
+		$(".smallAdd").click(function(){
+            //console.log("sadsd");
+            if (!add_flag){
+                add_flag = true;
+                $(".smallAdd").before('<input name="newtag" id="newtag" class="input_tag_box" style="width:110px;" onkeydown="javascript:if (event.keyCode==13) addNew();"type="text" value="" style="line-height:36px;">');
+            }
+        });
+		$('a[id^="delIcon"]').click(function(e){
+			$(this).parent().remove();
+		});
+	});
 }
-Tag_search.prototype = {   //群组搜索
-call_sync_ajax_request:function(url, method, callback){
-	$.ajax({
-      url: url,
-      type: method,
-      dataType: 'json',
-      async: false,
-      success:callback
+function addNew(){
+    var newtag = $('.input_tag_box').val();
+    if (newtag == ''){
+        alert("标签名不能为空！");
+        return;
+    }
+    var tagnames = $('.tagName').length;
+    var nameszh = [];
+    for(i=0;i<tagnames;i++){
+        nameszh.push($(".tagName").eq(i).html());
+        //console.log(value);
+    }
+    var count = 0;
+    for(i=0;i<nameszh.length;i++){
+        if(newtag==nameszh[i]){
+            count = count +0;
+        }else{
+            count = count +1;
+        }
+    }
+    if(count==nameszh.length){
+        add_flag = false;
+        $(".input_tag_box").remove();
+        $(".smallAdd").before('<span class="tagbg" id="" name="attrName"><span class="tagName">'+newtag+'</span><a  class="delCon" id="delIcon"></a></span>');
+    }else{
+        alert("已经存在相同标签名，请重新输入！");
+    }
+    $('a[id^="delIcon"]').click(function(e){
+        $(this).parent().remove();
     });
-},
-searchResult:function(data){
-	 $('#Tagtable').empty();
-    var item = data;
-    var html = '';
-	html += '<table class="table table-bordered table-striped table-condensed datatable" >';
-	html += '<thead><tr style="text-align:center;">';
-	html += '<th>标签类别</th><th>标签名</th><th>创建者</th><th>时间</th><th>操作</th></tr>';
-	html += '</thead>';
-	html += '<tbody>';
-	for(i=0;i<item.length;i++){
-		html += '<tr>'
-		html += '<td name="attribute_name">'+item[i].attribute_name+'</td>';
-		html += '<td name="attribute_value"><a href="javascript:void(0)" data-toggle="modal" data-target="#editor" title="点击编辑">'+item[i].attribute_value+'</a></td>';
-		html += '<td name="creater">'+item[i].user+'</td>';
-		html += '<td name="time">'+item[i].date+'</td>'
-		html += '<td name="operate" style="cursor:pointer;" ><a href="javascript:void(0)" id="delTag">删除</a></td>';
-		html += '</tr>';
-	}
-	html += '</tbody>';
-	html += '</table>';
-	$('#Tagtable').append(html);
+}
+function page_init(){
     $('.datatable').dataTable({
         "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
         "sPaginationType": "bootstrap",
@@ -90,20 +114,24 @@ searchResult:function(data){
         }
     });
 }
+function self_refresh(){
+    //var tag_url ="/tag/search_attribute/";
+    //call_ajax_request(tag_url, Draw_tag_table);
+    window.location.reload();
 }
 
-function searchbtnFun(that){
-	$('#searchbtn').off("click").click(function(){
-		var url = that.url;
-		$("#float-wrap").addClass("hidden");
-        $("#SearchTab").addClass("hidden");
-		url += get_data();
-		that.call_sync_ajax_request(url,that.ajax_method,that.searchResult);
+function deleteGroup(){
+	$('a[id^="delTag"]').click(function(e){
+		var delete_url = "/tag/delete_attribute/?";
+		var temp = $(this).parent().prev().prev().prev().prev().html();
+		delete_url += 'attribute_name=' + temp;
+		console.log(delete_url);
+		//window.location.href = url;
+		call_ajax_request(delete_url, self_refresh);
 	});
 }
 
-
-function get_data(){
+function get_search_data(){
 	var temp='';
     var input_value;
     var input_name;
@@ -117,84 +145,93 @@ function get_data(){
 	temp = temp.substring(0, temp.length-1);
 	return temp;
 }
-
-var fbase = new Tag_search();
-searchbtnFun(fbase);
-
-function Tag_add(){
-  this.url = '/tag/submit_attribute/?';
-}
-Tag_add.prototype = {   //获取数据，重新画表
-  call_sync_ajax_request:function(url, method, callback){
-    $.ajax({
-      url: url,
-      type: method,
-      dataType: 'json',
-      async: false,
-      success:callback
-    });
-  },
-
-NewTag:function(data){
-	//console.log(data);
-  location.reload();
-  }
-}
-
-function tagAddFun(that){
-	$('#newTag').off("click").click(function(){
-		var url = that.url;
-		url += get_input_data();
-		that.call_sync_ajax_request(url,that.ajax_method,that.NewTag);
+function bindButtonClick(){
+	$('#searchbtn').off("click").click(function(){
+		var url = "/tag/search_attribute/?";
+		url += get_search_data();
+		$("#float-wrap").addClass("hidden");
+        $("#SearchTab").addClass("hidden");
+		call_ajax_request(url,Draw_tag_table);
+        page_init();
 	});
+	$('#newTag').off("click").click(function(){
+		var url = "/tag/submit_attribute/?";
+        var input = get_input_data();
+        if (input){
+            console.log('true');
+            url += input;
+            call_ajax_request(url, self_refresh);
+            //page_init();
+            //$('#add').modal("hide");
+        }
+        else{
+            console.log('false');
+        }
+	});
+	$('#modifySave').off("click").click(function(){
+		var url = "/tag/change_attribute/?";
+		url += input_data();
+		call_ajax_request(url, self_refresh);
+        //page_init();
+        //$('#editor').modal("hide");
+	});
+    $(".addIcon").off("click").click(function(){
+        var html = '';
+        html += '<div class="tagCols"><span style="margin-left:65px;">标签名</span><input name="user_attribute_value" class="inputbox " type="text" value="" style="margin-left:35px;"></div>';
+        $('#ADDTAG').append(html);
+    });
+}
+
+
+var add_flag;
+var tag_url ="/tag/search_attribute/";
+call_ajax_request(tag_url, Draw_tag_table);
+bindButtonClick();
+
+
+function cDate(){
+	var myDate = new Date();
+	var yy = myDate.getFullYear();
+	var mm = myDate.getMonth() + 1;
+	if(mm<10){
+		mm = '0'+mm.toString();
+		
+	}
+	var dd = myDate.getDate();
+	if(dd<10){
+		dd = '0'+dd.toString();
+	}
+	
+	var date = yy.toString()+ '-' + mm.toString() + '-' + dd.toString();
+	//console.log(date);
+	return date;
 }
 
 function get_input_data(){
-	var temp='';
+	var temp='attribute_name=';
     var input_value;
-    var input_name;
-	var tagnames = document.getElementsByName("attribute_name");
-	var tagclass = document.getElementById("tagClass");
-	input_name = "attribute_name=";
-	input_value = document.getElementsByName("attribute_name")[tagnames.length-1].value;
+    var input_name = "attribute_name=";
+	var attribute_name = $("#tagClass").val();
 	var reg = "^[a-zA-Z0-9_\u4e00-\u9fa5\uf900-\ufa2d]";
-	
-	while(!input_value.match(reg)){
+
+	if(!attribute_name.match(reg)){
 		alert('标签类型只能包含英文、汉字、数字和下划线，请重新输入');
-		tagnames.focus();
+		$('#tagClass').focus();
+        return false;
 	}
-	/*if(!input_value.match(reg)){
-		alert('标签类型只能包含英文、汉字、数字和下划线，请重新输入');
-		return;
-	}*/
-	temp += input_name;
-    temp = temp + input_value +'&';
-	var tagnames = document.getElementsByName("attribute_value");
-	input_name = "attribute_value=";
-	var value = '';
-    var value_list = new Array();
-	//console.log(tagnames);
-	for(i=4;i<tagnames.length;i++){
-        var this_value = document.getElementsByName("attribute_value")[i].value;
-		console.log(this_value);
-		if(this_value){
-			value_list.push(this_value);
-		}
-	}
-	value = value_list.join(',');
-    console.log(value);
-	input_value = value+'&';
-	temp += input_name;
-    temp += input_value;
-	input_name = "user=";
-	input_value ="admint&";
-	temp += input_name;
-    temp += input_value;
-	input_name = "date=";
-	input_value =currentDate()+'&';
-	temp += input_name;
-    temp += input_value;
-	temp = temp.substring(0, temp.length-1);
+
+    temp += attribute_name;
+    var attribute_value_list = new Array();
+    $("[name='user_attribute_value']").each(function(){
+        var attribute_value = $(this).val();
+        console.log(attribute_value);
+        if (attribute_value){
+            attribute_value_list.push(attribute_value);
+        }
+    });
+    temp += '&' + 'attribute_value=' + attribute_value_list.join(',');
+    temp += '&' + 'user=admin&date=' + currentDate();
+
 	console.log(temp);
 	return temp;
 }
@@ -215,71 +252,6 @@ function currentDate(){
 	console.log(date);
 	return date;
 }
-var TagAdd = new Tag_add();
-tagAddFun(TagAdd);
-
- function Tag_delete(){
-	 this.url = "/tag/delete_attribute/?";
-}
-Tag_delete.prototype = {   //删除
-call_sync_ajax_request:function(url, method, callback){
-    $.ajax({
-      url: url,
-      type: 'GET',
-      dataType: 'json',
-      async: true,
-      success:callback
-    });
-},
-del:function(data){
-	//location.reload();
-	console.log(data);
-}
-}
-
-function deleteGroup(that){
-	$('a[id^="delTag"]').click(function(e){
-		var url = that.url;
-		var temp = $(this).parent().prev().prev().prev().prev().html();
-		console.log(temp);
-		url = url + 'attribute_name=' + temp;
-		//window.location.href = url;
-		that.call_sync_ajax_request(url,that.ajax_method,that.del);
-		console.log(url);
-	});
-}
-
-var Tag_delete = new Tag_delete();
-deleteGroup(Tag_delete);
-
-function TagChange(){
-  this.url = '/tag/change_attribute/?';
-}
-TagChange.prototype = {   //获取数据，重新画表
-  call_sync_ajax_request:function(url, method, callback){
-    $.ajax({
-      url: url,
-      type: method,
-      dataType: 'json',
-      async: false,
-      success:callback
-    });
-  },
-
-ChangeTag:function(data){
-	//console.log(data);
-   location.reload();
-  }
-}
-
-function tagChangeFun(that){
-	$('#modifySave').off("click").click(function(){
-		var url = that.url;
-		url += input_data();
-		that.call_sync_ajax_request(url,that.ajax_method,that.ChangeTag);
-	});
-}
-
 function input_data(){
 	var temp='';
     var input_value;
@@ -315,24 +287,3 @@ function input_data(){
 	console.log(temp);
 	return temp;
 }
-function cDate(){
-	var myDate = new Date();
-	var yy = myDate.getFullYear();
-	var mm = myDate.getMonth() + 1;
-	if(mm<10){
-		mm = '0'+mm.toString();
-		
-	}
-	var dd = myDate.getDate();
-	if(dd<10){
-		dd = '0'+dd.toString();
-	}
-	
-	var date = yy.toString()+ '-' + mm.toString() + '-' + dd.toString();
-	//console.log(date);
-	return date;
-}
-var TagChange = new TagChange();
-//Tag.call_sync_ajax_request(url, Tag.ajax_method, Tag.AddTag);
-tagChangeFun(TagChange);
-

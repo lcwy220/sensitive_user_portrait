@@ -129,27 +129,58 @@ def search_full_text(uid, date):
         retweeted_number = 0
         comment_number = 0
         if source['sensitive']:
-            print source
             if int(source['message_type']) == 1:
                 if weibo_bci:
-                    print weibo_bci['s_origin_weibo_retweeted_detail']
-                    retweeted_number = weibo_bci.get('s_origin_weibo_retweeted_detail', {}).get(mid, 0)
-                    comment_number = weibo_bci.get('s_origin_weibo_comment_detail', {}).get(mid, 0)
+                    if weibo_bci.get('s_origin_weibo_retweeted_detail', {}):
+                        retweeted_detail = json.loads(weibo_bci['s_origin_weibo_retweeted_detail'])
+                    else:
+                        retweeted_detail = {}
+                    retweeted_number = retweeted_detail.get(mid, 0)
+                    if weibo_bci.get('s_origin_weibo_comment_detail', {}):
+                        comment_detail = json.loads(weibo_bci['s_origin_weibo_comment_detail'])
+                    else:
+                        comment_detail = {}
+                    comment_number = comment_detail.get(mid, 0)
             elif int(source['message_type']) == 2:
                 if weibo_bci:
-                    retweeted_number = weibo_bci.get('s_retweeted_weibo_retweeted_detail', {}).get(mid, 0)
-                    comment_number = weibo_bci.get('s_retweeted_weibo_comment_detail', {}).get(mid, 0)
+                    if weibo_bci.get('s_retweeted_weibo_retweeted_detail', {}):
+                        retweeted_detail = json.loads(weibo_bci['s_retweeted_weibo_retweeted_detail'])
+                    else:
+                        retweeted_detail = {}
+                    retweeted_number = retweeted_detail.get(mid, 0)
+                    if weibo_bci.get('s_retweetd_weibo_comment_detail', {}):
+                        comment_detail = json.loads(weibo_bci['s_retweeted_weibo_comment_detail'])
+                    else:
+                        comment_detail = {}
+                    comment_number = comment_detail.get(mid, 0)
             else:
                 pass
         else:
             if int(source['message_type']) == 1:
                 if weibo_bci:
-                    retweeted_number = weibo_bci.get('origin_weibo_retweeted_detail', {}).get(mid, 0)
-                    comment_number = weibo_bci.get('origin_weibo_comment_detail', {}).get(mid, 0)
+                    print weibo_bci['origin_weibo_retweeted_detail']
+                    if weibo_bci.get('origin_weibo_retweeted_detail', {}):
+                        retweeted_detail = json.loads(weibo_bci['origin_weibo_retweeted_detail'])
+                    else:
+                        retweeted_detail = {}
+                    retweeted_number = retweeted_detail.get(mid, 0)
+                    if weibo_bci.get('origin_weibo_comment_detail', {}):
+                        comment_detail = json.loads(weibo_bci['origin_weibo_comment_detail'])
+                    else:
+                        comment_detail = {}
+                    comment_number = comment_detail.get(mid, 0)
             elif int(source['message_type']) == 2:
                 if weibo_bci:
-                    retweeted_number = weibo_bci.get('retweeted_weibo_retweeted_detail', {}).get(mid, 0)
-                    comment_number = weibo_bci.get('retweeted_weibo_comment_detail', {}).get(mid, 0)
+                    if weibo_bci.get('retweeted_weibo_retweeted_detail', {}):
+                        retweeted_detail = json.loads(weibo_bci['retweeted_weibo_retweeted_detail'])
+                    else:
+                        retweeted_detail = {}
+                    retweeted_number = retweeted_detail.get(mid, 0)
+                    if weibo_bci.get('retweetd_weibo_comment_detail', {}):
+                        comment_detail = json.loads(weibo_bci['retweeted_weibo_comment_detail'])
+                    else:
+                        comment_detail = {}
+                    comment_number = comment_detail.get(mid, 0)
             else:
                 pass
         detail.append(retweeted_number)
@@ -412,7 +443,7 @@ def sort_sensitive_text(uid):
             item = item['_source']
             if not item['sensitive']:
                 continue
-            text = item['text']
+            text = item['text'].encode('utf-8', 'ignore')
             sentiment_dict = json.loads(item['sentiment'])
             if not sentiment_dict:
                 sentiment = 0
@@ -484,6 +515,7 @@ def search_attribute_portrait(uid):
     return_results['fansnum'] = results['fansnum']
     return_results['friendsnum'] = results['friendsnum']
     return_results['gender'] = results['gender']
+    return_results['psycho_status'] = json.loads(results['psycho_status'])
 
     keyword_list = []
     if results['keywords']:
@@ -493,27 +525,6 @@ def search_attribute_portrait(uid):
     else:
         return_results['keywords'] = []
 
-    if return_results['sensitive']:
-        sentiment_trend = user_sentiment_trend(uid)
-        emotion_number = sentiment_trend[0]
-        return_results['negetive_index'] = float(emotion_number[2])/(emotion_number[2]+emotion_number[1]+emotion_number[0])
-        return_results['negetive_influence'] = float(emotion_number[1])/(emotion_number[2]+emotion_number[1]+emotion_number[0])
-        sentiment_dict = sentiment_trend[1]
-        datetime = ts2datetime(time.time()).replace('-', '')
-        return_sentiment = dict()
-        return_sentiment['positive'] = []
-        return_sentiment['neutral'] = []
-        return_sentiment['negetive'] = []
-        ts = time.time()
-        ts = datetime2ts('2013-09-08') - 8*24*3600
-        for i in range(1,8):
-            ts = ts + 24*3600
-            date = ts2datetime(ts).replace('-', '')
-            temp = sentiment_dict.get(date, {})
-            return_sentiment['positive'].append(temp.get('positive', 0))
-            return_sentiment['negetive'].append(temp.get('negetive', 0))
-            return_sentiment['neutral'].append(temp.get('neutral', 0))
-        return_results['sentiment_trend'] = return_sentiment
 
     return_results['retweet'] = search_retweet(uid, 0)
     return_results['follow'] = search_follower(uid, 0)
@@ -615,13 +626,6 @@ def search_attribute_portrait(uid):
         return_results['online_pattern'] = []
 
 
-    # psycho_status
-    if results['psycho_status']:
-        psycho_status_dict = json.loads(results['psycho_status'])
-        sort_psycho_status_dict = sorted(psycho_status_dict.items(), key=lambda x:x[1], reverse=True)
-        return_results['psycho_status'] = sort_psycho_status_dict[:5]
-    else:
-        return_results['psycho_status'] = []
 
     '''
     #psycho_feature
@@ -825,13 +829,18 @@ def search_portrait(condition_num, query, sort, size):
     return user_result
 
 
-def sensitive_attribute(uid):
+def sensitive_attribute(uid, date):
     results = {}
     utype = user_type(uid)
     if not utype:
         results['utype'] = 0
         return results
     results['utype'] = 1
+
+    results['uid'] = uid
+    portrait_result = es.get(index='sensitive_user_portrait', doc_type='user', id=uid)['_source']
+    results['uname'] = portrait_result['uname']
+    results['photo_url'] = portrait_result['photo_url']
 
     # sensitive weibo number statistics
     date = ts2datetime(time.time()-24*3600).replace('-', '')
@@ -841,18 +850,33 @@ def sensitive_attribute(uid):
         influence_results = es.get(index=date, doc_type='bci', id=uid)['_source']
         results['sensitive_origin_weibo_number'] = influence_results.get('s_origin_weibo_number', 0)
         results['sensitive_retweeted_weibo_number'] = influence_results.get('s_retweeted_weibo_number', 0)
-        results['sensitive_comment_weibo_number'] = influence_results.get('s_comment_weibo_number', 0)
-        results['sensitive_retweeted_total_number'] = influence_results.get('s_retweeted_weibo_retweeted_total_number', 0)+influence_results.get('s_origin_weibo_retweeted_total_number', 0)
-        results['sensitive_comment_total_number'] = influence_results.get('s_origin_weibo_comment_total_number', 0) + influence_results.get('s_retweeted_weibo_comment_total_number', 0)
+        results['sensitive_comment_weibo_number'] = int(influence_results.get('s_comment_weibo_number', 0))
+        results['sensitive_retweeted_weibo_retweeted_total_number'] = influence_results.get('s_retweeted_weibo_retweeted_total_number', 0)
+        results['sensitive_origin_weibo_retweeted_total_number'] = influence_results.get('s_origin_weibo_retweeted_total_number', 0)
+        results['sensitive_origin_weibo_comment_total_number'] = influence_results.get('s_origin_weibo_comment_total_number', 0) 
+        results['sensitive_retweeted_weibo_comment_total_number'] = influence_results.get('s_retweeted_weibo_comment_total_number', 0)
     except:
         results['sensitive_origin_weibo_number'] = 0
         results['sensitive_retweeted_weibo_number'] = 0
         results['sensitive_comment_weibo_number'] = 0
-        results['sensitive_retweeted_total_number'] = 0
-        results['sensitive_comment_total_number'] = 0
+        results['sensitive_origin_weibo_retweeted_total_number'] = 0
+        results['sensitive_origin_weibo_comment_total_number'] = 0
+        results['sensitive_retweeted_weibo_retweeted_total_number'] = 0
+        results['sensitive_retweeted_weibo_comment_total_number'] = 0
+
+    try:
+        item = es.get(index=date, doc_type='bci', id=uid)['_source']
+    except:
+        item = {}
+    results['origin_weibo_total_number'] = item.get('origin_weibo_number', 0) + results['sensitive_origin_weibo_number']
+    results['retweeted_weibo_total_number'] = item.get('retweeted_weibo_number', 0) + results['sensitive_retweeted_weibo_number']
+    results['comment_weibo_total_number'] = int(item.get('comment_weibo_number', 0)) + int(results['sensitive_comment_weibo_number'])
+    results['origin_weibo_retweeted_total_number'] = item.get('origin_weibo_retweeted_total_number', 0) + results['sensitive_origin_weibo_retweeted_total_number']
+    results['origin_weibo_comment_total_number'] = item.get('origin_weibo_comment_total_number', 0) + results['sensitive_origin_weibo_comment_total_number']
+    results['retweeted_weibo_retweeted_total_number'] = item.get('retweeted_weibo_retweeted_total_number', 0)+ results['sensitive_retweeted_weibo_retweeted_total_number']
+    results['retweeted_weibo_comment_total_number'] = item.get('retweeted_weibo_comment_total_number', 0) + results['sensitive_retweeted_weibo_comment_total_number']
 
     results['sensitive_text'] = sort_sensitive_text(uid)
-    results['sensitive_time_trend'] = get_user_trend(uid)[1]
 
     results['sensitive_geo_distribute'] = []
     results['sensitive_time_distribute'] = get_user_trend(uid)[1]
@@ -862,8 +886,32 @@ def sensitive_attribute(uid):
     results['sensitive_words_dict'] = []
     results['sensitive_hashtag_description'] = ''
 
+    sentiment_trend = user_sentiment_trend(uid)
+    emotion_number = sentiment_trend[0]
+    return_results['negetive_index'] = float(emotion_number[2])/(emotion_number[2]+emotion_number[1]+emotion_number[0])
+    return_results['negetive_influence'] = float(emotion_number[1])/(emotion_number[2]+emotion_number[1]+emotion_number[0])
+    sentiment_dict = sentiment_trend[1]
+    datetime = ts2datetime(time.time()).replace('-', '')
+    return_sentiment = dict()
+    return_sentiment['positive'] = []
+    return_sentiment['neutral'] = []
+    return_sentiment['negetive'] = []
+    ts = time.time()
+    ts = datetime2ts('2013-09-08') - 8*24*3600
+    for i in range(1,8):
+        ts = ts + 24*3600
+        date = ts2datetime(ts).replace('-', '')
+        temp = sentiment_dict.get(date, {})
+        return_sentiment['positive'].append(temp.get('positive', 0))
+        return_sentiment['negetive'].append(temp.get('negetive', 0))
+        return_sentiment['neutral'].append(temp.get('neutral', 0))
+    return_results['sentiment_trend'] = return_sentiment
+
     if 1:
         portrait_results = es.get(index="sensitive_user_portrait", doc_type='user', id=uid)['_source']
+        results['politics_trend'] = portrait_results['politics_trend']
+        results['domain'] = portrait_results['domain']
+        results['sensitive'] = portrait_results['sensitive']
         temp_hashtag = portrait_results['sensitive_hashtag_dict']
         temp_sensitive_words = portrait_results['sensitive_words_dict']
         temp_sensitive_geo =  portrait_results['sensitive_geo_activity']
@@ -921,7 +969,7 @@ def sensitive_attribute(uid):
         date = ts2datetime(time.time()-24*3600).replace('-', '')
         date = '20130907'
         today_sensitive_words = sensitive_words_dict.get(date,{})
-        results['today_sensitive_words'] = json.dumps(today_sensitive_words)
+        results['today_sensitive_words'] = today_sensitive_words
         all_hashtag_dict = {}
         for item in hashtag_dict:
             detail_hashtag_dict = hashtag_dict[item]
@@ -945,10 +993,10 @@ def sensitive_attribute(uid):
         sorted_hashtag_dict = sorted(hashtag_dict.items(), key = lambda x:x[0], reverse=False)
         sorted_words_dict = sorted(sensitive_words_dict.items(), key = lambda x:x[0], reverse=False)
         new_sorted_dict = sort_sensitive_words(sorted_words)
-        results['sensitive_hashtag'] = json.dumps(sorted_hashtag)
-        results['sensitive_words'] = json.dumps(new_sorted_dict)
-        results['sensitive_hashtag_dict'] = json.dumps(sorted_hashtag_dict)
-        results['sensitive_words_dict'] = json.dumps(sorted_words_dict)
+        results['sensitive_hashtag'] = sorted_hashtag
+        results['sensitive_words'] = new_sorted_dict
+        results['sensitive_hashtag_dict'] = sorted_hashtag_dict
+        results['sensitive_words_dict'] = sorted_words_dict
 
     results['sensitive_retweet'] = search_retweet(uid, 1)
     results['sensitive_follow'] = search_follower(uid, 1)

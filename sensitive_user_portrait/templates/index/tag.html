@@ -3,16 +3,28 @@
 {% block subtitle %}自定义标签{% endblock subtitle %}
 {% block custom_css %}
 {{ super() }}
-<link rel="stylesheet" type="text/css" href="/static/custom/css/group.css">
+   <link rel="stylesheet" type="text/css" href="/static/content/css/bootmetro-tiles.css">
+   <link rel="stylesheet" type="text/css" href="/static/custom/css/group.css">
+   <style>
+       .metro-sections {margin-top:10%;margin-left:10%;}
+       #section1 {width:900px;}
+       #section1 a {width:330px;}
+   </style>
 {% endblock custom_css  %}
 {% block body %}
-<div class="" style="width:100%;height:420px;background-image:url('/static/custom/images/bgcolor.png');background-repeat:repeat;">
-	<div class="circle" id="" style="margin-left:250px;float:left;">
+         <div class="metro span12">
+            <div class="metro-sections">
+               <div id="section1" class="metro-section tile-span-4">
+                 </div>
+             </div>
+         </div>
+    <!--
+    <div class="circle" id="" style="margin-left:250px;float:left;">
 		<a class="wordtitle" href="/index/tag_search/">用户标签</a>
 	</div>
 	<div class="circle" id="" style="margin-left:200px;float:left;">
 		<a class="wordtitle" href="/index/tag_manage/">标签管理</a>
-	</div>
-</div>
+    </div>
+    -->
 
 {% endblock %}

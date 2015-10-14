@@ -12,7 +12,7 @@
 
 {% block body %}
 {% include "/index/search/search_results_base.html" %}
-    <button class="btn btn-primary btn-sm" style="float:right;width:80px;height:40px;margin-right:5px" name="group_button" id="group_button" title="选择若干用户进行整体分析" onclick="group_button();">群体分析</button>
+    <button class="btn btn-primary btn-sm" type="submit" style="float:right;width:80px;height:40px;margin-right:50px" name="group_button" id="group_button" title="选择若干用户进行整体分析" onclick="group_button();">群体分析</button>
 <div class="modal fade" id="group" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document" style="width:850px;">
     <div class="modal-content">
@@ -21,8 +21,9 @@
         <h4 class="modal-title" id="myModalLabel">群体分析</h4>
       </div>
       <div class="modal-body">
-        <span>群体名称：</span><span style="margin-left:10px"><input type="text" name="group_name" style="width:270px;"placeholder="（必填）仅包含汉字、英文、数字和下划线" /></span>
-        <span style="margin-left:10px;float:right"><input type="text" name="remark" style="width:400px" placeholder="（可选）仅包含汉字、英文、数字和下划线" /></span><span style="margin-left:10px;float:right">备注：</span>
+        <span style="float:left;margin-top:5px;">群体名称：</span><span style="margin-left:10px"><input type="text" name="group_name" style="width:330px;"placeholder="（必填）仅包含汉字、英文、数字和下划线" /></span>
+        <span style="margin-left:10px;float:right"><input type="text" name="remark" style="width:330px" placeholder="（可选）仅包含汉字、英文、数字和下划线" /></span>
+        <span style="margin-left:10px;margin-top:5px;float:right">备注：</span>
         <div id="group_comfirm" style="margin-top:30px"></div>
       </div>
       <div class="modal-footer">

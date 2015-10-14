@@ -34,6 +34,6 @@ def ajax_imagine():
     if result:
         return json.dumps(result)
 
-    return '0'
+    return json.dumps([])
 
 
