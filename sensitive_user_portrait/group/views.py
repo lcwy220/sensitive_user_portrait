@@ -155,6 +155,8 @@ def ajax_submit_track_task():
     #input_data = request.get_json()
     # test
     input_data = {'task_name':'testtask', 'state':'it is a test', 'uid_list':['1311967407', '1671386130', '1653255165']}
+    #input_data = {'task_name': 'testtask2', 'state': 'it is a test', \
+    #        'uid_list':['3270699555', '3199485481', '1736407257', '1471234522', '1158518402', '1688547585', '1947335820', '3200285974']}
     '''
     now_ts = time.time()
     now_date = ts2datetime(now_ts)
