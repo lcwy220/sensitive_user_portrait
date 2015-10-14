@@ -298,15 +298,21 @@ function Draw_think_topic(){
 function Draw_think_emotion(status_data){
     var myChart = echarts.init(document.getElementById('pie_emotion')); 
     var first_status_dict = {'positive': '积极', 'negetive': '消极', 'middle': '中性'};
-    var second_status_dict = {'positive': '积极', 'negetive': '消极', 'middle': '中性', 'anxious': '焦虑', 'sad': '悲伤', 'anger': '生气', 'other': '其他'};
+    var second_status_dict = {'positive': '积极', 'anxious': '焦虑', 'sad': '悲伤', 'anger': '生气', 'other': '其他', 'middle': '中性'};
     var first_series = new Array();
     var second_series = new Array();
 
     for (var key in first_status_dict){
         first_series.push({"value":status_data[key], 'name': first_status_dict[key]})
     }
+    var negative = status_data['negetive'];
     for (var key in second_status_dict){
-        second_series.push({"value":status_data[key], 'name': second_status_dict[key]})
+        if (key in first_status_dict){
+            second_series.push({"value":status_data[key], 'name': second_status_dict[key]})
+        }
+        else{
+            second_series.push({"value":status_data[key] * negative , 'name': second_status_dict[key]})
+        }
     }
     var option = {
         title : {
