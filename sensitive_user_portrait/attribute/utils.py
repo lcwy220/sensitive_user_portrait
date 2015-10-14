@@ -902,9 +902,9 @@ def sensitive_attribute(uid, date):
         ts = ts + 24*3600
         date = ts2datetime(ts).replace('-', '')
         temp = sentiment_dict.get(date, {})
-        return_sentiment['positive'].append(temp.get('positive', 0))
-        return_sentiment['negetive'].append(temp.get('negetive', 0))
-        return_sentiment['neutral'].append(temp.get('neutral', 0))
+        return_sentiment['positive'].append([temp.get('positive', 0), date])
+        return_sentiment['negetive'].append([temp.get('negetive', 0), date])
+        return_sentiment['neutral'].append([temp.get('neutral', 0), date])
     results['sentiment_trend'] = return_sentiment
 
     if 1:
