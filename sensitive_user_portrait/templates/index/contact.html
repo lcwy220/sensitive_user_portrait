@@ -17,6 +17,7 @@
     .controls input[type=radio] {opacity:1;}
      #float-wrap {position: fixed;top: 0px;left: 0px;opacity: 0.6;z-index: 1001;width: 100%;height: 100%; background: #000 none repeat scroll 0% 0%;}
      #page {width:990px;padding:10px;background-color:#fff;margin-left:80px;} 
+     #table .table>tbody>tr>td{padding:4px;}
  </style>
 
 {% endblock custom_css %}
@@ -57,35 +58,35 @@
                                 <div class='col-lg-3'>
                                     <input type='checkbox' class='inline-checkbox' value='option1' checked='checked'>
                                     <span class="input-group-addon" style="width:96px;border:1px solid white;background-color:white; display:inline-block" id="domain">领域</span>                             
-                                     <input type='text' class="form-control" style='width:40%; display:inline-block;height:25px'  value='1'>
+                                     <input type='text' class="form-control" style='width:35%; display:inline-block;height:25px'  value='1'>
                                 </div>
 
                                  <div class='col-lg-3'>
                                     <input type='checkbox' class='inline-checkbox' value='option1'>
                                     <span class="input-group-addon" style="width:96px;border:1px solid white;background-color:white; display:inline-block" id="topic_string">话题</span>
-                                     <input type='text' class="form-control" style='width:40%; display:inline-block;height:25px' disabled>
+                                     <input type='text' class="form-control" style='width:35%; display:inline-block;height:25px' disabled>
                                 </div>
                                  <div class='col-lg-3'>
                                     <input type='checkbox' class='inline-checkbox' value='option1'>
-                                    <span class="input-group-addon" style="width:96px;border:1px solid white;background-color:white; display:inline-block" id="keywords_string">关键词</span>
-                                     <input type='text' class="form-control" style='width:40%; display:inline-block;height:25px' disabled>
+                                    <span class="input-group-addon" style="width:96px;border:1px solid white;background-color:white; display:inline-block" id="sensitive_words">敏感词</span>
+                                     <input type='text' class="form-control" style='width:35%; display:inline-block;height:25px' disabled>
                                 </div>
                                 <div class='col-lg-3'>
                                     <input type='checkbox' class='inline-checkbox' value='option1'>
                                     <span class="input-group-addon" style="width:96px;border:1px solid white; background-color:white;display:inline-block" id="psycho_status_string">心理状态</span>
-                                     <input type='text' class="form-control" style='width:40%; display:inline-block;height:25px' disabled>
+                                     <input type='text' class="form-control" style='width:35%; display:inline-block;height:25px' disabled>
                                 </div>
                             </div>
                             <div class='col-md-12' >
                                 <div class='col-lg-3'>
                                     <input type='checkbox' class='inline-checkbox' value='option1'>
                                     <span class="input-group-addon" style="width:96px;border:1px solid white; background-color:white;display:inline-block" id="activity_geo">地理特征</span>
-                                     <input type='text' class="form-control" style='width:40%; display:inline;height:25px' disabled>
+                                     <input type='text' class="form-control" style='width:35%; display:inline;height:25px' disabled>
                                 </div>
                                 <div class='col-lg-3' >
                                     <input type='checkbox' class='inline-checkbox' value='option1'>
                                     <span class="input-group-addon" style="width:96px;border:1px solid white; background-color:white;display:inline-block" id="hashtag">hashtag</span>
-                                     <input type='text' class="form-control" style='width:40%; display:inline;height:25px' disabled>
+                                     <input type='text' class="form-control" style='width:35%; display:inline;height:25px' disabled>
                                 </div>
                             </div>
                             <div class='col-md-12' id='tag'>
@@ -113,6 +114,10 @@
                                     <input type='radio' id="influence" name="inlineRadioOptions" value='option1'>
                                     <span class="input-group-addon" style="width:96px;border:1px solid white; background-color:white;display:inline-block" >影响力</span>
                                 </div>
+                                <div class='col-lg-3'>
+                                    <input type='radio' id="sensitive" name="inlineRadioOptions" value='option1'>
+                                    <span class="input-group-addon" style="width:96px;border:1px solid white; background-color:white;display:inline-block" >敏感度</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -134,8 +139,10 @@
                             <div class="panel panel-default" style="width:945px;margin-left:-20px;height:624px;" id='table'>
                             </div>
                         </div>
-                        <div style=" margin-left:817px">
+                        <div style=" margin-left:850px">
+                            <!--
                             <button class="btn btn-primary btn-sm" style="width:80px;height:40px;margin-right:5px" name="compare_button" id="compare_button" title="选择2至3个用户对比"  onclick="compare_button();">个体对比</button>
+                            -->
                             <button class="btn btn-primary btn-sm" style="width:80px;height:40px;margin-right:5px" name="group_button" id="group_button" onclick="group_button();">群体分析</button>
                         </div>
                     </div>
@@ -240,8 +247,8 @@
         <h4 class="modal-title" id="myModalLabel">群体分析</h4>
       </div>
       <div class="modal-body">
-        <span>群体名称：</span><span style="margin-left:10px"><input type="text" name="group_name" style="width:270px;"placeholder="（必填）仅包含汉字、英文、数字和下划线" /></span>
-        <span style="margin-left:10px;float:right"><input type="text" name="remark" style="width:400px" placeholder="（可选）仅包含汉字、英文、数字和下划线" /></span><span style="margin-left:10px;float:right">备注：</span>
+        <span style="float:left;line-height:30px;">群体名称：</span><span style="margin-left:10px"><input type="text" name="group_name" style="width:290px;"placeholder="（必填）仅包含汉字、英文、数字和下划线" /></span>
+        <span style="margin-left:10px;float:right"><input type="text" name="remark" style="width:360px" placeholder="（可选）仅包含汉字、英文、数字和下划线" /></span><span style="line-height:30px;margin-left:10px;float:right">备注：</span>
         <div id="group_comfirm" style="margin-top:30px"></div>
       </div>
       <div class="modal-footer">
@@ -268,7 +275,7 @@
                         return '<a href="#">列表视图</a>';
                     }
                     else{
-                        return '<a href="#" style="margin-right:283px">图标视图</a>';
+                        return '<a href="#" style="margin-right:250px">图标视图</a>';
                     }
                     // return '<a href="#">' + $(this).find('h3').text() + '</a>';
                 }
