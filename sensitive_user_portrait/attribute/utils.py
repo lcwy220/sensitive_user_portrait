@@ -508,6 +508,10 @@ def search_attribute_portrait(uid):
         return_results['user_type'] = 0
         return_results['sensitive'] = 0
 
+    if results['photo_url'] == 0:
+        results['photo_url'] = 'unknown'
+    if results['location'] == 0:
+        results['location'] = 'unknown'
     return_results['photo_url'] = results['photo_url']
     return_results['uid'] = results['uid']
     return_results['uname'] = results['uname']
@@ -844,6 +848,10 @@ def sensitive_attribute(uid, date):
     results['uname'] = portrait_result['uname']
     if portrait_result['uname'] == 0:
         results['uname'] = 'unknown'
+    if portrait_result['photo_url'] == 0:
+        portrait_result['photo_url'] = 'unknown'
+    if portrait['location'] == 0:
+        portrait['location'] = 'unknown'
     results['photo_url'] = portrait_result['photo_url']
 
     # sensitive weibo number statistics
