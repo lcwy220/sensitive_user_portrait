@@ -137,8 +137,33 @@ def compute_mid_result(task_name, task_submit_date):
         print 'start_detect_peaks'
         result[field+'_peak'] = detect_peaks(detect_peaks_input)
         result[field] = sort_complement_item
-        
+        #compute abnormal evaluate
+        #result[field+'_abnormal'] = compute_abnormal(field, detect_peaks_input, result[field+'_peak'])
     return result
+
+
+# compute abnormal from time trend of one attribute and peak
+def compute_abnormal(field, detect_peaks_input, peak_list):
+    evaluate_index = 0
+    if field in ['count_0','count_1']:
+        max_count = max(detect_peaks_input)
+        ave_count = sum(detect_peaks_input) / len(detect_peaks_input)
+        peak_count_list = [detect_peaks_input[peak_location] for peak_location in peak_list]
+        ave_peak_count = sum(peak_count_list) / len(peak_count_list)
+        if max_count >= 25:
+            evaluate_index += 1
+        if ave_peak_count / ave_count >= 3:
+            evaluate_index += 1
+        evaluate_key = field
+
+    elif field in ['sentiment_0_127', 'sentiment_0_128', 'sentiment_0_129', 'sentiment_1_127', 'sentiment_1_128', 'sentiment_1_129']:
+        max_count = max(detect_peaks_input)
+        ave_count = sum(detect_peaks_input) / len(detect_peaks_input)
+        peak_count_list = [detect_peaks_input[peak_location] for peak_location in peak_list]
+        ave_peak_count  = sum(peak_count_list) / len(peak_count_list)
+        
+    return evaluate_index
+
 
 # add ts with value is 0
 def complement_ts(result_dict,start_ts, end_ts):
@@ -237,8 +262,13 @@ def get_network(task_exist):
                 top_list_dict[field] = [[uid, uname, count]]
         
         iter_date_ts -= time_segment
+        # get inner-retweet group from es---field: inner_graph
+        try:
+            inner_graph = json.loads(task_date_result['inner_graph'])
+        except:
+            inner_graph = {}
     
-    return [date_list, top_list_dict]
+    return [date_list, top_list_dict, inner_graph]
 
 # get user information from user_profile
 def get_user_info(uid_list):
