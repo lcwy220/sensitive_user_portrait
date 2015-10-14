@@ -129,10 +129,8 @@ def search_full_text(uid, date):
         retweeted_number = 0
         comment_number = 0
         if source['sensitive']:
-            print source
             if int(source['message_type']) == 1:
                 if weibo_bci:
-                    print weibo_bci['s_origin_weibo_retweeted_detail']
                     if weibo_bci.get('s_origin_weibo_retweeted_detail', {}):
                         retweeted_detail = json.loads(weibo_bci['s_origin_weibo_retweeted_detail'])
                     else:
@@ -517,6 +515,7 @@ def search_attribute_portrait(uid):
     return_results['fansnum'] = results['fansnum']
     return_results['friendsnum'] = results['friendsnum']
     return_results['gender'] = results['gender']
+    return_results['psycho_status'] = json.loads(results['psycho_status'])
 
     keyword_list = []
     if results['keywords']:
@@ -526,27 +525,6 @@ def search_attribute_portrait(uid):
     else:
         return_results['keywords'] = []
 
-    if return_results['sensitive']:
-        sentiment_trend = user_sentiment_trend(uid)
-        emotion_number = sentiment_trend[0]
-        return_results['negetive_index'] = float(emotion_number[2])/(emotion_number[2]+emotion_number[1]+emotion_number[0])
-        return_results['negetive_influence'] = float(emotion_number[1])/(emotion_number[2]+emotion_number[1]+emotion_number[0])
-        sentiment_dict = sentiment_trend[1]
-        datetime = ts2datetime(time.time()).replace('-', '')
-        return_sentiment = dict()
-        return_sentiment['positive'] = []
-        return_sentiment['neutral'] = []
-        return_sentiment['negetive'] = []
-        ts = time.time()
-        ts = datetime2ts('2013-09-08') - 8*24*3600
-        for i in range(1,8):
-            ts = ts + 24*3600
-            date = ts2datetime(ts).replace('-', '')
-            temp = sentiment_dict.get(date, {})
-            return_sentiment['positive'].append(temp.get('positive', 0))
-            return_sentiment['negetive'].append(temp.get('negetive', 0))
-            return_sentiment['neutral'].append(temp.get('neutral', 0))
-        return_results['sentiment_trend'] = return_sentiment
 
     return_results['retweet'] = search_retweet(uid, 0)
     return_results['follow'] = search_follower(uid, 0)
@@ -648,13 +626,6 @@ def search_attribute_portrait(uid):
         return_results['online_pattern'] = []
 
 
-    # psycho_status
-    if results['psycho_status']:
-        psycho_status_dict = json.loads(results['psycho_status'])
-        sort_psycho_status_dict = sorted(psycho_status_dict.items(), key=lambda x:x[1], reverse=True)
-        return_results['psycho_status'] = sort_psycho_status_dict[:5]
-    else:
-        return_results['psycho_status'] = []
 
     '''
     #psycho_feature
@@ -870,7 +841,6 @@ def sensitive_attribute(uid, date):
     portrait_result = es.get(index='sensitive_user_portrait', doc_type='user', id=uid)['_source']
     results['uname'] = portrait_result['uname']
     results['photo_url'] = portrait_result['photo_url']
-    results['politics_trand'] = portrait_result['politics_trend']
 
     # sensitive weibo number statistics
     date = ts2datetime(time.time()-24*3600).replace('-', '')
@@ -907,7 +877,6 @@ def sensitive_attribute(uid, date):
     results['retweeted_weibo_comment_total_number'] = item.get('retweeted_weibo_comment_total_number', 0) + results['sensitive_retweeted_weibo_comment_total_number']
 
     results['sensitive_text'] = sort_sensitive_text(uid)
-    results['sensitive_time_trend'] = get_user_trend(uid)[1]
 
     results['sensitive_geo_distribute'] = []
     results['sensitive_time_distribute'] = get_user_trend(uid)[1]
@@ -916,6 +885,27 @@ def sensitive_attribute(uid, date):
     results['sensitive_hashtag_dict'] = []
     results['sensitive_words_dict'] = []
     results['sensitive_hashtag_description'] = ''
+
+    sentiment_trend = user_sentiment_trend(uid)
+    emotion_number = sentiment_trend[0]
+    results['negetive_index'] = float(emotion_number[2])/(emotion_number[2]+emotion_number[1]+emotion_number[0])
+    results['negetive_influence'] = float(emotion_number[1])/(emotion_number[2]+emotion_number[1]+emotion_number[0])
+    sentiment_dict = sentiment_trend[1]
+    datetime = ts2datetime(time.time()).replace('-', '')
+    return_sentiment = dict()
+    return_sentiment['positive'] = []
+    return_sentiment['neutral'] = []
+    return_sentiment['negetive'] = []
+    ts = time.time()
+    ts = datetime2ts('2013-09-08') - 8*24*3600
+    for i in range(1,8):
+        ts = ts + 24*3600
+        date = ts2datetime(ts).replace('-', '')
+        temp = sentiment_dict.get(date, {})
+        return_sentiment['positive'].append(temp.get('positive', 0))
+        return_sentiment['negetive'].append(temp.get('negetive', 0))
+        return_sentiment['neutral'].append(temp.get('neutral', 0))
+    results['sentiment_trend'] = return_sentiment
 
     if 1:
         portrait_results = es.get(index="sensitive_user_portrait", doc_type='user', id=uid)['_source']

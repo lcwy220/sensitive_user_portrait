@@ -32,11 +32,15 @@ def get_sensitive_user_detail(uid_list, date, sensitive):
             personal_info[4] = profile_dict['statusnum']
         if user_bci_results[i]['found']:
             personal_info[5] = user_bci_results[i]['_source'].get('user_index', 0)
+        else:
+            personal_info[5] = 0
         if sensitive:
             sensitive_words = r_cluster.hget('sensitive_' + index_name, str(uid))
             if sensitive_words:
                 sensitive_dict = json.loads(sensitive_words)
                 personal_info.append(sensitive_dict.keys())
+            else:
+                personal_info.append([])
         results.append(personal_info)
     return results
 
@@ -58,7 +62,7 @@ def recommend_in_top_influence(date):
     date = date.replace('-','')
     results = r.hget('recommend_influence', date)
     if not results:
-        return '0'
+        return []
     else:
         uid_list = json.loads(results)
     sensitive = 0
@@ -314,21 +318,21 @@ def identify_in(data):
             appoint_list.append([uid, source])
 
     sensitive_results = r.hget('recommend_sensitive', date)
-    if sensitive_results:
+    if sensitive_results and sensitive_results != '0':
         sensitive_results = json.loads(sensitive_results)
         revise_set = set(sensitive_results) - sensitive_list
         if revise_set:
-            r.hset('recommend_sensitive', date, json.dumps(revise_set))
+            r.hset('recommend_sensitive', date, json.dumps(list(revise_set)))
         else:
-            r.hset('recommend_sensitive', date, '0')
+            r.hdel('recommend_sensitive', date)
     influence_results = r.hget('recommend_influence', date)
-    if influence_results:
+    if influence_results and influence_results != '0':
         influence_results = json.loads(influence_results)
         revise_set = set(influence_results) - influence_list
         if revise_set:
-            r.hset('recommend_influence', date, json.dumps(revise_set))
+            r.hset('recommend_influence', date, json.dumps(list(revise_set)))
         else:
-            r.hset('recommend_influence', date, '0')
+            r.hdel('recommend_influence', date)
 
     # about compute
     compute_now_list = r.hget('compute_now', date)

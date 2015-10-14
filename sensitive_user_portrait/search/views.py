@@ -20,6 +20,6 @@ def ajax_full_text_search():
     if results:
         return json.dumps(results)
     else:
-        return '0'
+        return json.dumps([])
 
 

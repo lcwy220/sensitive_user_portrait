@@ -9,6 +9,8 @@ reload(sys)
 sys.path.append('./../')
 from global_utils import es_sensitive_user_portrait as es
 """
+search_dict = {"sensitive_words_string": "sensitive_words", "topic_string": "topic", "psycho_status_string": "psycho_status", \
+        'sensitive_geo_activity': "activity_geo", 'sensitive_hashtag_string': "hashtag"}
 
 def imagine(uid, query_fields_dict,index_name="sensitive_user_portrait", doctype='user'):
 
@@ -109,6 +111,8 @@ def imagine(uid, query_fields_dict,index_name="sensitive_user_portrait", doctype
         for iter_key in iter_list:
             iter_common_list = item['_source'][iter_key].split('&')
             common_dict[iter_key] = list(set(iter_common_list) & set(search_dict[iter_key]))
+            if search_dict.has_key(iter_key):
+                iter_key = search_dict[iter_key]
         info.append(common_dict)
         return_list.append(info)
         count += 1
