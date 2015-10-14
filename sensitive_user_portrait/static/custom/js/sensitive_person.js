@@ -61,6 +61,7 @@ Search_weibo.prototype = {
   draw_today_sensi_word(data);
   // draw_hashtag_cloud(data);
   draw_sensi_word_cloud(data);
+  draw_sentiment_trend(data);
   var hashtag_table = data['sensitive_hashtag'];
   var sensiword_table = data['sensitive_words'];
   draw_hashtag_sensiword_table('hash_detail_body',hashtag_table);
@@ -296,6 +297,68 @@ function createRandomItemStyle(){
     };
 }
 
+function draw_sentiment_trend(data){
+   negative_trend = data['sentiment_trend']['nagetive'];
+   neutral_trend = data['sentiment_trend']['neutral'];
+   positive_trend = data['sentiment_trend']['positive'];
+   var emotion_charts = echarts.init(document.getElementById('emotion_chart'));
+   var emotion_data = {
+    tooltip : {
+        trigger: 'axis'
+    },
+    legend: {
+        data:['积极','消极','中性']
+    },
+    toolbox: {
+        show : true,
+        feature : {
+            mark : {show: true},
+            dataView : {show: true, readOnly: false},
+            magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    calculable : true,
+    xAxis : [
+        {
+            type : 'category',
+            boundaryGap : false,
+            data : ['周一','周二','周三','周四','周五','周六','周日']
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value'
+        }
+    ],
+    series : [
+        {
+            name:'积极',
+            type:'line',
+            stack: '总量',
+            data:positive_trend
+        },
+        {
+            name:'消极',
+            type:'line',
+            stack: '总量',
+            data:negative_trend
+        },
+        {
+            name:'中性',
+            type:'line',
+            stack: '总量',
+            data:neutral_trend
+        }
+    ]
+};        
+//emotion_data["xAxis"][0]["data"]=[120, 132, 101, 134, 90, 230,  210];       
+emotion_data["series"][0]["data"]=pos_emotion;
+emotion_data["series"][1]["data"]=neg_emotion;
+emotion_data["series"][2]["data"]=neu_emotion;
+emotion_charts.setOption(emotion_data); 
+}
 //请求数据
 var Search_weibo = new Search_weibo(); 
 $(document).ready(function(){
@@ -360,66 +423,7 @@ function draw_mutual_info(div,data){
 
 
 //情绪分析
-var emotion_charts = echarts.init(document.getElementById('emotion_chart'));
-var pos_emotion=[120, 132, 101, 134, 90, 230,  210];
-var neg_emotion=[220, 182, 191, 234, 290, 330, 310];
-var neu_emotion=[150, 232, 201, 154, 190, 330, 410];
-var emotion_data = {
-    tooltip : {
-        trigger: 'axis'
-    },
-    legend: {
-        data:['积极','消极','中性']
-    },
-    toolbox: {
-        show : true,
-        feature : {
-            mark : {show: true},
-            dataView : {show: true, readOnly: false},
-            magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
-            restore : {show: true},
-            saveAsImage : {show: true}
-        }
-    },
-    calculable : true,
-    xAxis : [
-        {
-            type : 'category',
-            boundaryGap : false,
-            data : ['周一','周二','周三','周四','周五','周六','周日']
-        }
-    ],
-    yAxis : [
-        {
-            type : 'value'
-        }
-    ],
-    series : [
-        {
-            name:'积极',
-            type:'line',
-            stack: '总量',
-            data:[]
-        },
-        {
-            name:'消极',
-            type:'line',
-            stack: '总量',
-            data:[]
-        },
-        {
-            name:'中性',
-            type:'line',
-            stack: '总量',
-            data:[]
-        }
-    ]
-};        
-//emotion_data["xAxis"][0]["data"]=[120, 132, 101, 134, 90, 230,  210];       
-emotion_data["series"][0]["data"]=pos_emotion;
-emotion_data["series"][1]["data"]=neg_emotion;
-emotion_data["series"][2]["data"]=neu_emotion;
-emotion_charts.setOption(emotion_data);
+
 
 //影响力走势图
 

@@ -888,8 +888,8 @@ def sensitive_attribute(uid, date):
 
     sentiment_trend = user_sentiment_trend(uid)
     emotion_number = sentiment_trend[0]
-    return_results['negetive_index'] = float(emotion_number[2])/(emotion_number[2]+emotion_number[1]+emotion_number[0])
-    return_results['negetive_influence'] = float(emotion_number[1])/(emotion_number[2]+emotion_number[1]+emotion_number[0])
+    results['negetive_index'] = float(emotion_number[2])/(emotion_number[2]+emotion_number[1]+emotion_number[0])
+    results['negetive_influence'] = float(emotion_number[1])/(emotion_number[2]+emotion_number[1]+emotion_number[0])
     sentiment_dict = sentiment_trend[1]
     datetime = ts2datetime(time.time()).replace('-', '')
     return_sentiment = dict()
@@ -905,7 +905,7 @@ def sensitive_attribute(uid, date):
         return_sentiment['positive'].append(temp.get('positive', 0))
         return_sentiment['negetive'].append(temp.get('negetive', 0))
         return_sentiment['neutral'].append(temp.get('neutral', 0))
-    return_results['sentiment_trend'] = return_sentiment
+    results['sentiment_trend'] = return_sentiment
 
     if 1:
         portrait_results = es.get(index="sensitive_user_portrait", doc_type='user', id=uid)['_source']
