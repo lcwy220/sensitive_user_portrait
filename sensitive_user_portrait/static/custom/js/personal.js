@@ -295,8 +295,25 @@ function Draw_think_topic(){
     };                
     myChart.setOption(option); 
 }
-function Draw_think_emotion(){
+function Draw_think_emotion(status_data){
     var myChart = echarts.init(document.getElementById('pie_emotion')); 
+    var first_status_dict = {'positive': '积极', 'negetive': '消极', 'middle': '中性'};
+    var second_status_dict = {'positive': '积极', 'anxious': '焦虑', 'sad': '悲伤', 'anger': '生气', 'other': '其他', 'middle': '中性'};
+    var first_series = new Array();
+    var second_series = new Array();
+
+    for (var key in first_status_dict){
+        first_series.push({"value":status_data[key], 'name': first_status_dict[key]})
+    }
+    var negative = status_data['negetive'];
+    for (var key in second_status_dict){
+        if (key in first_status_dict){
+            second_series.push({"value":status_data[key], 'name': second_status_dict[key]})
+        }
+        else{
+            second_series.push({"value":status_data[key] * negative , 'name': second_status_dict[key]})
+        }
+    }
     var option = {
         title : {
             text: '心理状态',
@@ -342,11 +359,7 @@ function Draw_think_emotion(){
                         }
                     }
                 },
-                data:[
-                    {value:5, name:'积极'},
-                    {value:5, name:'中性'},
-                    {value:12, name:'消极', selected:true}
-                ]
+                data:first_series,
             },
             {
                 name:'',
@@ -359,13 +372,7 @@ function Draw_think_emotion(){
                 funnelAlign: 'left',
                 max: 1048,
                 
-                data:[
-                    {value:5, name:'积极'},
-                    {value:5, name:'中性'},
-                    {value:3, name:'生气'},
-                    {value:4, name:'悲伤'},
-                    {value:5, name:'其他'}
-                ]
+                data:second_series
             }
         ]
     }
@@ -492,7 +499,7 @@ function page_group_weibo(start_row,end_row,data){
             var type = '敏感微博';
         }
 
-        html += '<div style="height:60px;background:' + colors[s%2] + ';font-size:13px">';
+        html += '<div style="height:70px;background:' + colors[s%2] + ';font-size:13px">';
         // html += '<p><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
         html += '<p style="color:black;">' + timestamp + '&nbsp;&nbsp;' + geo + '&nbsp;&nbsp;' + text + '</p>';
         html += '<p style="margin-top:-5px;color:darkred;text-align:right">' + type + '&nbsp;&nbsp;转发(' + repost + ')&nbsp;&nbsp;评论(' + comment + ')</p>';
@@ -588,7 +595,7 @@ function draw(data){
 
     // unfinished
     Draw_think_topic();
-    Draw_think_emotion();
+    Draw_think_emotion(personalData.psycho_status);
 }
 
 var personalData;

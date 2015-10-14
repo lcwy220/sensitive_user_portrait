@@ -25,9 +25,9 @@ Search_weibo.prototype = {
       $('#user_lable').empty();
       user_lable_html = '';
       user_lable_html += '<table id="" class="table table-striped table-bordered bootstrap-datatable datatype responsive">';
-      user_lable_html += '<thead><tr><th class="center" style="text-align:center">用户ID</th>';
-      user_lable_html += '<th class="center" style="text-align:center">用户标签</th>';
-      user_lable_html += '<th class="center" style="text-align:center">全选<input name="recommend_all" id="recommend_all" type="checkbox" value="" onclick="recommend_all()"></th>';
+      user_lable_html += '<thead><tr><th class="center" style="text-align:center;vertical-align:middle">用户ID</th>';
+      user_lable_html += '<th class="center" style="text-align:center;vertical-align:middle;">用户标签</th>';
+      user_lable_html += '<th class="center" style="text-align:center;vertical-align:middle;">全选<input name="recommend_all" id="recommend_all" type="checkbox" value="" onclick="recommend_all()"></th>';
       user_lable_html += '</tr></thead>';
       user_lable_html += '<tbody>';
       for (key in data){
@@ -136,16 +136,19 @@ Search_weibo.prototype = {
         var user_name = data[0][0];
          var personal_url = 'http://'+ window.location.host + '/index/personal/?uid=';
         for(var item =1; item < data.length-1; item++){
+            var node_weight = Math.ceil(data[item][5] / 2) * 10;
+            var link_weight = data[item][5] * 2;
             if(data[item][1]=='unknown'){
                 data[item][1] = '未知';
-                Related_Node.push({'name':data[item][0], 'value':data[item][5], 'label':data[item][1],'category':1,'symbolSize':20*Math.sqrt(data[item][5])});
-                Related_Link.push({'source':user_name, 'target':data[item][0], 'weight':data[item][5],'itemStyle':{'normal':{'width':2*data[item][5]}}});
+                Related_Node.push({'name':data[item][0], 'value':data[item][5], 'label':data[item][1],'category':1,'symbolSize':node_weight});
+                Related_Link.push({'source':user_name, 'target':data[item][0], 'weight':data[item][5],'itemStyle':{'normal':{'width':link_weight}}});
             }
             else{
-                Related_Node.push({'name':data[item][0], 'value':data[item][5], 'label':data[item][1],'category':1,'symbolSize':20*Math.sqrt(data[item][5])});
-                Related_Link.push({'source':user_name, 'target':data[item][0], 'weight':data[item][5],'itemStyle':{'normal':{'width':2*data[item][5]}}});
+                Related_Node.push({'name':data[item][0], 'value':data[item][5], 'label':data[item][1],'category':1,'symbolSize':node_weight});
+                Related_Link.push({'source':user_name, 'target':data[item][0], 'weight':data[item][5],'itemStyle':{'normal':{'width':link_weight}}});
             }
         }
+        console.log(Related_Link);
         var option = {
                 title : {
                     text: '',
@@ -300,7 +303,7 @@ function Show_tag(data){
         html += '<div class="col-lg-3" >';
         html += '<input type="checkbox" class="inline-checkbox" value="option1">';
         html += '<span class="input-group-addon" style="width:96px;border:1px solid white; background-color:white;display:inline-block" id="'+ data[i] +'">'+ data[i] +'</span>';
-        html += '<input type="text" class="form-control" style="width:40%; display:inline;height:25px;margin-left:7px" disabled>';
+        html += '<input type="text" class="form-control" style="width:35%; display:inline;height:25px;margin-left:7px" disabled>';
         html += '</div>';
       }
       $('#tag').append(html);
@@ -508,7 +511,7 @@ function draw_table_compare_confirm(uids, div){
       html += '<td class="center">'+ item[2].toFixed(2) + '</td>';
       html += '<td class="center" style="width:100px;">'+ item[3].toFixed(2) + '</td>';
       html += '<td class="center" style="width:100px;">'+ item[4].toFixed(2) + '</td>';
-      html += '<td class="center" style="width:100px;">'+ item[5] + '</td>';
+      html += '<td class="center" style="width:100px;">'+ item[5].toFixed(2) + '</td>';
       html += '<td class="center" style="width:80px;"><button class="btn btn-primary btn-sm" style="width:60px;height:30px" onclick="delRow(this)">移除</button></td>';
       html += '</tr>';
     }
@@ -531,7 +534,7 @@ function draw_table_group_confirm(uids, div){
       html += '<td class="center">'+ item[2].toFixed(2) + '</td>';
       html += '<td class="center" style="width:100px;">'+ item[3].toFixed(2) + '</td>';
       html += '<td class="center" style="width:100px;">'+ item[4].toFixed(2) + '</td>';
-      html += '<td class="center" style="width:100px;">'+ item[5] + '</td>';
+      html += '<td class="center" style="width:100px;">'+ item[5].toFixed(2) + '</td>';
       html += '<td class="center" style="width:80px;"><button class="btn btn-primary btn-sm" style="width:60px;height:30px" onclick="delRow(this)">移除</button></td>';
       html += '</tr>';
     }
