@@ -2,14 +2,13 @@
     <form class="search_form" id="" method="post" action="">
         <span class="fleft lineh42"style="margin-right:16px;line-height:33px;">全文搜索</span>
         <span class="searchborder fleft">
-            <input type="text" id="keyword" value="" placeholder="请输入要搜索的微博内容"/>
+            <input name="words_list" type="text" id="keyword" value="" placeholder="请输入要搜索的微博内容"/>
         </span>
         <span class="fleft" style="margin-left:20px;">
             <a title="">
-                <input id="simple_search" class="search" type="submit" value="确定"/>
+                <input name="submit" type="submit" class="bluebtn" id="words_list" value="确定"/>
             </a>
         </span>
-    </form>
 </div>
 
 <div id="supersearch">
@@ -96,3 +95,9 @@
       <input name="submit" type="submit" class="bluebtn" id="bluebtn" value="确定" />
     </div>
 </div>
+
+<script>
+    $('#words_list').click(function(){
+        window.location.href = '/index/text_search/';
+    })
+</script>
