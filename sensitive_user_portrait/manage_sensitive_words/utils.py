@@ -56,7 +56,7 @@ def identify_in(date, words_list):
 
 def search_sensitive_words(level, category): # level: 0, 1, 2, 3; category: '', or other category
     if not level and not category:
-        return '0'
+        return []
     results = dict()
     word_list = []
     words_dict = r.hgetall('sensitive_words')
