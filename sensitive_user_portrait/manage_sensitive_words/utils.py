@@ -63,13 +63,13 @@ def search_sensitive_words(level, category): # level: 0, 1, 2, 3; category: '', 
             word_list = []
             for k,v in words_dict.items():
                 word_state = json.loads(v)
-                word_list.extend([k, word_state[0], word_state[1]])
+                word_list.append([k, word_state[0], word_state[1]])
         elif level and category:
             word_list = []
             for k,v in words_dict.items():
                 word_state = json.loads(v)
                 if int(level) == int(word_state[0]) and category == word_state[1]:
-                    word_list.extend([k, word_state[0], word_state[1]])
+                    word_list.append([k, word_state[0], word_state[1]])
         elif not level and category:
             for k,v in words_dict.items():
                 word_state = json.loads(v)

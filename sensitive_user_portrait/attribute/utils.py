@@ -511,6 +511,8 @@ def search_attribute_portrait(uid):
     return_results['photo_url'] = results['photo_url']
     return_results['uid'] = results['uid']
     return_results['uname'] = results['uname']
+    if return_results['uname'] == 0:
+        return_results['uname'] = 'unknown'
     return_results['location'] = results['location']
     return_results['fansnum'] = results['fansnum']
     return_results['friendsnum'] = results['friendsnum']
@@ -840,6 +842,8 @@ def sensitive_attribute(uid, date):
     results['uid'] = uid
     portrait_result = es.get(index='sensitive_user_portrait', doc_type='user', id=uid)['_source']
     results['uname'] = portrait_result['uname']
+    if portrait_result['uname'] == 0:
+        results['uname'] = 'unknown'
     results['photo_url'] = portrait_result['photo_url']
 
     # sensitive weibo number statistics

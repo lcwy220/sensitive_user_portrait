@@ -31,7 +31,7 @@ def imagine(uid, query_fields_dict,index_name="sensitive_user_portrait", doctype
     iter_list = []
 
     for iter_key in keys_list:
-        if personal_info[iter_key] == '' or not personal_info[iter_key]:
+        if iter_key not in personal_info or personal_info[iter_key] == '':
             query_fields_dict.pop(iter_key)
         else:
             iter_list.append(iter_key)
