@@ -3,6 +3,7 @@
 {% block subtitle %}重点人物监控{% endblock subtitle %}
 {% block custom_css %}
 {{ super() }}
+<link rel="stylesheet" type="text/css" href="/static/custom/css/group.css">
 <style>
     .hidden{display:none;}
     .dataTables_filter{text-align:right;margin-bottom:5px;}
@@ -31,6 +32,7 @@
                         </div>
                         <div class="fleft">
                         </div>
+                        <a id="upload" data-target="#upload_file" data-toggle="modal" style="cursor:pointer;float:right;margin-right:20px;margin-top:16px;margin-bottom:10px;">上传用户名单</a>
                         <a id="search_all" style="cursor:pointer;float:right;margin-right:20px;margin-top:16px;margin-bottom:10px;">查看全部任务</a>
                         <a data-toggle="modal" data-target="#search_group" style="cursor:pointer;float:right;margin-right:20px;margin-top:16px;margin-bottom:10px;">表单搜索</a>
                         <div class="box-content" id="group_task" >
@@ -118,6 +120,37 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
         <button id="searchbtn" type="button" class="btn btn-primary">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--文件上传模态框-->
+<!-- Modal -->
+<div class="modal fade" id="upload_file" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        <h4 class="modal-title" id="myModalLabel">上传文件</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+			<fieldset style="margin:10px 0 0 150px;">
+				<label>群组名称</label>
+				<input type="text" placeholder="请输入群组名称">
+			</fieldset>
+			<fieldset style="margin:10px 0 0 150px;">
+				<label>备 注 </label>
+                <input type="text" placeholder="请输入备注">
+			</fieldset>
+			<form enctype="multipart/form-data" method="post"  >
+				<input type="file" name="fileUp" style="margin-left:150px;height:23px;" id="file-upload" onchange="handleFileSelect(this.files)">  
+			</form>
+		</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default lineh14" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary lineh14">确定</button>
       </div>
     </div>
   </div>

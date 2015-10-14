@@ -38,37 +38,6 @@
 	</div>
 	-->
 
-<!--文件上传模态框-->
-<!-- Modal -->
-<div class="modal fade" id="upload_file" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
-        <h4 class="modal-title" id="myModalLabel">上传文件</h4>
-      </div>
-      <div class="modal-body">
-        <form>
-			<fieldset style="margin:10px 0 0 150px;">
-				<label>群组名称</label>
-				<input type="text" placeholder="Type something…">
-			</fieldset>
-			<fieldset style="margin:10px 0 0 150px;">
-				<label style="margin-right:25px;">备 注 </label>
-				<input type="text" placeholder="Type something…">
-			</fieldset>
-			<form enctype="multipart/form-data" method="post"  >
-				<input type="file" name="fileUp" style="margin-left:150px;height:23px;" id="file-upload" onchange="handleFileSelect(this.files)">  
-			</form>
-		</form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default lineh14" data-dismiss="modal">取消</button>
-        <button type="button" class="btn btn-primary lineh14">确定</button>
-      </div>
-    </div>
-  </div>
-</div>
 {% endblock %}
 {% block end_js%}
     <script src="/static/custom/js/group.js/"></script>

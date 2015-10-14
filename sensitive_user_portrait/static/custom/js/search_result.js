@@ -228,8 +228,8 @@ function process_par(name, value){
         result[0] = '活跃地区';
         result[1] = value;
     }
-    else if(name=='keywords'){
-        result[0] = '关键词';
+    else if(name=='sensitive_words'){
+        result[0] = '敏感词';
         result[1] = value;
     }
     else if(name=='hashtag'){
@@ -267,6 +267,7 @@ function process_par(name, value){
     else if(name=='tag'){
         result[0] = '标签';
         result[1] = '';
+        console.log(value);
         var term_list = value.split(',');
         for (var i = 0;i < term_list.length;i++){
             result[1] += (term_list[i].replace(':', '--') + ',');
@@ -280,6 +281,7 @@ function process_par(name, value){
     return result;
 }
 function draw_conditions(that){
+    console.log('here');
     $('#conditions').empty();
     var html = '';
     for (var i = 0;i < pars.length;i++){
@@ -305,12 +307,12 @@ function draw_conditions(that){
                 html += '&nbsp;<a class="cross" href="#">X</a></span>';
             }
         }
-        $('#conditions').html(html);
-        $('.mouse>a').click(function(){
-            deleteurl(that, $(this).parent().attr("id"));
-        });
-        return;
     }
+    $('#conditions').html(html);
+    $('.mouse>a').click(function(){
+        deleteurl(that, $(this).parent().attr("id"));
+    });
+    return;
 }
 
 function get_custom_value(data){

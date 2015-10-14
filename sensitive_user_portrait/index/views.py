@@ -69,50 +69,42 @@ def search():
 
 @mod.route('/search_results/')
 def search_results():
-    stype = request.args.get('stype','')
-    uid = request.args.get('uid', '')
-    uname = request.args.get('uname', '')
-    location = request.args.get('location', '')
-    activity_geo = request.args.get('activity_geo', '')
-    adkeyword = request.args.get('adkeyword', '')
-    hashtag = request.args.get('hashtag', '')
-    psycho_status = request.args.get('psycho_status', '')
-    psycho_feature = request.args.get('psycho_feature', '')
-    domain = request.args.get('domain', '')
-    topic = request.args.get('topic', '')
-    tag = request.args.get('tag', '')
+    words_list = request.args.get('words_list', '')
+    return render_template('index/search/search_text_result.html', words_list=words_list)
+    # stype = request.args.get('stype','')
+    # uid = request.args.get('uid', '')
+    # uname = request.args.get('uname', '')
+    # location = request.args.get('location', '')
+    # activity_geo = request.args.get('activity_geo', '')
+    # adkeyword = request.args.get('adkeyword', '')
+    # hashtag = request.args.get('hashtag', '')
+    # psycho_status = request.args.get('psycho_status', '')
+    # psycho_feature = request.args.get('psycho_feature', '')
+    # domain = request.args.get('domain', '')
+    # topic = request.args.get('topic', '')
+    # tag = request.args.get('tag', '')
 
-    if (stype == '1'):
-        return render_template('index/search/search_results.html', uid=uid, uname=uname,\
-                location=location, activity_geo=activity_geo, adkeyword=adkeyword, hashtag=hashtag, psycho_status=psycho_status,\
-                psycho_feature=psycho_feature, domain=domain, topic=topic, tag=tag)
-    elif (stype == '2'):
-        return render_template('index/search/group_search_results.html', uid=uid, uname=uname,\
-                location=location, activity_geo=activity_geo, adkeyword=adkeyword, hashtag=hashtag, psycho_status=psycho_status,\
-                psycho_feature=psycho_feature, domain=domain, topic=topic, tag=tag)
-    elif (stype == '3'):
-        return render_template('index/search/tag_search_results.html', uid=uid, uname=uname,\
-                location=location, activity_geo=activity_geo, adkeyword=adkeyword, hashtag=hashtag, psycho_status=psycho_status,\
-                psycho_feature=psycho_feature, domain=domain, topic=topic, tag=tag)
-    else:
-        return render_template('index/search/search_results.html', uid=uid, uname=uname,\
-                location=location, activity_geo=activity_geo, adkeyword=adkeyword, hashtag=hashtag, psycho_status=psycho_status,\
-                psycho_feature=psycho_feature, domain=domain, topic=topic, tag=tag)
+    # if (stype == '1'):
+    #     return render_template('index/search/search_results.html', uid=uid, uname=uname,\
+    #             location=location, activity_geo=activity_geo, adkeyword=adkeyword, hashtag=hashtag, psycho_status=psycho_status,\
+    #             psycho_feature=psycho_feature, domain=domain, topic=topic, tag=tag)
+    # elif (stype == '2'):
+    #     return render_template('index/search/group_search_results.html', uid=uid, uname=uname,\
+    #             location=location, activity_geo=activity_geo, adkeyword=adkeyword, hashtag=hashtag, psycho_status=psycho_status,\
+    #             psycho_feature=psycho_feature, domain=domain, topic=topic, tag=tag)
+    # elif (stype == '3'):
+    #     return render_template('index/search/tag_search_results.html', uid=uid, uname=uname,\
+    #             location=location, activity_geo=activity_geo, adkeyword=adkeyword, hashtag=hashtag, psycho_status=psycho_status,\
+    #             psycho_feature=psycho_feature, domain=domain, topic=topic, tag=tag)
+    # else:
+    #     return render_template('index/search/search_results.html', uid=uid, uname=uname,\
+    #             location=location, activity_geo=activity_geo, adkeyword=adkeyword, hashtag=hashtag, psycho_status=psycho_status,\
+    #             psycho_feature=psycho_feature, domain=domain, topic=topic, tag=tag)
 
 @mod.route('/text_search/')
 def text_search():
-    stype = request.args.get('stype','')
     words_list = request.args.get('words_list', '')
-
-    if (stype == '1'):
-        return render_template('index/search/text_search.html', words_list=words_list)
-    elif (stype == '2'):
-        return render_template('index/search/group_text_search.html', words_list=words_list)
-    elif (stype == '3'):
-        return render_template('index/search/tag_text_search.html', words_list=words_list)
-    else:
-        return render_template('index/search/text_search.html', words_list=words_list)
-
+    return render_template('index/search/search_text_result.html', words_list=words_list)
 @mod.route('/influence/')
 def influence():
     return render_template('index/influence.html')
