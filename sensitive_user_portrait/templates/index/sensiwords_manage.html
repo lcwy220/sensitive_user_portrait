@@ -26,6 +26,14 @@ li{list-style-type:none;}
   margin-right: 10px;
   height:30px;
 }
+
+
+
+
+
+
+
+
 #close {
   width: 12px;
   height: 12px;
@@ -148,26 +156,26 @@ tbody td{text-align:center;}
       <div class="modal-body" id="add_snesiword" style="padding:30px;">
       <div class="add_word_model" style="margin-top:12px;">等级:
       <select name="level" class="add_sensi_level" style="width:90px; margin-right:5px;">   
-            <option value="0">所有等级</option> 
+             
             <option value="1">level 1</option>   
             <option value="2">level 2</option>   
             <option value="3">level 3</option>           
       </select>
         类别:
         <select name="classify" class="add_sensi_class" style="width:90px; margin-right:5px;"> 
-            <option value="0">所有类别</option>   
+              
             <option value="politics">politics</option>   
             <option value="military">military</option>   
             <option value="law">law</option>
             <option value="ideology">ideology</option>
           <option value="democracy">democracy</option>                   
-        </select><br>
-        <input class="input_sensi" style="min-width: 50px;margin-top:20px;" placeholder="输入敏感词">
-        <span class="addIcon" id="addTag" style="margin-bottom:-10px;margin-top:20px;">
+        </select>
+        <input class="input_sensi" style="min-width: 50px;margin-top:0px;" placeholder="输入敏感词">
+        <span class="addIcon" id="addTag" style="margin-bottom:-10px;margin-top:0px;">
       </span>
 
-    </div>
-    
+    </div><div id="test"></div>
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -189,7 +197,7 @@ tbody td{text-align:center;}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-        <button type="button" class="btn btn-primary" id="modifySave">保存</button>
+        <button type="button" class="btn btn-primary" id="word_modifySave">保存</button>
       </div>
     </div>
   </div>
@@ -257,11 +265,7 @@ tbody td{text-align:center;}
 			$(this).parent().remove();
 		});
 	});
-    $(".addIcon").off("click").click(function(){
-        var html = '';
-        html += '<div class="tagCols"><span style="margin-left:65px;">标签名</span><input name="attribute_value" class="inputbox " type="text" value="" style="margin-left:35px;line-height:36px;"></div>';
-        $('#ADDTAG').append(html);
-	});
+
 	function addNew(){
         var newtag = $('.input_tag_box').val();
         if (newtag == ''){
