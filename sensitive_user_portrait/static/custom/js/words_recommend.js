@@ -75,10 +75,19 @@ function Draw_sensi_recommend_table(data){
         else{
             html += '<td name="attribute_value"><a href="" data-toggle="modal" data-target="#editor" id="currentEdit" title="点击编辑">'+item_value+'</a></td>';
         }*/
+<<<<<<< HEAD
         html += '<td name="word">'+item[i][0]+'</td>';
         html += '<td name="count">'+item[i][2]+'</td>'+'<td name="user_list">';
 		for( var s=0;s<item[i][1].length;s++){
 			html += '<span style="margin-left:10px;">'+item[i][1][s]+'</span>';
+=======
+        html += '<td name="level">'+item[i][0]+'</td>';
+        html += '<td name="class">'+item[i][2]+'</td>'+'<td name="time">';
+        
+		for( var s=0;s<item[i].uid.length;s++){
+			var uid_list = item[i][1];
+			html += '<span style="margin-left:10px;">'+uid_list[s]+'</span>';
+>>>>>>> ef68e08917a406a02a0a3db8f98d952d2ca6a02f
 		}
 		html += '<td name="check"><input name="recommend_word_all" class="recommend_word_all" type="checkbox" value=""  />' + '</td>';
 		//html += '</td>+<td name="operate" style="cursor:pointer;" ><a href="javascript:void(0)" id="delTag">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" id="edit_word" data-toggle="modal" data-target="#word_edit">修改</a></td>';
@@ -92,13 +101,20 @@ function Draw_sensi_recommend_table(data){
 
 	$('#sensi_manage_table').append(html);
   }
+<<<<<<< HEAD
 var recommend_data = [{"level":'敏感词', "sensi_class":'10', "uid":['1234','2345','3456','4567']},{"level":'敏感词', "sensi_class":'10', "uid":['1234','2345','3456','4567']}];
 url_init = '/manage_sensitive_words/recommend_new_words/?date_list='
 call_ajax_request(url_init, Draw_sensi_recommend_table) 
+=======
+//var recommend_data = [{"level":'敏感词', "sensi_class":'10', "uid":['1234','2345','3456','4567']},{"level":'敏感词', "sensi_class":'10', "uid":['1234','2345','3456','4567']}];
+ 
+
+>>>>>>> ef68e08917a406a02a0a3db8f98d952d2ca6a02f
 function date_initial(){
   var tomorrow = new Date(2013,8,8);
   $("#recommend_date_select").empty();
   var recommend_date_html = '';
+<<<<<<< HEAD
     var timestamp = 1378483200000;
     var date = new Date(parseInt(timestamp)).format("yyyy-MM-dd");
     recommend_date[0]=date;
@@ -110,10 +126,21 @@ function date_initial(){
       recommend_date_html += '<option value="' + recommend_date[i] + '">' + recommend_date[i] + '</option>';
     }
   recommend_date_html += '<option value="recommend_date_all" selected="selected">最近七天</option>';
+=======
+  recommend_date_html += '<option value="' + recommend_date[0] + 'id="' + recommend_date[0] + '">' + recommend_date[0] + '</option>';
+  recommend_date_html += '<option value="' + recommend_date[1] + 'id="' + recommend_date[1] + '">' + recommend_date[1] + '</option>';
+  recommend_date_html += '<option value="' + recommend_date[2] + 'id="' + recommend_date[2] + '">' + recommend_date[2] + '</option>';
+  recommend_date_html += '<option value="' + recommend_date[3] + 'id="' + recommend_date[3] + '">'+ recommend_date[3] + '</option>';
+  recommend_date_html += '<option value="' + recommend_date[4] + 'id="' + recommend_date[4] + '">' + recommend_date[4] + '</option>';
+  recommend_date_html += '<option value="' + recommend_date[5] + 'id="' + recommend_date[5] + '">' + recommend_date[5] + '</option>';
+  recommend_date_html += '<option value="' + recommend_date[6] + 'id="' + recommend_date[6] + '">' + recommend_date[6] + '</option>';
+  recommend_date_html += '<option id="recommend_date_all" selected="selected">最近七天</option>';
+>>>>>>> ef68e08917a406a02a0a3db8f98d952d2ca6a02f
   $("#recommend_date_select").append(recommend_date_html);
-
+  return recommend_date;
 }
 date_initial();
+<<<<<<< HEAD
 var data_list = recommend_date.join(',');
 
 
@@ -174,3 +201,37 @@ $('#modifySave').off("click").click(function(){
   call_ajax_request(domain_url, confirm_ok); 
   console.log(domain_url);
 });
+=======
+function get_data_list(){
+var data_list = [];
+for(var i=0; i<7; i++){
+	data_list.push($('#recommend_date['+i+']').text());
+	}
+return data_list;
+}
+var a= date_initial();
+console.log(a);
+url_init = '/manage_sensitive_words/recommend_new_words/?date_list='+a;
+console.log(url_init);
+call_ajax_request(url_init, Draw_sensi_recommend_table);
+
+$('#show_recommend_word').click(function(){
+
+	var choose_date = $('#recommend_date_select').val();
+	if (choose_date="最近七天"){
+		choose_date = date_initial();
+	}
+	var url = '/manage_sensitive_words/recommend_new_words/?date_list='+choose_date;
+  console.log(url);
+	call_ajax_request(url, Draw_sensi_recommend_table);
+	})
+
+
+
+$('#sensi_add_Save').click(function(){
+	var add_level = $('sensi_add_Save').val();
+	var add_class = $('sensi_add_class').val();
+
+})
+
+>>>>>>> ef68e08917a406a02a0a3db8f98d952d2ca6a02f
