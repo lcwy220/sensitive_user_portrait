@@ -136,7 +136,7 @@ tbody td{text-align:center;}
         <h4 class="modal-title" id="myModalLabel">自定义类别</h4>
       </div>
       <div class="modal-body" id="EDIT" style="padding:30px;">
-        555
+        自定义类别
     
       </div>
       <div class="modal-footer">
@@ -170,11 +170,11 @@ tbody td{text-align:center;}
             <option value="ideology">ideology</option>
           <option value="democracy">democracy</option>                   
         </select>
-        <input class="input_sensi" style="min-width: 50px;margin-top:0px;" placeholder="输入敏感词">
+        <input name="input_sensi" class="input_sensi" style="min-width: 50px;margin-top:0px;" placeholder="输入敏感词">
         <span class="addIcon" id="addTag" style="margin-bottom:-10px;margin-top:0px;">
       </span>
 
-    </div><div id="test"></div>
+    </div><div id="add_word_div"></div>
 
       </div>
       <div class="modal-footer">
@@ -204,102 +204,11 @@ tbody td{text-align:center;}
 </div>
 
 
-
-
 {% endblock body %}
 
     {% block end_js %}
 
-  <script>
-
-	$("#uploadbtn1").off("click").click(function(){
-		$("#float-wrap").removeClass("hidden");
-		$("#uploadFile").removeClass("hidden");
-		return false;
-	});
-	
-	$(".close1").off("click").click(function(){
-		$("#float-wrap").addClass("hidden");
-		$("#uploadFile").addClass("hidden");
-	});
-	$(".close2").off("click").click(function(){
-		$("#float-wrap").addClass("hidden");
-		$("#SearchTab").addClass("hidden");
-    });
-	
-	
-</script>
 <script type="text/javascript" src="/static/custom/js/sensiwords_manage_test.js"></script> 
- 
-<script>
-    var add_flag;
-    var tagname = new Array();
-    tagname = ['a','b','c']
-    //$('a[id^="currentEdit"]').click(function(e){
-        add_flag = false;
-        var tagNames =  $(this).text();
-        if (tagNames.indexOf('/') > -1){
-            tagname = tagNames.split('/');
-        }
-		$('#EDIT').empty();
-		var html = '';
-		html += '<div class="" style="margin-bottom:10px;"><span style="">敏感词类别&nbsp;&nbsp;&nbsp;&nbsp;</span>';
-    for(i=0;i<tagname.length;i++){
-		//html += '<span style="color:blue;" id="attributeName">'+$(this).parent().prev().html()+'</span ></div>';
-    html += '<span class="tagbg" id="" name="attrName"><span class="tagName">'+tagname[i]+'</span><a  class="delCon" id="delIcon"></a></span>';
-    }
-		html += '<div class="" id=""><span style="margin-right:15px;">类别名称</span>';
-		
-		//html += '<input name="attribute_value" class="inputbox " type="text" value="" style="line-height:36px;">'
-		html += '<span class="smallAdd"></span>'
-		html += '</div>';
-		$('#EDIT').append(html);
-		$(".smallAdd").click(function(){
-            //console.log("sadsd");
-            if (!add_flag){
-                add_flag = true;
-                $(".smallAdd").before('<input name="newtag" id="newtag" class="input_tag_box" style="width:110px;" onkeydown="javascript:if (event.keyCode==13) addNew();"type="text" value="" style="line-height:36px;">');
-            }
-      //  });
-		$('a[id^="delIcon"]').click(function(e){
-			$(this).parent().remove();
-		});
-	});
-
-	function addNew(){
-        var newtag = $('.input_tag_box').val();
-        if (newtag == ''){
-            alert("标签名不能为空！");
-            return;
-        }
-        var tagnames = $('.tagName').length;
-        var nameszh = [];
-        for(i=0;i<tagnames;i++){
-            nameszh.push($(".tagName").eq(i).html());
-            //console.log(value);
-        }
-        var count = 0;
-        for(i=0;i<nameszh.length;i++){
-            if(newtag==nameszh[i]){
-                count = count +0;
-            }else{
-                count = count +1;
-            }
-        }
-        if(count==nameszh.length){
-            add_flag = false;
-            $(".input_tag_box").remove();
-            $(".smallAdd").before('<span class="tagbg" id="" name="attrName"><span class="tagName">'+newtag+'</span><a  class="delCon" id="delIcon"></a></span>');
-        }else{
-            alert("已经存在相同标签名，请重新输入！");
-        }
-			
-			
-			$('a[id^="delIcon"]').click(function(e){
-                $(this).parent().remove();
-            });
-	}
-</script>
 
 <script src="/static/custom/js/charisma.js"></script>
 {% endblock end_js %}

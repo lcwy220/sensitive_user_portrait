@@ -70,38 +70,6 @@ function Draw_sensi_manage_table(data){
   }
 
 
-function addNew(){
-    var newtag = $('.input_tag_box').val();
-    if (newtag == ''){
-        alert("不能为空！");
-        return;
-    }
-    var tagnames = $('.tagName').length;
-    var nameszh = [];
-    for(i=0;i<tagnames;i++){
-        nameszh.push($(".tagName").eq(i).html());
-        //console.log(value);
-    }
-    var count = 0;
-    for(i=0;i<nameszh.length;i++){
-        if(newtag==nameszh[i]){
-            count = count +0;
-        }else{
-            count = count +1;
-        }
-    }
-    if(count==nameszh.length){
-        add_flag = false;
-        $(".input_tag_box").remove();
-        $(".smallAdd").before('<span class="tagbg" id="" name="attrName"><span class="tagName">'+newtag+'</span><a  class="delCon" id="delIcon"></a></span>');
-    }else{
-        alert("已经存在相同标签名，请重新输入！");
-    }
-    $('a[id^="delIcon"]').click(function(e){
-        $(this).parent().remove();
-    });
-}
-
 function currentDate(){
     var myDate = new Date();
     var yy = myDate.getFullYear();
@@ -119,52 +87,52 @@ function currentDate(){
 
     return date;
 }
-function get_input_data(){
-    var temp='attribute_name=';
-    var input_value;
-    var input_name = "attribute_name=";
-    var attribute_name = $("#tagClass").val();
-    var reg = "^[a-zA-Z0-9_\u4e00-\u9fa5\uf900-\ufa2d]";
 
-    if(!attribute_name.match(reg)){
-        alert('标签类型只能包含英文、汉字、数字和下划线，请重新输入');
-        $('#tagClass').focus();
-        return false;
-    }
-
-    temp += attribute_name;
-    var attribute_value_list = new Array();
-    $("[name='user_attribute_value']").each(function(){
-        var attribute_value = $(this).val();
-        console.log(attribute_value);
-        if (attribute_value){
-            attribute_value_list.push(attribute_value);
-        }
+$('#add_words_Save').off("click").click(function(){
+    var add_words_name = new Array;
+    var add_words_class = new Array;
+    var add_words_level = new Array;
+    var add_words_date = currentDate();
+    $('.add_sensi_level').each(function(){
+        var each_word_level = $(this).val();
+        add_words_level.push(each_word_level);
+    })
+    $('.add_sensi_class').each(function(){
+        var each_word_class = $(this).val();
+        add_words_class.push(each_word_class);
     });
-    temp += '&' + 'attribute_value=' + attribute_value_list.join(',');
-    temp += '&' + 'user=admin&date=' + currentDate();
-
-    console.log(temp);
-    return temp;
+    $('[name="input_sensi"]').each(function(){
+        var each_word_name = $(this).val();
+        if (each_word_name == ''){
+        alert("敏感词不能为空！");
+    
+        return false;
+        }else{
+            add_words_name.push(each_word_name);
+        }
+        //console.log(each_word_name);
+        
+    })
+    if (add_words_name.length == add_words_level.length){
+        var url = '/manage_sensitive_words/identify_in/'
+    url += '?date='+ add_words_date + '&words_list=' +add_words_name + '&level_list=' + add_words_level + '&category_list=' + add_words_class;
+    call_ajax_request(url, self_refresh);
+}else{
+    return 0;
 }
+    
+})
+
 
 $(".addIcon").off("click").click(function(){
         var html = '';
-        console.log('1111');
-
-        html = '<div class="add_word_model" style="margin-top:12px;">等级:<select name="level" class="add_sensi_level" style="width:90px; margin-right:5px;">  <option value="1">level 1</option>   <option value="2">level 2</option><option value="3">level 3</option></select>类别:<select name="classify" class="add_sensi_class" style="width:90px; margin-right:5px;">  <option value="politics">politics</option><option value="military">military</option><option value="law">law</option><option value="ideology">ideology</option><option value="democracy">democracy</option></select><input class="input_sensi" style="min-width: 30px;margin-top:0px;" placeholder="输入敏感词"><span class="addIcon" id="addTag" style="margin-bottom:-10px;margin-top:20px;"></span></div>';
-        $('#test').append(html);
+        html = '<div class="add_word_model" style="margin-top:12px;">等级:<select name="level" class="add_sensi_level" style="width:90px; margin-right:5px;">  <option value="1">level 1</option>   <option value="2">level 2</option><option value="3">level 3</option></select>类别:<select name="classify" class="add_sensi_class" style="width:90px; margin-right:5px;">  <option value="politics">politics</option><option value="military">military</option><option value="law">law</option><option value="ideology">ideology</option><option value="democracy">democracy</option></select><input name="input_sensi" class="input_sensi" style="min-width: 30px;margin-top:0px;" placeholder="输入敏感词"></div>';
+        $('#add_word_div').append(html);
     });
 
 
-
-
-
-
-
 //var table_data1 = [{'words':'敏感词1','level':'A','sensi_class':'a类','date':'09-01'},{'words':'敏感词2','level':'A','sensi_class':'b类','date':'09-01'},{'words':'敏感词3','level':'B','sensi_class':'a类','date':'09-01'},{'words':'敏感词4','level':'B','sensi_class':'b类','date':'09-01'}];
-all_words='/manage_sensitive_words/search_sensitive_words/?level=1&category='
-	
+all_words='/manage_sensitive_words/search_sensitive_words/?level=0&category='
 call_ajax_request(all_words, Draw_sensi_manage_table);
 
 $('#edit_word').click(function(){
@@ -174,6 +142,9 @@ $('#edit_word').click(function(){
 $('#show_sensi_manage').click(function (){
     var word_level=$("#sensi_manage_level").val();
     var word_class=$("#sensi_manage_class").val();
+    if (word_class== 0){
+        word_class = '';
+    }
     //alert(word_level);
     var base_choose_data_url = '/manage_sensitive_words/search_sensitive_words/?'
     var choose_data_url=base_choose_data_url+'level='+word_level+'&category='+word_class;
@@ -183,8 +154,7 @@ call_ajax_request(choose_data_url, Draw_sensi_manage_table);
 })
 
 function self_refresh(){
-    //var tag_url ="/tag/search_attribute/";
-    //call_ajax_request(tag_url, Draw_tag_table);
+
     window.location.reload();
 }
 
