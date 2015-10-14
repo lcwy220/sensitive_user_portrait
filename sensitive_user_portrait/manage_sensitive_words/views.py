@@ -56,14 +56,20 @@ def ajax_search_sensitive_words():
 def ajax_self_add_in():
     date = request.args.get('date', '')
     date = date.replace('-','')
-    word = request.args.get('word', '')
-    word = word.encode('utf-8', 'ignore')
-    level = request.args.get('level', '')
-    category = request.args.get('category', '')
-    category = category.encode('utf-8', 'ignore')
+    word = request.args.get('word_list', '') # word_list, seperate with ','
+    level = request.args.get('level_list', '') # level correspond with word, seperate with ','
+    category = request.args.get('category_list', '') # category 
+
+    word_list = word.split(',')
+    level_list = level.split(',')
+    category_list = category.split(',')
     result = '0'
-    if date and word and level and category:
-        result = self_add_in(date, word, level, category)
+    for i in range(len(word_list)):
+        iter_word = word_list[i].encode('utf-8', 'ignore')
+        iter_level = level_list[i]
+        iter_category = category_list[i].encode('utf-8', 'ignore')
+        if date and iter_word and iter_level and iter_category:
+            result = self_add_in(date, iter_word, iter_level, iter_category)
 
     return result
 
