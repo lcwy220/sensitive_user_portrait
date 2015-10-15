@@ -597,7 +597,7 @@ function draw_mutual_info(div,data){
      html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
      html += '<tr><th style="text-align:center">昵称</th>';
      html += '<th style="text-align:center">交互次数</th>';
-     html += '<th style="text-align:center">是否入库</th></tr></table>';
+     html += '<th style="text-align:center">是否入库</th></tr>';
     }
     else{
      html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
@@ -624,9 +624,10 @@ function draw_mutual_info(div,data){
        html += '<tr>';
        html += '<th style="text-align:center;"><a target="_blank" href="/index/personal/?uid=' + data['0'][m]['0'] + '">' + nickname + '</a></th>';
        html += '<th style="text-align:center;">' + data['0'][m]['1']['1'] + '</th>';
-       html += '<th style="text-align:center;">' + in_status + '</th></tr></table>';      
+       html += '<th style="text-align:center;">' + in_status + '</th></tr>';      
     };
     }
+    html += '</table>';
     $('#'+div).append(html);
 }
 
