@@ -50,6 +50,8 @@ def add_retweet(item):
     key = 'retweet_' + str(start_ts)
     monitor_r.hincrby(str(root_uid), key, 1)
 
+
+# use to save inner retweet relation
 def inner_group_retweet(item):
     root_uid = str(item['root_uid'])
     uid = str(item['uid'])
@@ -59,12 +61,10 @@ def inner_group_retweet(item):
     time_segment = int((timestamp - date_ts) / 900)
     start_ts = date_ts + time_segment * 900
     key = 'inner_' + str(start_ts)
-    try:
-        inner_retweet_exist = monitor_inner_r.hget(root_uid, key)
-    except:
-        inner_retweet_exist = None
+    inner_retweet_exist = monitor_inner_r.hget(root_uid, key)
+    if not inner_retweet_exist:
         monitor_inner_r.hset(root_uid, key, json.dumps({uid: 1}))
-    if inner_retweet_exist:
+    else:
         inner_retweet_dict = json.loads(inner_retweet_exist)
         if uid in inner_retweet_dict:
             inner_retweet_dict[uid] += 1
@@ -96,9 +96,7 @@ if __name__ == "__main__":
     update_user_ts = time.time()
     bulk_action = []
 
-    #test
-    not_compute_comment_retweet_user = ['1311967407', '1671386130', '1653255165']
-
+    yes_count = 0
     while 1:
         '''
         use to update user list by 15min
@@ -111,23 +109,22 @@ if __name__ == "__main__":
         item = receiver.recv_json()
         if not item:
             continue 
-        
         if item['sp_type'] == '1':
             read_count += 1
             #accumulate the retweet and comment count of monitor_task_user from all weibo user
             #----outer retweet/comment
-            
+            '''
             if str(item['root_uid']) in monitor_user_list:
                 if item['message_type'] == 2:
                     add_comment(item)
                 elif item['message_type'] == 3:
                     add_retweet(item)
-           
+            '''
             #accumulate the retweet relation in monitor_task_user
             #----inner retweet
             if item['message_type'] == 3:
-                if item['root_uid'] in monitor_user_list:
-                    if item['uid'] in monitor_user_list:
+                if str(item['root_uid']) in monitor_user_list:
+                    if str(item['uid']) in monitor_user_list and str(item['uid'])!= str(item['root_uid']):
                         inner_group_retweet(item)
 
         if read_count % 10000 == 0:
