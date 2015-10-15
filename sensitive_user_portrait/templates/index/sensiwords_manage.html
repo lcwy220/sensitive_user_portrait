@@ -99,9 +99,9 @@ tbody td{text-align:center;}
     <div style="margin-top:12px;">等级:
 			<select name="level" id="sensi_manage_level" style="width:90px; margin-right:5px;">   
 				<option value="0">所有等级</option> 
-		        <option value="1">level 1</option>   
-		        <option value="2">level 2</option>   
-		        <option value="3">level 3</option>           
+		        <option value="1">1</option>   
+		        <option value="2">2</option>   
+		        <option value="3">3</option>           
 		    </select>
 		    类别:
 		    <select name="classify" id="sensi_manage_class" style="width:90px; margin-right:5px;"> 
@@ -154,12 +154,13 @@ tbody td{text-align:center;}
         <h4 class="modal-title" id="myModalLabel">添加敏感词</h4>
       </div>
       <div class="modal-body" id="add_snesiword" style="padding:30px;">
-      <div class="add_word_model" style="margin-top:12px;">等级:
+      <input name="input_sensi" class="input_sensi" style="min-width: 50px;margin-top:0px;float: left;" placeholder="输入敏感词">
+      <div class="add_word_model" style="margin-top:-5px;">等级:
       <select name="level" class="add_sensi_level" style="width:90px; margin-right:5px;">   
              
-            <option value="1">level 1</option>   
-            <option value="2">level 2</option>   
-            <option value="3">level 3</option>           
+            <option value="1">1</option>   
+            <option value="2">2</option>   
+            <option value="3">3</option>           
       </select>
         类别:
         <select name="classify" class="add_sensi_class" style="width:90px; margin-right:5px;"> 
@@ -170,7 +171,7 @@ tbody td{text-align:center;}
             <option value="ideology">ideology</option>
           <option value="democracy">democracy</option>                   
         </select>
-        <input name="input_sensi" class="input_sensi" style="min-width: 50px;margin-top:0px;" placeholder="输入敏感词">
+        
         <span class="addIcon" id="addTag" style="margin-bottom:-10px;margin-top:0px;">
       </span>
 

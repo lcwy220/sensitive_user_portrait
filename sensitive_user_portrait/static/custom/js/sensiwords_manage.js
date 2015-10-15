@@ -53,7 +53,7 @@ function Draw_sensi_manage_table(data){
         var word_class=$(this).parent().prev().html()
         var html = '';
         html += '<div class="edit_word_model" style="margin-top:12px;"><input id="input_sensi" name="input_sensi" style="min-width: 30px;margin-top:0px;" value="'+$(this).parent().prev().prev().prev().html()+'">';
-        html += '本词等级:<select name="level" class="edit_sensi_level" style="width:90px; margin-right:5px;">  <option value="1">level 1</option>   <option value="2">level 2</option><option value="3">level 3</option></select>请选择类别:<select name="classify" class="edit_sensi_class" style="width:90px; margin-right:5px;">  <option value="politics">politics</option><option value="military">military</option><option value="law">law</option><option value="ideology">ideology</option><option value="democracy">democracy</option></select></div>';
+        html += '本词等级:<select name="level" class="edit_sensi_level" style="width:90px; margin-right:5px;">  <option value="1">1</option>   <option value="2">2</option><option value="3">3</option></select>请选择类别:<select name="classify" class="edit_sensi_class" style="width:90px; margin-right:5px;">  <option value="politics">politics</option><option value="military">military</option><option value="law">law</option><option value="ideology">ideology</option><option value="democracy">democracy</option></select></div>';
         //$("#edit_sensi_class option[value='"+word_class+"']").attr("selected", true);
         //console.log(html);
         $('#edit_snesiword').append(html); 
@@ -73,9 +73,13 @@ function Draw_sensi_manage_table(data){
     var word = $('#input_sensi').val()
     var word_list = new Array;
     word_list.push(word);
+    if(word != ''){
     url += date+'&words_list='+word_list+'&level_list='+level+'&category_list='+class_word;
     console.log(url);
-    call_ajax_request(url, self_refresh); 
+    call_ajax_request(url, self_refresh);
+    }else{
+        alert('敏感词不能为空！')
+    } 
 	})
 
   }
@@ -136,7 +140,7 @@ $('#add_words_Save').off("click").click(function(){
 
 $(".addIcon").off("click").click(function(){
         var html = '';
-        html = '<div class="add_word_model" style="margin-top:12px;">等级:<select name="level" class="add_sensi_level" style="width:90px; margin-right:5px;">  <option value="1">level 1</option>   <option value="2">level 2</option><option value="3">level 3</option></select>类别:<select name="classify" class="add_sensi_class" style="width:90px; margin-right:5px;">  <option value="politics">politics</option><option value="military">military</option><option value="law">law</option><option value="ideology">ideology</option><option value="democracy">democracy</option></select><input name="input_sensi" class="input_sensi" style="min-width: 30px;margin-top:0px;" placeholder="输入敏感词"></div>';
+        html = '<div class="add_word_model" style="margin-top:12px;"><input name="input_sensi" class="input_sensi" style="min-width: 30px;margin-top:0px;" placeholder="输入敏感词">等级:<select name="level" class="add_sensi_level" style="width:90px;margin-left:10px; margin-right:5px;">  <option value="1">1</option><option value="2">2</option><option value="3">3</option></select>类别:<select name="classify" class="add_sensi_class" style="width:90px; margin-right:5px;">  <option value="politics">politics</option><option value="military">military</option><option value="law">law</option><option value="ideology">ideology</option><option value="democracy">democracy</option></select></div>';
         $('#add_word_div').append(html);
     });
 
