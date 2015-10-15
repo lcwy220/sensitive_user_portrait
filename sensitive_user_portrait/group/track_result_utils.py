@@ -115,6 +115,8 @@ def compute_mid_result(task_name, task_submit_date):
                     sensitive_hashtag_dict = json.loads(result_item['hashtag'])
                 else:
                     sensitive_hashtag_dict = {}
+                    result['hashtag_0'][timestamp_date] = {}
+                    result['hashtag_1'][timestamp_date] = {}
                 for sensitive in sensitive_hashtag_dict:
                     for sensitive in sensitive_hashtag_dict:
                         if timestamp_date not in result['hashtag_'+sensitive]:
@@ -142,8 +144,9 @@ def compute_mid_result(task_name, task_submit_date):
         result[field] = sort_complement_item
     
     #compute abnormal evaluate
-    #abnormal_index_dict = compute_abnormal(result)
-    #result = dict(result, **abnormal_index_dict)
+    abnormal_index_dict = compute_abnormal(result)
+    print 'abnormal_index_dict:', abnormal_index_dict
+    result = dict(result, **abnormal_index_dict)
 
     return result
 
@@ -159,7 +162,7 @@ def compute_abnormal(result):
     count_1_peak = result['count_1_peak']
     evaluate_index_count_1 = compute_count_abnormal_index(count_1_list, count_1_peak)
 
-    abnormal_index_dict['count'] = evaluate_index_count_0 * 0.25 + evaluate_index_count_1 * 0.75
+    abnormal_index_dict['count_abnormal'] = evaluate_index_count_0 * 0.25 + evaluate_index_count_1 * 0.75
     
     #step2:compute sentiment abnormal
     sentiment_0_126_list = [item[1] for item in result['sentiment_0_126']]
@@ -178,27 +181,63 @@ def compute_abnormal(result):
     sentiment_1_128_peak = result['sentiment_1_128_peak']
     evaluate_index_sentiment_1 = compute_sentiment_abnormal_index(sentiment_1_126_list, sentiment_1_126_peak, sentiment_1_127_list, sentiment_1_127_peak, sentiment_1_128_list, sentiment_1_128_peak)
 
-    abnormal_index_dict['sentiment'] = evaluate_index_sentiment_0 * 0.25 + evaluate_index_sentiment_1 * 0.75
+    abnormal_index_dict['sentiment_abnormal'] = evaluate_index_sentiment_0 * 0.25 + evaluate_index_sentiment_1 * 0.75
 
     #step3:compute sensitive count abnormal
     sensitive_score_list = [item[1] for item in result['sensitive_score']]
     sensitive_peak = result['sensitive_score_peak']
-    abnormal_index_dict['sensitive'] = compute_sensitive_abnormal_index(sensitive_score_list, sensitive_peak)
+    abnormal_index_dict['sensitive_abnormal'] = compute_sensitive_abnormal_index(sensitive_score_list, sensitive_peak)
     
+    #step4:compute hashtag count abnormal
+    hashtag_0_dict = [result['hashtag_0'][date] for date in result['hashtag_0']] # [{date1_dict}, {date2_dict}]
+    hashtag_1_dict = [result['hashtag_1'][date] for date in result['hashtag_1']]
+    abnormal_index_dict['hashtag_abnormal'] = compute_hashtag_abnormal_index(hashtag_0_dict, hashtag_1_dict)
+    
+    #step5:compute geo abnormal
+    geo_0_dict = [result['geo_0'][date] for date in result['geo_0']]
+    geo_1_dict = [result['geo_1'][date] for date in result['geo_1']]
+    abnormal_index_dict['geo_abnormal'] = compute_hashtag_abnormal_index(geo_0_dict, geo_1_dict)
 
     return abnormal_index_dict
 
+#compute hashtag abnormal index
+def compute_hashtag_abnormal_index(hashtag_0_dict, hashtag_1_dict):
+    abnormal_index = 0
+    date_len = len(hashtag_0_dict)
+    for item in range(0, date_len):
+        date_item_0_list = hashtag_0_dict[item].values()
+        if date_item_0_list==[]:
+            date_item_0_max = 0
+            date_item_0_ave = 0
+        else:
+            date_item_0_max = max(date_item_0_list)
+            date_item_0_ave = float(sum(date_item_0_list)) / len(date_item_0_list)
+        date_item_1_list = hashtag_1_dict[item].values()
+        if date_item_1_list==[]:
+            date_item_1_max = 0
+            date_item_1_ave = 0
+        else:
+            date_item_1_max = max(date_item_1_list)
+            date_item_1_ave = float(sum(date_item_1_list)) / len(date_item_1_list)
+        if date_item_1_ave > 3*date_item_0_ave:
+            abnormal_index += 1
+        if date_item_1_max > 2*date_item_1_ave:
+            abnormal_index += 1.5
+        if date_item_0_max > 2*date_item_0_ave:
+            abnormal_index += 0.5
+    abnormal_index = float(abnormal_index) / date_len
+    return abnormal_index
 
 #compute sensitive count abnormal
 def compute_sensitive_abnormal_index(sensitive_score_list, sensitive_peak):
     abnormal_index= 0
-    ave_sensitive_score = sum(sensitive_score_list) / len(sensitive_score_list)
+    ave_sensitive_score = float(sum(sensitive_score_list)) / len(sensitive_score_list)
     max_sensitive_score = max(sensitive_score_list)
     peak_sensitive_list = [sensitive_score_list[peak_location] for peak_location in sensitive_peak]
-    ave_peak_sensitive = sum(peak_sensitive_list)
+    ave_peak_sensitive = float(sum(peak_sensitive_list)) / len(peak_sensitive_list)
     if max_sensitive_score >= 9:
         abnormal_index += 1
-    if ave_peak_sensitive_score / ave_sensitive_score >= 2:
+    if ave_peak_sensitive / ave_sensitive_score >= 2:
         abnormal_index += 1
     if ave_peak_sensitive >= 3:
         abnormal_index += 1
@@ -208,16 +247,16 @@ def compute_sensitive_abnormal_index(sensitive_score_list, sensitive_peak):
 #compute sentiment abnormal index
 def compute_sentiment_abnormal_index(sentiment_126, sentiment_126_peak, sentiment_127, sentiment_127_peak, sentiment_128, sentiment_128_peak):
     abnormal_index = 0
-    ave_sentiment_126 = sum(sentiment_126) / len(sentiment_126)
+    ave_sentiment_126 = float(sum(sentiment_126)) / len(sentiment_126)
     ave_sentiment_127 = sum(sentiment_127) / len(sentiment_127)
     max_sentiment_127_count = max(sentiment_127)
-    ave_sentiment_128 = sum(sentiment_128) / len(sentiment_128)
+    ave_sentiment_128 = float(sum(sentiment_128)) / len(sentiment_128)
     max_sentiment_128_count = max(sentiment_128)
     if max_sentiment_127_count >= 25:
         abnormal_index += 1
     if max_sentiment_128_count >= 25:
         abnormal_index += 1
-    if ave_sentiment_128_count / ave_sentiment_126_count >= 2 or ave_sentiment_128_count/ ave_sentiment_126_count >= 2:
+    if ave_sentiment_128 / ave_sentiment_126 >= 2 or ave_sentiment_128/ ave_sentiment_126 >= 2:
         abnormal_index += 1
 
     return abnormal_index
@@ -227,9 +266,9 @@ def compute_sentiment_abnormal_index(sentiment_126, sentiment_126_peak, sentimen
 def compute_count_abnormal_index(input_list, peak_list):
     abnormal_index = 0
     max_count = max(input_list)
-    ave_count = sum(input_list) / len(input_list)
+    ave_count = float(sum(input_list)) / len(input_list)
     peak_count_list = [input_list[peak_location] for peak_location in peak_list]
-    ave_peak_count = sum(peak_count_list) / len(peak_count_list)
+    ave_peak_count = float(sum(peak_count_list)) / len(peak_count_list)
     if max_count >= 25:
         abnormal_index += 1
     if ave_peak_count / ave_count >= 3:
@@ -350,14 +389,44 @@ def get_user_comment_retweet(task_exist):
 
     return new_result
 
-# use to compute retweet/comment abnormal
+# use to compute retweet/comment abnormal for a monitor_task
 def compute_comment_retweet_abnormal(new_result, union_user):
-    abnormal_index_dict = {} # {uid: abnormal_index}
-    for uid in union_user:
+
+    abnormal_index = 0
+    retweet_abnormal_index = 0
+    comment_abnormal_index = 0
+    for user in union_user:
         retweet_dict = new_result[user+'_retweet']
         retweet_list = [retweet_dict[item] for item in retweet_dict]
-        retweet_abnormal_index = compute_abnormal_index(retweet_list)
+        retweet_peak_location = new_result[user+'_retweet_peak']
+        retweet_abnormal_index += compute_user_comment_retweet_abnormal(retweet_list, retweet_peak_location)
+        comment_dict = new_result[user+'_comment']
+        comment_list = [comment_dict[item] for item in comment_dict]
+        comment_peak_location = new_result[user+'_comment_peak']
+        comment_abnormal_index += compute_user_comment_retweet_abnormal(comment_list, comment_peak_location)
     
+    abnormal_index = float(retweet_abnormal_index) / len(union_user) * 0.7 + float(comment_abnormal_index) / len(union_user) * 0.3
+    print 'retweet_abnormal_index, comment_abnormal_index:', retweet_abnormal_index, comment_abnormal_index
+
+    return abnormal_index
+
+
+# use to compute retweet/comment abnormal index for every body
+def compute_user_comment_retweet_abnormal(input_list, peak_location):
+    abnormal_index = 0
+    ave_count = float(sum(input_list)) / len(input_list)
+    max_count = sum(input_list)
+    peak_list = [input_list[peak] for peak in peak_location]
+    ave_peak_count = float(sum(peak_list)) / len(peak_list)
+    print 'compute user abnormal:', ave_count, max_count, ave_peak_count
+    if ave_count >= 20:
+        abnormal_index += 1
+    if max_count >= 10000:
+        abnormal_index += 1
+    if float(ave_peak_count) / ave_count >= 1.5:
+
+        abnormal_index += 1
+
     return abnormal_index
 
 # get top user profile imagein
@@ -384,7 +453,7 @@ def get_top_user_profile(union_user):
 # time range: the latest 7 day
 # output: time is in reversed order
 def get_network(task_exist):
-    task_name = task_exist['_id']
+    task_name = task_exist['task_name']
     submit_date = task_exist['submit_date']
     submit_ts = date2ts(submit_date)
 
@@ -407,7 +476,7 @@ def get_network(task_exist):
         except:
             task_date_result = {}
         iter_field = ['top1', 'top2', 'top3', 'top4', 'top5']
-        for filed in iter_field:
+        for field in iter_field:
             user_count_item = json.loads(task_date_result[field])
             uid = user_count_item[0]
             uname = uid2uname(uid)
