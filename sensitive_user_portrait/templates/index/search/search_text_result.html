@@ -1,6 +1,6 @@
 {% extends "index/base.html" %} 
-{% block title %}微博文本检索{% endblock title %}
-{% block subtitle %}微博文本检索{% endblock subtitle %}
+{% block title %}全文检索{% endblock title %}
+{% block subtitle %}全文检索{% endblock subtitle %}
 {% block custom_css %}
 {{ super() }}
 	<link rel="stylesheet" href="/static/custom/css/overview.css" media="screen" />
@@ -52,16 +52,8 @@
 	</div>
 {% endblock body %}
 {% block end_js %}
-  <script  src="/static/scripts/jquery-jelevator-1.0.3.min.js"></script>
   <script type="text/javascript">
     var words_list = "{{ words_list }}";
-	jQuery(function($){
-	    $("h1,h2").jElevator({
-	        howTopButton: true,
-	        showBottomButton: true,
-	        showSectionsMenu: true
-	    });
-	});
  </script>
  <script  src="/static/custom/js/global_weibo.js"></script>
  <script  src="/static/custom/js/search_text_result.js"></script>
