@@ -93,8 +93,7 @@ Search_weibo.prototype = {
     html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive" style="width:450px">';
     html += '<tr><th style="text-align:center;width:50px;">排名</th><th style="text-align:center;width:50px;">敏感词</th>';
     html += '<th style="text-align:center;width:50px;">词频</th><th style="text-align:center;width:50px;">等级</th><th style="text-align:center;width:50px;">类别</th></tr>';
-    var min_row = Math.min(10, data.length);
-    for (var i = 0; i < min_row; i++){
+    for (var i = 0; i < data.length; i++){
        var s = (i+1).toString();
        var m = i.toString();
        html += '<tr><th style="text-align:center;">' + s + '</th>';
@@ -261,8 +260,6 @@ Search_weibo.call_sync_ajax_request(sort_sensitive_text, Search_weibo.ajax_metho
   function draw_statictics_info_table(data){
     $('#statictics_info').empty();
     html = '';
-    html += '<hr />';
-    html += '<h2>统计信息</h2>';
     html += '<table class="statictics" width="750" border="1">';
     html += ' <tr>';
     html += '<td style="text-align:center" class="col_1">统计信息</td><td style="text-align:center">敏感/微博总数</td><td style="text-align:center">敏感/总转发</td><td style="text-align:center" >敏感/总评论</td>';
