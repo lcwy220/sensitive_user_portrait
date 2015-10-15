@@ -44,8 +44,10 @@ li{list-style-type:none;}
 #SearchTab{position: fixed;margin-top: -200px;left: 50%;top: 50%;z-index: 1002;width: 620px;background: #FFF none repeat scroll 0% 0%;
 border: 1px solid #AA8BE8;height: 300px;margin-left: -300px;}
 #pageTitle{font-size:20px;text-indent:20px;font-family:"Microsoft YaHei UI";}
+/*
 #DataTables_Table_0_filter{display:none;}
 #DataTables_Table_0_length{display:none;}
+*/
 #del{color:black;}
 .lineh{line-height:30px;}
 table th{text-align:center;}
@@ -198,9 +200,9 @@ tbody td{text-align:center;}
 
 {% endblock body %}
 
-    {% block end_js %}
+{% block end_js %}
+<script src="/static/custom/js/table_init.js"></script>
 
 <script type="text/javascript" src="/static/custom/js/sensiwords_manage.js"></script> 
 
-<script src="/static/custom/js/charisma.js"></script>
 {% endblock end_js %}
