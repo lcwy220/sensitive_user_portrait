@@ -188,7 +188,7 @@ Search_weibo.prototype = {
 function draw_conditions(){
     $('#conditions').empty();
     var html = '';
-    html += '<span class="mouse" style="margin-left:10px">关键词:'+ words_list;
+    html += '<span class="mouse" style="margin-left:10px">'+ words_list;
     $('#conditions').html(html);
 }
 
