@@ -42,7 +42,7 @@ a#showBtn.webpage:hover{
 	font-size: 14px;
 	color: #CCCCCC;
 	float:left;
-	width:220px;
+	width:350px;
     height:33px;
 	line-height:20px;
 	padding:6px 0 5px 3px;
@@ -190,7 +190,7 @@ text-indent:40px;
 	width: auto;
 }
 #textsearch {
-    margin-left:35%;
+    margin-left:30%;
     margin-top:45px;
 }
 #supersearch {

@@ -386,6 +386,10 @@ function bindButtonClick(){
           else{
             var compute_time;
             var sure;
+            var source = 1;
+            if (global_index == 1){
+                source = 2;
+            }
             if($('input[name="instant"]:checked').val()==1){
               compute_time = '1';
               sure = confirm('立即计算会消耗系统较多资源，您确定要立即计算吗？');
@@ -400,7 +404,7 @@ function bindButtonClick(){
                   var waiting_html = '<div style="text-align:center;vertical-align:middle;height:40px">数据正在加载中，请稍后...</div>';
                   $('#recommend').append(waiting_html);
 
-                  var recommend_confirm_url = '/recommentation/identify_in/?date=' + recommend_date + '&uid_list=' + uids_trans + '&status=' + compute_time;
+                  var recommend_confirm_url = '/recommentation/identify_in/?date=' + recommend_date + '&uid_list=' + uids_trans + '&status=' + compute_time + '&source=' + source;
                   call_ajax_request(recommend_confirm_url, confirm_ok);
                   //console.log(recommend_confirm_url);
                   var url_recommend_new = recommend_url_list[global_index] + $("#recommend_date_select").val();

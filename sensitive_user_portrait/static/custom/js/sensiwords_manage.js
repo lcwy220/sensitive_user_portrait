@@ -1,341 +1,171 @@
-function Tag(){
-  this.ajax_method = 'GET';
-}
-Tag.prototype = {   //获取数据，重新画表
-  call_sync_ajax_request:function(url, method, callback){
+function call_ajax_request(url, callback){
     $.ajax({
       url: url,
-      type: method,
+      type: 'get',
       dataType: 'json',
       async: false,
       success:callback
     });
-  },
-
-Draw_tag_table:function(data){
+}
+function Draw_sensi_manage_table(data){
 	//console.log(data);
-	var data = []
-
-
-    $('#sensi_manage_table').empty();
+	$('#sensi_manage_table').empty();
     var item = data;
-    console.log(item);
+    
     var html = '';
 	html += '<table class="table table-bordered table-striped table-condensed datatable" >';
 	html += '<thead><tr style="text-align:center;">';
-	html += '<th>敏感词</th><th>等级</th><th>类别</th><th>时间</th><th>操作</th></tr>';
+	html += '<th>敏感词</th><th>等级</th><th>类别</th><th>操作</th></tr>';
 	html += '</thead>';
 	html += '<tbody>';
 	for(i=0;i<item.length;i++){
 		html += '<tr>'
-		html += '<td name="attribute_name">'+item[i].attribute_name+'</td>';
-		var item_value = item[i].attribute_value.split('&').join('/');
+		html += '<td name="attribute_name">'+item[i][0]+'</td>';
+		/*var item_value = item[i].attribute_value.split('&').join('/');
         if (!item_value){
             html += '<td name="attribute_value"><a href="" data-toggle="modal" data-target="#editor" id="currentEdit" style="color:darkred;font-size:10px;" title="添加标签名">添加</a></td>';
         }
         else{
             html += '<td name="attribute_value"><a href="" data-toggle="modal" data-target="#editor" id="currentEdit" title="点击编辑">'+item_value+'</a></td>';
-        }
-        html += '<td name="creater">'+item[i].user+'</td>';
-		html += '<td name="time">'+item[i].date+'</td>'
-		html += '<td name="operate" style="cursor:pointer;" ><a href="javascript:void(0)" id="delTag">删除</a><a href="javascript:void(0)" id="delTag">删除</a></td>';
+        }*/
+        html += '<td name="level">'+item[i][1]+'</td>';
+        html += '<td name="class">'+item[i][2]+'</td>';
+		//html += '<td name="time">'+item[i].date+'</td>';
+		html += '<td name="operate" style="cursor:pointer;" ><a href="javascript:void(0)" class="delTag">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" class="edit_word" data-toggle="modal" data-target="#word_edit">修改</a></td>';
 		html += '</tr>';
 	}
 	html += '</tbody>';
 	html += '</table>';
-	$('#Tagtable').append(html);
+	$('#sensi_manage_table').append(html);
+
+    $('.delTag').off("click").click(function(){
+
+    var delete_url = "/manage_sensitive_words/self_delete/?";
+    var temp = $(this).parent().prev().prev().prev().html();
+    delete_url += 'word=' + temp;
+    console.log(delete_url);
+    //window.location.href = url;
+    call_ajax_request(delete_url, self_refresh);
+    });
+
+    $('.edit_word').off("click").click(function(){
+        $('#edit_snesiword').empty();
+        var word_class=$(this).parent().prev().html()
+        var html = '';
+        html += '<div class="edit_word_model" style="margin-top:12px;"><input id="input_sensi" name="input_sensi" style="min-width: 30px;margin-top:0px;" value="'+$(this).parent().prev().prev().prev().html()+'">';
+        html += '本词等级:<select name="level" class="edit_sensi_level" style="width:90px; margin-right:5px;">  <option value="1">level 1</option>   <option value="2">level 2</option><option value="3">level 3</option></select>请选择类别:<select name="classify" class="edit_sensi_class" style="width:90px; margin-right:5px;">  <option value="politics">politics</option><option value="military">military</option><option value="law">law</option><option value="ideology">ideology</option><option value="democracy">democracy</option></select></div>';
+        //$("#edit_sensi_class option[value='"+word_class+"']").attr("selected", true);
+        //console.log(html);
+        $('#edit_snesiword').append(html); 
+       	
+    })
+    $('#word_modifySave').off("click").click(function(){
+    var url = '/manage_sensitive_words/identify_in/?date=';
+    var edit_date = currentDate();
+    var date = new Array;
+    date.push(edit_date);
+    var word_level=$(".edit_sensi_level").val();
+    var level = new Array;
+    level.push(word_level);
+    var word_class=$(".edit_sensi_class").val();
+    var class_word = new Array;
+    class_word.push(word_class);
+    var word = $('#input_sensi').val()
+    var word_list = new Array;
+    word_list.push(word);
+    url += date+'&words_list='+word_list+'&level_list='+level+'&category_list='+class_word;
+    console.log(url);
+    call_ajax_request(url, self_refresh); 
+	})
+
   }
-}
-var url ="/tag/search_attribute/";
-var Tag = new Tag();
-Tag.call_sync_ajax_request(url, Tag.ajax_method, Tag.Draw_tag_table);
 
-function Tag_search(){
-
-	 this.url = "/tag/search_attribute/?";
-}
-Tag_search.prototype = {   //群组搜索
-call_sync_ajax_request:function(url, method, callback){
-	$.ajax({
-      url: url,
-      type: method,
-      dataType: 'json',
-      async: false,
-      success:callback
-    });
-},
-searchResult:function(data){
-	 $('#Tagtable').empty();
-    var item = data;
-    var html = '';
-	html += '<table class="table table-bordered table-striped table-condensed datatable" >';
-	html += '<thead><tr style="text-align:center;">';
-	html += '<th>标签类别</th><th>标签名</th><th>创建者</th><th>时间</th><th>操作</th></tr>';
-	html += '</thead>';
-	html += '<tbody>';
-	for(i=0;i<item.length;i++){
-		html += '<tr>'
-		html += '<td name="attribute_name">'+item[i].attribute_name+'</td>';
-		html += '<td name="attribute_value"><a href="javascript:void(0)" data-toggle="modal" data-target="#editor" title="点击编辑">'+item[i].attribute_value+'</a></td>';
-		html += '<td name="creater">'+item[i].user+'</td>';
-		html += '<td name="time">'+item[i].date+'</td>'
-		html += '<td name="operate" style="cursor:pointer;" ><a href="javascript:void(0)" id="delTag">删除</a></td>';
-		html += '</tr>';
-	}
-	html += '</tbody>';
-	html += '</table>';
-	$('#Tagtable').append(html);
-    $('.datatable').dataTable({
-        "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
-        "sPaginationType": "bootstrap",
-        "oLanguage": {
-            "sLengthMenu": "_MENU_ 每页"
-        }
-    });
-}
-}
-
-function searchbtnFun(that){
-	$('#searchbtn').off("click").click(function(){
-		var url = that.url;
-		$("#float-wrap").addClass("hidden");
-        $("#SearchTab").addClass("hidden");
-		url += get_data();
-		that.call_sync_ajax_request(url,that.ajax_method,that.searchResult);
-	});
-}
-
-
-function get_data(){
-	var temp='';
-    var input_value;
-    var input_name;
-	 $('.searchinput').each(function(){
-        input_name = $(this).attr('name')+'=';
-        input_value = $(this).val()+'&';
-        temp += input_name;
-        temp += input_value;;
-    });
-	//console.log(temp);
-	temp = temp.substring(0, temp.length-1);
-	return temp;
-}
-
-var fbase = new Tag_search();
-searchbtnFun(fbase);
-
-function Tag_add(){
-  this.url = '/tag/submit_attribute/?';
-}
-Tag_add.prototype = {   //获取数据，重新画表
-  call_sync_ajax_request:function(url, method, callback){
-    $.ajax({
-      url: url,
-      type: method,
-      dataType: 'json',
-      async: false,
-      success:callback
-    });
-  },
-
-NewTag:function(data){
-	//console.log(data);
-  location.reload();
-  }
-}
-
-function tagAddFun(that){
-	$('#newTag').off("click").click(function(){
-		var url = that.url;
-		url += get_input_data();
-		that.call_sync_ajax_request(url,that.ajax_method,that.NewTag);
-	});
-}
-
-function get_input_data(){
-	var temp='';
-    var input_value;
-    var input_name;
-	var tagnames = document.getElementsByName("attribute_name");
-	var tagclass = document.getElementById("tagClass");
-	input_name = "attribute_name=";
-	input_value = document.getElementsByName("attribute_name")[tagnames.length-1].value;
-	var reg = "^[a-zA-Z0-9_\u4e00-\u9fa5\uf900-\ufa2d]";
-	
-	while(!input_value.match(reg)){
-		alert('标签类型只能包含英文、汉字、数字和下划线，请重新输入');
-		tagnames.focus();
-	}
-	/*if(!input_value.match(reg)){
-		alert('标签类型只能包含英文、汉字、数字和下划线，请重新输入');
-		return;
-	}*/
-	temp += input_name;
-    temp = temp + input_value +'&';
-	var tagnames = document.getElementsByName("attribute_value");
-	input_name = "attribute_value=";
-	var value = '';
-    var value_list = new Array();
-	//console.log(tagnames);
-	for(i=4;i<tagnames.length;i++){
-        var this_value = document.getElementsByName("attribute_value")[i].value;
-		console.log(this_value);
-		if(this_value){
-			value_list.push(this_value);
-		}
-	}
-	value = value_list.join(',');
-    console.log(value);
-	input_value = value+'&';
-	temp += input_name;
-    temp += input_value;
-	input_name = "user=";
-	input_value ="admint&";
-	temp += input_name;
-    temp += input_value;
-	input_name = "date=";
-	input_value =currentDate()+'&';
-	temp += input_name;
-    temp += input_value;
-	temp = temp.substring(0, temp.length-1);
-	console.log(temp);
-	return temp;
-}
 function currentDate(){
-	var myDate = new Date();
-	var yy = myDate.getFullYear();
-	var mm = myDate.getMonth() + 1;
-	if(mm<10){
-		mm = '0'+mm.toString();
-		
-	}
-	var dd = myDate.getDate();
-	if(dd<10){
-		dd = '0'+dd.toString();
-	}
-	
-	var date = yy.toString()+ '-' + mm.toString() + '-' + dd.toString();
-	console.log(date);
-	return date;
-}
-var TagAdd = new Tag_add();
-tagAddFun(TagAdd);
+    var myDate = new Date();
+    var yy = myDate.getFullYear();
+    var mm = myDate.getMonth() + 1;
+    if(mm<10){
+        mm = '0'+mm.toString();
+        
+    }
+    var dd = myDate.getDate();
+    if(dd<10){
+        dd = '0'+dd.toString();
+    }
+    
+    var date = yy.toString()+ '-' + mm.toString() + '-' + dd.toString();
 
- function Tag_delete(){
-	 this.url = "/tag/delete_attribute/?";
+    return date;
 }
-Tag_delete.prototype = {   //删除
-call_sync_ajax_request:function(url, method, callback){
-    $.ajax({
-      url: url,
-      type: 'GET',
-      dataType: 'json',
-      async: true,
-      success:callback
+
+$('#add_words_Save').off("click").click(function(){
+    var add_words_name = new Array;
+    var add_words_class = new Array;
+    var add_words_level = new Array;
+    var add_words_date = currentDate();
+    $('.add_sensi_level').each(function(){
+        var each_word_level = $(this).val();
+        add_words_level.push(each_word_level);
+    })
+    $('.add_sensi_class').each(function(){
+        var each_word_class = $(this).val();
+        add_words_class.push(each_word_class);
     });
-},
-del:function(data){
-	//location.reload();
-	console.log(data);
+    $('[name="input_sensi"]').each(function(){
+        var each_word_name = $(this).val();
+        if (each_word_name == ''){
+        alert("敏感词不能为空！");
+    
+        return false;
+        }else{
+            add_words_name.push(each_word_name);
+        }
+        //console.log(each_word_name);
+        
+    })
+    if (add_words_name.length == add_words_level.length){
+        var url = '/manage_sensitive_words/identify_in/'
+    url += '?date='+ add_words_date + '&words_list=' +add_words_name + '&level_list=' + add_words_level + '&category_list=' + add_words_class;
+    call_ajax_request(url, self_refresh);
+}else{
+    return 0;
 }
-}
+    
+})
 
-function deleteGroup(that){
-	$('a[id^="delTag"]').click(function(e){
-		var url = that.url;
-		var temp = $(this).parent().prev().prev().prev().prev().html();
-		console.log(temp);
-		url = url + 'attribute_name=' + temp;
-		//window.location.href = url;
-		that.call_sync_ajax_request(url,that.ajax_method,that.del);
-		console.log(url);
-	});
-}
 
-var Tag_delete = new Tag_delete();
-deleteGroup(Tag_delete);
-
-function TagChange(){
-  this.url = '/tag/change_attribute/?';
-}
-TagChange.prototype = {   //获取数据，重新画表
-  call_sync_ajax_request:function(url, method, callback){
-    $.ajax({
-      url: url,
-      type: method,
-      dataType: 'json',
-      async: false,
-      success:callback
+$(".addIcon").off("click").click(function(){
+        var html = '';
+        html = '<div class="add_word_model" style="margin-top:12px;">等级:<select name="level" class="add_sensi_level" style="width:90px; margin-right:5px;">  <option value="1">level 1</option>   <option value="2">level 2</option><option value="3">level 3</option></select>类别:<select name="classify" class="add_sensi_class" style="width:90px; margin-right:5px;">  <option value="politics">politics</option><option value="military">military</option><option value="law">law</option><option value="ideology">ideology</option><option value="democracy">democracy</option></select><input name="input_sensi" class="input_sensi" style="min-width: 30px;margin-top:0px;" placeholder="输入敏感词"></div>';
+        $('#add_word_div').append(html);
     });
-  },
 
-ChangeTag:function(data){
-	//console.log(data);
-   location.reload();
-  }
+
+//var table_data1 = [{'words':'敏感词1','level':'A','sensi_class':'a类','date':'09-01'},{'words':'敏感词2','level':'A','sensi_class':'b类','date':'09-01'},{'words':'敏感词3','level':'B','sensi_class':'a类','date':'09-01'},{'words':'敏感词4','level':'B','sensi_class':'b类','date':'09-01'}];
+all_words='/manage_sensitive_words/search_sensitive_words/?level=0&category='
+call_ajax_request(all_words, Draw_sensi_manage_table);
+
+$('#edit_word').click(function(){
+
+})
+
+$('#show_sensi_manage').click(function (){
+    var word_level=$("#sensi_manage_level").val();
+    var word_class=$("#sensi_manage_class").val();
+    if (word_class== 0){
+        word_class = '';
+    }
+    //alert(word_level);
+    var base_choose_data_url = '/manage_sensitive_words/search_sensitive_words/?'
+    var choose_data_url=base_choose_data_url+'level='+word_level+'&category='+word_class;
+    //var need_data=[]
+    //console.log(url);
+	call_ajax_request(choose_data_url, Draw_sensi_manage_table);   
+})
+
+function self_refresh(){
+
+    window.location.reload();
 }
 
-function tagChangeFun(that){
-	$('#modifySave').off("click").click(function(){
-		var url = that.url;
-		url += input_data();
-		that.call_sync_ajax_request(url,that.ajax_method,that.ChangeTag);
-	});
-}
-
-function input_data(){
-	var temp='';
-    var input_value;
-    var input_name;
-	//console.log(tagnames);
-	input_name = "attribute_name=";
-	input_value = $('#attributeName').html()+'&';
-	temp += input_name;
-    temp += input_value;
-
-	var tagnames = $('.tagName').length;
-	input_name = "attribute_value=";
-	var value = '';
-	var reg = "^[a-zA-Z0-9_\u4e00-\u9fa5\uf900-\ufa2d]+$";	
-	for(i=0;i<tagnames;i++){
-		value += $(".tagName").eq(i).html()+',';
-		//console.log(value);
-	}
-	value = value.substring(0,value.length-1);
-	input_value = value+'&';
-	temp += input_name;
-    temp += input_value;
-
-	input_name = "user=";
-	input_value ="admint&";
-	temp += input_name;
-    temp += input_value;
-	input_name = "date=";
-	input_value =cDate()+'&';
-	temp += input_name;
-    temp += input_value;
-	temp = temp.substring(0, temp.length-1);
-	console.log(temp);
-	return temp;
-}
-function cDate(){
-	var myDate = new Date();
-	var yy = myDate.getFullYear();
-	var mm = myDate.getMonth() + 1;
-	if(mm<10){
-		mm = '0'+mm.toString();
-		
-	}
-	var dd = myDate.getDate();
-	if(dd<10){
-		dd = '0'+dd.toString();
-	}
-	
-	var date = yy.toString()+ '-' + mm.toString() + '-' + dd.toString();
-	//console.log(date);
-	return date;
-}
-var TagChange = new TagChange();
-//Tag.call_sync_ajax_request(url, Tag.ajax_method, Tag.AddTag);
-tagChangeFun(TagChange);
 

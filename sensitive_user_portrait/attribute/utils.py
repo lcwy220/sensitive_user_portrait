@@ -508,9 +508,15 @@ def search_attribute_portrait(uid):
         return_results['user_type'] = 0
         return_results['sensitive'] = 0
 
+    if results['photo_url'] == 0:
+        results['photo_url'] = 'unknown'
+    if results['location'] == 0:
+        results['location'] = 'unknown'
     return_results['photo_url'] = results['photo_url']
     return_results['uid'] = results['uid']
     return_results['uname'] = results['uname']
+    if return_results['uname'] == 0:
+        return_results['uname'] = 'unknown'
     return_results['location'] = results['location']
     return_results['fansnum'] = results['fansnum']
     return_results['friendsnum'] = results['friendsnum']
@@ -831,6 +837,7 @@ def search_portrait(condition_num, query, sort, size):
 
 def sensitive_attribute(uid, date):
     results = {}
+    portrait = {}
     utype = user_type(uid)
     if not utype:
         results['utype'] = 0
@@ -840,6 +847,12 @@ def sensitive_attribute(uid, date):
     results['uid'] = uid
     portrait_result = es.get(index='sensitive_user_portrait', doc_type='user', id=uid)['_source']
     results['uname'] = portrait_result['uname']
+    if portrait_result['uname'] == 0:
+        results['uname'] = 'unknown'
+    if portrait_result['photo_url'] == 0:
+        portrait_result['photo_url'] = 'unknown'
+    if portrait_result['location'] == 0:
+        portrait_result['location'] = 'unknown'
     results['photo_url'] = portrait_result['photo_url']
 
     # sensitive weibo number statistics
@@ -888,8 +901,8 @@ def sensitive_attribute(uid, date):
 
     sentiment_trend = user_sentiment_trend(uid)
     emotion_number = sentiment_trend[0]
-    return_results['negetive_index'] = float(emotion_number[2])/(emotion_number[2]+emotion_number[1]+emotion_number[0])
-    return_results['negetive_influence'] = float(emotion_number[1])/(emotion_number[2]+emotion_number[1]+emotion_number[0])
+    results['negetive_index'] = float(emotion_number[2])/(emotion_number[2]+emotion_number[1]+emotion_number[0])
+    results['negetive_influence'] = float(emotion_number[1])/(emotion_number[2]+emotion_number[1]+emotion_number[0])
     sentiment_dict = sentiment_trend[1]
     datetime = ts2datetime(time.time()).replace('-', '')
     return_sentiment = dict()
@@ -902,10 +915,10 @@ def sensitive_attribute(uid, date):
         ts = ts + 24*3600
         date = ts2datetime(ts).replace('-', '')
         temp = sentiment_dict.get(date, {})
-        return_sentiment['positive'].append(temp.get('positive', 0))
-        return_sentiment['negetive'].append(temp.get('negetive', 0))
-        return_sentiment['neutral'].append(temp.get('neutral', 0))
-    return_results['sentiment_trend'] = return_sentiment
+        return_sentiment['positive'].append([temp.get('positive', 0), date])
+        return_sentiment['negetive'].append([temp.get('negetive', 0), date])
+        return_sentiment['neutral'].append([temp.get('neutral', 0), date])
+    results['sentiment_trend'] = return_sentiment
 
     if 1:
         portrait_results = es.get(index="sensitive_user_portrait", doc_type='user', id=uid)['_source']

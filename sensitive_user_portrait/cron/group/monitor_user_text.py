@@ -311,9 +311,13 @@ def compute_group_inner(task_name, task_user, start_ts):
                 inner_retweet_dict = None
             if inner_retweet_dict:
                 inner_group_dict[root_uid] = merge_dict(inner_group_dict[root_uid], inner_retweet_dict)
+            iter_ts += time_segment
         user_inner_retweet_count = sum(inner_group_dict[root_uid].values())
         user_count_dict[root_uid] = user_inner_retweet_count
     all_be_retweet_count = sum(user_count_dict.values())
+    if all_be_retweet_count==0:
+        group_status = 1
+        return group_status
     sort_user_inner_retweet_count = sorted(user_count_dict.items(), key=lambda x:x[1], reverse=True)
     top5_user = sort_user_inner_retweet_count[:5]
 
@@ -324,7 +328,10 @@ def compute_group_inner(task_name, task_user, start_ts):
         key = 'top' + str(rank)
         index_body[key] = json.dumps(top5_user[rank-1])
     key = 'inner_' + date
-    es.index(index=monitor_result_name, doc_type=task_name, id=key, body=index_body)
+    # save inner-retweet graph by dict {root_uid1:{uid1:count1, uid2:count2}, ...}
+    index_body['inner_graph'] = json.dumps(inner_group_dict)
+    
+    es.index(index=monitor_index_name, doc_type=task_name, id=key, body=index_body)
     group_status = 1
     return group_status
 
@@ -347,12 +354,12 @@ def main():
             start_ts = int(start_ts)
             #now_ts = time.time()
             #test
-            now_ts = datetime2ts('2013-09-02')
+            now_ts = datetime2ts('2013-09-08')
             if start_ts == now_ts:
                 status = add_task_name(task_name)
                 if status == 0:
                     print 'add task to redis fail'
-                break
+                    break
 
             if start_ts + 900 <= now_ts:
                 task_user  = get_task_user(task_name)
@@ -365,6 +372,7 @@ def main():
                     status = compute_mid_result_group(task_name, task_user, start_ts)
                     #compute group polarization----compute once a day
                     if datetime2ts(ts2datetime(start_ts)) == start_ts:
+                        print 'start commpute group inner %s' % ts2date(start_ts)
                         group_status = compute_group_inner(task_name, task_user, start_ts)
                         status += group_status
 
@@ -374,6 +382,7 @@ def main():
                     #update the record time
                     start_ts += 900
                     task_doing_status = identify_task_doing(task_name)
+                    print 'task_doing_status:', task_doing_status
                     if task_doing_status == True:
                         r_task.hset('monitor_task_time_record', task_name, start_ts)
                         status = add_task_name(task_name)
@@ -397,4 +406,5 @@ if __name__=='__main__':
     '''
     task_name = 'testtask'
     #add_task_name(task_name)
-    
+    #test
+    #es.delete(index=monitor_index_name, doc_type='testtask2', id='inner_2013-09-01')

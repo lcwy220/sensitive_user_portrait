@@ -295,8 +295,25 @@ function Draw_think_topic(){
     };                
     myChart.setOption(option); 
 }
-function Draw_think_emotion(){
+function Draw_think_emotion(status_data){
     var myChart = echarts.init(document.getElementById('pie_emotion')); 
+    var first_status_dict = {'positive': '积极', 'negetive': '消极', 'middle': '中性'};
+    var second_status_dict = {'positive': '积极', 'anxious': '焦虑', 'sad': '悲伤', 'anger': '生气', 'other': '其他', 'middle': '中性'};
+    var first_series = new Array();
+    var second_series = new Array();
+
+    for (var key in first_status_dict){
+        first_series.push({"value":status_data[key], 'name': first_status_dict[key]})
+    }
+    var negative = status_data['negetive'];
+    for (var key in second_status_dict){
+        if (key in first_status_dict){
+            second_series.push({"value":status_data[key], 'name': second_status_dict[key]})
+        }
+        else{
+            second_series.push({"value":status_data[key] * negative , 'name': second_status_dict[key]})
+        }
+    }
     var option = {
         title : {
             text: '心理状态',
@@ -342,11 +359,7 @@ function Draw_think_emotion(){
                         }
                     }
                 },
-                data:[
-                    {value:5, name:'积极'},
-                    {value:5, name:'中性'},
-                    {value:12, name:'消极', selected:true}
-                ]
+                data:first_series,
             },
             {
                 name:'',
@@ -359,27 +372,29 @@ function Draw_think_emotion(){
                 funnelAlign: 'left',
                 max: 1048,
                 
-                data:[
-                    {value:5, name:'积极'},
-                    {value:5, name:'中性'},
-                    {value:3, name:'生气'},
-                    {value:4, name:'悲伤'},
-                    {value:5, name:'其他'}
-                ]
+                data:second_series
             }
         ]
     }
     myChart.setOption(option);  
 }
 function drawBasic(personalData){
-    var APsum = document.getElementById('APsum');
-    APsum.innerHTML = personalData.all_count;
-    var IPsum = document.getElementById('IPsum');
-    IPsum.innerHTML = personalData.all_count;
-    var FPsum = document.getElementById('FPsum');
-    FPsum.innerHTML = personalData.all_count;
-    var SPsum = document.getElementById('SPsum');
-    SPsum.innerHTML = personalData.all_count;
+    var APsum = document.getElementById('APsum');
+
+    APsum.innerHTML = personalData.all_count;
+
+    var IPsum = document.getElementById('IPsum');
+
+    IPsum.innerHTML = personalData.all_count;
+
+    var FPsum = document.getElementById('FPsum');
+
+    FPsum.innerHTML = personalData.all_count;
+
+    var SPsum = document.getElementById('SPsum');
+
+    SPsum.innerHTML = personalData.all_count;
+
     var value = 'activeness' in personalData?personalData['activeness'].toFixed(2):'无此数据';
     $('#APnum').html(value);
     var value = 'importance' in personalData?personalData['importance'].toFixed(2):'无此数据';
@@ -411,54 +426,96 @@ function drawBasic(personalData){
     var value = 'online_pattern' in personalData?personalData['online_pattern'][0][0]:'无此数据';
     $('#userOnline').html(value);
     
-    var img = document.getElementById('portraitImg');
-    if(personalData.photo_url == "unknown"){
-        img.src =  "http://tp2.sinaimg.cn/1878376757/50/0/1";
-    }else{
-        img.src = personalData.photo_url;
-    }
-    var gender = document.getElementById('userGender');
-    if(personalData.gender){
-        gendernum = personalData.gender;
-        if (gendernum == 1){
-            gender.innerHTML = '男';
-        }else{
-            gender.innerHTML = '女';
-        }
-    }else{
-        gender.innerHTML = "无此数据";
-    }
-        
-    var domain = document.getElementById('userDomain');
-    if(personalData.domain){
+    var img = document.getElementById('portraitImg');
+
+    if(personalData.photo_url == "unknown"){
+
+        img.src =  "http://tp2.sinaimg.cn/1878376757/50/0/1";
+
+    }else{
+
+        img.src = personalData.photo_url;
+
+    }
+
+    var gender = document.getElementById('userGender');
+
+    if(personalData.gender){
+
+        gendernum = personalData.gender;
+
+        if (gendernum == 1){
+
+            gender.innerHTML = '男';
+
+        }else{
+
+            gender.innerHTML = '女';
+
+        }
+
+    }else{
+
+        gender.innerHTML = "无此数据";
+
+    }
+
+        
+
+    var domain = document.getElementById('userDomain');
+
+    if(personalData.domain){
+
         var content = personalData.domain;
         domain.innerHTML = content.join(',');
-        // domain.innerHTML = '媒体';
-    }else{
-        domain.innerHTML = "无此数据";
-    }
-        
-    var topic = document.getElementById('userTopic');
-    if(personalData.topic){
-        var topicdict = personalData.topic;
-        var str = '';
-        for(var i = 0;i < topicdict.length;i++){
-            if (i == (topicdict.length -1)){
-                str += topicdict[i][0];
-            }else{
-                str = str + topicdict[i][0] +',';
-            }
-            
-        }
-        topic.innerHTML = str;
-        // topic.innerHTML = '生活，娱乐';
-    }else{
-        topic.innerHTML = "无此数据";
-    }
+        // domain.innerHTML = '媒体';
+
+    }else{
+
+        domain.innerHTML = "无此数据";
+
+    }
+
+        
+
+    var topic = document.getElementById('userTopic');
+
+    if(personalData.topic){
+
+        var topicdict = personalData.topic;
+
+        var str = '';
+
+        for(var i = 0;i < topicdict.length;i++){
+
+            if (i == (topicdict.length -1)){
+
+                str += topicdict[i][0];
+
+            }else{
+
+                str = str + topicdict[i][0] +',';
+
+            }
+
+            
+
+        }
+
+        topic.innerHTML = str;
+
+        // topic.innerHTML = '生活，娱乐';
+
+    }else{
+
+        topic.innerHTML = "无此数据";
+
+    }
+
     if(personalData.user_type){
         if (personalData.user_type == 1){
             $('#sensitive_type').attr("title", "此用户为敏感用户，点击查看敏感性分析")
-                .attr("href", "/index/personal/?uid=" + uid)
+                .attr("href", "/index/sensitive_person/?uid=" + uid)
                 .removeClass("hidden");
         }
     }
@@ -492,7 +549,7 @@ function page_group_weibo(start_row,end_row,data){
             var type = '敏感微博';
         }
 
-        html += '<div style="height:60px;background:' + colors[s%2] + ';font-size:13px">';
+        html += '<div style="height:70px;background:' + colors[s%2] + ';font-size:13px">';
         // html += '<p><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
         html += '<p style="color:black;">' + timestamp + '&nbsp;&nbsp;' + geo + '&nbsp;&nbsp;' + text + '</p>';
         html += '<p style="margin-top:-5px;color:darkred;text-align:right">' + type + '&nbsp;&nbsp;转发(' + repost + ')&nbsp;&nbsp;评论(' + comment + ')</p>';
@@ -588,7 +645,7 @@ function draw(data){
 
     // unfinished
     Draw_think_topic();
-    Draw_think_emotion();
+    Draw_think_emotion(personalData.psycho_status);
 }
 
 var personalData;

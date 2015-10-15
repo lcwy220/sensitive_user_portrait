@@ -28,7 +28,6 @@ function call_ajax_request(url, callback){
         success: callback
     });
 }
-var tomorrow = new Date(2013,8,8);
 
 function select_init(){
   $("#domain").empty();

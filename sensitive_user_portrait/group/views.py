@@ -12,7 +12,7 @@ from track_utils import submit_track_task, search_track_task,\
                         end_track_task, delete_track_task
 from track_result_utils import get_track_result, get_count_weibo, get_sentiment_weibo, \
                                get_sensitive_word, get_geo_user, get_geo_weibo, \
-                               get_inner_top_weibo
+                               get_inner_top_weibo, get_hashtag_weibo
 
 from sensitive_user_portrait.global_config import UPLOAD_FOLDER, ALLOWED_EXTENSIONS
 from sensitive_user_portrait.search_user_profile import es_get_source
@@ -155,6 +155,8 @@ def ajax_submit_track_task():
     #input_data = request.get_json()
     # test
     input_data = {'task_name':'testtask', 'state':'it is a test', 'uid_list':['1311967407', '1671386130', '1653255165']}
+    #input_data = {'task_name': 'testtask2', 'state': 'it is a test', \
+    #        'uid_list':['3270699555', '3199485481', '1736407257', '1471234522', '1158518402', '1688547585', '1947335820', '3200285974']}
     '''
     now_ts = time.time()
     now_date = ts2datetime(now_ts)
@@ -253,6 +255,17 @@ def ajax_get_geo_user():
     timestamp = request.args.get('timestamp', '')
     timestamp = int(timestamp)
     results = get_geo_user(task_name, geo, timestamp)
+    return json.dumps(results)
+
+# show weibo when click hashtag
+@mod.route('/get_hashtag_weibo/')
+def ajax_get_hashtag_weibo():
+    results = {}
+    task_name = request.args.get('task_name', '')
+    hashtag = request.args.get('hashtag', '')
+    timestamp = request.args.get('timestamp', '')
+    timestamp = int(timestamp)
+    results = get_hashtag_weibo(task_name, hashtag, timestamp)
     return json.dumps(results)
 
 # show weibo when click geo

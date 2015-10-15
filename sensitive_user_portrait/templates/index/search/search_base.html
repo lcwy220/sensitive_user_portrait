@@ -1,14 +1,12 @@
 <div id="textsearch">
-    <form class="search_form" id="" method="post" action="">
         <span class="searchborder fleft">
-            <input type="text" id="keyword" value="" placeholder="请输入要搜索的微博内容"/>
+            <input name="words_list" type="text" value="" placeholder="请输入要搜索的微博内容"/>
         </span>
         <span class="fleft" style="margin-left:20px;">
             <a title="">
-                <input id="simple_search" class="search" type="submit" value="确定"/>
+                <input type="submit" class="bluebtn" id="words_list" value="确定"/>
             </a>
         </span>
-    </form>
 </div>
 
 <div id="supersearch">
@@ -95,3 +93,15 @@
       <input name="submit" type="submit" class="bluebtn" id="bluebtn" value="确定" />
     </div>
 </div>
+
+<script>
+    $('#words_list').click(function(){
+        words = $("input[name='words_list']").val()
+        if (words == ''){
+            alert("关键词不能为空");
+        }
+        else{
+            window.location.href = '/index/text_search/?words_list=' + words;
+        }
+    })
+</script>

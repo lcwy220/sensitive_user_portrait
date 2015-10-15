@@ -1,0 +1,59 @@
+{% extends "index/base.html" %} 
+{% block title %}微博文本检索{% endblock title %}
+{% block subtitle %}微博文本检索{% endblock subtitle %}
+{% block custom_css %}
+{{ super() }}
+	<link rel="stylesheet" href="/static/custom/css/overview.css" media="screen" />
+    <link rel="stylesheet" href="/static/custom/css/jelevator.css"  media="screen" />
+	<link rel="stylesheet" href="/static/custom/css/sensitive_person.css" media="screen" />
+	<style>
+	.box{width:310px;height:300px;float:left;}
+	li{list-style:none;}
+    .mouse {border:#d0d0d0 solid 1px;}
+	</style>
+{% endblock custom_css  %}
+{% block body %}
+	<div id="page">
+		<div class="box-content" style="padding-right:50px;">
+		        <span style="float:left;margin-top:0px">已选条件:</span>
+		        <div id="conditions" style='float:left;margin-top:0px;'></div>
+		</div>
+		<div id="weibo_text" style="float:left;width:950px;font-size:16px;">
+			<hr />
+			<div id="weibo_content">
+				<div id="weibo_content2"></div>
+				<div id="pageGro" style="height:60px;margin-left:350px">
+                <div class="pageUp">上一页</div>
+                <div class="pageList">
+                    <ul>
+                        <li>1</li>
+                        <li>2</li>
+                        <li>3</li>
+                        <li>4</li>
+                        <li>5</li>
+                    </ul>
+                </div>
+                <div class="pageDown">下一页</div>
+            	</div>
+			</div>
+		</div>
+
+		<div id="weibo_re_modal">
+		</div>
+	</div>
+{% endblock body %}
+{% block end_js %}
+  <script  src="/static/scripts/jquery-jelevator-1.0.3.min.js"></script>
+  <script type="text/javascript">
+    var words_list = "{{ words_list }}";
+	jQuery(function($){
+	    $("h1,h2").jElevator({
+	        howTopButton: true,
+	        showBottomButton: true,
+	        showSectionsMenu: true
+	    });
+	});
+ </script>
+ <script  src="/static/custom/js/global_weibo.js"></script>
+ <script  src="/static/custom/js/search_text_result.js"></script>
+{% endblock end_js%}

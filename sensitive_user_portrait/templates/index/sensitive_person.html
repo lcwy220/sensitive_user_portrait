@@ -56,7 +56,7 @@
 		    <div id="sensiword_hashtag">
 			    <div style="width:250px;float:right;">
 			    	<span id="hash_word_detail" style="margin-right: 80px; margin-top: 10px;float:right;">
-			    		<a data-toggle="modal" data-target="#hash_detail">详情</a>
+			    		<a data-toggle="modal" data-target="#hash_detail">查看详情</a>
 			    	</span>
 			    	<span style="font-size:18px;float:left;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hashtag云</strong></span>
 			    	<div id="hashtag_cloud" style="width:320px;height:300px;float:left;margin-left:-20px;z-index:20"></div>
@@ -64,7 +64,7 @@
 			    </div>
 			    <div style="width:250px;float:right;">
 			    	<span id="hash_word_detail" style="margin-right: 20px; margin-top: 10px;float:right;">
-			    		<a data-toggle="modal"  data-target="#sensi_detail">详情</a>
+			    		<a data-toggle="modal"  data-target="#sensi_detail">查看详情</a>
 			    	</span>
 			    	<span style="font-size:18px;float:left;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;敏感词云</strong></span>
 					<div id="sensi_word_cloud" style="width:320px;height:300px;float:left;margin-left:-20px;"></div>
@@ -80,11 +80,11 @@
 			            <div class="clear" style= "margin-top:20px;">
                 <div style="padding:10px;">
                     <span style='font-size:16px;color:#777'>转发排名</span>
-                    <span type="button" data-toggle="modal" data-target="#rank_repost" style='font-size:16px;margin-left:160px;cursor:pointer'><u>查看更多</u></span>
+                    <span type="button" data-toggle="modal" data-target="#rank_repost" style='font-size:16px;margin-left:160px;cursor:pointer'><u>查看详情</u></span>
                     <span style="margin-left:25px;font-size:16px;color:#777">被转发排名</span>
-                    <span data-toggle="modal" type="button"data-target="#rank_retweeted"  style='font-size:16px;margin-left:155px;cursor: pointer'><u>查看更多</u></span>
+                    <span data-toggle="modal" type="button"data-target="#rank_retweeted"  style='font-size:16px;margin-left:155px;cursor: pointer'><u>查看详情</u></span>
                     <span style="margin-left:45px;font-size:16px;color:#777">@排名</span>
-                    <span type="button"data-toggle="modal" data-target="#rank_at" style='font-size:16px;margin-left:150px;cursor: pointer'><u>查看更多</u></span>
+                    <span type="button"data-toggle="modal" data-target="#rank_at" style='font-size:16px;margin-left:150px;cursor: pointer'><u>查看详情</u></span>
                 </div>	
                 <div id='repost' style='overflow-x:hidden;width:300px;float:left;'>
                 </div>
@@ -98,6 +98,7 @@
 		<div id="emotion_analysis" style="float:left">
 			<hr />
 			<h2>情绪分析</h2>
+			<div id="sentiment_index_influence" style="margin:20px;font-size:18px;"></div>
 			<div id="emotion_chart" style="height:300px;width:950px;float:left;"></div>
 		</div>
 
@@ -105,13 +106,14 @@
 			<hr />
 			<h2>微博文本</h2>
 			<div style="margin-left:20px;margin-top:10px;">类型：
-				<input type="radio" style="opacity:1; position:static;" name="origin_re" checked value="1" />原创
+				<input type="radio" style="opacity:1; position:static;" name="origin_re" checked value="0" />所有
+				<input type="radio" style="opacity:1; position:static;margin-left:10px;" name="origin_re" value="1" />原创
 				<input type="radio" style="opacity:1; position:static;margin-left:10px;" name="origin_re" value="2" />转发
 			</div>
 			<div style="margin-left:20px;margin-top:10px;">排序方式：
-				<input type="radio" style="opacity:1; position:static;" name="seq_method" checked value="1">时间
-				<input type="radio" style="opacity:1; position:static;margin-left:10px;" name="seq_method" value="2">转发量
-				<input type="radio" style="opacity:1; position:static;margin-left:10px;" name="seq_method" value="3">评论量
+				<input type="radio" style="opacity:1; position:static;" name="seq_method" checked value="0">时间
+				<input type="radio" style="opacity:1; position:static;margin-left:10px;" name="seq_method" value="1">转发量
+				<input type="radio" style="opacity:1; position:static;margin-left:10px;" name="seq_method" value="2">评论量
 			</div>
 			<div id="weibo_content">
 				<div id="weibo_content2"></div>
@@ -166,29 +168,62 @@
 		  </div>
 		</div>
 
+		<div class="modal fade" id="rank_repost" tabindex="-1" role="dialog" aria-labelledby="sensi_detail_content">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+		        <h4 class="modal-title">更多转发排名</h4>
+		      </div>
+		      <div class="modal-body" id="more_repost_body">
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
+		<div class="modal fade" id="rank_retweeted" tabindex="-1" role="dialog" aria-labelledby="sensi_detail_content">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+		        <h4 class="modal-title">更多被转发排名</h4>
+		      </div>
+		      <div class="modal-body" id="more_retweeted_body">
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
+		<div class="modal fade" id="rank_at" tabindex="-1" role="dialog" aria-labelledby="sensi_detail_content">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+		        <h4 class="modal-title">更多@排名</h4>
+		      </div>
+		      <div class="modal-body" id="more_rank_at_body">
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
 		<div id="weibo_re_modal">
-				<div class="modal fade" id="retweeted_line" tabindex="-1" role="dialog" aria-labelledby="sensi_detail_content">
-				  <div class="modal-dialog" role="document">
-				    <div class="modal-content">
-				      <div class="modal-header">
-				        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
-				        <h4 class="modal-title" id="sensi_detail_content">微博转发关系</h4>
-				      </div>
-				      <div class="modal-body">
-				        ...
-				      </div>
-				      <div class="modal-footer">
-				        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				      </div>
-				    </div>
-				  </div>
-				</div>
 		</div>
 		<!--end  模态框：hashtag云和敏感词云  -->
 {% endblock body %}
 {% block end_js %}
   <script  src="/static/scripts/jquery-jelevator-1.0.3.min.js"></script>
   <script type="text/javascript">
+    var uid = "{{ uid }}"
     jQuery(function($){
         $("h1,h2").jElevator({
             howTopButton: true,
