@@ -26,6 +26,14 @@ li{list-style-type:none;}
   margin-right: 10px;
   height:30px;
 }
+
+
+
+
+
+
+
+
 #close {
   width: 12px;
   height: 12px;
@@ -76,7 +84,7 @@ tbody td{text-align:center;}
 <div class="ch-container" style="width:1000px;">
 
     <div class="row">
-        <div id="content" class="col-lg-10 col-sm-10">
+      <div id="content" class="col-lg-10 col-sm-10">
             <!-- content starts -->
 			<div class="row">
         <div class="box col-md-12">
@@ -88,7 +96,7 @@ tbody td{text-align:center;}
 </div>
 <a id="free_add_class" href="" data-toggle="modal" data-target="#free_add" style="float:right;margin-bottom:10px;margin-top:12px;margin-right:40px;">自定义类别</a>
 <a id="add_sensi_tag" href="" data-toggle="modal" data-target="#add_sensiword" style="float:right;margin-bottom:10px;margin-top:12px;margin-right:40px;">添加敏感词</a>
-<div style="margin-top:12px;">等级:
+    <div style="margin-top:12px;">等级:
 			<select name="level" id="sensi_manage_level" style="width:90px; margin-right:5px;">   
 				<option value="0">所有等级</option> 
 		        <option value="1">level 1</option>   
@@ -98,16 +106,17 @@ tbody td{text-align:center;}
 		    类别:
 		    <select name="classify" id="sensi_manage_class" style="width:90px; margin-right:5px;"> 
 		        <option value="0">所有类别</option>   
-		        <option value="1">a类词</option>   
-		        <option value="2">b类词</option>   
-		        <option value="3">class 3</option>
-		        <option value="4">class 3</option>
-		     	<option value="5">class 3</option>	                 
+		        <option value="politics">politics</option>   
+		        <option value="military">military</option>   
+		        <option value="law">law</option>
+		        <option value="ideology">ideology</option>
+		     	<option value="democracy">democracy</option>	                 
 		    </select>
-		    <button id="show_sensi_manage" style="min-width: 50px;">确定</button></div>
-                <div class="box-content" id="sensi_manage_table" >
+		    <button id="show_sensi_manage" style="min-width: 50px;">确定</button>
+    </div>
+    <div class="box-content" id="sensi_manage_table" >
                     
-                </div>
+    </div>
             </div>
         </div>
     </div><!--/span-->
@@ -127,7 +136,7 @@ tbody td{text-align:center;}
         <h4 class="modal-title" id="myModalLabel">自定义类别</h4>
       </div>
       <div class="modal-body" id="EDIT" style="padding:30px;">
-        555
+        <div style="padding:10px;">请输入新类别：<input name="add_new_category"></div>
     
       </div>
       <div class="modal-footer">
@@ -144,119 +153,62 @@ tbody td{text-align:center;}
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" style=".alert .close:after{content='';height:0;width:0;}">&nbsp;</span></button>
         <h4 class="modal-title" id="myModalLabel">添加敏感词</h4>
       </div>
+      <div class="modal-body" id="add_snesiword" style="padding:30px;">
+      <div class="add_word_model" style="margin-top:12px;">等级:
+      <select name="level" class="add_sensi_level" style="width:90px; margin-right:5px;">   
+             
+            <option value="1">level 1</option>   
+            <option value="2">level 2</option>   
+            <option value="3">level 3</option>           
+      </select>
+        类别:
+        <select name="classify" class="add_sensi_class" style="width:90px; margin-right:5px;"> 
+              
+            <option value="politics">politics</option>   
+            <option value="military">military</option>   
+            <option value="law">law</option>
+            <option value="ideology">ideology</option>
+          <option value="democracy">democracy</option>                   
+        </select>
+        <input name="input_sensi" class="input_sensi" style="min-width: 50px;margin-top:0px;" placeholder="输入敏感词">
+        <span class="addIcon" id="addTag" style="margin-bottom:-10px;margin-top:0px;">
+      </span>
+
+    </div><div id="add_word_div"></div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" id="add_words_Save">添加</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="word_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" style=".alert .close:after{content='';height:0;width:0;}">&nbsp;</span></button>
+        <h4 class="modal-title" id="myModalLabel">敏感词修改</h4>
+      </div>
       <div class="modal-body" id="edit_snesiword" style="padding:30px;">
-        555
+        
     
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-        <button type="button" class="btn btn-primary" id="modifySave">保存</button>
+        <button type="button" class="btn btn-primary" id="word_modifySave">保存</button>
       </div>
     </div>
   </div>
 </div>
 
 
-
-
 {% endblock body %}
 
     {% block end_js %}
 
-  <script>
-
-	$("#uploadbtn1").off("click").click(function(){
-		$("#float-wrap").removeClass("hidden");
-		$("#uploadFile").removeClass("hidden");
-		return false;
-	});
-	
-	$(".close1").off("click").click(function(){
-		$("#float-wrap").addClass("hidden");
-		$("#uploadFile").addClass("hidden");
-	});
-	$(".close2").off("click").click(function(){
-		$("#float-wrap").addClass("hidden");
-		$("#SearchTab").addClass("hidden");
-    });
-	
-	
-</script>
-<script type="text/javascript" src="/static/custom/js/sensiwords_manage_test.js"></script> 
- 
-<script>
-    var add_flag;
-    var tagname = new Array();
-    tagname = ['a','b','c']
-    //$('a[id^="currentEdit"]').click(function(e){
-        add_flag = false;
-        var tagNames =  $(this).text();
-        if (tagNames.indexOf('/') > -1){
-            tagname = tagNames.split('/');
-        }
-		$('#EDIT').empty();
-		var html = '';
-		html += '<div class="" style="margin-bottom:10px;"><span style="">敏感词类别&nbsp;&nbsp;&nbsp;&nbsp;</span>';
-    for(i=0;i<tagname.length;i++){
-		//html += '<span style="color:blue;" id="attributeName">'+$(this).parent().prev().html()+'</span ></div>';
-    html += '<span class="tagbg" id="" name="attrName"><span class="tagName">'+tagname[i]+'</span><a  class="delCon" id="delIcon"></a></span>';
-    }
-		html += '<div class="" id=""><span style="margin-right:15px;">类别名称</span>';
-		
-		//html += '<input name="attribute_value" class="inputbox " type="text" value="" style="line-height:36px;">'
-		html += '<span class="smallAdd"></span>'
-		html += '</div>';
-		$('#EDIT').append(html);
-		$(".smallAdd").click(function(){
-            //console.log("sadsd");
-            if (!add_flag){
-                add_flag = true;
-                $(".smallAdd").before('<input name="newtag" id="newtag" class="input_tag_box" style="width:110px;" onkeydown="javascript:if (event.keyCode==13) addNew();"type="text" value="" style="line-height:36px;">');
-            }
-      //  });
-		$('a[id^="delIcon"]').click(function(e){
-			$(this).parent().remove();
-		});
-	});
-    $(".addIcon").off("click").click(function(){
-        var html = '';
-        html += '<div class="tagCols"><span style="margin-left:65px;">标签名</span><input name="attribute_value" class="inputbox " type="text" value="" style="margin-left:35px;line-height:36px;"></div>';
-        $('#ADDTAG').append(html);
-	});
-	function addNew(){
-        var newtag = $('.input_tag_box').val();
-        if (newtag == ''){
-            alert("标签名不能为空！");
-            return;
-        }
-        var tagnames = $('.tagName').length;
-        var nameszh = [];
-        for(i=0;i<tagnames;i++){
-            nameszh.push($(".tagName").eq(i).html());
-            //console.log(value);
-        }
-        var count = 0;
-        for(i=0;i<nameszh.length;i++){
-            if(newtag==nameszh[i]){
-                count = count +0;
-            }else{
-                count = count +1;
-            }
-        }
-        if(count==nameszh.length){
-            add_flag = false;
-            $(".input_tag_box").remove();
-            $(".smallAdd").before('<span class="tagbg" id="" name="attrName"><span class="tagName">'+newtag+'</span><a  class="delCon" id="delIcon"></a></span>');
-        }else{
-            alert("已经存在相同标签名，请重新输入！");
-        }
-			
-			
-			$('a[id^="delIcon"]').click(function(e){
-                $(this).parent().remove();
-            });
-	}
-</script>
+<script type="text/javascript" src="/static/custom/js/sensiwords_manage.js"></script> 
 
 <script src="/static/custom/js/charisma.js"></script>
 {% endblock end_js %}

@@ -50,17 +50,25 @@ with open ('1010_domain.csv', 'rb') as f:
             print count
     if bulk_action:
         es.bulk(bulk_action, index='sensitive_user_portrait', doc_type='user', timeout=60)
+'''
+
 
 
 csv_file = file('domain1013.csv', 'rb')
 reader = csv.reader(csv_file)
 for line in reader:
-    print line
-    print line[1][1]
+    uid = line[0]
+    result - dict()
+    for i in range(1,13):
+        item = line[i].split('*')
+        result[item[1]] = int(item[0])
+    
     sys.exit(0)
+
+
 '''
 es.delete(index= 'custom_attribute', doc_type='attribute', id='AVBa32QMGk0Kt7GIxCQW')
 es.delete(index= 'custom_attribute', doc_type='attribute', id='AVBa32rwGk0Kt7GIxCQX')
 es.delete(index= 'custom_attribute', doc_type='attribute', id='AVBa4Qx7y3nG3t1ED6gr')
-
+'''
 

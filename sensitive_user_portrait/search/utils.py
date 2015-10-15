@@ -6,6 +6,7 @@ import sys
 import json
 
 from sensitive_user_portrait.global_utils import es_sensitive_user_text as es_cluster
+from sensitive_user_portrait.global_utils import es_user_profile
 emotion_mark_dict = {'126': 'positive', '127':'negative', '128':'anxiety', '129':'angry'}
 
 def sentiment_test(sentiment_dict):
@@ -38,7 +39,7 @@ def ts2format_time(ts):
     return format_time
 
 def full_text_search(words_list):
-    results = dict()
+    results = []
     query_body = {
         "query": {
             "bool": {
@@ -57,9 +58,18 @@ def full_text_search(words_list):
         item = item['_source']
         item['timestamp'] = ts2format_time(item['timestamp'])
         item['sentiment'] = sentiment_test(item['sentiment'])
+        if item['sensitive']:
+            item['sensitive_words'] = json.loads(item['sensitive_words'])
+        else:
+            item['sensitive_words'] = []
+        item['text'] = item['text'].encode('utf-8', 'ignore')
+        uid = item['uid']
         try:
-            results[item['uid']].append(item)
+            profile_result = es_user_profile.get(index='weibo_user', doc_type="user", id=uid)['_source']
+            item['photo_url'] = profile_result['photo_url']
+            item['uname'] = profile_result['nick_name']
         except:
-            results[item['uid']] = [item]
-
+            item['photo_url'] = 'unknown'
+            item['uname'] = 'unknown'
+        results.append(item)
     return results

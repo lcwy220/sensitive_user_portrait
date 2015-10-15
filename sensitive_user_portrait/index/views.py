@@ -101,18 +101,8 @@ def search_results():
 
 @mod.route('/text_search/')
 def text_search():
-    stype = request.args.get('stype','')
     words_list = request.args.get('words_list', '')
-
-    if (stype == '1'):
-        return render_template('index/search/text_search.html', words_list=words_list)
-    elif (stype == '2'):
-        return render_template('index/search/group_text_search.html', words_list=words_list)
-    elif (stype == '3'):
-        return render_template('index/search/tag_text_search.html', words_list=words_list)
-    else:
-        return render_template('index/search/text_search.html', words_list=words_list)
-
+    return render_template('index/search/search_text_result.html', words_list=words_list)
 @mod.route('/influence/')
 def influence():
     return render_template('index/influence.html')
@@ -138,7 +128,9 @@ def personal():
 
 @mod.route('/sensitive_person/')
 def sensitive_person():
-    return render_template('index/sensitive_person.html')
+    uid = request.args.get('uid', '2697649164')
+    uid = str(uid)
+    return render_template('index/sensitive_person.html', uid=uid)
 
 @mod.route('/contact/')
 def contact():
