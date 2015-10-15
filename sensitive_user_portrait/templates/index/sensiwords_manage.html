@@ -130,8 +130,8 @@ tbody td{text-align:center;}
         <h4 class="modal-title" id="myModalLabel">自定义类别</h4>
       </div>
       <div class="modal-body" id="EDIT" style="padding:30px;">
-        现有类别：<div id="exist_categroy">   </div>
-        <div style="padding:10px;">请输入新类别：<input name="add_new_category"></div>
+        <div id="exist_categroy" style="padding:10px;"></div>
+        <div style="padding:10px;"><span style="margin-right:10px;">输入要添加的类别</span><input name="add_new_category"></div>
     
       </div>
       <div class="modal-footer">
@@ -149,29 +149,25 @@ tbody td{text-align:center;}
         <h4 class="modal-title" id="myModalLabel">添加敏感词</h4>
       </div>
       <div class="modal-body" id="add_snesiword" style="padding:30px;">
+      <div class="add_word_model" style="margin-top:-5px;">
       <input name="input_sensi" class="input_sensi" style="min-width: 50px;margin-top:0px;float: left;" placeholder="输入敏感词">
-      <div class="add_word_model" style="margin-top:-5px;">等级:
-      <select name="level" class="add_sensi_level" style="width:90px; margin-right:5px;">   
-             
-            <option value="1">1</option>   
-            <option value="2">2</option>   
-            <option value="3">3</option>           
-      </select>
-        类别:
-        <select name="classify" class="add_sensi_class" style="width:90px; margin-right:5px;"> 
-              
+      <span style="margin-left:10px;">等级</span>
+          <select name="level" class="add_sensi_level" style="width:90px; margin-left:6px;margin-right:5px;">   
+                <option value="1">1</option>   
+                <option value="2">2</option>   
+                <option value="3">3</option>           
+          </select>
+          <span style="margin-left:6px;">类别</span>
+        <select name="classify" class="add_sensi_class" style="width:90px; margin-left:6px;margin-right:5px;"> 
             <option value="politics">politics</option>   
             <option value="military">military</option>   
             <option value="law">law</option>
             <option value="ideology">ideology</option>
           <option value="democracy">democracy</option>                   
         </select>
-        
-        <span class="addIcon" id="addTag" style="margin-bottom:-10px;margin-top:0px;">
-      </span>
+        <span class="addIcon" id="addTag" style="margin-bottom:-10px;margin-top:0px;"></span>
 
-    </div><div id="add_word_div"></div>
-
+    </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
