@@ -57,7 +57,7 @@ Search_weibo.prototype = {
     }
     $('#portrait_info').empty();
     html = '';
-    html += '<div class="PortraitImg" ><span class="sensitive_name">姓名</span></div>';
+    html += '<div class="PortraitImg" ><span class="sensitive_name"></span></div>';
     html += '<div style="text-align:left;height:30px;margin-top:20px;float:left;">';
     html += '<span style="margin-right:30px"><img src=' + photo_url + '></span>';
     html += '<span style="margin-right:30px">昵称:<span><a target="_blank" href="/index/personal/?uid=' + data['uid'] + '">' + uname + '</a></span></span>';
@@ -200,7 +200,7 @@ Search_weibo.call_sync_ajax_request(sort_sensitive_text, Search_weibo.ajax_metho
 $('input[name="seq_method"]').click(function(){
 var weibo_category = $('input[name="origin_re"]:checked').val();
 var sort = $('input[name="seq_method"]:checked').val();
-var sort_sensitive_text = "/attribute/sort_sensitive_text/?uuid=" + uid + "&weibo_category=" + weibo_category + "&sort=" + sort;
+var sort_sensitive_text = "/attribute/sort_sensitive_text/?uid=" + uid + "&weibo_category=" + weibo_category + "&sort=" + sort;
 Search_weibo.call_sync_ajax_request(sort_sensitive_text, Search_weibo.ajax_method, Search_weibo.Draw_sort_sensitive_text);
 });
 
@@ -261,6 +261,7 @@ Search_weibo.call_sync_ajax_request(sort_sensitive_text, Search_weibo.ajax_metho
   function draw_statictics_info_table(data){
     $('#statictics_info').empty();
     html = '';
+    html += '<hr />';
     html += '<h2>统计信息</h2>';
     html += '<table class="statictics" width="750" border="1">';
     html += ' <tr>';
@@ -294,7 +295,6 @@ function draw_influence_chart_info(data){
     var influenceChart = echarts.init(document.getElementById('influence_chart_info'));         
     var Influenceoption = {
         title : {
-            text: '敏感微博量时间走势',
         },
         tooltip : {
             trigger: 'axis'
@@ -594,7 +594,10 @@ function draw_mutual_info(div,data){
     $('#'+div).empty();
      html = '';
     if (data['1'] == 0){
-        $('#'+div).html('暂无数据');
+     html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
+     html += '<tr><th style="text-align:center">昵称</th>';
+     html += '<th style="text-align:center">交互次数</th>';
+     html += '<th style="text-align:center">是否入库</th></tr></table>';
     }
     else{
      html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
@@ -621,10 +624,10 @@ function draw_mutual_info(div,data){
        html += '<tr>';
        html += '<th style="text-align:center;"><a target="_blank" href="/index/personal/?uid=' + data['0'][m]['0'] + '">' + nickname + '</a></th>';
        html += '<th style="text-align:center;">' + data['0'][m]['1']['1'] + '</th>';
-       html += '<th style="text-align:center;">' + in_status + '</th></tr>';      
+       html += '<th style="text-align:center;">' + in_status + '</th></tr></table>';      
     };
-       $('#'+div).append(html);
     }
+    $('#'+div).append(html);
 }
 
 $('#show_sensi_word').click(function (){
