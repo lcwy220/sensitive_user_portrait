@@ -7,18 +7,29 @@
     <link rel="stylesheet" href="/static/custom/css/jelevator.css"  media="screen" />
 	<link rel="stylesheet" href="/static/custom/css/sensitive_person.css" media="screen" />
 	<style>
-	.box{width:310px;height:300px;float:left;}
-	li{list-style:none;}
+        .box{width:310px;height:300px;float:left;}
+        li{list-style:none;}
+        #pageGro{ width:400px; height:25px; margin:0px auto; padding-top:30px;}
+        #pageGro div,#pageGro div ul li{ font-size:12px; color:#999; line-height:23px; float:left; margin-left:5px;}
+        #pageGro div ul li{ width:22px; text-align:center; border:1px solid #999; cursor:pointer;}
+        #pageGro div ul li.on{ color:#fff; background:#3c90d9; border:1px solid #3c90d9;}
+        #pageGro .pageUp{ border:1px solid #999; cursor:pointer;}
+        #pageGro .pageDown{ width:63px; border:1px solid #999; cursor:pointer;}
+        #pageGro .pageUp{ text-indent:23px;background:url(/static/custom/images/pageUp.png) 5px 7px no-repeat;}
+        #pageGro .pageDown{ text-indent:5px;background:url(/static/custom/images/pageDown.png) 46px 6px no-repeat;}
+        .pageList ul{margin-left:0px;} 
 	</style>
 {% endblock custom_css  %}
 {% block body %}
 <div id="page">
-		<div id = "portrait_info" class="portait" style="font-family:'Microsoft YaHei UI'; font-size:16px;margin-top:10px">
+		<div id = "portrait_info" class="portait" style="font-family:'Microsoft YaHei UI'; font-size:16px;margin-top:10px;margin-bottom:80px">
 		</div>
-            <br />
-        <div id = "statictics_info" style="float:left;margin-top:20px;">
+		<div style="float:left">
+		    <hr />
+		    <h2>统计信息</h2>
+	        <div id = "statictics_info" style="float:left;margin-top:20px;width:100%">
+			</div>
 		</div>
-
 		<div style="float:left">
 			<hr />
 			<h2>活动信息</h2>
@@ -50,24 +61,24 @@
 		    </select>
 		    <button id="show_sensi_word" style="min-width: 50px;">确定</button></div>
 		   	<!--敏感词  -->
-		    <div id="sensi_word_table"></div>
+		    <div id="sensi_word_table" style="overflow:hidden;height:220px;margin-top:15px"></div>
 		    </div>
 		    <div id="language_right" style="float:right">
 		    <div id="sensiword_hashtag">
 			    <div style="width:250px;float:right;">
 			    	<span id="hash_word_detail" style="margin-right: 80px; margin-top: 10px;float:right;">
-			    		<a data-toggle="modal" data-target="#hash_detail">查看详情</a>
+			    		<a data-toggle="modal" data-target="#hash_detail">详情</a>
 			    	</span>
 			    	<span style="font-size:18px;float:left;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hashtag云</strong></span>
-			    	<div id="hashtag_cloud" style="width:320px;height:300px;float:left;margin-left:-20px;z-index:20"></div>
+			    	<div id="hashtag_cloud" style="width:320px;height:220px;float:left;margin-left:-20px;z-index:20"></div>
 			    	
 			    </div>
 			    <div style="width:250px;float:right;">
 			    	<span id="hash_word_detail" style="margin-right: 20px; margin-top: 10px;float:right;">
-			    		<a data-toggle="modal"  data-target="#sensi_detail">查看详情</a>
+			    		<a data-toggle="modal"  data-target="#sensi_detail">详情</a>
 			    	</span>
 			    	<span style="font-size:18px;float:left;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;敏感词云</strong></span>
-					<div id="sensi_word_cloud" style="width:320px;height:300px;float:left;margin-left:-20px;"></div>
+					<div id="sensi_word_cloud" style="width:320px;height:220px;float:left;margin-left:-20px;"></div>
 			    	<br>
 			    </div>	
 		    </div> 
@@ -83,8 +94,8 @@
                     <span type="button" data-toggle="modal" data-target="#rank_repost" style='font-size:16px;margin-left:160px;cursor:pointer'><u>查看详情</u></span>
                     <span style="margin-left:25px;font-size:16px;color:#777">被转发排名</span>
                     <span data-toggle="modal" type="button"data-target="#rank_retweeted"  style='font-size:16px;margin-left:155px;cursor: pointer'><u>查看详情</u></span>
-                    <span style="margin-left:45px;font-size:16px;color:#777">@排名</span>
-                    <span type="button"data-toggle="modal" data-target="#rank_at" style='font-size:16px;margin-left:150px;cursor: pointer'><u>查看详情</u></span>
+                    <span style="margin-left:25px;font-size:16px;color:#777">@排名</span>
+                    <span type="button"data-toggle="modal" data-target="#rank_at" style='font-size:16px;margin-left:185px;cursor: pointer'><u>查看详情</u></span>
                 </div>	
                 <div id='repost' style='overflow-x:hidden;width:300px;float:left;'>
                 </div>

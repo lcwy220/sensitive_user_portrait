@@ -191,18 +191,18 @@ text-indent:40px;
 }
 #textsearch {
     margin-left:30%;
-    margin-top:45px;
+    margin-top:15px;
 }
 #supersearch {
 	/*position: fixed;*/
-	margin-top: 150px;
+	margin-top: 80px;
 	left: 50%;
 	top: 50%;
 	z-index: 1002;
 	width: 980px;
 	background: #FFF none repeat scroll 0% 0%;
 	border: 1px solid #AA8BE8;
-    margin-left: 60px;
+    margin-left: 80px;
     font_family:"Microsoft YaHei UI";
 }
 #supersearch .title {

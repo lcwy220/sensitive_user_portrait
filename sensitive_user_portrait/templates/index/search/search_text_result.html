@@ -1,14 +1,23 @@
 {% extends "index/base.html" %} 
-{% block title %}微博文本检索{% endblock title %}
-{% block subtitle %}微博文本检索{% endblock subtitle %}
+{% block title %}全文检索{% endblock title %}
+{% block subtitle %}全文检索{% endblock subtitle %}
 {% block custom_css %}
 {{ super() }}
 	<link rel="stylesheet" href="/static/custom/css/overview.css" media="screen" />
     <link rel="stylesheet" href="/static/custom/css/jelevator.css"  media="screen" />
 	<link rel="stylesheet" href="/static/custom/css/sensitive_person.css" media="screen" />
 	<style>
-	.box{width:310px;height:300px;float:left;}
-	li{list-style:none;}
+    .box{width:310px;height:300px;float:left;}
+    li{list-style:none;}
+    #pageGro{ width:400px; height:25px; margin:0px auto; padding-top:30px;}
+    #pageGro div,#pageGro div ul li{ font-size:12px; color:#999; line-height:23px; float:left; margin-left:5px;}
+    #pageGro div ul li{ width:22px; text-align:center; border:1px solid #999; cursor:pointer;}
+    #pageGro div ul li.on{ color:#fff; background:#3c90d9; border:1px solid #3c90d9;}
+    #pageGro .pageUp{ border:1px solid #999; cursor:pointer;}
+    #pageGro .pageDown{ width:63px; border:1px solid #999; cursor:pointer;}
+    #pageGro .pageUp{ text-indent:23px;background:url(/static/custom/images/pageUp.png) 5px 7px no-repeat;}
+    #pageGro .pageDown{ text-indent:5px;background:url(/static/custom/images/pageDown.png) 46px 6px no-repeat;}
+    .pageList ul{margin-left:0px;} 
     .mouse {border:#d0d0d0 solid 1px;}
 	</style>
 {% endblock custom_css  %}
@@ -43,16 +52,8 @@
 	</div>
 {% endblock body %}
 {% block end_js %}
-  <script  src="/static/scripts/jquery-jelevator-1.0.3.min.js"></script>
   <script type="text/javascript">
     var words_list = "{{ words_list }}";
-	jQuery(function($){
-	    $("h1,h2").jElevator({
-	        howTopButton: true,
-	        showBottomButton: true,
-	        showSectionsMenu: true
-	    });
-	});
  </script>
  <script  src="/static/custom/js/global_weibo.js"></script>
  <script  src="/static/custom/js/search_text_result.js"></script>
