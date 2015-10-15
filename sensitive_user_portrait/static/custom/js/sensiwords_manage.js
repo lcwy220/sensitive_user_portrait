@@ -21,17 +21,10 @@ function Draw_sensi_manage_table(data){
 	for(i=0;i<item.length;i++){
 		html += '<tr>'
 		html += '<td name="attribute_name">'+item[i][0]+'</td>';
-		/*var item_value = item[i].attribute_value.split('&').join('/');
-        if (!item_value){
-            html += '<td name="attribute_value"><a href="" data-toggle="modal" data-target="#editor" id="currentEdit" style="color:darkred;font-size:10px;" title="添加标签名">添加</a></td>';
-        }
-        else{
-            html += '<td name="attribute_value"><a href="" data-toggle="modal" data-target="#editor" id="currentEdit" title="点击编辑">'+item_value+'</a></td>';
-        }*/
-        html += '<td name="level">'+item[i][1]+'</td>';
+		html += '<td name="level">'+item[i][1]+'</td>';
         html += '<td name="class">'+item[i][2]+'</td>';
 		//html += '<td name="time">'+item[i].date+'</td>';
-		html += '<td name="operate" style="cursor:pointer;" ><a href="javascript:void(0)" class="delTag">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" class="edit_word" data-toggle="modal" data-target="#word_edit">修改</a></td>';
+		html += '<td name="operate" style="cursor:pointer;" ><a href="javascript:void(0)" class="delTag">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" class="edit_word" id="edit_word" data-toggle="modal" data-target="#word_edit">修改</a></td>';
 		html += '</tr>';
 	}
 	html += '</tbody>';
@@ -52,20 +45,28 @@ function Draw_sensi_manage_table(data){
     var delete_url = "/manage_sensitive_words/self_delete/?";
     var temp = $(this).parent().prev().prev().prev().html();
     delete_url += 'word=' + temp;
-    console.log(delete_url);
+    //console.log(delete_url);
     //window.location.href = url;
     call_ajax_request(delete_url, self_refresh);
     });
 
     $('.edit_word').off("click").click(function(){
         $('#edit_snesiword').empty();
+        var word_level=$(this).parent().prev().prev().html()
         var word_class=$(this).parent().prev().html()
+        //console.log(word_class);
+        //console.log(word_level);
         var html = '';
-        html += '<div class="edit_word_model" style="margin-top:12px;"><input id="input_sensi" name="input_sensi" style="min-width: 30px;margin-top:0px;" value="'+$(this).parent().prev().prev().prev().html()+'">';
-        html += '本词等级:<select name="level" class="edit_sensi_level" style="width:90px; margin-right:5px;">  <option value="1">level 1</option>   <option value="2">level 2</option><option value="3">level 3</option></select>请选择类别:<select name="classify" class="edit_sensi_class" style="width:90px; margin-right:5px;">  <option value="politics">politics</option><option value="military">military</option><option value="law">law</option><option value="ideology">ideology</option><option value="democracy">democracy</option></select></div>';
-        //$("#edit_sensi_class option[value='"+word_class+"']").attr("selected", true);
+        html += '<div class="edit_word_model" style="margin-top:12px;"><input id="input_sensi" name="input_sensi" style="min-width: 100px;margin-top:0px;" value="'+$(this).parent().prev().prev().prev().html()+'">';
+        html += '本词等级:<select name="level" id="edit_sensi_level" class="edit_sensi_level" style="width:60px; margin-right:5px;">  <option value="1">1</option>   <option value="2" >2</option><option value="3">3</option></select>';
+        html += '请选择类别:<select name="classify" id="edit_sensi_class" class="edit_sensi_class" style="width:100px; margin-right:5px;">  <option value="politics" >politics</option><option value="military" >military</option><option value="law">law</option><option value="ideology">ideology</option><option value="democracy">democracy</option></select></div>';
+        
+        //$('#edit_sensi_class option[value="'+ word_class +'"]').attr("selected", true);
+        //$("#sel  option[value='s2'] ").attr("selected",true);
         //console.log(html);
         $('#edit_snesiword').append(html); 
+        $('#edit_sensi_level').val(word_level);
+        $('#edit_sensi_class').val(word_class);
        	
     })
     $('#word_modifySave').off("click").click(function(){
@@ -82,9 +83,13 @@ function Draw_sensi_manage_table(data){
     var word = $('#input_sensi').val()
     var word_list = new Array;
     word_list.push(word);
+    if(word != ''){
     url += date+'&words_list='+word_list+'&level_list='+level+'&category_list='+class_word;
     console.log(url);
-    call_ajax_request(url, self_refresh); 
+    call_ajax_request(url, self_refresh);
+    }else{
+        alert('敏感词不能为空！')
+    } 
 	})
 
   }
@@ -106,6 +111,19 @@ function currentDate(){
 
     return date;
 }
+//var category_name= ['politics', 'military','law','ideology','democracy']
+$('#free_add_class').off("click").click(function(){
+    var category_name= ['politics', 'military','law','ideology','democracy']
+    $('#exist_categroy').empty();
+    var html = ''
+    for (i=0;i<category_name.length;i++){
+         html += '<span class="tagbg" id="" name="attrName"><span class="tagName">'+category_name[i]+'</span><a  class="delCon" id="delIcon"></a></span>';
+    }
+    $('#exist_categroy').append(html);
+    $('a[id^="delIcon"]').click(function(e){
+            $(this).parent().remove();
+        });
+});
 
 $('#add_words_Save').off("click").click(function(){
     var add_words_name = new Array;
@@ -115,6 +133,7 @@ $('#add_words_Save').off("click").click(function(){
     $('.add_sensi_level').each(function(){
         var each_word_level = $(this).val();
         add_words_level.push(each_word_level);
+
     })
     $('.add_sensi_class').each(function(){
         var each_word_class = $(this).val();
@@ -123,20 +142,23 @@ $('#add_words_Save').off("click").click(function(){
     $('[name="input_sensi"]').each(function(){
         var each_word_name = $(this).val();
         if (each_word_name == ''){
-        alert("敏感词不能为空！");
-    
-        return false;
+            alert("敏感词不能为空！");
+            return false;
         }else{
+            console.log(each_word_name);
             add_words_name.push(each_word_name);
         }
         //console.log(each_word_name);
         
     })
+    //console.log(add_words_name.length);
+    //console.log(add_words_level.length);
     if (add_words_name.length == add_words_level.length){
         var url = '/manage_sensitive_words/identify_in/'
     url += '?date='+ add_words_date + '&words_list=' +add_words_name + '&level_list=' + add_words_level + '&category_list=' + add_words_class;
     call_ajax_request(url, self_refresh);
 }else{
+    console.log('no');
     return 0;
 }
     
@@ -145,7 +167,7 @@ $('#add_words_Save').off("click").click(function(){
 
 $(".addIcon").off("click").click(function(){
         var html = '';
-        html = '<div class="add_word_model" style="margin-top:12px;">等级:<select name="level" class="add_sensi_level" style="width:90px; margin-right:5px;">  <option value="1">level 1</option>   <option value="2">level 2</option><option value="3">level 3</option></select>类别:<select name="classify" class="add_sensi_class" style="width:90px; margin-right:5px;">  <option value="politics">politics</option><option value="military">military</option><option value="law">law</option><option value="ideology">ideology</option><option value="democracy">democracy</option></select><input name="input_sensi" class="input_sensi" style="min-width: 30px;margin-top:0px;" placeholder="输入敏感词"></div>';
+        html = '<div class="add_word_model" style="margin-top:12px;"><input name="input_sensi" class="input_sensi" style="min-width: 30px;margin-top:0px;" placeholder="输入敏感词">等级:<select name="level" class="add_sensi_level" style="width:90px;margin-left:10px; margin-right:5px;">  <option value="1">1</option><option value="2">2</option><option value="3">3</option></select>类别:<select name="classify" class="add_sensi_class" style="width:90px; margin-right:5px;">  <option value="politics">politics</option><option value="military">military</option><option value="law">law</option><option value="ideology">ideology</option><option value="democracy">democracy</option></select></div>';
         $('#add_word_div').append(html);
     });
 
