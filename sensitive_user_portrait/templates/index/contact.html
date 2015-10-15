@@ -350,7 +350,12 @@
     }
     var nickName = document.getElementById('nickname');
     if(personalData.uname){
-        nickName.innerHTML = personalData.uname;
+        if (personalData.uname == 'unknown'){
+            nickName.innerHTML = "无此数据";
+        }
+        else{
+            nickName.innerHTML = personalData.uname;
+        }
     }else{
         nickName.innerHTML = "无此数据";
     }
@@ -387,7 +392,12 @@
         
     var userlocation = document.getElementById('userLocation');
     if(personalData.location){
-        userlocation.innerHTML = personalData.location;
+        if (personalData.location == 'unknown'){
+            userLocation.innerHTML = "无此数据";
+        }
+        else{
+            userLocation.innerHTML = personalData.location;
+        }
     }else{
         userlocation.innerHTML = "无此数据";
     }
