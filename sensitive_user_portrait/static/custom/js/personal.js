@@ -380,21 +380,13 @@ function Draw_think_emotion(status_data){
 }
 function drawBasic(personalData){
     var APsum = document.getElementById('APsum');
-
     APsum.innerHTML = personalData.all_count;
-
     var IPsum = document.getElementById('IPsum');
-
     IPsum.innerHTML = personalData.all_count;
-
     var FPsum = document.getElementById('FPsum');
-
     FPsum.innerHTML = personalData.all_count;
-
     var SPsum = document.getElementById('SPsum');
-
     SPsum.innerHTML = personalData.all_count;
-
     var value = 'activeness' in personalData?personalData['activeness'].toFixed(2):'无此数据';
     $('#APnum').html(value);
     var value = 'importance' in personalData?personalData['importance'].toFixed(2):'无此数据';
@@ -411,14 +403,22 @@ function drawBasic(personalData){
     $('#FPrank').html(value);
     var value = 'sensitive_rank' in personalData?personalData['sensitive_rank']:'无此数据';
     $('#SPrank').html(value);
-    var value = 'uname' in personalData?personalData['uname']:'无此数据';
-    $('#nickname').html(value);
+    if ((!'uname' in personalData) || (personalData.uname == 'unknown')){
+        $('#nickname').html('无此数据');
+    }
+    else{
+        $('#nickname').html(personalData.uname);
+    }
     var value = 'description' in personalData?personalData['description']:'无此数据';
     $('#portraitDetail').html(value);
     var value = 'uid' in personalData?personalData['uid']:'无此数据';
     $('#userId').html(value);
-    var value = 'location' in personalData?personalData['location']:'无此数据';
-    $('#userLocation').html(value);
+    if ((!'location' in personalData) || (personalData['location'] == 'unknown')){
+        $('#userLocation').html('无此数据');
+    }
+    else{
+        $('#userLocation').html(personalData['location']);
+    }
     var value = 'fansnum' in personalData?personalData['fansnum']:'无此数据';
     $('#userFans').html(value);
     var value = 'friendsnum' in personalData?personalData['friendsnum']:'无此数据';

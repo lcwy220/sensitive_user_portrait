@@ -837,6 +837,7 @@ def search_portrait(condition_num, query, sort, size):
 
 def sensitive_attribute(uid, date):
     results = {}
+    portrait = {}
     utype = user_type(uid)
     if not utype:
         results['utype'] = 0
@@ -850,8 +851,8 @@ def sensitive_attribute(uid, date):
         results['uname'] = 'unknown'
     if portrait_result['photo_url'] == 0:
         portrait_result['photo_url'] = 'unknown'
-    if portrait['location'] == 0:
-        portrait['location'] = 'unknown'
+    if portrait_result['location'] == 0:
+        portrait_result['location'] = 'unknown'
     results['photo_url'] = portrait_result['photo_url']
 
     # sensitive weibo number statistics

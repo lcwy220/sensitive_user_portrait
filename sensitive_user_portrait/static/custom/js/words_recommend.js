@@ -62,7 +62,7 @@ function Draw_sensi_recommend_table(data){
     var html = '';
 	html += '<table class="table table-bordered table-striped table-condensed datatable" >';
 	html += '<thead><tr style="text-align:center;">';
-	html += '<th>敏感词</th><th>次数</th><th>用户ID</th><th>操作</th></tr>';
+	html += '<th>敏感词</th><th>提及次数</th><th>提到的用户名</th><th>操作&nbsp;&nbsp;<input name="choose_all" id="choose_all"  type="checkbox" value="" onclick="choose_all()" /></th></tr>';
 	html += '</thead>';
 	html += '<tbody>';
 	for(i=0;i<item.length;i++){
@@ -80,7 +80,6 @@ function Draw_sensi_recommend_table(data){
         html += '<td name="count">'+item[i][2]+'</td>'+'<td name="user_list">';
 		for( var s=0;s<item[i][1].length;s++){
 			html += '<span style="margin-left:10px;">'+item[i][1][s]+'</span>';
-
 		}
 		html += '<td name="check"><input name="recommend_word_all" class="recommend_word_all" type="checkbox" value=""  />' + '</td>';
 		//html += '</td>+<td name="operate" style="cursor:pointer;" ><a href="javascript:void(0)" id="delTag">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" id="edit_word" data-toggle="modal" data-target="#word_edit">修改</a></td>';
@@ -90,24 +89,24 @@ function Draw_sensi_recommend_table(data){
 	html += '</tbody>';
 
 	html += '</table>';
-	html += '<br>'+'<button id="add_words" ;" data-toggle="modal" data-target="#confirm_add" >确定添加</button>'
+	html += '<br>'+'<button id="add_words" ;" data-toggle="modal" style="margin-left:850px;" class="btn btn-primary btn-sm"  data-target="#confirm_add" >确定添加</button>'
 
 	$('#sensi_manage_table').append(html);
   }
 
+function choose_all(){
+  $('input[name="recommend_word_all"]').prop('checked', $("#choose_all").prop('checked'));
+}
 var recommend_data = [{"level":'敏感词', "sensi_class":'10', "uid":['1234','2345','3456','4567']},{"level":'敏感词', "sensi_class":'10', "uid":['1234','2345','3456','4567']}];
 url_init = '/manage_sensitive_words/recommend_new_words/?date_list='
 call_ajax_request(url_init, Draw_sensi_recommend_table) 
-
 //var recommend_data = [{"level":'敏感词', "sensi_class":'10', "uid":['1234','2345','3456','4567']},{"level":'敏感词', "sensi_class":'10', "uid":['1234','2345','3456','4567']}];
  
-
 
 function date_initial(){
   var tomorrow = new Date(2013,8,8);
   $("#recommend_date_select").empty();
   var recommend_date_html = '';
-
     var timestamp = 1378483200000;
     var date = new Date(parseInt(timestamp)).format("yyyy-MM-dd");
     recommend_date[0]=date;
@@ -119,12 +118,10 @@ function date_initial(){
       recommend_date_html += '<option value="' + recommend_date[i] + '">' + recommend_date[i] + '</option>';
     }
   recommend_date_html += '<option value="recommend_date_all" selected="selected">最近七天</option>';
-
   $("#recommend_date_select").append(recommend_date_html);
   return recommend_date;
 }
 date_initial();
-
 var data_list = recommend_date.join(',');
 
 $('#show_recommend_word').click(function(){
