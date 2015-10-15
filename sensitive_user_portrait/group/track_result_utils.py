@@ -89,8 +89,11 @@ def compute_mid_result(task_name, task_submit_date):
                 for word in sensitive_word_dict:
                     #print 'word:', json.dumps(word.encode('utf-8')), word.encode('utf-8'), type(word.encode('utf-8'))
                     search_word = word.encode('utf-8')
-                    #print 'search_word:', search_word, type(search_word)
-                    word_identify = json.loads(word_r.hget('sensitive_words', search_word))
+                    print 'search_word:', search_word, type(search_word)
+                    try:
+                        word_identify = json.loads(word_r.hget('sensitive_words', search_word))
+                    except:
+                        word_identify = [2]
                     ts_word_score += sensitive_word_dict[word] * word_identify[0]
                 result['sensitive_score'][str(timestamp)] = ts_word_score
                 #attr_geo
@@ -137,11 +140,103 @@ def compute_mid_result(task_name, task_submit_date):
         print 'start_detect_peaks'
         result[field+'_peak'] = detect_peaks(detect_peaks_input)
         result[field] = sort_complement_item
-        #compute abnormal evaluate
-        #result[field+'_abnormal'] = compute_abnormal(field, detect_peaks_input, result[field+'_peak'])
+    
+    #compute abnormal evaluate
+    #abnormal_index_dict = compute_abnormal(result)
+    #result = dict(result, **abnormal_index_dict)
+
     return result
 
 
+def compute_abnormal(result):
+    abnormal_index_dict = {}
+    #step1:compute count abnormal
+    count_0_list = [item[1] for item in result['count_0']]
+    count_0_peak = result['count_0_peak']
+    evaluate_index_count_0 = compute_count_abnormal_index(count_0_list, count_0_peak)
+
+    count_1_list = [item[1] for item in result['count_1']]
+    count_1_peak = result['count_1_peak']
+    evaluate_index_count_1 = compute_count_abnormal_index(count_1_list, count_1_peak)
+
+    abnormal_index_dict['count'] = evaluate_index_count_0 * 0.25 + evaluate_index_count_1 * 0.75
+    
+    #step2:compute sentiment abnormal
+    sentiment_0_126_list = [item[1] for item in result['sentiment_0_126']]
+    sentiment_0_126_peak = result['sentiment_0_126_peak']
+    sentiment_0_127_list = [item[1] for item in result['sentiment_0_127']]
+    sentiment_0_127_peak = result['sentiment_0_127_peak']
+    sentiment_0_128_list = [item[1] for item in result['sentiment_0_128']]
+    sentiment_0_128_peak = result['sentiment_0_128_peak']
+    evaluate_index_sentiment_0 = compute_sentiment_abnormal_index(sentiment_0_126_list, sentiment_0_126_peak, sentiment_0_127_list, sentiment_0_127_peak, sentiment_0_128_list, sentiment_0_128_peak)
+    
+    sentiment_1_126_list = [item[1] for item in result['sentiment_1_126']]
+    sentiment_1_126_peak = result['sentiment_1_126_peak']
+    sentiment_1_127_list = [item[1] for item in result['sentiment_1_127']]
+    sentiment_1_127_peak = result['sentiment_1_127_peak']
+    sentiment_1_128_list = [item[1] for item in result['sentiment_1_128']]
+    sentiment_1_128_peak = result['sentiment_1_128_peak']
+    evaluate_index_sentiment_1 = compute_sentiment_abnormal_index(sentiment_1_126_list, sentiment_1_126_peak, sentiment_1_127_list, sentiment_1_127_peak, sentiment_1_128_list, sentiment_1_128_peak)
+
+    abnormal_index_dict['sentiment'] = evaluate_index_sentiment_0 * 0.25 + evaluate_index_sentiment_1 * 0.75
+
+    #step3:compute sensitive count abnormal
+    sensitive_score_list = [item[1] for item in result['sensitive_score']]
+    sensitive_peak = result['sensitive_score_peak']
+    abnormal_index_dict['sensitive'] = compute_sensitive_abnormal_index(sensitive_score_list, sensitive_peak)
+    
+
+    return abnormal_index_dict
+
+
+#compute sensitive count abnormal
+def compute_sensitive_abnormal_index(sensitive_score_list, sensitive_peak):
+    abnormal_index= 0
+    ave_sensitive_score = sum(sensitive_score_list) / len(sensitive_score_list)
+    max_sensitive_score = max(sensitive_score_list)
+    peak_sensitive_list = [sensitive_score_list[peak_location] for peak_location in sensitive_peak]
+    ave_peak_sensitive = sum(peak_sensitive_list)
+    if max_sensitive_score >= 9:
+        abnormal_index += 1
+    if ave_peak_sensitive_score / ave_sensitive_score >= 2:
+        abnormal_index += 1
+    if ave_peak_sensitive >= 3:
+        abnormal_index += 1
+    return abnormal_index
+
+
+#compute sentiment abnormal index
+def compute_sentiment_abnormal_index(sentiment_126, sentiment_126_peak, sentiment_127, sentiment_127_peak, sentiment_128, sentiment_128_peak):
+    abnormal_index = 0
+    ave_sentiment_126 = sum(sentiment_126) / len(sentiment_126)
+    ave_sentiment_127 = sum(sentiment_127) / len(sentiment_127)
+    max_sentiment_127_count = max(sentiment_127)
+    ave_sentiment_128 = sum(sentiment_128) / len(sentiment_128)
+    max_sentiment_128_count = max(sentiment_128)
+    if max_sentiment_127_count >= 25:
+        abnormal_index += 1
+    if max_sentiment_128_count >= 25:
+        abnormal_index += 1
+    if ave_sentiment_128_count / ave_sentiment_126_count >= 2 or ave_sentiment_128_count/ ave_sentiment_126_count >= 2:
+        abnormal_index += 1
+
+    return abnormal_index
+
+
+#compute count abnormal index
+def compute_count_abnormal_index(input_list, peak_list):
+    abnormal_index = 0
+    max_count = max(input_list)
+    ave_count = sum(input_list) / len(input_list)
+    peak_count_list = [input_list[peak_location] for peak_location in peak_list]
+    ave_peak_count = sum(peak_count_list) / len(peak_count_list)
+    if max_count >= 25:
+        abnormal_index += 1
+    if ave_peak_count / ave_count >= 3:
+        abnormal_index += 1
+    return abnormal_index
+
+'''
 # compute abnormal from time trend of one attribute and peak
 def compute_abnormal(field, detect_peaks_input, peak_list):
     evaluate_index = 0
@@ -162,20 +257,21 @@ def compute_abnormal(field, detect_peaks_input, peak_list):
         peak_count_list = [detect_peaks_input[peak_location] for peak_location in peak_list]
         ave_peak_count  = sum(peak_count_list) / len(peak_count_list)
         
+        
     return evaluate_index
-
+'''
 
 # add ts with value is 0
 def complement_ts(result_dict,start_ts, end_ts):
     ts = start_ts
     time_segment = 900
-    print 'start_ts:', ts2date(ts)
-    print 'end_ts:', ts2date(end_ts)
-    print 'result_dict:', result_dict
+    #print 'start_ts:', ts2date(ts)
+    #print 'end_ts:', ts2date(end_ts)
+    #print 'result_dict:', result_dict
     while True:
         if ts > end_ts:
             break
-        print 'ts:', ts2date(ts)
+        #print 'ts:', ts2date(ts)
         if str(ts) not in result_dict:
             result_dict[str(ts)] = 0
         ts += time_segment
@@ -200,6 +296,10 @@ def get_user_comment_retweet(task_exist):
         end_ts = date2ts(task_exist['end_date'])
 
     task_user = task_exist['uid_list']
+
+    select_top_dict = {} # {uid:[ave_retweet_count, ave_peak_retweet_count]}
+    #select union top5 ave_retweet_count and top5 ave_peak_retweet_count
+
     for user in task_user:
         result[user+'_comment'] = {}
         result[user+'_retweet'] = {}
@@ -208,12 +308,13 @@ def get_user_comment_retweet(task_exist):
             item_type_ts = item.split('_')
             item_type = item_type_ts[0]
             item_ts = item_type_ts[1]
-            result[user+'_'+item_type][item_ts] = comment_retweet_dict[item]
+            result[user+'_'+item_type][item_ts] = int(comment_retweet_dict[item])
         # use to detect peaks
         comment_dict = result[user+'_comment']
         complement_comment_dict = complement_ts(comment_dict, start_ts, end_ts)
         sort_comment_dict = sorted(complement_comment_dict.items(), key=lambda x:int(x[0]))
         detect_peaks_comment_input = [item[1] for item in sort_comment_dict]
+        #print 'detect_peaks_comment_input:', detect_peaks_comment_input
         result[user+'_comment_peak'] = detect_peaks(detect_peaks_comment_input)
 
         retweet_dict = result[user+'_retweet']
@@ -222,7 +323,62 @@ def get_user_comment_retweet(task_exist):
         detect_peaks_retweet_input = [item[1] for item in sort_retweet_dict]
         result[user+'_retweet_peak'] = detect_peaks(detect_peaks_retweet_input)
         
+        ave_retweet_count = sum(detect_peaks_retweet_input) / len(detect_peaks_retweet_input)
+        peak_count_list = [detect_peaks_retweet_input[peak_location] for peak_location in result[user+'_retweet_peak']]
+        ave_peak_count = sum(peak_count_list) / len(peak_count_list)
+        select_top_dict[user] = [ave_retweet_count, ave_peak_count]
+    
+    #select union top5
+    sort_select_top_count_dict = sorted(select_top_dict.items(), key=lambda x:x[1][0], reverse=True)
+    top5_count_user_list = sort_select_top_count_dict[:5]
+    top5_count_user = [item[0] for item in top5_count_user_list]
+    sort_select_top_peak_dict = sorted(select_top_dict.items(), key=lambda x:x[1][1], reverse=True)
+    top5_peak_user_list = sort_select_top_peak_dict[:5]
+    top5_peak_user = [item[0] for item in top5_peak_user_list]
+    union_user = list(set(top5_count_user) & set(top5_peak_user))
+    new_result = {}
+    for user in union_user:
+        new_result[user+'_retweet'] = result[user+'_retweet']
+        new_result[user+'_retweet_peak'] = result[user+'_retweet_peak']
+        new_result[user+'_comment'] = result[user+'_comment']
+        new_result[user+'_comment_peak'] = result[user+'_comment_peak']
+    
+    new_result['profile'] = get_top_user_profile(union_user)
+
+    #compute abnormal index
+    new_result['abnormal_index'] = compute_comment_retweet_abnormal(new_result, union_user)
+
+    return new_result
+
+# use to compute retweet/comment abnormal
+def compute_comment_retweet_abnormal(new_result, union_user):
+    abnormal_index_dict = {} # {uid: abnormal_index}
+    for uid in union_user:
+        retweet_dict = new_result[user+'_retweet']
+        retweet_list = [retweet_dict[item] for item in retweet_dict]
+        retweet_abnormal_index = compute_abnormal_index(retweet_list)
+    
+    return abnormal_index
+
+# get top user profile imagein
+def get_top_user_profile(union_user):
+    result = {} # result[user] = [uname, imgin_url]
+    for user in union_user:
+        try:
+            user_item = es_user_profile.get(index=profile_index_name, doc_type=profile_index_type,\
+                                            id=uid)['_source']
+        except:
+            user_item = None
+        if not user_item:
+            result[user] = [u'未知', '']
+        else:
+             uname = user_item['nick_name']
+             photo_url = user_item['photo_url']
+             result[user] = [uname, photo_url]
+
     return result
+
+
 
 # get monitor task user inner group polarization
 # time range: the latest 7 day
@@ -534,3 +690,39 @@ def get_inner_top_weibo(task_name, date, uid):
         result.append([uid, uname, geo, weibo_date, text])
 
     return result
+
+# get weibo of one hashtag by condition: task_user, hashtag, timestamp
+def get_hashtag_weibo(task_name, hashtag, timestamp):
+    results = []
+    #step1: identify task exist
+    #step2: search weibo from monitor_user_text by condition: task user, hashtag, timestamp
+    task_exist = identify_task(task_name)
+    if not task_exist:
+        return 'task is not exist'
+    task_user = task_exist['uid_list']
+    query_body = []
+    #multi-search: task user
+    nest_body_list = []
+    for uid in task_user:
+        nest_body_list.append({'term': {'uid': uid}})
+    query_body.append({'bool': {'should': nest_body_list}})
+    #range-search: timestamp timestamp+day
+    query_body.append({'range': {'timestmap':{'from': timestamp, 'to': timestamp + 24*3600}}})
+    #wildcard-search: hashtag
+    query_body.append({'wildcard':{'hashtag': '*' + hashtag + '*'}})
+    try:
+        weibo_dict_list = es.search(index=text_index_name, doc_type=text_index_type, \
+                body={'query':{'bool':{'must': query_body}}, 'sort':[{'timestamp': {'order': 'asc'}}], 'size':10000})['hits']['hits']
+    except Exception, e:
+        raise e
+    for weibo_dict in weibo_dict_list:
+        weibo_item = weibo_dict['_source']
+        uid = weibo_item['uid']
+        uname = uid2uname(uid)
+        text = weibo_item['text']
+        timestamp = weibo_item['timestamp']
+        date = ts2date(timestamp)
+        results.append([uid, uname, date, text])
+    
+    return results
+

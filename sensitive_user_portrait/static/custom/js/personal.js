@@ -379,14 +379,22 @@ function Draw_think_emotion(status_data){
     myChart.setOption(option);  
 }
 function drawBasic(personalData){
-    var APsum = document.getElementById('APsum');
-    APsum.innerHTML = personalData.all_count;
-    var IPsum = document.getElementById('IPsum');
-    IPsum.innerHTML = personalData.all_count;
-    var FPsum = document.getElementById('FPsum');
-    FPsum.innerHTML = personalData.all_count;
-    var SPsum = document.getElementById('SPsum');
-    SPsum.innerHTML = personalData.all_count;
+    var APsum = document.getElementById('APsum');
+
+    APsum.innerHTML = personalData.all_count;
+
+    var IPsum = document.getElementById('IPsum');
+
+    IPsum.innerHTML = personalData.all_count;
+
+    var FPsum = document.getElementById('FPsum');
+
+    FPsum.innerHTML = personalData.all_count;
+
+    var SPsum = document.getElementById('SPsum');
+
+    SPsum.innerHTML = personalData.all_count;
+
     var value = 'activeness' in personalData?personalData['activeness'].toFixed(2):'无此数据';
     $('#APnum').html(value);
     var value = 'importance' in personalData?personalData['importance'].toFixed(2):'无此数据';
@@ -418,54 +426,96 @@ function drawBasic(personalData){
     var value = 'online_pattern' in personalData?personalData['online_pattern'][0][0]:'无此数据';
     $('#userOnline').html(value);
     
-    var img = document.getElementById('portraitImg');
-    if(personalData.photo_url == "unknown"){
-        img.src =  "http://tp2.sinaimg.cn/1878376757/50/0/1";
-    }else{
-        img.src = personalData.photo_url;
-    }
-    var gender = document.getElementById('userGender');
-    if(personalData.gender){
-        gendernum = personalData.gender;
-        if (gendernum == 1){
-            gender.innerHTML = '男';
-        }else{
-            gender.innerHTML = '女';
-        }
-    }else{
-        gender.innerHTML = "无此数据";
-    }
-        
-    var domain = document.getElementById('userDomain');
-    if(personalData.domain){
+    var img = document.getElementById('portraitImg');
+
+    if(personalData.photo_url == "unknown"){
+
+        img.src =  "http://tp2.sinaimg.cn/1878376757/50/0/1";
+
+    }else{
+
+        img.src = personalData.photo_url;
+
+    }
+
+    var gender = document.getElementById('userGender');
+
+    if(personalData.gender){
+
+        gendernum = personalData.gender;
+
+        if (gendernum == 1){
+
+            gender.innerHTML = '男';
+
+        }else{
+
+            gender.innerHTML = '女';
+
+        }
+
+    }else{
+
+        gender.innerHTML = "无此数据";
+
+    }
+
+        
+
+    var domain = document.getElementById('userDomain');
+
+    if(personalData.domain){
+
         var content = personalData.domain;
         domain.innerHTML = content.join(',');
-        // domain.innerHTML = '媒体';
-    }else{
-        domain.innerHTML = "无此数据";
-    }
-        
-    var topic = document.getElementById('userTopic');
-    if(personalData.topic){
-        var topicdict = personalData.topic;
-        var str = '';
-        for(var i = 0;i < topicdict.length;i++){
-            if (i == (topicdict.length -1)){
-                str += topicdict[i][0];
-            }else{
-                str = str + topicdict[i][0] +',';
-            }
-            
-        }
-        topic.innerHTML = str;
-        // topic.innerHTML = '生活，娱乐';
-    }else{
-        topic.innerHTML = "无此数据";
-    }
+        // domain.innerHTML = '媒体';
+
+    }else{
+
+        domain.innerHTML = "无此数据";
+
+    }
+
+        
+
+    var topic = document.getElementById('userTopic');
+
+    if(personalData.topic){
+
+        var topicdict = personalData.topic;
+
+        var str = '';
+
+        for(var i = 0;i < topicdict.length;i++){
+
+            if (i == (topicdict.length -1)){
+
+                str += topicdict[i][0];
+
+            }else{
+
+                str = str + topicdict[i][0] +',';
+
+            }
+
+            
+
+        }
+
+        topic.innerHTML = str;
+
+        // topic.innerHTML = '生活，娱乐';
+
+    }else{
+
+        topic.innerHTML = "无此数据";
+
+    }
+
     if(personalData.user_type){
         if (personalData.user_type == 1){
             $('#sensitive_type').attr("title", "此用户为敏感用户，点击查看敏感性分析")
-                .attr("href", "/index/personal/?uid=" + uid)
+                .attr("href", "/index/sensitive_person/?uid=" + uid)
                 .removeClass("hidden");
         }
     }
