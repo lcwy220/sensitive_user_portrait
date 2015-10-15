@@ -34,6 +34,12 @@ Search_weibo.prototype = {
     });
   },
   Draw_basic: function(data){
+    console.log(data);
+    if (data['photo_url'] == 'unknown'){
+       photo_url = "http://tp2.sinaimg.cn/1878376757/50/0/1";
+    }else{
+       photo_url = data['photo_url'];
+           };
     if (data['politics_trend'] = 'left'){
         politics_trend = '偏左';
     }
@@ -43,12 +49,18 @@ Search_weibo.prototype = {
     else{
         politics_trend = '中性';
     }
+    if ((data['uname'] =='unknown') || (data['uname'] =='0')){
+      uname = "未知";
+    }
+    else{
+      uname = data['uname'];
+    }
     $('#portrait_info').empty();
     html = '';
     html += '<div class="PortraitImg" ><span class="sensitive_name">姓名</span></div>';
     html += '<div style="text-align:left;height:30px;margin-top:20px;float:left;">';
-    html += '<span style="margin-right:30px"><img src=' + data['photo_url'] + '></span>';
-    html += '<span style="margin-right:30px">昵称:<span>' + data['uname'] + '</span></span>';
+    html += '<span style="margin-right:30px"><img src=' + photo_url + '></span>';
+    html += '<span style="margin-right:30px">昵称:<span><a target="_blank" href="/index/personal/?uid=' + data['uid'] + '">' + uname + '</a></span></span>';
     html += '<span style="margin-right:30px">政治倾向:<span>' + politics_trend + '</span></span>';
     html += '<span style="margin-right:20px">敏感度:<span>' + data['sensitive'].toFixed(2) + '</span></span>';
     html += '<span style="margin-right:20px">领域类别:<span>' + data['domain'] + '</span></span>';
@@ -589,7 +601,7 @@ function draw_mutual_info(div,data){
      html += '<tr><th style="text-align:center">昵称</th>';
      html += '<th style="text-align:center">交互次数</th>';
      html += '<th style="text-align:center">是否入库</th></tr>';
-     var min_row = Math.min(5, data.length);
+     var min_row = Math.min(5, data['0'].length);
      for (var i = 0; i < min_row; i++) {
        var s = (i+1).toString();
        var m = i.toString();
@@ -607,7 +619,7 @@ function draw_mutual_info(div,data){
            in_status = '是';
        }
        html += '<tr>';
-       html += '<th style="text-align:center;">' + nickname + '</th>';
+       html += '<th style="text-align:center;"><a target="_blank" href="/index/personal/?uid=' + data['0'][m]['0'] + '">' + nickname + '</a></th>';
        html += '<th style="text-align:center;">' + data['0'][m]['1']['1'] + '</th>';
        html += '<th style="text-align:center;">' + in_status + '</th></tr>';      
     };
@@ -639,7 +651,7 @@ function draw_more_mutual_info(div,data){
      html += '<tr><th style="text-align:center">昵称</th>';
      html += '<th style="text-align:center">交互次数</th>';
      html += '<th style="text-align:center">是否入库</th></tr>';
-     for (var i = 0; i < data.length; i++) {
+     for (var i = 0; i < data['0'].length; i++) {
        var s = (i+1).toString();
        var m = i.toString();
         if ((data['0'][m]['1']['0'] == 'unknown') || (data['0'][m]['1']['0'] == '0')){
@@ -656,7 +668,7 @@ function draw_more_mutual_info(div,data){
            in_status = '是';
        }
        html += '<tr>';
-       html += '<th style="text-align:center;">' + nickname + '</th>';
+       html += '<th style="text-align:center;"><a target="_blank" href="/index/personal/?uid=' + data['0'][m]['0'] + '">' + nickname + '</a></th>';
        html += '<th style="text-align:center;">' + data['0'][m]['1']['1'] + '</th>';
        html += '<th style="text-align:center;">' + in_status + '</th></tr>';      
     };

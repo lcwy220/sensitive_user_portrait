@@ -6,6 +6,7 @@ import sys
 import json
 
 from sensitive_user_portrait.global_utils import es_sensitive_user_text as es_cluster
+from sensitive_user_portrait.global_utils import es_user_profile
 emotion_mark_dict = {'126': 'positive', '127':'negative', '128':'anxiety', '129':'angry'}
 
 def sentiment_test(sentiment_dict):
@@ -62,5 +63,13 @@ def full_text_search(words_list):
         else:
             item['sensitive_words'] = []
         item['text'] = item['text'].encode('utf-8', 'ignore')
+        uid = item['uid']
+        try:
+            profile_result = es_user_profile.get(index='weibo_user', doc_type="user", id=uid)['_source']
+            item['photo_url'] = profile_result['photo_url']
+            item['uname'] = profile_result['nick_name']
+        except:
+            item['photo_url'] = 'unknown'
+            item['uname'] = 'unknown'
         results.append(item)
     return results
