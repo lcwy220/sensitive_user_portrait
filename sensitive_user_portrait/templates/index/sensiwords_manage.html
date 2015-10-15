@@ -26,14 +26,6 @@ li{list-style-type:none;}
   margin-right: 10px;
   height:30px;
 }
-
-
-
-
-
-
-
-
 #close {
   width: 12px;
   height: 12px;
@@ -52,8 +44,10 @@ li{list-style-type:none;}
 #SearchTab{position: fixed;margin-top: -200px;left: 50%;top: 50%;z-index: 1002;width: 620px;background: #FFF none repeat scroll 0% 0%;
 border: 1px solid #AA8BE8;height: 300px;margin-left: -300px;}
 #pageTitle{font-size:20px;text-indent:20px;font-family:"Microsoft YaHei UI";}
+/*
 #DataTables_Table_0_filter{display:none;}
 #DataTables_Table_0_length{display:none;}
+*/
 #del{color:black;}
 .lineh{line-height:30px;}
 table th{text-align:center;}
@@ -81,14 +75,14 @@ tbody td{text-align:center;}
 
     {% block body %}
 
-<div class="ch-container" style="width:1000px;">
+<div class="ch-container" style="padding-left:50px;padding-right:50px;width:1000px;">
 
     <div class="row">
       <div id="content" class="col-lg-10 col-sm-10">
             <!-- content starts -->
 			<div class="row">
         <div class="box col-md-12">
-            <div class="box-inner" style="width:980px;min-height:150px;">
+            <div class="box-inner" style="background-color:white;width:980px;min-height:150px;">
                 <div class="box-header well" data-original-title="" style="padding-top:5px;">
                    <span class="TabTitle"  >敏感词管理列表</span>
                 </div>
@@ -96,14 +90,14 @@ tbody td{text-align:center;}
 </div>
 <a id="free_add_class" href="" data-toggle="modal" data-target="#free_add" style="float:right;margin-bottom:10px;margin-top:12px;margin-right:40px;">自定义类别</a>
 <a id="add_sensi_tag" href="" data-toggle="modal" data-target="#add_sensiword" style="float:right;margin-bottom:10px;margin-top:12px;margin-right:40px;">添加敏感词</a>
-    <div style="margin-top:12px;">等级:
+    <div style="margin-top:12px;margin-left:20px;">等级
 			<select name="level" id="sensi_manage_level" style="width:90px; margin-right:5px;">   
 				<option value="0">所有等级</option> 
 		        <option value="1">1</option>   
 		        <option value="2">2</option>   
 		        <option value="3">3</option>           
 		    </select>
-		    类别:
+		    类别
 		    <select name="classify" id="sensi_manage_class" style="width:90px; margin-right:5px;"> 
 		        <option value="0">所有类别</option>   
 		        <option value="politics">politics</option>   
@@ -114,7 +108,7 @@ tbody td{text-align:center;}
 		    </select>
 		    <button id="show_sensi_manage" style="min-width: 50px;">确定</button>
     </div>
-    <div class="box-content" id="sensi_manage_table" >
+    <div class="box-content" id="sensi_manage_table" style="padding:20px;">
                     
     </div>
             </div>
@@ -208,9 +202,9 @@ tbody td{text-align:center;}
 
 {% endblock body %}
 
-    {% block end_js %}
+{% block end_js %}
+<script src="/static/custom/js/table_init.js"></script>
 
 <script type="text/javascript" src="/static/custom/js/sensiwords_manage.js"></script> 
 
-<script src="/static/custom/js/charisma.js"></script>
 {% endblock end_js %}
