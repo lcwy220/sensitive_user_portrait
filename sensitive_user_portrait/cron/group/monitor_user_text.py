@@ -354,7 +354,7 @@ def main():
             start_ts = int(start_ts)
             #now_ts = time.time()
             #test
-            now_ts = datetime2ts('2013-09-05')
+            now_ts = datetime2ts('2013-09-08')
             if start_ts == now_ts:
                 status = add_task_name(task_name)
                 if status == 0:
