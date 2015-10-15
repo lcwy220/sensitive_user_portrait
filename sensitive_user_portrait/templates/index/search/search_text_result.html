@@ -20,7 +20,6 @@
 		</div>
 		<div id="weibo_text" style="float:left;width:950px;font-size:16px;">
 			<hr />
-			<h2>微博文本</h2>
 			<div id="weibo_content">
 				<div id="weibo_content2"></div>
 				<div id="pageGro" style="height:60px;margin-left:350px">
@@ -47,9 +46,6 @@
   <script  src="/static/scripts/jquery-jelevator-1.0.3.min.js"></script>
   <script type="text/javascript">
     var words_list = "{{ words_list }}";
-    if (words_list == ''){
-    	alert("关键词不能为空");
-    }
 	jQuery(function($){
 	    $("h1,h2").jElevator({
 	        howTopButton: true,
