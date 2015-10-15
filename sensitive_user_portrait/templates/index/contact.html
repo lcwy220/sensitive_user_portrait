@@ -46,11 +46,11 @@
     </div>
     <div class='row'>
         <div class="box col-md-12" >
-            <div class="box-inner" id = 'box-height'>
+            <div class="" id = 'box-height'>
                 <div class="box-header" style="background-color:rgba(195,220,224,0.4)">
                     <h2 style='margin-left:5px'>条件选择</h2>
                 </div>
-                <div class="box-content" style="height:200px">
+                <div class="box-content box-inner" style="float:left;">
                     <div class="col-md-12">
                         <label class='control-label'>关联维度（权重从1到10）：</label>
                         <div class='controls'>
@@ -215,6 +215,10 @@
                 <div id= "user_lable" style="margin-top:14px"></div>
               </div>
             </div>
+            <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="compare_confirm_button()">确认</button>
+              </div>
           </div>
         </div>
 
@@ -350,7 +354,12 @@
     }
     var nickName = document.getElementById('nickname');
     if(personalData.uname){
-        nickName.innerHTML = personalData.uname;
+        if (personalData.uname == 'unknown'){
+            nickName.innerHTML = "无此数据";
+        }
+        else{
+            nickName.innerHTML = personalData.uname;
+        }
     }else{
         nickName.innerHTML = "无此数据";
     }
@@ -387,7 +396,12 @@
         
     var userlocation = document.getElementById('userLocation');
     if(personalData.location){
-        userlocation.innerHTML = personalData.location;
+        if (personalData.location == 'unknown'){
+            userLocation.innerHTML = "无此数据";
+        }
+        else{
+            userLocation.innerHTML = personalData.location;
+        }
     }else{
         userlocation.innerHTML = "无此数据";
     }

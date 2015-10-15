@@ -1,6 +1,6 @@
 {% extends "index/base.html" %} 
-{% block title %}敏感热词推荐{% endblock title %}
-{% block subtitle %}敏感热词推荐{% endblock subtitle %}
+{% block title %}敏感词推荐{% endblock title %}
+{% block subtitle %}敏感词推荐{% endblock subtitle %}
       {% block custom_css %}
 <style type="text/css">
     .hidden{display:none;}
@@ -74,24 +74,23 @@ tbody td{text-align:center;}
   {% endblock custom_css %}
 
     {% block body %}
-    <div class="ch-container" style="width:1000px;">
-
-        <div class="row">
-            <div id="content" class="col-lg-10 col-sm-10">
-                <!-- content starts -->
-                <div class="row">
+<div class="ch-container" style="width:1000px;">
+    <div class="row">
+      <div id="content" class="col-lg-10 col-sm-10">
+            <!-- content starts -->
+			<div class="row">
                 <div class="box col-md-12">
                     <div class="box-inner" style="background-color:white;margin-left:25px;width:980px;min-height:150px;">
                         <div class="box-header well" data-original-title="" style="padding-top:5px;">
-                           <span class="TabTitle"  >敏感热词推荐</span>
+                           <span class="TabTitle"  >敏感词推荐</span>
                         </div>
-                        <div class="fleft">
-                        </div>
+                    <div class="fleft">
                         <div style="margin-top:12px;margin-left:30px;">选择日期:
-                          <select name="level" id="recommend_date_select" style="width:180px; margin-right:5px;"></select>
-                        <button id="show_recommend_word" class="btn btn-primary btn-sm"  style="min-width: 50px;">确定</button>
+                            <select name="level" id="recommend_date_select" style="width:180px; margin-right:5px;"></select>
+                            <button id="show_recommend_word" class="btn btn-primary btn-sm"  style="min-width: 50px;">确定</button>
                         </div>
-                         <div class="box-content" id="sensi_manage_table" >
+                </div>
+    <div class="box-content" id="sensi_manage_table" >
                     
                          </div>
                     </div>
