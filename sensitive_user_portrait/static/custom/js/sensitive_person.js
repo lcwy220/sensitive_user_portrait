@@ -181,14 +181,14 @@ Search_weibo.prototype = {
 $('input[name="origin_re"]').click(function(){
 var weibo_category = $('input[name="origin_re"]:checked').val();
 var sort = $('input[name="seq_method"]:checked').val();
-var sort_sensitive_text = "/attribute/sort_sensitive_text/?uid=1009362117&weibo_category=" + weibo_category + "&sort=" + sort;
+var sort_sensitive_text = "/attribute/sort_sensitive_text/?uid=" + uid + "&weibo_category=" + weibo_category + "&sort=" + sort;
 Search_weibo.call_sync_ajax_request(sort_sensitive_text, Search_weibo.ajax_method, Search_weibo.Draw_sort_sensitive_text);
 });
 
 $('input[name="seq_method"]').click(function(){
 var weibo_category = $('input[name="origin_re"]:checked').val();
 var sort = $('input[name="seq_method"]:checked').val();
-var sort_sensitive_text = "/attribute/sort_sensitive_text/?uid=1009362117&weibo_category=" + weibo_category + "&sort=" + sort;
+var sort_sensitive_text = "/attribute/sort_sensitive_text/?uuid=" + uid + "&weibo_category=" + weibo_category + "&sort=" + sort;
 Search_weibo.call_sync_ajax_request(sort_sensitive_text, Search_weibo.ajax_method, Search_weibo.Draw_sort_sensitive_text);
 });
 
@@ -539,17 +539,18 @@ emotion_charts.setOption(emotion_data);
 //请求数据
 var Search_weibo = new Search_weibo(); 
 $(document).ready(function(){
-    var sensitive_attribute_url = "/attribute/portrait_sensitive_attribute/?uid=1009362117";
+    console.log(uid);
+    var sensitive_attribute_url = "/attribute/portrait_sensitive_attribute/?uid=" + uid;
     Search_weibo.call_sync_ajax_request(sensitive_attribute_url, Search_weibo.ajax_method, Search_weibo.Draw_basic);
     get_level = $("#sensi_word_level").val();
     get_category = $("#sensi_word_class").val();
-    var level_category_url = "/attribute/sort_sensitive_words/?uid=1009362117&level=" + get_level + "&category=" + get_category;
+    var level_category_url = "/attribute/sort_sensitive_words/?uid=" + uid + "&level=" + get_level + "&category=" + get_category;
     Search_weibo.call_sync_ajax_request(level_category_url, Search_weibo.ajax_method, Search_weibo.Draw_sensi_word_table);
 
 
     var weibo_category = $('input[name="origin_re"]:checked').val();
     var sort = $('input[name="seq_method"]:checked').val();
-    var sort_sensitive_text = "/attribute/sort_sensitive_text/?uid=1009362117&weibo_category=" + weibo_category + "&sort=" + sort;
+    var sort_sensitive_text = "/attribute/sort_sensitive_text/?uid=" + uid + "&weibo_category=" + weibo_category + "&sort=" + sort;
     Search_weibo.call_sync_ajax_request(sort_sensitive_text, Search_weibo.ajax_method, Search_weibo.Draw_sort_sensitive_text);
 })
 
@@ -617,7 +618,7 @@ function draw_mutual_info(div,data){
 $('#show_sensi_word').click(function (){
     get_level = $("#sensi_word_level").val();
     get_category = $("#sensi_word_class").val();
-    var level_category_url = "/attribute/sort_sensitive_words/?uid=1009362117&level=" + get_level + "&category=" + get_category;
+    var level_category_url = "/attribute/sort_sensitive_words/?uid=" + uid + "&level=" + get_level + "&category=" + get_category;
     Search_weibo.call_sync_ajax_request(level_category_url, Search_weibo.ajax_method, Search_weibo.Draw_sensi_word_table);
     })
 //转发链模态框

@@ -125,11 +125,11 @@ Search_weibo.prototype = {
     if (weibo_num == 0){
         $('#weibo_content2').html('暂无微博数据');
         return;
-    }
+    }else{
     var html = "";
     html += '<div class="group_weibo_font">';
     var colors = ['white', 'whitesmoke'];
-  	for (var s = start_row; s < end_row; s++) {
+    for (var s = start_row; s < end_row; s++) {
         var timestamp = data[s]['timestamp'];
         var geo = data[s]['geo'];
         var text = data[s]['text'];
@@ -138,19 +138,19 @@ Search_weibo.prototype = {
         var is_sensitive = data[s]['sensitive'];
         var uid = data[s]['uid'];
         if (is_sensitive == 1){
-        	sensitive = "敏感微博";
+          sensitive = "敏感微博";
         }
         else{
-        	sensitive = '';
+          sensitive = '';
         }
         if (message_type == '1'){
-        	type = "原创微博";
+          type = "原创微博";
         }
         else if(message_type == '2'){
-        	type = "转发微博";
+          type = "转发微博";
         }
         else{
-        	type = "评论微博";
+          type = "评论微博";
         }
         if (emotion_sort == 'positive'){
             emotion = '积极';
@@ -166,23 +166,35 @@ Search_weibo.prototype = {
         html += '<div style="padding:10px;background:' + colors[(s+1)%2] + ';font-size:13px">';
         html += '<p style="color:black;">' + uid + '&nbsp;发布:&nbsp;'+ text + '</p>';
         if (sensi_words_weibo.length != 0){
-	        for (var i=0; i < sensi_words_weibo.length;i++){
-	            sensi_words_str += sensi_words_weibo[i] +'&nbsp;&nbsp;&nbsp;&nbsp;';
-	        }
-    	}
-    	else{
-    		sensi_words_str = '无';
-    	}
+          for (var i=0; i < sensi_words_weibo.length;i++){
+              sensi_words_str += sensi_words_weibo[i] +'&nbsp;&nbsp;&nbsp;&nbsp;';
+          }
+      }
+      else{
+        sensi_words_str = '无';
+      }
         html += '<p style="color:darkred;">敏感词:' + sensi_words_str +'&nbsp;&nbsp;情绪:<span style="color:red">'+ emotion + '</span>&nbsp;&nbsp;微博类型:<span>'+ type +'</span>&nbsp;&nbsp;<span>'+ sensitive + '</span><span style="float:right">' + timestamp + '&nbsp;&nbsp;' + geo + '&nbsp;&nbsp;'+ '</span></p>';
         html += '</div>'
     }
     html += '</div>'; 
+    }
     $('#weibo_content2').append(html);
   }
 
+function draw_conditions(){
+    $('#conditions').empty();
+    var html = '';
+    html += '<span class="mouse" style="margin-left:10px">关键词:'+ words_list;
+    $('#conditions').html(html);
+}
+
+function draw_empty_conditions(){
+    $('#conditions').empty();
+}
 //请求数据
 var Search_weibo = new Search_weibo(); 
 $(document).ready(function(){
-    var sensitive_text = "/search/full_text_search/?words_list=" + "中国";
+    draw_conditions();
+    var sensitive_text = "/search/full_text_search/?words_list=" + words_list;
     Search_weibo.call_sync_ajax_request(sensitive_text, Search_weibo.ajax_method, Search_weibo.Draw_search_text);
 })

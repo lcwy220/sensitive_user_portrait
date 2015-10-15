@@ -223,6 +223,7 @@
 {% block end_js %}
   <script  src="/static/scripts/jquery-jelevator-1.0.3.min.js"></script>
   <script type="text/javascript">
+    var uid = "{{ uid }}"
     jQuery(function($){
         $("h1,h2").jElevator({
             howTopButton: true,
