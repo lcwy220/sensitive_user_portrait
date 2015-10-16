@@ -44,7 +44,7 @@ def compute_mid_result(task_name, task_submit_date):
     now_ts = time.time()
     now_date = ts2datetime(now_ts)
     #test
-    now_ts = datetime2ts('2013-09-02')
+    now_ts = datetime2ts('2013-09-08')
     date_ts = datetime2ts(now_date)
     segment = int((now_ts - date_ts) / 900) + 1
     end_ts = date_ts + segment * 900
@@ -55,7 +55,7 @@ def compute_mid_result(task_name, task_submit_date):
         if begin_ts >= end_ts:
             break
         compute_ts = ts2date(begin_ts)
-        print 'compute ts:', compute_ts
+        #print 'compute ts:', compute_ts
         query_body = {'range':{'timestamp':{'from': begin_ts, 'to':begin_ts+search_time_segment}}}
         try:
             mid_result_list = es.search(index=monitor_index_name, doc_type=task_name, body={'query':query_body, 'size':100000, 'sort':[{'timestamp':{'order': 'asc'}}]})['hits']['hits']
@@ -66,13 +66,13 @@ def compute_mid_result(task_name, task_submit_date):
                 result_item = mid_result_item['_source']
                 timestamp = result_item['timestamp']
                 #attr_count
-                print 'compute_count'
+                #print 'compute_count'
                 count_dict = json.loads(result_item['count'])
                 for sensitive in count_dict:
                     count_key = 'count_' + sensitive
                     result[count_key][str(timestamp)] = count_dict[sensitive]
                 #attr_sentiment
-                print 'compute_sentiment'
+                #print 'compute_sentiment'
                 sensitive_sentiment_dict = json.loads(result_item['sentiment'])
                 for sensitive in sensitive_sentiment_dict:
                     sentiment_dict = sensitive_sentiment_dict[sensitive]
@@ -80,7 +80,7 @@ def compute_mid_result(task_name, task_submit_date):
                         sentiment_key = 'sentiment_'+sensitive+'_'+sentiment
                         result[sentiment_key][str(timestamp)] = sentiment_dict[sentiment]
                 #attr_sensitive_score
-                print 'compute_sensitive_word'
+                #print 'compute_sensitive_word'
                 if 'sensitive_word' in result_item:
                     sensitive_word_dict = json.loads(result_item['sensitive_word'])
                 else:
@@ -89,7 +89,7 @@ def compute_mid_result(task_name, task_submit_date):
                 for word in sensitive_word_dict:
                     #print 'word:', json.dumps(word.encode('utf-8')), word.encode('utf-8'), type(word.encode('utf-8'))
                     search_word = word.encode('utf-8')
-                    print 'search_word:', search_word, type(search_word)
+                    #print 'search_word:', search_word, type(search_word)
                     try:
                         word_identify = json.loads(word_r.hget('sensitive_words', search_word))
                     except:
@@ -97,7 +97,7 @@ def compute_mid_result(task_name, task_submit_date):
                     ts_word_score += sensitive_word_dict[word] * word_identify[0]
                 result['sensitive_score'][str(timestamp)] = ts_word_score
                 #attr_geo
-                print 'compute geo'
+                #print 'compute geo'
                 timestamp_date = ts2datetime(timestamp)
                 sensitive_geo_dict = json.loads(result_item['geo'])
                 for sensitive in sensitive_geo_dict:
@@ -110,7 +110,7 @@ def compute_mid_result(task_name, task_submit_date):
                         except:
                             result['geo_'+sensitive][timestamp_date][geo] = geo_dict[geo]
                 #attr_hashtag
-                print 'compute hashtag'
+                #print 'compute hashtag'
                 if 'hashtag' in result_item:
                     sensitive_hashtag_dict = json.loads(result_item['hashtag'])
                 else:
@@ -134,18 +134,18 @@ def compute_mid_result(task_name, task_submit_date):
                           'sentiment_0_129', 'sentiment_0_130', 'sensitive_score',\
                           'sentiment_1_126', 'sentiment_1_127', 'sentiment_1_128', 'sentiment_1_129', \
                           'sentiment_1_130']
-    print 'compute_peak'
+    #print 'compute_peak'
     for field in peak_compute_field:
         complement_item = complement_ts(result[field], start_ts, end_ts)
         sort_complement_item = sorted(complement_item.items(), key=lambda x:int(x[0]))
         detect_peaks_input = [item[1] for item in sort_complement_item]
-        print 'start_detect_peaks'
+        #print 'start_detect_peaks'
         result[field+'_peak'] = detect_peaks(detect_peaks_input)
         result[field] = sort_complement_item
     
     #compute abnormal evaluate
     abnormal_index_dict = compute_abnormal(result)
-    print 'abnormal_index_dict:', abnormal_index_dict
+    #print 'abnormal_index_dict:', abnormal_index_dict
     result = dict(result, **abnormal_index_dict)
 
     return result
@@ -408,7 +408,7 @@ def compute_comment_retweet_abnormal(new_result, union_user):
         comment_abnormal_index += compute_user_comment_retweet_abnormal(comment_list, comment_peak_location)
     
     abnormal_index = float(retweet_abnormal_index) / len(union_user) * 0.7 + float(comment_abnormal_index) / len(union_user) * 0.3
-    print 'retweet_abnormal_index, comment_abnormal_index:', retweet_abnormal_index, comment_abnormal_index
+    #print 'retweet_abnormal_index, comment_abnormal_index:', retweet_abnormal_index, comment_abnormal_index
 
     return abnormal_index
 
@@ -420,7 +420,7 @@ def compute_user_comment_retweet_abnormal(input_list, peak_location):
     max_count = sum(input_list)
     peak_list = [input_list[peak] for peak in peak_location]
     ave_peak_count = float(sum(peak_list)) / len(peak_list)
-    print 'compute user abnormal:', ave_count, max_count, ave_peak_count
+    #print 'compute user abnormal:', ave_count, max_count, ave_peak_count
     if ave_count >= 20:
         abnormal_index += 1
     if max_count >= 10000:
@@ -479,7 +479,7 @@ def get_network(task_exist):
             task_date_result = es.get(index=monitor_index_name, doc_type=task_name, id=key)['_source']
         except:
             task_date_result = {}
-        print 'task_name, key, task_date_result:', task_name, key, task_date_result
+        #print 'task_name, key, task_date_result:', task_name, key, task_date_result
         iter_field = ['top1', 'top2', 'top3', 'top4', 'top5']
         for field in iter_field:
             user_count_item = json.loads(task_date_result[field])
