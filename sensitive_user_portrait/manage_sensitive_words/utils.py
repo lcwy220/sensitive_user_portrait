@@ -57,6 +57,7 @@ def identify_in(date, words_list):
 def search_sensitive_words(level, category): # level: 0, 1, 2, 3; category: '', or other category
     results = dict()
     word_list = []
+    level = int(level)
     words_dict = r.hgetall('sensitive_words')
     if words_dict:
         if int(level) == 0 and not category:
@@ -73,7 +74,7 @@ def search_sensitive_words(level, category): # level: 0, 1, 2, 3; category: '', 
         elif not level and category:
             for k,v in words_dict.items():
                 word_state = json.loads(v)
-                if catetory == word_state[1]:
+                if category == word_state[1]:
                     word_list.append([k, word_state[0], word_state[1]])
         else:
             for k,v in words_dict.items():

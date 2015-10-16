@@ -62,7 +62,7 @@ function Draw_sensi_recommend_table(data){
     var html = '';
 	html += '<table class="table table-bordered table-striped table-condensed datatable" >';
 	html += '<thead><tr style="text-align:center;">';
-	html += '<th>敏感词</th><th>次数</th><th>用户ID</th><th>操作</th></tr>';
+	html += '<th>敏感词</th><th>提及次数</th><th>提到的用户名</th><th>操作&nbsp;&nbsp;<input name="choose_all" id="choose_all"  type="checkbox" value="" onclick="choose_all()" /></th></tr>';
 	html += '</thead>';
 	html += '<tbody>';
 	for(i=0;i<item.length;i++){
@@ -89,11 +89,14 @@ function Draw_sensi_recommend_table(data){
 	html += '</tbody>';
 
 	html += '</table>';
-	html += '<br>'+'<button id="add_words" ;" data-toggle="modal" data-target="#confirm_add" >确定添加</button>'
+	html += '<br>'+'<button id="add_words" ;" data-toggle="modal" style="margin-left:850px;" class="btn btn-primary btn-sm"  data-target="#confirm_add" >确定添加</button>'
 
 	$('#sensi_manage_table').append(html);
   }
 
+function choose_all(){
+  $('input[name="recommend_word_all"]').prop('checked', $("#choose_all").prop('checked'));
+}
 var recommend_data = [{"level":'敏感词', "sensi_class":'10', "uid":['1234','2345','3456','4567']},{"level":'敏感词', "sensi_class":'10', "uid":['1234','2345','3456','4567']}];
 url_init = '/manage_sensitive_words/recommend_new_words/?date_list='
 call_ajax_request(url_init, Draw_sensi_recommend_table) 

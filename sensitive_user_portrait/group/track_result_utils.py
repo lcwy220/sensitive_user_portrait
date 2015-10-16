@@ -488,12 +488,39 @@ def get_network(task_exist):
         
         iter_date_ts -= time_segment
         # get inner-retweet group from es---field: inner_graph
+        '''
         try:
             inner_graph = json.loads(task_date_result['inner_graph'])
         except:
             inner_graph = {}
+        '''
+
+    abnormal_index = compute_inner_polarization(top_list_dict)
     
-    return [date_list, top_list_dict, inner_graph]
+    return [date_list, top_list_dict, abnormal_index]
+
+
+# compute abnormal about inner polarization
+def compute_inner_polarization(top_list_dict):
+    abnormal_index = 0
+    top1_user_list = [item[0] for item in top_list_dict['top1']]
+    top2_user_list = [item[0] for item in top_list_dict['top2']]
+    top2_user_list = top1_user_list.extend(top2_user_list)
+    top2_user_set = set(top_user_list)
+    if len(top_user_set) <= 3:
+        abnormal_index += 1
+    user_count_list = []
+    for field in top_list_dict:
+        field_user_count = [item[2] for item in top_list_dict[field]]
+        user_count_list.extend(field_user_count)
+    max_user_count = max(user_count_list)
+    ave_user_count = float(sum(max_user_count)) / len(user_count_list)
+    if max_user_count >= 0.3:
+        abnormal_index += 1
+    if ave_user_count >= 0.1:
+        abnormal_index += 1
+
+    return abnormal_index
 
 # get user information from user_profile
 def get_user_info(uid_list):
