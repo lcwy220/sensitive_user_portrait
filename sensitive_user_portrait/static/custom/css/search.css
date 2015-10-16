@@ -191,11 +191,11 @@ text-indent:40px;
 }
 #textsearch {
     margin-left:30%;
-    margin-top:45px;
+    margin-top:15px;
 }
 #supersearch {
 	/*position: fixed;*/
-	margin-top: 150px;
+	margin-top: 80px;
 	left: 50%;
 	top: 50%;
 	z-index: 1002;
