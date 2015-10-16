@@ -24,14 +24,24 @@
       <div style="width:100%;height:300px;">
 			 <div id="active" style="width:70%;height:300px;float:left;"></div>
        <div id="weibo_content" style="font-size:10px;background-color:whitesmoke;width:30%;height:300px;float:right;" >
-        <div id="weibo_text" style="padding:0px 10px;">
+        <div id="weibo_count" style="padding:0px 10px; overflow-x:hidden; height:300px">
         </div>
       </div>
       </div>
 			<h2>情绪</h2>
-			<div id="emotion" style="width:900px;height:300px;"></div>
+			<div style="width:100%;height:300px;">
+      <div style="width:100%;height:30px;">
+      <input type='radio'  name='count' value = 1 checked='checked' style="position:relative; opacity:1">敏感
+      <input type='radio'  name='count' value = 0 style="position:relative; opacity:1">非敏感
+      </div>
+      <div style="width:70%;height:300px;float:left;" id="emotion"></div>
+      <div id="weibo_content" style="font-size:10px;background-color:whitesmoke;width:30%;height:300px;float:right;" >
+        <div id="weibo_sentiment" style="padding:0px 10px; overflow-x:hidden; height:300px">
+        </div>
+      </div>
+      </div>
 			<h2>用户</h2>
-			<table style="text-align:center;vertical-align:middle"><th style="text-align:center;vertical-align:middle">1</th><th style="text-align:center;vertical-align:middle">2</th><th style="text-align:center;vertical-align:middle">3</th><th style="text-align:center;vertical-align:middle">4</th></table>
+			<div id = 'img'></div>
       <div style="width:100%;height:300px;">
 			<div id="user" style="width:900px;height:300px;"></div>
     </div>
@@ -39,14 +49,24 @@
       <div style="width:100%;height:300px;">
 			<div style="width:70%;height:300px;float:left;" id="sensitivity"></div>
 			<div id="weibo_content" style="font-size:10px;background-color:whitesmoke;width:30%;height:300px;float:right;" >
-				<div id="weibo_text" style="padding:0px 10px;">
+				<div id="weibo_sentivity" style="padding:0px 10px;">
 				</div>
 			</div>
       </div>
 			<h2>地理位置</h2>
+      <div style="width:100%;height:30px;">
+      <input type='radio'  name='location_0'  value = 1 style="position:relative; opacity:1" checked='checked'>敏感
+      <input type='radio'  name='location_0' value = 0 style="position:relative; opacity:1">非敏感
+      </div>
 			<div id="location" style="width:100%;height:300px;"></div>
 			<h2>hashtag</h2>
+      <div style="width:100%;height:30px;">
+      <input type='radio'  name='hashtag' value = 1 checked='checked' style="position:relative; opacity:1">敏感
+      <input type='radio'  name='hashtag' value = 0 style="position:relative; opacity:1">非敏感
+      </div>
 			<div id="hashtag" style="width:900px;height:300px;"></div>
+      <h2>堆积图</h2>
+      <div id="test" style="width:900px;height:300px;"></div>
 		</div>
 	</div>
 <div class="modal fade" id="user_list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

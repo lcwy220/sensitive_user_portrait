@@ -11,7 +11,7 @@ sys.path.append('../')
 from global_utils import R_GROUP as r
 from global_utils import R_GROUP_TASK as r_task
 from global_utils import es_sensitive_user_portrait as es
-from time_utils import ts2datetime, datetime2ts
+from time_utils import ts2datetime, datetime2ts, ts2date, date2ts
 '''
 from sensitive_user_portrait.global_utils import R_GROUP as r
 from sensitive_user_portrait.global_utils import R_GROUP_TASK as r_task
@@ -231,5 +231,6 @@ def delete_track_task(task_name):
 
 if __name__=='__main__':
     task_name = 'testtask'
-    submit_date = '2013-09-01 00:00:00'
-    add_task_record_time(task_name, submit_date)
+    #submit_date = '2013-09-01 00:00:00'
+    #add_task_record_time(task_name, submit_date)
+    #es.delete(index=index_name, doc_type=index_type, id=task_name)

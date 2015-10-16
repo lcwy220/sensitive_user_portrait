@@ -24,10 +24,10 @@ function Draw_tag_table(data){
 		html += '<td name="attribute_name">'+item[i].attribute_name+'</td>';
 		var item_value = item[i].attribute_value.split('&').join('/');
         if (!item_value){
-            html += '<td name="attribute_value"><a href="" data-toggle="modal" data-target="#editor" id="currentEdit" style="color:darkred;font-size:10px;" title="添加标签名">添加</a></td>';
+            html += '<td name="attribute_value"><a href="" data-toggle="modal" data-target="#editor" class="currentEdit" style="color:darkred;font-size:10px;" title="添加标签名">添加</a></td>';
         }
         else{
-            html += '<td name="attribute_value"><a href="" data-toggle="modal" data-target="#editor" id="currentEdit" title="点击编辑">'+item_value+'</a></td>';
+            html += '<td name="attribute_value"><a href="" data-toggle="modal" data-target="#editor" class="currentEdit fortag" title="点击编辑">'+item_value+'</a></td>';
         }
         html += '<td name="creater">'+item[i].user+'</td>';
 		html += '<td name="time">'+item[i].date+'</td>'
@@ -42,14 +42,20 @@ function Draw_tag_table(data){
     deleteGroup();
 }
 function editTag(){
-    var tagname = new Array();
-    $('a[id^="currentEdit"]').click(function(e){
+    $('.currentEdit').click(function(e){
         add_flag = false;
         var tagNames =  $(this).text();
+        //console.log(tagNames);
+        var tagname = new Array();
         if (tagNames.indexOf('/') > -1){
             tagname = tagNames.split('/');
         }
-        console.log(tagname);
+        else{
+            if ($(this).hasClass('fortag')){
+                tagname.push(tagNames);
+            }
+        }
+        //console.log(tagname);
 		$('#EDIT').empty();
 		var html = '';
 		html += '<div class="" style="margin-bottom:10px;"><span style="">标签类别&nbsp;&nbsp;&nbsp;&nbsp;</span>';

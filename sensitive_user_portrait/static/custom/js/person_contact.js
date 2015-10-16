@@ -59,7 +59,11 @@ Search_weibo.prototype = {
         var html = '';
         var height = 39 * (data.length-1);
         html += '<table class="table table-striped table-bordered bootstrap-datatable datatype responsive" style="table-layout:fixed">';
-        html += '<thead><tr><th class="center" style="text-align:center">用户id</th><th class="center" style="text-align:center">昵称</th><th class="center" style="text-align:center; ">活跃度</th><th class="center" style="text-align:center;">重要度</th><th class="center" style="text-align:center">影响力</th><th class="center" style="text-align:center">敏感性</th><th class="center" style="text-align:center">得分</th><th style="width:40px"><input name="choose_all" id="choose_all" type="checkbox" value="" onclick="choose_all()" /></th></tr></thead>';
+        html += '<thead><tr><th class="center" style="text-align:center">用户id</th><th class="center" style="text-align:center">昵称</th>';
+        html += '<th class="center" style="text-align:center; ">活跃度</th><th class="center" style="text-align:center;">重要度</th>';
+        html += '<th class="center" style="text-align:center">影响力</th><th class="center" style="text-align:center">敏感性</th><th class="center" style="text-align:center">得分</th>';
+        html += '<th class="center" style="text-align:center">关联维度</th>';
+        html += '<th style="width:40px"><input name="choose_all" id="choose_all" type="checkbox" value="" onclick="choose_all()" /></th></tr></thead>';
         html += '<tbody>';
         for(var item = 1; item < data.length-1; item++){
             html += '<tr style="border-bottom:1px solid #ddd">';
@@ -80,7 +84,12 @@ Search_weibo.prototype = {
                    html += '<td class="center" style="text-align:center;vertical-align:middle">'+ data[item][i] +'</td>'; 
                 }
                 else {
-                   // html += '<td class="center" style="text-align:center;vertical-align:middle">'+ data[item][i] +'</td>'; 
+                    var relation = new Array();
+                    var rel_obj = data[item][i];
+                    for (var key in rel_obj){
+                        relation.push(key);
+                    }
+                   html += '<td class="center" style="text-align:center;vertical-align:middle">'+ relation.join(',') +'</td>'; 
                 }
             }
             html += '<td class="center"><input name="search_result_option" class="search_result_option" type="checkbox" value="' + item + '" /></td>';
