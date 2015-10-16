@@ -273,6 +273,8 @@ def compute_count_abnormal_index(input_list, peak_list):
         abnormal_index += 1
     if ave_peak_count / ave_count >= 3:
         abnormal_index += 1
+    if ave_count >= 10:
+        abnormal_index += 1
     return abnormal_index
 
 '''
@@ -461,6 +463,8 @@ def get_network(task_exist):
     now_ts = time.time()
     now_date = ts2datetime(now_ts)
     now_date_ts = datetime2ts(now_date)
+    #test
+    now_date_ts = datetime2ts('2013-09-07')
     iter_date_ts = now_date_ts
     iter_count = 1
     date_list = []
@@ -472,9 +476,10 @@ def get_network(task_exist):
         date_list.append(iter_date)
         key = 'inner_' + str(iter_date)
         try:
-            task_date_result = es.search(index=monitor_index_name, doc_type=task_name, id=key)['_source']
+            task_date_result = es.get(index=monitor_index_name, doc_type=task_name, id=key)['_source']
         except:
             task_date_result = {}
+        print 'task_name, key, task_date_result:', task_name, key, task_date_result
         iter_field = ['top1', 'top2', 'top3', 'top4', 'top5']
         for field in iter_field:
             user_count_item = json.loads(task_date_result[field])
@@ -503,18 +508,22 @@ def get_network(task_exist):
 # compute abnormal about inner polarization
 def compute_inner_polarization(top_list_dict):
     abnormal_index = 0
+    #print 'top_list_dict:', top_list_dict
     top1_user_list = [item[0] for item in top_list_dict['top1']]
     top2_user_list = [item[0] for item in top_list_dict['top2']]
-    top2_user_list = top1_user_list.extend(top2_user_list)
-    top2_user_set = set(top_user_list)
+    top1_user_list.extend(top2_user_list)
+    #print 'top1_user_list:', top1_user_list
+    top_user_set = set(top1_user_list)
+    #print 'top_user_set:', top_user_set
     if len(top_user_set) <= 3:
         abnormal_index += 1
     user_count_list = []
     for field in top_list_dict:
         field_user_count = [item[2] for item in top_list_dict[field]]
         user_count_list.extend(field_user_count)
+    #print 'user_count_list:', user_count_list
     max_user_count = max(user_count_list)
-    ave_user_count = float(sum(max_user_count)) / len(user_count_list)
+    ave_user_count = float(sum(user_count_list)) / len(user_count_list)
     if max_user_count >= 0.3:
         abnormal_index += 1
     if ave_user_count >= 0.1:

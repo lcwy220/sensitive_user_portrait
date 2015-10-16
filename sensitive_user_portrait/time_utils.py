@@ -37,8 +37,8 @@ def date2ts(date):
     return timestamp
 
 if __name__=='__main__':
-    result = ts2date(int('1378397099'))
+    result = ts2date(int('1377964800'))
     print 'result:', result
-    #date = '2013-10-10 23:40:00'
+    #date = '2013-09-01 00:00:00'
     #timestamp = date2ts(date)
     #print 'timestamp:', timestamp
