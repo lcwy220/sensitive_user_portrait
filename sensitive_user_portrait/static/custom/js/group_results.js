@@ -44,6 +44,9 @@ function basic_influence(div,data){
     domain_html += '备注：<span id="remarks">' + data['state'] + '</span>';
     domain_html += '<span type="button"data-toggle="modal" data-target="#user_list" style="font-size:16px;cursor: pointer; float:right"><u>查看用户列表</u></span></p>';
     $(div).append(domain_html);
+
+    var user_list = data['uid_list'];
+    draw_table(user_list);
 }
 
 function draw_linechart(id,data,type,flag){
@@ -97,7 +100,6 @@ function draw_linechart(id,data,type,flag){
         ],
         function(ec){
             var ecConfig = require('echarts/config');
-
             function focus(param){
                 var data = param.data;
                 if(type == 'active'){
@@ -106,15 +108,14 @@ function draw_linechart(id,data,type,flag){
                 }
                 if(type=='sentiment'){
                     var sentiment_weibo_url = '/group/get_sentiment_weibo/?task_name='+name+ '&sensitive_status='+flag+'&sentiment='+data['type']+'&timestamp='+data['xAxis'].getTime()/1000;
+                    console.log(sentiment_weibo_url);
                     call_ajax_request(sentiment_weibo_url, draw_sentiment_weibo);
                 }
                 if(type=='sensitivity'){
                     var sentiment_weibo_url = '/group/get_sensitive_word/?task_name='+name+ '&timestamp='+data['xAxis'].getTime()/1000;
                     call_ajax_request(sentiment_weibo_url, draw_sentivity_word);
                 }
-
             }
-
             myChart.on(ecConfig.EVENT.CLICK,focus)
             myChart.on(ecConfig.EVENT.FORCE_LAYOUT_END, function () {});
         }
@@ -363,8 +364,6 @@ function analysis_count(data1,data2,data3,data4){
     var point_data_1 = [];
     for(var i = 0; i < data1.length; i++){
         temp_data_0.push([new Date(data1[i][0]*1000),data1[i][1]]);
-    }
-    for(var i = 0; i < data2.length; i++){
         temp_data_1.push([new Date(data2[i][0]*1000),data2[i][1]]);
     }
 
@@ -435,20 +434,11 @@ function analysis_sentiment(data1,data2,data3,data4,data5,data6,data7,data8,data
 
     for(var i = 0; i < data1.length; i++){
         temp_data_0.push([new Date(data1[i][0]*1000),data1[i][1]]);
-    }
-    for(var i = 0; i < data2.length; i++){
         temp_data_1.push([new Date(data2[i][0]*1000),data2[i][1]]);
-    }
-    for(var i = 0; i < data3.length; i++){
         temp_data_2.push([new Date(data3[i][0]*1000),data3[i][1]]);
-    }
-    for(var i = 0; i < data4.length; i++){
         temp_data_3.push([new Date(data4[i][0]*1000),data4[i][1]]);
-    }
-    for(var i = 0; i < data5.length; i++){
         temp_data_4.push([new Date(data5[i][0]*1000),data5[i][1]]);
     }
-
     for(var i = 0; i < data6.length; i++){
         point_data_0.push({'name':'拐点'+i, 'value':data1[data6[i]][1], 'xAxis':new Date(data1[data6[i]][0]*1000),'yAxis':data1[data6[i]][1],'type':126});
     }
@@ -642,13 +632,15 @@ function get_group_data(data){
     console.log(data);
     global_data = data;
     basic_influence('#basic',data.basic);
-    draw_table(user_list);
+
     var count_0_data = data['count_0'];
     var count_1_data = data['count_1'];
     var count_0_peak = data['count_0_peak'];
     var count_1_peak = data['count_1_peak'];
-    var sensitive_data = data['sensitive_score'];
-    var sensitive_peak = data['sensitive_score_peak'];
+    var count_data = analysis_count(count_0_data, count_1_data,count_0_peak,count_1_peak);
+    draw_linechart('active',count_data,'active',0);
+
+    /*
     var sentiment_0_126 = data['sentiment_0_126'];
     var sentiment_0_127 = data['sentiment_0_127'];
     var sentiment_0_128 = data['sentiment_0_128'];
@@ -660,7 +652,8 @@ function get_group_data(data){
     var sentiment_0_128_peak = data['sentiment_0_128_peak'];
     var sentiment_0_129_peak = data['sentiment_0_129_peak'];
     var sentiment_0_130_peak = data['sentiment_0_130_peak'];
-
+    */
+    bind_radio_input();
     var sentiment_1_126 = data['sentiment_1_126'];
     var sentiment_1_127 = data['sentiment_1_127'];
     var sentiment_1_128 = data['sentiment_1_128'];
@@ -672,21 +665,21 @@ function get_group_data(data){
     var sentiment_1_128_peak = data['sentiment_1_128_peak'];
     var sentiment_1_129_peak = data['sentiment_1_129_peak'];
     var sentiment_1_130_peak = data['sentiment_1_130_peak'];
+    var sentiment = analysis_sentiment(sentiment_1_126,sentiment_1_127,sentiment_1_128,sentiment_1_129,sentiment_1_130,sentiment_1_126_peak, sentiment_1_127_peak, sentiment_1_128_peak,sentiment_1_129_peak,sentiment_1_130_peak);
+    draw_linechart('emotion',sentiment,'sentiment', 1);
+    
+    var sensitive_data = data['sensitive_score'];
+    var sensitive_peak = data['sensitive_score_peak'];
 
     var geo_0 = data['geo_0'];
     var geo_1 = data['geo_1'];
     var hashtag_0 = data['hashtag_0'];
     var hashtag_1 = data['hashtag_1'];
-    var user_list = data['basic']['uid_list'];
-
-    var count_data = analysis_count(count_0_data, count_1_data,count_0_peak,count_1_peak);
+    /*
     var sensitive = analysis_sensitive(sensitive_data, sensitive_peak);
-    var sentiment = analysis_sentiment(sentiment_1_126,sentiment_1_127,sentiment_1_128,sentiment_1_129,sentiment_1_130,sentiment_1_126_peak, sentiment_1_127_peak, sentiment_1_128_peak,sentiment_1_129_peak,sentiment_1_130_peak);
     var option_data = analysis_geo(geo_1);
     var hashtag_data = analysis_geo(hashtag_1);
-    draw_linechart('active',count_data,'active',0);
     draw_linechart('sensitivity',sensitive,'sensitivity',0);
-    draw_linechart('emotion',sentiment,'sentiment',0);
     if(option_data == 0){
         $('#location').append('<h3>当前数值为空<h3>');
     }else{
@@ -697,7 +690,7 @@ function get_group_data(data){
     }else{
         draw_barchart('hashtag', hashtag_data,'hashtag');
     }    
-    bind_radio_input();
+    */
 }
 
 function bind_radio_input(){
@@ -779,12 +772,12 @@ var test_url = '/group/track_task_results/?task_name='+name;
 var comment_url = '/group/track_task_results/?task_name='+name+'&module=comment_retweet';
 
 call_ajax_request(test_url, get_group_data);
-call_ajax_request(comment_url, test_data);
+//call_ajax_request(comment_url, test_data);
 
 // draw_linechart('emotion');
 // draw_linechart('sensitivity');
 // draw_linechart('user');
 // draw_barchart('location');
 // draw_barchart('hashtag');
-draw_stackbar('test');
+// draw_stackbar('test');
 
