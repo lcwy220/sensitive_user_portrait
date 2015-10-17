@@ -261,14 +261,16 @@ function draw_stackbar(id,data){
                 //console.log(params)
                 var res = '<br/>' + params[0].name;
                 for (var i = 0, l = params.length; i < l; i++) {
-                    for(var j = 0; j < data[1].length; j++){
-                        if(params[0].name == data[1][j]){
-                            //console.log(j);
-                            res += '<br/>' + params[i].seriesName + ' : ' + params[i].value + '&nbsp;&nbsp;用户名：' + params[i]['series']['uname'][j] ;
-                            break;
+                    if (params[i].value != 0){
+                        for(var j = 0; j < data[1].length; j++){
+                            if(params[0].name == data[1][j] ){
+                                //console.log(j);
+                                res += '<br/>' + params[i].seriesName + ' : ' + params[i].value + '&nbsp;&nbsp;用户名：' + params[i]['series']['uname'][j] ;
+                                break;
+                            }
                         }
+                        // res += '<br/>' + params[i].seriesName + ' : ' + params[i].value;
                     }
-                    // res += '<br/>' + params[i].seriesName + ' : ' + params[i].value;
                 }
                 setTimeout(function (){
                     callback(ticket, res);
