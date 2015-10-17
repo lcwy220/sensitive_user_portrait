@@ -123,6 +123,15 @@ function bind_weibo_word(type, data,flag){
         var sentiment_weibo_url = '/group/get_sensitive_word/?task_name='+name+ '&timestamp='+data['xAxis'].getTime()/1000;
         call_ajax_request(sentiment_weibo_url, draw_sentivity_word);
     }
+    // if(type=='location'){
+    //     console.log(data);
+    //     var sentiment_weibo_url = '/group/get_geo_weibo/?task_name='+name+ '&timestamp='+data['xAxis'].getTime()/1000;
+    //     call_ajax_request(sentiment_weibo_url, draw_sentivity_word);
+    // }
+    // if(type=='hashtag'){
+    //     var sentiment_weibo_url = '/group/get_hashtag_weibo/?task_name='+name+ '&timestamp='+data['xAxis'].getTime()/1000;
+    //     call_ajax_request(sentiment_weibo_url, draw_sentivity_word);
+    // }
 }
 
 function draw_count_weibo(data){
@@ -211,7 +220,7 @@ function draw_table(data){
     $('#more_influence').append(html);
 }
 
-function draw_barchart(id,data,type){
+function draw_barchart(id,data,type,flag){
     var myChart = echarts.init(document.getElementById(id)); 
     //console.log(data[1]);
     var option = {
@@ -228,6 +237,21 @@ function draw_barchart(id,data,type){
         options:data[1],
     };                    
     myChart.setOption(option);                
+    /*
+    require([
+            'echarts'
+        ],
+        function(ec){
+            var ecConfig = require('echarts/config');
+            function focus(param){
+                var data = param;
+                // bind_weibo_word(type, data, flag);
+            }
+            myChart.on(ecConfig.EVENT.CLICK,focus)
+            myChart.on(ecConfig.EVENT.FORCE_LAYOUT_END, function () {});
+        }
+    ) 
+    */
 }
 
 function draw_stackbar(id,data){
@@ -542,13 +566,29 @@ function draw_domain_portrait(data){
     var user_data = data;
     var num = 0 
     var html = '';
+    var i = 0;
+    for(var m in data){
+        i++;
+    }
     html += '<div ng-repeat="t in hotTopics" class="col-md-4 ng-scope"><div style="padding:5px; padding-left:15px; padding-right:15px; margin-bottom:15px" class="section-block">';
     html += '<h1 class="no-margin"><small><a style="color:#777;font-size:18px" class="ng-binding"></a></small></h1>';
-    html += '<hr style="margin-top: 5px; margin-bottom: 15px">';
-    html += '<ul style="margin-top:0px;margin-bottom:0;padding-left: 7px;height:50px; overflow-y:hidden" class="list-inline">';
+    html += '<hr style="margin-top: 5px; margin-bottom: 15px;width:'+60*i+'px" id = "seprate_line">';
+    html += '<ul style="margin-top:0px;margin-bottom:0;padding-left: 7px;height:50px; overflow-y:hidden;width:'+65*i+'px" class="list-inline" id="ui_line">';
     for (key in data){ 
        num ++;
-       if (num < 7){
+       if(num == 1){
+            var comment_index = key + '_comment';
+            var retweet_index = key+ '_retweet';
+            var comment_peak = key + '_comment_peak';
+            var retweet_peak = key + '_retweet_peak';
+            var comment_data = user_name_data[comment_index] ;
+            var retweet_data = user_name_data[retweet_index];
+            var comment_peak_data = user_name_data[comment_peak];
+            var retweet_peak_data = user_name_data[retweet_peak];
+            var img_data = analysis_img(comment_data,retweet_data,comment_peak_data,retweet_peak_data);
+            draw_linechart('user',img_data,'user',0);
+       }
+       if (num < 14){
                if (data[key][1] == ''){
                   domain_top_user_portrait = "http://tp2.sinaimg.cn/1878376757/50/0/1";
                }else{
@@ -559,6 +599,7 @@ function draw_domain_portrait(data){
         }
     }
     html += '</ul></div></div>';
+    var width = 50 * num;
     $('#img').append(html);
     bind_portait();
 }
@@ -635,7 +676,7 @@ function get_group_data(data){
     if(option_data == 0){
         $('#location').append('<h3>当前数值为空<h3>');
     }else{
-        draw_barchart('location', option_data,'location');
+        draw_barchart('location', option_data,'location',0);
     }
 
     var hashtag_0 = data['hashtag_0'];
@@ -644,7 +685,7 @@ function get_group_data(data){
     if(hashtag_data == 0){
         $('#hashtag').append('<h3>当前数值为空<h3>')
     }else{
-        draw_barchart('hashtag', hashtag_data,'hashtag');
+        draw_barchart('hashtag', hashtag_data,'hashtag',0);
     }    
 }
 
@@ -696,7 +737,7 @@ function bind_radio_input(){
         if(option_data == 0){
             $('#location').append('<h3>当前数值为空<h3>');
         }else{
-            draw_barchart('location', option_data,'location');
+            draw_barchart('location', option_data,'location',0);
         }
     });
     var hashtag_data ;
@@ -712,7 +753,7 @@ function bind_radio_input(){
         if(hashtag_data == 0){
             $('#hashtag').html('<h3>当前数值为空<h3>');
         }else{
-            draw_barchart('hashtag', hashtag_data,'hashtag');
+            draw_barchart('hashtag', hashtag_data,'hashtag',0);
         }
     });
 }
@@ -729,4 +770,5 @@ var stack_url = '/group/track_task_results/?task_name='+name+'&module=network';
 call_ajax_request(test_url, get_group_data);
 call_ajax_request(comment_url, test_data);
 call_ajax_request(stack_url, analysis_stack);
+
 
