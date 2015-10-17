@@ -19,7 +19,7 @@ function Draw_sensi_manage_table(data){
 	html += '</thead>';
 	html += '<tbody>';
 	for(i=0;i<item.length;i++){
-		html += '<tr>'
+		html += '<tr id=' + item[i][0] + '>'
 		html += '<td name="attribute_name">'+item[i][0]+'</td>';
 		html += '<td name="level">'+item[i][1]+'</td>';
         html += '<td name="class">'+item[i][2]+'</td>';
@@ -31,18 +31,10 @@ function Draw_sensi_manage_table(data){
 	html += '</table>';
 	$('#sensi_manage_table').append(html);
     
-    //datatable for page
-    $('.datatable').dataTable({
-        "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
-        "sPaginationType": "bootstrap",
-        "oLanguage": {
-            "sLengthMenu": "_MENU_ 每页"
-        }
-    });
 
     $('.delTag').off("click").click(function(){
         var delete_url = "/manage_sensitive_words/self_delete/?";
-        var temp = $(this).parent().prev().prev().prev().html();
+        var temp = $(this).parent().parent().attr('id');
         delete_url += 'word=' + temp;
         //console.log(delete_url);
         //window.location.href = url;
@@ -90,6 +82,14 @@ function Draw_sensi_manage_table(data){
             alert('敏感词不能为空！')
         } 
 	})
+    //datatable for page
+    $('.datatable').dataTable({
+        "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
+        "sPaginationType": "bootstrap",
+        "oLanguage": {
+            "sLengthMenu": "_MENU_ 每页"
+        }
+    });
 
   }
 

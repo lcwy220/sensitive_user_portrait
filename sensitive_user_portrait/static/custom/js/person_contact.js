@@ -59,7 +59,7 @@ Search_weibo.prototype = {
         var html = '';
         var height = 39 * (data.length-1);
         html += '<table class="table table-striped table-bordered bootstrap-datatable datatype responsive" style="table-layout:fixed">';
-        html += '<thead><tr><th class="center" style="text-align:center">用户id</th><th class="center" style="text-align:center">昵称</th>';
+        html += '<thead><tr><th class="center" style="text-align:center">昵称</th>';
         html += '<th class="center" style="text-align:center; ">活跃度</th><th class="center" style="text-align:center;">重要度</th>';
         html += '<th class="center" style="text-align:center">影响力</th><th class="center" style="text-align:center">敏感性</th><th class="center" style="text-align:center">得分</th>';
         html += '<th class="center" style="text-align:center">关联维度</th>';
@@ -78,10 +78,10 @@ Search_weibo.prototype = {
                 else if (i == 0){
                    var user_url = personal_url + data[item][0];
                    save_id.push(data[item][0]);
-                   html += '<td class="center" style="text-align:center;vertical-align:middle"><a href='+user_url +' target="_blank">'+ data[item][i] +'</a></td>';
+                   //html += '<td class="center" style="text-align:center;vertical-align:middle"><a href='+user_url +' target="_blank">'+ data[item][i] +'</a></td>';
                 }
                 else if (i == 1) {
-                   html += '<td class="center" style="text-align:center;vertical-align:middle">'+ data[item][i] +'</td>'; 
+                   html += '<td class="center" style="text-align:center;vertical-align:middle"><a href=' + user_url + ' target="_blank">' + data[item][i] +'</a></td>'; 
                 }
                 else {
                     var relation = new Array();
@@ -533,18 +533,26 @@ function draw_table_group_confirm(uids, div){
   $(div).empty();
     var html = '';
     html += '<table id="group_confirm_table" class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
-    html += '<thead><tr><th class="center" style="text-align:center">用户id</th><th class="center" style="text-align:center">昵称</th><th class="center" style="text-align:center">活跃度</th><th class="center" style="text-align:center;width:72px">重要度</th><th class="center" style="text-align:center">影响力</th><th class="center" style="text-align:center">得分</th><th></th></tr></thead>';
+    html += '<thead><tr><th class="center" style="text-align:center">昵称</th><th class="center" style="text-align:center">活跃度</th>';
+    html += '<th class="center" style="text-align:center;width:72px">重要度</th><th class="center" style="text-align:center">影响力</th>';
+    html += '<th class="center" style="text-align:center">得分</th>';
+    html += '<th class="center" style="text-align:center;">关联维度</th><th></th></tr></thead>';
     html += '<tbody>';
     for(var i in uids){
       var item = global_data[uids[i]];
       html += '<tr">';
-      html += '<td class="center" name="compare_confirm_uids">'+ item[0] +'</td>';
-      html += '<td class="center">'+ item[1] + '</td>';
-      html += '<td class="center">'+ item[2].toFixed(2) + '</td>';
-      html += '<td class="center" style="width:100px;">'+ item[3].toFixed(2) + '</td>';
-      html += '<td class="center" style="width:100px;">'+ item[4].toFixed(2) + '</td>';
-      html += '<td class="center" style="width:100px;">'+ item[5].toFixed(2) + '</td>';
-      html += '<td class="center" style="width:80px;"><button class="btn btn-primary btn-sm" style="width:60px;height:30px" onclick="delRow(this)">移除</button></td>';
+      // html += '<td class="center" name="group_confirm_uids">'+ item[0] +'</td>';
+      html += '<td class="center" style="text-align:center;">'+ item[1] + '</td>';
+      html += '<td class="center" style="text-align:center;">'+ item[2].toFixed(2) + '</td>';
+      html += '<td class="center" style="text-align:center;width:100px;">'+ item[3].toFixed(2) + '</td>';
+      html += '<td class="center" style="text-align:center;width:100px;">'+ item[4].toFixed(2) + '</td>';
+      html += '<td class="center" style="text-align:center;width:100px;">'+ item[5].toFixed(2) + '</td>';
+      var relation = new Array();
+      for (var j in item[7]){
+          relation.push(j);
+      }
+      html += '<td class="center" style="text-align:center;width:100px;">'+ relation.join(',') + '</td>';
+      html += '<td class="center" style="text-align:center;width:80px;"><button class="btn btn-primary btn-sm" style="width:60px;height:30px" onclick="delRow(this)">移除</button></td>';
       html += '</tr>';
     }
     html += '</tbody>';

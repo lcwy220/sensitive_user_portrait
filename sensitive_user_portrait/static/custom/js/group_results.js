@@ -32,17 +32,17 @@ function basic_influence(div,data){
     $(div).empty();
     var domain_html = '';
     domain_html += '<p style="margin-top:30px;margin-left:10px;">群体名称：';
-    domain_html += '<span id="groupName" style="margin-right:10px;">' + data['task_name'] + '</span>';
-    domain_html += '群组人数：<span id="members_count" style="margin-right:10px;">' + data['count'] + '</span>';
-    domain_html += '提交时间：<span id="endTime" style="margin-right:10px;">' + data['submit_date'] + '</span>';
+    domain_html += '<span id="groupName" style="margin-right:10px;color:darkcyan">' + data['task_name'] + '</span>';
+    domain_html += '群组人数：<span id="members_count" style="margin-right:10px;color:darkcyan">' + data['count'] + '</span>';
+    domain_html += '提交时间：<span id="endTime" style="margin-right:10px;color:darkcyan">' + data['submit_date'] + '</span>';
     if (data['status'] == 1){
-        domain_html += '监控状态：<span id="status" style="margin-right:10px;">监控停止</span>';
+        domain_html += '监控状态：<span id="status" style="margin-right:10px;color:darkcyan">监控停止</span>';
     }
     else {
-        domain_html += '监控状态：<span id="stauts" style="margin-right:10px;">正在监控</span>';
+        domain_html += '监控状态：<span id="stauts" style="margin-right:10px;color:darkcyan">正在监控</span>';
     }
-    domain_html += '备注：<span id="remarks">' + data['state'] + '</span>';
-    domain_html += '<span type="button"data-toggle="modal" data-target="#user_list" style="font-size:16px;cursor: pointer; float:right"><u>查看用户列表</u></span></p>';
+    domain_html += '备注：<span id="remarks" style="color:darkcyan">' + data['state'] + '</span>';
+    domain_html += '<span type="button"data-toggle="modal" data-target="#user_list" style="font-size:16px;cursor: pointer; color:darkblue;float:right"><u>查看用户列表</u></span></p>';
     $(div).append(domain_html);
 
     var user_list = data['uid_list'];
@@ -572,7 +572,7 @@ function draw_domain_portrait(data){
     }
     html += '<div ng-repeat="t in hotTopics" class="col-md-4 ng-scope"><div style="padding:5px; padding-left:15px; padding-right:15px; margin-bottom:15px" class="section-block">';
     html += '<h1 class="no-margin"><small><a style="color:#777;font-size:18px" class="ng-binding"></a></small></h1>';
-    html += '<hr style="margin-top: 5px; margin-bottom: 15px;width:'+60*i+'px" id = "seprate_line">';
+    html += '<hr style="margin-top: 5px; margin-bottom: 15px;width:0px" id ="seprate_line">';
     html += '<ul style="margin-top:0px;margin-bottom:0;padding-left: 7px;height:50px; overflow-y:hidden;width:'+65*i+'px" class="list-inline" id="ui_line">';
     for (key in data){ 
        num ++;
@@ -595,7 +595,7 @@ function draw_domain_portrait(data){
                   domain_top_user_portrait = data[key][1];
                 };
               html += '<li ng-repeat="result in t.result" target="_blank" style="margin-bottom: 10px" class="img"  id='+key+'>';
-              html += '<div class="small-photo shadow-5"><span class="helper"></span><img title="'+ key +'" src="' + domain_top_user_portrait + '" alt="' + data[key][0] +'"></div></li>';         
+              html += '<div class="small-photo shadow-5"><span class="helper"></span><img style="cursor:pointer;" title="'+ key +'" src="' + domain_top_user_portrait + '" alt="' + data[key][0] +'"></div></li>';         
         }
     }
     html += '</ul></div></div>';
@@ -625,7 +625,7 @@ function add_head(){
     //console.log('aaaaaaa');
     $('#count_head').append('<h4 style="display:inline-block">(异常值为:'+global_data['count_abnormal']+')</h4>');
     $('#emtion_head').append('<h4 style="display:inline-block">(异常值为:'+global_data['sentiment_abnormal']+')</h4>');
-    $('#location_head').append('<h4 style="display:inline-block">(异常值为:'+global_data['geo_abnormal']+')</h4>');
+    $('#location_head').append('<h4 style="display:inline-block">(异常值为:'+global_data['geo_abnormal'].toFixed(2)+')</h4>');
     $('#hashtag_head').append('<h4 style="display:inline-block">(异常值为:'+global_data['hashtag_abnormal']+')</h4>');
     $('#senstivity_head').append('<h4 style="display:inline-block">(异常值为:'+global_data['sensitive_abnormal']+')</h4>');
     $('#user_head').append('<h4 style="display:inline-block">(异常值为:'+user_name_data['abnormal_index'].toFixed(2)+')</h4>');
