@@ -1,7 +1,3 @@
-var name = 'testtask2';
-var global_data = {};
-var user_data ;
-var user_name_data ;
 Date.prototype.format = function(format) {
     var o = {
         "M+" : this.getMonth()+1, //month
@@ -23,28 +19,29 @@ Date.prototype.format = function(format) {
     return format;
 }
 
-function ajax_method(){
-    this.ajax_method = 'GET';
-}
-//ajax get data 
-ajax_method.prototype = {
-    call_sync_ajax_request:function(url, method, callback){
-        $.ajax({
-            url: url,
-            method: method,
-            dataType: 'json',
-            success: callback
-        });
-    },
+function call_ajax_request(url, callback){
+    $.ajax({
+        url: url,
+        method: 'get',
+        dataType: 'json',
+        success: callback
+    });
 }
 
 function basic_influence(div,data){
     $(div).empty();
     var domain_html = '';
     domain_html += '<p style="margin-top:30px;margin-left:10px;">群体名称：';
-    domain_html += '<span id="groupName">' + data['task_name'] + '</span>';
-    domain_html += '；提交时间：<span id="endTime">' + data['submit_date'] + '</span>';
-    domain_html += '；备注：<span id="remarks">' + data['state'] + '</span>';
+    domain_html += '<span id="groupName" style="margin-right:10px;">' + data['task_name'] + '</span>';
+    domain_html += '群组人数：<span id="members_count" style="margin-right:10px;">' + data['count'] + '</span>';
+    domain_html += '提交时间：<span id="endTime" style="margin-right:10px;">' + data['submit_date'] + '</span>';
+    if (data['status'] == 1){
+        domain_html += '监控状态：<span id="status" style="margin-right:10px;">监控停止</span>';
+    }
+    else {
+        domain_html += '监控状态：<span id="stauts" style="margin-right:10px;">正在监控</span>';
+    }
+    domain_html += '备注：<span id="remarks">' + data['state'] + '</span>';
     domain_html += '<span type="button"data-toggle="modal" data-target="#user_list" style="font-size:16px;cursor: pointer; float:right"><u>查看用户列表</u></span></p>';
     $(div).append(domain_html);
 }
@@ -105,15 +102,15 @@ function draw_linechart(id,data,type,flag){
                 var data = param.data;
                 if(type == 'active'){
                     var count_weibo_url = '/group/get_count_weibo/?task_name='+name+ '&sensitive_status='+data['type']+'&timestamp='+data['xAxis'].getTime()/1000;
-                    group_results.call_sync_ajax_request(count_weibo_url, group_results.ajax_method, draw_count_weibo);
+                    call_ajax_request(count_weibo_url, draw_count_weibo);
                 }
                 if(type=='sentiment'){
                     var sentiment_weibo_url = '/group/get_sentiment_weibo/?task_name='+name+ '&sensitive_status='+flag+'&sentiment='+data['type']+'&timestamp='+data['xAxis'].getTime()/1000;
-                    group_results.call_sync_ajax_request(sentiment_weibo_url, group_results.ajax_method, draw_sentiment_weibo);
+                    call_ajax_request(sentiment_weibo_url, draw_sentiment_weibo);
                 }
                 if(type=='sensitivity'){
                     var sentiment_weibo_url = '/group/get_sensitive_word/?task_name='+name+ '&timestamp='+data['xAxis'].getTime()/1000;
-                    group_results.call_sync_ajax_request(sentiment_weibo_url, group_results.ajax_method, draw_sentivity_word);
+                    call_ajax_request(sentiment_weibo_url, draw_sentivity_word);
                 }
 
             }
@@ -641,12 +638,11 @@ function add_head(){
     $('#user_head').append('<h4 style="display:inline-block">(异常值为:'+user_name_data['abnormal_index'].toFixed(2)+')</h4>');
 }
 
-var test_url = '/group/track_task_results/?task_name='+name;
-var comment_url = '/group/track_task_results/?task_name='+name+'&module=comment_retweet';
 function get_group_data(data){
     console.log(data);
     global_data = data;
-    var basic_data = data['basic'];
+    basic_influence('#basic',data.basic);
+    draw_table(user_list);
     var count_0_data = data['count_0'];
     var count_1_data = data['count_1'];
     var count_0_peak = data['count_0_peak'];
@@ -688,8 +684,6 @@ function get_group_data(data){
     var sentiment = analysis_sentiment(sentiment_1_126,sentiment_1_127,sentiment_1_128,sentiment_1_129,sentiment_1_130,sentiment_1_126_peak, sentiment_1_127_peak, sentiment_1_128_peak,sentiment_1_129_peak,sentiment_1_130_peak);
     var option_data = analysis_geo(geo_1);
     var hashtag_data = analysis_geo(hashtag_1);
-    basic_influence('#basic',basic_data);
-    draw_table(user_list);
     draw_linechart('active',count_data,'active',0);
     draw_linechart('sensitivity',sensitive,'sensitivity',0);
     draw_linechart('emotion',sentiment,'sentiment',0);
@@ -777,13 +771,15 @@ function bind_radio_input(){
     });
 }
 
-var group_results = new ajax_method();
+var name = 'testtask2';
+var global_data = {};
+var user_data ;
+var user_name_data ;
+var test_url = '/group/track_task_results/?task_name='+name;
+var comment_url = '/group/track_task_results/?task_name='+name+'&module=comment_retweet';
 
-group_results.call_sync_ajax_request(test_url, group_results.ajax_method, get_group_data);
-group_results.call_sync_ajax_request(comment_url, group_results.ajax_method, test_data);
-
-
-
+call_ajax_request(test_url, get_group_data);
+call_ajax_request(comment_url, test_data);
 
 // draw_linechart('emotion');
 // draw_linechart('sensitivity');
