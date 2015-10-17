@@ -4,6 +4,7 @@
 # recommend new words for lastest 7 days
 # dataform: recommend_sensitive_words_date, word, [times, uids]
 # include new words 
+category_dict = {'politics':"政治", 'military':"军事", 'law':"法律", 'ideology':"意识形态", 'democracy':"民运"}
 
 import redis
 import time
@@ -64,23 +65,23 @@ def search_sensitive_words(level, category): # level: 0, 1, 2, 3; category: '', 
             word_list = []
             for k,v in words_dict.items():
                 word_state = json.loads(v)
-                word_list.append([k, word_state[0], word_state[1]])
+                word_list.append([k, word_state[0], category_dict[word_state[1]]])
         elif level and category:
             word_list = []
             for k,v in words_dict.items():
                 word_state = json.loads(v)
                 if int(level) == int(word_state[0]) and category == word_state[1]:
-                    word_list.append([k, word_state[0], word_state[1]])
+                    word_list.append([k, word_state[0], category_dict[word_state[1]]])
         elif not level and category:
             for k,v in words_dict.items():
                 word_state = json.loads(v)
                 if category == word_state[1]:
-                    word_list.append([k, word_state[0], word_state[1]])
+                    word_list.append([k, word_state[0], category_dict[word_state[1]]])
         else:
             for k,v in words_dict.items():
                 word_state = json.loads(v)
                 if int(level) == int(word_state[0]):
-                    word_list.append([k, word_state[0], word_state[1]])
+                    word_list.append([k, word_state[0], category_dict[word_state[1]]])
     return word_list
 
 
