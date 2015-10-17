@@ -158,27 +158,6 @@ function draw_recommend(data){
     html += '</tbody>';
     html += '</table>';
     $(div).append(html);
-    // global_index
-    if (global_index == 2){
-        $('#recommend_table_new').dataTable({
-            "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
-            "sPaginationType": "recommend_boot",
-            "aoColumnDefs":[ {"bSortable": false, "aTargets":[8]}],
-            "oLanguage": {
-                "sLengthMenu": "_MENU_ 每页",
-            }
-        });
-    }
-    else{
-        $('#recommend_table_new').dataTable({
-            "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
-            "sPaginationType": "recommend_boot",
-            "aoColumnDefs":[ {"bSortable": false, "aTargets":[7]}],
-            "oLanguage": {
-                "sLengthMenu": "_MENU_ 每页",
-            }
-        });
-    }
     // page control start
     recommend_pre_page = 1;
     recommend_choose_uids = new Array();
@@ -263,6 +242,27 @@ function draw_recommend(data){
         $('#details_modal').modal();
       }
     });
+    // global_index
+    if (global_index == 2){
+        $('#recommend_table_new').dataTable({
+            "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
+            "sPaginationType": "recommend_boot",
+            "aoColumnDefs":[ {"bSortable": false, "aTargets":[8]}],
+            "oLanguage": {
+                "sLengthMenu": "_MENU_ 每页",
+            }
+        });
+    }
+    else{
+        $('#recommend_table_new').dataTable({
+            "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
+            "sPaginationType": "recommend_boot",
+            "aoColumnDefs":[ {"bSortable": false, "aTargets":[7]}],
+            "oLanguage": {
+                "sLengthMenu": "_MENU_ 每页",
+            }
+        });
+    }
 }
 function draw_history(data){
     console.log(data);
