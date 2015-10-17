@@ -171,5 +171,5 @@ def detect_peaks(lis,topN=10,form=0,micro_dur=5,macro_dur=10):
 	new_zeros = list(new_zeros)
 	new_zeros = filter_micro_macro(lis,new_zeros,micro_dur=3,macro_dur=6,form=0)
 	new_zeros = sorted(new_zeros)	
-	print new_zeros,'final nodes 1'
+	#print new_zeros,'final nodes 1'
 	return new_zeros

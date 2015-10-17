@@ -1,7 +1,3 @@
-var name = 'testtask2';
-var global_data = {};
-var user_data ;
-var user_name_data ;
 Date.prototype.format = function(format) {
     var o = {
         "M+" : this.getMonth()+1, //month
@@ -23,53 +19,58 @@ Date.prototype.format = function(format) {
     return format;
 }
 
-function ajax_method(){
-    this.ajax_method = 'GET';
-}
-//ajax get data 
-ajax_method.prototype = {
-    call_sync_ajax_request:function(url, method, callback){
-        $.ajax({
-            url: url,
-            method: method,
-            dataType: 'json',
-            success: callback
-        });
-    },
+function call_ajax_request(url, callback){
+    $.ajax({
+        url: url,
+        method: 'get',
+        dataType: 'json',
+        success: callback
+    });
 }
 
 function basic_influence(div,data){
     $(div).empty();
     var domain_html = '';
     domain_html += '<p style="margin-top:30px;margin-left:10px;">群体名称：';
-    domain_html += '<span id="groupName">' + data['task_name'] + '</span>';
-    domain_html += '；提交时间：<span id="endTime">' + data['submit_date'] + '</span>';
-    domain_html += '；备注：<span id="remarks">' + data['state'] + '</span>';
-    domain_html += '<span type="button"data-toggle="modal" data-target="#user_list" style="font-size:16px;cursor: pointer"><u>用户列表1</u></span></p>';
+    domain_html += '<span id="groupName" style="margin-right:10px;">' + data['task_name'] + '</span>';
+    domain_html += '群组人数：<span id="members_count" style="margin-right:10px;">' + data['count'] + '</span>';
+    domain_html += '提交时间：<span id="endTime" style="margin-right:10px;">' + data['submit_date'] + '</span>';
+    if (data['status'] == 1){
+        domain_html += '监控状态：<span id="status" style="margin-right:10px;">监控停止</span>';
+    }
+    else {
+        domain_html += '监控状态：<span id="stauts" style="margin-right:10px;">正在监控</span>';
+    }
+    domain_html += '备注：<span id="remarks">' + data['state'] + '</span>';
+    domain_html += '<span type="button"data-toggle="modal" data-target="#user_list" style="font-size:16px;cursor: pointer; float:right"><u>查看用户列表</u></span></p>';
     $(div).append(domain_html);
+
+    var user_list = data['uid_list'];
+    draw_table(user_list);
 }
 
 function draw_linechart(id,data,type,flag){
-    // $('#'+id).empty();
-    // $('#'+id).empty();
+    console.log(data);
+    bind_weibo_word(type, data[1][0]['markPoint']['data'][0],flag);
     var myChart = echarts.init(document.getElementById(id)); 
     var option = {
     title : {
-        text : '时间坐标折线图',
-        subtext : 'dataZoom支持'
+        text : '',
+        subtext : ''
     },
     tooltip : {
         trigger: 'item',
     },
-    toolbox: {
-        show : true,
-        feature : {
-            mark : {show: true},
-            dataView : {show: true, readOnly: false},
-            restore : {show: true},
-            saveAsImage : {show: true}
-        }
-    },
+
+    // toolbox: {
+    //     show : true,
+    //     feature : {
+    //         mark : {show: true},
+    //         dataView : {show: true, readOnly: false},
+    //         restore : {show: true},
+    //         saveAsImage : {show: true}
+    //     }
+    // },
     dataZoom: {
         show: true,
         start : 70
@@ -92,44 +93,39 @@ function draw_linechart(id,data,type,flag){
         }
     ],
     series :data[1]
-};
+    };
     myChart.setOption(option);
     require([
             'echarts'
         ],
         function(ec){
             var ecConfig = require('echarts/config');
-
             function focus(param){
                 var data = param.data;
-                console.log(data);
-                console.log(data['xAxis'].getTime());
-                if(type == 'active'){
-                    var count_weibo_url = '/group/get_count_weibo/?task_name='+name+ '&sensitive_status='+data['type']+'&timestamp='+data['xAxis'].getTime()/1000;
-                    console.log(count_weibo_url);
-                    group_results.call_sync_ajax_request(count_weibo_url, group_results.ajax_method, draw_count_weibo);
-                }
-                if(type=='sentiment'){
-                    var sentiment_weibo_url = '/group/get_sentiment_weibo/?task_name='+name+ '&sensitive_status='+flag+'&sentiment='+data['type']+'&timestamp='+data['xAxis'].getTime()/1000;
-                    console.log(sentiment_weibo_url);
-                    group_results.call_sync_ajax_request(sentiment_weibo_url, group_results.ajax_method, draw_sentiment_weibo);
-                }
-                if(type=='sensitivity'){
-                    var sentiment_weibo_url = '/group/get_sensitive_word/?task_name='+name+ '&timestamp='+data['xAxis'].getTime()/1000;
-                    console.log(sentiment_weibo_url);
-                    group_results.call_sync_ajax_request(sentiment_weibo_url, group_results.ajax_method, draw_sentivity_word);
-                }
-
+                bind_weibo_word(type, data, flag);
             }
-
             myChart.on(ecConfig.EVENT.CLICK,focus)
             myChart.on(ecConfig.EVENT.FORCE_LAYOUT_END, function () {});
         }
     )                   
 }
 
+function bind_weibo_word(type, data,flag){
+    if(type == 'active'){
+        var count_weibo_url = '/group/get_count_weibo/?task_name='+name+ '&sensitive_status='+data['type']+'&timestamp='+data['xAxis'].getTime()/1000;
+        call_ajax_request(count_weibo_url, draw_count_weibo);
+    }
+    if(type=='sentiment'){
+        var sentiment_weibo_url = '/group/get_sentiment_weibo/?task_name='+name+ '&sensitive_status='+flag+'&sentiment='+data['type']+'&timestamp='+data['xAxis'].getTime()/1000;
+        call_ajax_request(sentiment_weibo_url, draw_sentiment_weibo);
+    }
+    if(type=='sensitivity'){
+        var sentiment_weibo_url = '/group/get_sensitive_word/?task_name='+name+ '&timestamp='+data['xAxis'].getTime()/1000;
+        call_ajax_request(sentiment_weibo_url, draw_sentivity_word);
+    }
+}
+
 function draw_count_weibo(data){
-    console.log(data);
     $('#weibo_count').empty();
     var html = '';  
     html += '<div class="group_weibo_font">';  
@@ -143,9 +139,9 @@ function draw_count_weibo(data){
             var date = data[i][2];
             var location = data[i][3];
             var message = data[i][4];
-            html += '<div style="padding:10px;font-size:13px">';
-            html += '<p style="color:black;"><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;发布:&nbsp;'+ message + '</p>';
-            html += '<p style="color:darkred;"><span style="float:right">' + date + '&nbsp;&nbsp;' + location + '&nbsp;&nbsp;'+ '</span></p>';
+            html += '<div style="padding:10px;font-size:13px;background: whitesmoke;margin-bottom: 10px">';
+            html += '<p><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;发布:&nbsp;'+ message + '</p>';
+            html += '<p style="color:darkred;height:10px;"><span style="float:right">' + date + '&nbsp;&nbsp;' + location + '&nbsp;&nbsp;'+ '</span></p>';
             html += '</div>'
         }
     }
@@ -154,7 +150,6 @@ function draw_count_weibo(data){
 }
 
 function draw_sentiment_weibo(data){
-    console.log(data);
     $('#weibo_sentiment').empty();
     var html = '';  
     html += '<div class="group_weibo_font">';  
@@ -168,9 +163,9 @@ function draw_sentiment_weibo(data){
             var date = data[i][2];
             var location = data[i][3];
             var message = data[i][4];
-            html += '<div style="padding:10px;font-size:13px">';
+            html += '<div style="padding:10px;font-size:13px;background: whitesmoke;margin-bottom: 10px">';
             html += '<p style="color:black;"><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;发布:&nbsp;'+ message + '</p>';
-            html += '<p style="color:darkred;"><span style="float:right">' + date + '&nbsp;&nbsp;' + location + '&nbsp;&nbsp;'+ '</span></p>';
+            html += '<p style="color:darkred; height:10px"><span style="float:right">' + date + '&nbsp;&nbsp;' + location + '&nbsp;&nbsp;'+ '</span></p>';
             html += '</div>'
         }
     }
@@ -179,14 +174,12 @@ function draw_sentiment_weibo(data){
 }
 
 function draw_sentivity_word(data){
-    console.log(data);
     $('#weibo_sentivity').empty();
     var html = '';
     html += '<table id="delete_confirm_table" class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
     html += '<thead><tr><th>序号</th><th>关键词</th></tr></thead>';
     html += '<tbody>';
     for(var i=0; i<data.length; i++){
-        console.log(data[i]);
       html += '<tr id=' + data[i][0] +'>';
       html += '<td class="center" >'+ i +'</td>';
       html += '<td class="center">'+ data[i][0] + '</td>';
@@ -198,8 +191,6 @@ function draw_sentivity_word(data){
 }
 
 function draw_table(data){
-    console.log('tabletable');
-    console.log(data);
     $('#more_influence').empty();
     var html = '';
     html += '<table id="delete_confirm_table" class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
@@ -220,10 +211,9 @@ function draw_table(data){
     $('#more_influence').append(html);
 }
 
-function draw_barchart(id,data){
-    console.log("fsdfsd");
-    console.log(data[1]);
+function draw_barchart(id,data,type){
     var myChart = echarts.init(document.getElementById(id)); 
+    console.log(data[1]);
     var option = {
         timeline:{
             data:data[0],
@@ -298,74 +288,83 @@ function draw_barchart(id,data){
     myChart.setOption(option);                
 }
 
-function draw_stackbar(id){
-    console.log("fsdfsd")
+function draw_stackbar(id,data){
     var myChart = echarts.init(document.getElementById(id)); 
     var option = {
-        timeline:{
-            data:[
-               '2002-01-01','2003-01-01',
-            ],
-            label : {
-                formatter : function(s) {
-                    return s.slice(0, 4);
+        // tooltip : {
+        //     trigger: 'axis',
+        //     // axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+        //     //     type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+        //     // },
+        //     formatter:function(params){
+        //         console.log(params);
+        //         return 0;
+        //     }
+        // },
+        // 
+        tooltip : {         // Option config. Can be overwrited by series or data
+            trigger: 'axis',
+            //show: true,   //default true
+            showDelay: 0,
+            hideDelay: 50,
+            transitionDuration:0,
+            backgroundColor : 'rgba(255,0,255,0.7)',
+            borderColor : '#f50',
+            borderRadius : 8,
+            borderWidth: 2,
+            padding: 10,    // [5, 10, 15, 20]
+            position : function(p) {
+                // 位置回调
+                // console.log && console.log(p);
+                return [p[0] + 10, p[1] - 10];
+            },
+            textStyle : {
+                color: 'yellow',
+                decoration: 'none',
+                fontFamily: 'Verdana, sans-serif',
+                fontSize: 15,
+                fontStyle: 'italic',
+                fontWeight: 'bold'
+            },
+            formatter: function (params,ticket,callback) {
+                console.log(params)
+                var res = '<br/>' + params[0].name;
+                for (var i = 0, l = params.length; i < l; i++) {
+                    for(var j = 0; j < data[1].length; j++){
+                        if(params[0].name == data[1][j]){
+                            console.log(j);
+                            res += '<br/>' + params[i].seriesName + ' : ' + params[i].value + '用户名:' + params[i]['series']['uname'][j] ;
+                            break;
+                        }
+                    }
+                    // res += '<br/>' + params[i].seriesName + ' : ' + params[i].value;
                 }
-            },
-            autoPlay : true,
-            playInterval : 1000
+                setTimeout(function (){
+                    // 仅为了模拟异步回调
+                    callback(ticket, res);
+                }, 1000)
+                return 'loading';
+            }
+            //formatter: "Template formatter: <br/>{b}<br/>{a}:{c}<br/>{a1}:{c1}"
         },
-        options:[
+        legend: {
+            data:data[0]
+        },
+        calculable : true,
+        xAxis : [
             {
-                title : {
-                    text: '世界人口总量',
-                },
-                tooltip : {
-                    trigger: 'axis'
-                },
-                legend: {
-                    data:['微博数']
-                },
-                toolbox: {
-                    show : true,
-                    feature : {
-                        mark : {show: true},
-                        dataView : {show: true, readOnly: false},
-                        magicType: {show: true, type: ['line', 'bar']},
-                        restore : {show: true},
-                        saveAsImage : {show: true}
-                    }
-                },
-                calculable : true,
-                xAxis : [
-                    {
-                        type : 'value',
-                        boundaryGap : [0, 0.01]
-                    }
-                ],
-                yAxis : [
-                    {
-                        type : 'category',
-                        data : ['巴西','印尼','美国','印度','中国','世界人口(万)']
-                    }
-                ],
-                series : [
-                    {
-                        name:'微博数',
-                        type:'bar',
-                        data:[18203, 23489, 29034, 104970, 131744, 630230]
-                    },
-                ]},
-                {
-                title : {'text':'2003全国宏观经济指标'},
-                series : [
-                    {'data': [18203, 239, 29034, 104970, 131744, 630230]},
-       
-                ]
-            },
-
-
-        ]
+                type : 'value'
+            }
+        ],
+        yAxis : [
+            {
+                type : 'category',
+                data : data[1]
+            }
+        ],
+        series : data[2]
     };
+                    
                                        
     myChart.setOption(option);                
 }
@@ -378,8 +377,6 @@ function analysis_count(data1,data2,data3,data4){
     var point_data_1 = [];
     for(var i = 0; i < data1.length; i++){
         temp_data_0.push([new Date(data1[i][0]*1000),data1[i][1]]);
-    }
-    for(var i = 0; i < data2.length; i++){
         temp_data_1.push([new Date(data2[i][0]*1000),data2[i][1]]);
     }
 
@@ -389,8 +386,6 @@ function analysis_count(data1,data2,data3,data4){
     for(var i = 0; i < data4.length; i++){
         point_data_1.push({'name':'拐点'+i, 'value':data2[data4[i]][1], 'xAxis':new Date(data2[data4[i]][0]*1000),'yAxis':data2[data4[i]][1],'type':1});
     }
-    console.log(point_data_0);
-    console.log(point_data_1);
     var series_0 = {'name':'不敏感', 'type':'line', 'smooth':true, 'data':temp_data_0,'markPoint':{'data':point_data_0}};
     var series_1 = {'name':'敏感', 'type':'line', 'smooth':true,'data': temp_data_1,'markPoint':{'data':point_data_1}};
     var data = [legend_data, [series_0, series_1]];
@@ -409,15 +404,13 @@ function analysis_img(data1,data2,data3,data4){
     for(var m in data2){
         temp_data_1.push([new Date(m*1000),data2[m]]);
     }
-
+    console.log(temp_data_0);
     for(var i = 0; i < data3.length; i++){
-        point_data_0.push({'name':'拐点'+i, 'value':temp_data_0[data3[i]][1], 'xAxis':new Date(temp_data_0[data3[i]][0]*1000),'yAxis':temp_data_0[data3[i]][1],'type':0});
+        point_data_0.push({'name':'拐点'+i, 'value':temp_data_0[data3[i]][1], 'xAxis':temp_data_0[data3[i]][0],'yAxis':temp_data_0[data3[i]][1],'type':0});
     }
     for(var i = 0; i < data4.length; i++){
-        point_data_1.push({'name':'拐点'+i, 'value':temp_data_1[data4[i]][1], 'xAxis':new Date(temp_data_1[data4[i]][0]*1000),'yAxis':temp_data_1[data4[i]][1],'type':1});
+        point_data_1.push({'name':'拐点'+i, 'value':temp_data_1[data4[i]][1], 'xAxis':temp_data_1[data4[i]][0],'yAxis':temp_data_1[data4[i]][1],'type':1});
     }
-    console.log(point_data_0);
-    console.log(point_data_1);
     var series_0 = {'name':'原创', 'type':'line', 'smooth':true, 'data':temp_data_0,'markPoint':{'data':point_data_0}};
     var series_1 = {'name':'转发', 'type':'line', 'smooth':true,'data': temp_data_1,'markPoint':{'data':point_data_1}};
     var data = [legend_data, [series_0, series_1]];
@@ -454,20 +447,11 @@ function analysis_sentiment(data1,data2,data3,data4,data5,data6,data7,data8,data
 
     for(var i = 0; i < data1.length; i++){
         temp_data_0.push([new Date(data1[i][0]*1000),data1[i][1]]);
-    }
-    for(var i = 0; i < data2.length; i++){
         temp_data_1.push([new Date(data2[i][0]*1000),data2[i][1]]);
-    }
-    for(var i = 0; i < data3.length; i++){
         temp_data_2.push([new Date(data3[i][0]*1000),data3[i][1]]);
-    }
-    for(var i = 0; i < data4.length; i++){
         temp_data_3.push([new Date(data4[i][0]*1000),data4[i][1]]);
-    }
-    for(var i = 0; i < data5.length; i++){
         temp_data_4.push([new Date(data5[i][0]*1000),data5[i][1]]);
     }
-
     for(var i = 0; i < data6.length; i++){
         point_data_0.push({'name':'拐点'+i, 'value':data1[data6[i]][1], 'xAxis':new Date(data1[data6[i]][0]*1000),'yAxis':data1[data6[i]][1],'type':126});
     }
@@ -484,8 +468,6 @@ function analysis_sentiment(data1,data2,data3,data4,data5,data6,data7,data8,data
         point_data_4.push({'name':'拐点'+i, 'value':data5[data10[i]][1], 'xAxis':new Date(data5[data10[i]][0]*1000),'yAxis':data5[data10[i]][1],'type':130});
     }
 
-    console.log(point_data_0);
-    console.log(point_data_1);
     var series_0 = {'name':'积极', 'type':'line', 'smooth':true, 'data':temp_data_0,'markPoint':{'data':point_data_0}};
     var series_1 = {'name':'消极', 'type':'line', 'smooth':true,'data': temp_data_1,'markPoint':{'data':point_data_1}};
     var series_2 = {'name':'生气', 'type':'line', 'smooth':true, 'data':temp_data_2,'markPoint':{'data':point_data_2}};
@@ -499,7 +481,8 @@ function analysis_geo(data){
     var legend_data = ['不敏感'];
     var time_data = [];
     var xAxis_data = [];
-    var y_data = [];  
+    var y_data = []; 
+    var length_data = []; 
     for(var k in data){
         time_data.push(k);
         var tempx_data = [];
@@ -510,9 +493,19 @@ function analysis_geo(data){
         }
         xAxis_data.push(tempx_data);
         y_data.push(tempy_data);
+        length_data.push(tempy_data.length);
     }
-    console.log(xAxis_data[0]);
-    console.log(y_data);
+    var max_length = Math.max.apply(Math, length_data);
+    console.log(max_length);
+    for(var i = 0; i < y_data.length; i++){
+        if(y_data[i].length < max_length){
+            for(var j = y_data[i].length; j < max_length; j++){
+                y_data[i].push(0);
+                xAxis_data[i].push('');
+            }
+        }
+    }
+
     if(xAxis_data.length == 0){
         return 0;
     }
@@ -528,16 +521,19 @@ function analysis_geo(data){
                 legend: {
                     data:legend_data,
                 },
-                toolbox: {
-                    show : true,
-                    feature : {
-                        mark : {show: true},
-                        dataView : {show: true, readOnly: false},
-                        magicType: {show: true, type: ['line', 'bar']},
-                        restore : {show: true},
-                        saveAsImage : {show: true}
-                    }
+                grid:{
+                    x:100,
                 },
+                // toolbox: {
+                //     show : true,
+                //     feature : {
+                //         mark : {show: true},
+                //         dataView : {show: true, readOnly: false},
+                //         magicType: {show: true, type: ['line', 'bar']},
+                //         restore : {show: true},
+                //         saveAsImage : {show: true}
+                //     }
+                // },
                 calculable : true,
                 xAxis : [
                     {
@@ -583,22 +579,44 @@ function analysis_geo(data){
   return [time_data, options];
 }
 
-function test_data(data){
-    user_name_data = data;
-    draw_domain_portrait(data['profile']);
+function analysis_stack(data){
+    console.log(data);
+    var y_data = data[0];
+    var lengend_data = [];
+    var series_data = [];
+    for(var k in data[1]){
+        var temp_data = [];
+        var u_name = [];
+        lengend_data.push(k);
+        for(var j = 0; j < data[1][k].length; j++){
+            temp_data.push(data[1][k][j][2]);
+            u_name.push(data[1][k][j][1]);
+        }
+        var option = {
+            name:k,
+            type:'bar',
+            stack: '总量',
+            uname:u_name,
+            itemStyle : { normal: {label : {show: true, position: 'insideRight'}}},
+            data:temp_data
+        };
+        series_data.push(option);
+    }
+    console.log(series_data);
+    console.log(data);
+    $('#network_head').append('<h4 style="display:inline-block">(异常值为:'+data[2].toFixed(2)+')</h4>');
+    draw_stackbar('test',[lengend_data, y_data, series_data]) ;
 }
 
 function draw_domain_portrait(data){
-    user_data = data;
-    console.log(data);
-  $('#img').empty();
-    num = 0 
+    $('#img').empty();
+    var user_data = data;
+    var num = 0 
     var html = '';
     html += '<div ng-repeat="t in hotTopics" class="col-md-4 ng-scope"><div style="padding:5px; padding-left:15px; padding-right:15px; margin-bottom:15px" class="section-block">';
     html += '<h1 class="no-margin"><small><a style="color:#777;font-size:18px" class="ng-binding"></a></small></h1>';
     html += '<hr style="margin-top: 5px; margin-bottom: 15px">';
     html += '<ul style="margin-top:0px;margin-bottom:0;padding-left: 7px;height:50px; overflow-y:hidden" class="list-inline">';
-  
     for (key in data){ 
        num ++;
        if (num < 7){
@@ -608,18 +626,17 @@ function draw_domain_portrait(data){
                   domain_top_user_portrait = data[key][1];
                 };
               html += '<li ng-repeat="result in t.result" target="_blank" style="margin-bottom: 10px" class="img"  id='+key+'>';
-              html += '<div class="small-photo shadow-5"><span class="helper"></span><img src="' + domain_top_user_portrait + '" alt="' + data[key][0] +'"></div></li>';         
+              html += '<div class="small-photo shadow-5"><span class="helper"></span><img title="'+ key +'" src="' + domain_top_user_portrait + '" alt="' + data[key][0] +'"></div></li>';         
         }
-      
-
     }
-      html += '</ul></div></div>';
+    html += '</ul></div></div>';
     $('#img').append(html);
     bind_portait();
 }
 
 function bind_portait(){
     $('.img').click(function(){
+        console.log(user_name_data);
         var id = $(this).attr('id');
         var comment_index = id + '_comment';
         var retweet_index = id+ '_retweet';
@@ -629,28 +646,41 @@ function bind_portait(){
         var retweet_data = user_name_data[retweet_index];
         var comment_peak_data = user_name_data[comment_peak];
         var retweet_peak_data = user_name_data[retweet_peak];
-        console.log(user_data);
-        console.log(comment_peak);
-        console.log(comment_peak_data);
         var img_data = analysis_img(comment_data,retweet_data,comment_peak_data,retweet_peak_data);
         draw_linechart('user',img_data,'user',0);
     });
 }
 
-var test_url = '/group/track_task_results/?task_name='+name;
-var comment_url = '/group/track_task_results/?task_name='+name+'&module=comment_retweet';
+function add_head(){
+    console.log('aaaaaaa');
+    $('#count_head').append('<h4 style="display:inline-block">(异常值为:'+global_data['count_abnormal']+')</h4>');
+    $('#emtion_head').append('<h4 style="display:inline-block">(异常值为:'+global_data['sentiment_abnormal']+')</h4>');
+    $('#location_head').append('<h4 style="display:inline-block">(异常值为:'+global_data['geo_abnormal']+')</h4>');
+    $('#hashtag_head').append('<h4 style="display:inline-block">(异常值为:'+global_data['hashtag_abnormal']+')</h4>');
+    $('#senstivity_head').append('<h4 style="display:inline-block">(异常值为:'+global_data['sensitive_abnormal']+')</h4>');
+    $('#user_head').append('<h4 style="display:inline-block">(异常值为:'+user_name_data['abnormal_index'].toFixed(2)+')</h4>');
+}
+
+function test_data(data){
+    console.log(data);
+    user_name_data = data;
+    add_head();
+    draw_domain_portrait(user_name_data['profile']);
+}
+
 function get_group_data(data){
     console.log(data);
     global_data = data;
-    console.log('aaaa');
-    console.log(global_data);
-    var basic_data = data['basic'];
+    basic_influence('#basic',data.basic);
+
     var count_0_data = data['count_0'];
     var count_1_data = data['count_1'];
     var count_0_peak = data['count_0_peak'];
     var count_1_peak = data['count_1_peak'];
-    var sensitive_data = data['sensitive_score'];
-    var sensitive_peak = data['sensitive_score_peak'];
+    var count_data = analysis_count(count_0_data, count_1_data,count_0_peak,count_1_peak);
+    draw_linechart('active',count_data,'active',0);
+
+    /*
     var sentiment_0_126 = data['sentiment_0_126'];
     var sentiment_0_127 = data['sentiment_0_127'];
     var sentiment_0_128 = data['sentiment_0_128'];
@@ -662,7 +692,8 @@ function get_group_data(data){
     var sentiment_0_128_peak = data['sentiment_0_128_peak'];
     var sentiment_0_129_peak = data['sentiment_0_129_peak'];
     var sentiment_0_130_peak = data['sentiment_0_130_peak'];
-
+    */
+    bind_radio_input();
     var sentiment_1_126 = data['sentiment_1_126'];
     var sentiment_1_127 = data['sentiment_1_127'];
     var sentiment_1_128 = data['sentiment_1_128'];
@@ -674,25 +705,21 @@ function get_group_data(data){
     var sentiment_1_128_peak = data['sentiment_1_128_peak'];
     var sentiment_1_129_peak = data['sentiment_1_129_peak'];
     var sentiment_1_130_peak = data['sentiment_1_130_peak'];
+    var sentiment = analysis_sentiment(sentiment_1_126,sentiment_1_127,sentiment_1_128,sentiment_1_129,sentiment_1_130,sentiment_1_126_peak, sentiment_1_127_peak, sentiment_1_128_peak,sentiment_1_129_peak,sentiment_1_130_peak);
+    draw_linechart('emotion',sentiment,'sentiment', 1);
+    
+    var sensitive_data = data['sensitive_score'];
+    var sensitive_peak = data['sensitive_score_peak'];
 
     var geo_0 = data['geo_0'];
     var geo_1 = data['geo_1'];
     var hashtag_0 = data['hashtag_0'];
     var hashtag_1 = data['hashtag_1'];
-    var user_list = data['basic']['uid_list'];
-
-    var count_data = analysis_count(count_0_data, count_1_data,count_0_peak,count_1_peak);
+    /*
     var sensitive = analysis_sensitive(sensitive_data, sensitive_peak);
-    var sentiment = analysis_sentiment(sentiment_0_126,sentiment_0_127,sentiment_0_128,sentiment_0_129,sentiment_0_130,sentiment_0_126_peak, sentiment_0_127_peak, sentiment_0_128_peak,sentiment_0_129_peak,sentiment_0_130_peak);
-    var option_data = analysis_geo(geo_0);
-    var hashtag_data = analysis_geo(hashtag_0);
-    console.log('sssssss');
-    console.log(hashtag_data);
-    basic_influence('#basic',basic_data);
-    draw_table(user_list);
-    draw_linechart('active',count_data,'active',0);
+    var option_data = analysis_geo(geo_1);
+    var hashtag_data = analysis_geo(hashtag_1);
     draw_linechart('sensitivity',sensitive,'sensitivity',0);
-    draw_linechart('emotion',sentiment,'sentiment',0);
     if(option_data == 0){
         $('#location').append('<h3>当前数值为空<h3>');
     }else{
@@ -703,7 +730,7 @@ function get_group_data(data){
     }else{
         draw_barchart('hashtag', hashtag_data,'hashtag');
     }    
-    bind_radio_input();
+    */
 }
 
 function bind_radio_input(){
@@ -731,14 +758,7 @@ function bind_radio_input(){
     var sentiment_1_129_peak = global_data['sentiment_1_129_peak'];
     var sentiment_1_130_peak = global_data['sentiment_1_130_peak'];
     var sentiment;
-    var option_data;
-    var geo_0 = global_data['geo_0'];
-    var geo_1 = global_data['geo_1'];
-    var hashtag_data ;
-    var hashtag_0 = global_data['hashtag_0'];
-    var hashtag_1 = global_data['hashtag_1'];
     $('input[name="count"]').click(function(){
-        console.log($(this).attr('value') );
         if($(this).attr('value') == 0){
             sentiment = analysis_sentiment(sentiment_0_126,sentiment_0_127,sentiment_0_128,sentiment_0_129,sentiment_0_130,sentiment_0_126_peak, sentiment_0_127_peak, sentiment_0_128_peak,sentiment_0_129_peak,sentiment_0_130_peak);
             draw_linechart('emotion',sentiment,'sentiment',0);
@@ -748,9 +768,13 @@ function bind_radio_input(){
             draw_linechart('emotion',sentiment,'sentiment',1);
         }
     });
-
+    var option_data;
+    var geo_0 = global_data['geo_0'];
+    var geo_1 = global_data['geo_1'];
+    var hashtag_data ;
+    var hashtag_0 = global_data['hashtag_0'];
+    var hashtag_1 = global_data['hashtag_1'];
     $('input[name="location_0"]').click(function(){
-        console.log($(this).attr('value') );
         if($(this).attr('value') == 0){
             option_data = analysis_geo(geo_0);
         }
@@ -765,7 +789,6 @@ function bind_radio_input(){
     });
 
     $('input[name="hashtag"]').click(function(){
-        console.log($(this).attr('value') );
         if($(this).attr('value') == 0){
             hashtag_data = analysis_geo(hashtag_0);
         }
@@ -780,18 +803,21 @@ function bind_radio_input(){
     });
 }
 
-var group_results = new ajax_method();
+var name = 'testtask2';
+var global_data = {};
+var user_data ;
+var user_name_data ;
+var test_url = '/group/track_task_results/?task_name='+name;
+var comment_url = '/group/track_task_results/?task_name='+name+'&module=comment_retweet';
+var stack_url = '/group/track_task_results/?task_name='+name+'&module=network';
 
-group_results.call_sync_ajax_request(test_url, group_results.ajax_method, get_group_data);
-group_results.call_sync_ajax_request(comment_url, group_results.ajax_method, test_data);
 
+call_ajax_request(test_url, get_group_data);
+call_ajax_request(comment_url, test_data);
+//call_ajax_request(stack_url, analysis_stack);
 
-
-
-// draw_linechart('emotion');
 // draw_linechart('sensitivity');
-// draw_linechart('user');
 // draw_barchart('location');
 // draw_barchart('hashtag');
-draw_stackbar('test');
+// draw_stackbar('test');
 

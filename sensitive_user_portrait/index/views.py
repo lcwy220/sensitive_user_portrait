@@ -22,11 +22,11 @@ def overview():
 @mod.route('/recommend_in/')
 def recommend_in():
     return render_template('index/recommend_in.html')
-
+"""
 @mod.route('/tag/')
 def tag():
     return render_template('index/tag.html')
-
+"""
 @mod.route('/tag_search/')
 def tag_search():
     return render_template('index/search/tag_search.html')
@@ -34,11 +34,11 @@ def tag_search():
 @mod.route('/tag_manage/')
 def tag_manage():
     return render_template('index/tag_manage.html')
-
+"""
 @mod.route('/sensitive_words/')
 def sensitive_words():
     return render_template('index/sensitive.html')
-
+"""
 @mod.route('/sensiwords_manage/')
 def sensiwords_manage():
     return render_template('index/sensiwords_manage.html')
@@ -46,13 +46,14 @@ def sensiwords_manage():
 @mod.route('/words_recommend/')
 def word_recommend():
     return render_template('index/words_recommend.html')
-
+"""
 @mod.route('/group/')
 def group():
     return render_template('index/group.html')
-
-@mod.route('/group_results')
+"""
+@mod.route('/group_results/')
 def group_results():
+    name = request.args.get('name', '')
     return render_template('index/group_results.html')
 
 @mod.route('/group_task/')
@@ -106,7 +107,7 @@ def text_search():
 @mod.route('/influence/')
 def influence():
     return render_template('index/influence.html')
-
+"""
 @mod.route('/monitor/')
 def monitor():
     return render_template('index/monitor.html')
@@ -119,7 +120,7 @@ def contrast():
 @mod.route('/group_analysis/')
 def group_analysis():
     return render_template('index/group_analysis.html')
-
+"""
 @mod.route('/personal/')
 def personal():
     uid = request.args.get('uid', '1215031834')

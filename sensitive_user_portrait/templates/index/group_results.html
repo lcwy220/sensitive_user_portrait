@@ -9,7 +9,8 @@
 	.box{width:310px;height:300px;float:left;}
     .important{}
     #page{width:990px;padding:10px;background-color:#fff;margin:auto}
-	</style>
+    #page h2{font-family:"Microsoft Yahei";}
+    </style>
 {% endblock custom_css  %}
 {% block custom_js %}
    <script src="/static/scripts/echarts.js"></script>
@@ -18,54 +19,80 @@
 {% block body %}
 	<div id="page">
 		<div id='content'>
-			<h2>基本信息</h2>
+			<h2 >基本信息</h2>
       <div id ='basic'></div>
-			<h2>活动情况</h2>
+      <hr>
+      <div id = 'count_head'>
+			<h2 style="display:inline-block">活动情况</h2>
+      </div>
       <div style="width:100%;height:300px;">
 			 <div id="active" style="width:70%;height:300px;float:left;"></div>
-       <div id="weibo_content" style="font-size:10px;background-color:whitesmoke;width:30%;height:300px;float:right;" >
+       <div id="weibo_content" style="font-size:10px;border: 1px solid rgba(0, 0, 0, 0.24);width:30%;height:300px;float:right;" >
         <div id="weibo_count" style="padding:0px 10px; overflow-x:hidden; height:300px">
         </div>
       </div>
       </div>
-			<h2>情绪</h2>
-			<div style="width:100%;height:300px;">
-      <div style="width:100%;height:30px;">
+      <hr>
+      <div id='emtion_head'>
+       <h2 style="display:inline-block">情绪</h2> 
+      </div>
+			
+			<div style="width:100%;height:350px;">
+      <div style="width:70%;height:30px; text-align:center">
       <input type='radio'  name='count' value = 1 checked='checked' style="position:relative; opacity:1">敏感
       <input type='radio'  name='count' value = 0 style="position:relative; opacity:1">非敏感
       </div>
       <div style="width:70%;height:300px;float:left;" id="emotion"></div>
-      <div id="weibo_content" style="font-size:10px;background-color:whitesmoke;width:30%;height:300px;float:right;" >
+      <div id="weibo_content" style="font-size:10px;border: 1px solid rgba(0, 0, 0, 0.24);width:30%;height:300px;float:right;" >
         <div id="weibo_sentiment" style="padding:0px 10px; overflow-x:hidden; height:300px">
         </div>
       </div>
       </div>
-			<h2>用户</h2>
+      <hr>
+      <div id='user_head'>
+        <h2 style="display:inline-block">用户</h2>
+      </div>
+			
 			<div id = 'img'></div>
-      <div style="width:100%;height:300px;">
+      <div style="width:100%;height:400px;">
 			<div id="user" style="width:900px;height:300px;"></div>
     </div>
-			<h2>敏感度变动</h2>
+    <hr>
+      <div id='senstivity_head'>
+        <h2 style="display:inline-block">敏感度变动</h2>
+      </div>
+			
       <div style="width:100%;height:300px;">
 			<div style="width:70%;height:300px;float:left;" id="sensitivity"></div>
-			<div id="weibo_content" style="font-size:10px;background-color:whitesmoke;width:30%;height:300px;float:right;" >
+			<div id="weibo_content" style="font-size:10px;border: 1px solid rgba(0, 0, 0, 0.24);width:30%;height:300px;float:right;" >
 				<div id="weibo_sentivity" style="padding:0px 10px;">
 				</div>
 			</div>
       </div>
-			<h2>地理位置</h2>
-      <div style="width:100%;height:30px;">
+      <hr>
+      <div id='location_head'>
+        <h2 style="display:inline-block">地理位置</h2>
+      </div>
+			
+      <div style="width:100%;height:30px; text-align:center">
       <input type='radio'  name='location_0'  value = 1 style="position:relative; opacity:1" checked='checked'>敏感
       <input type='radio'  name='location_0' value = 0 style="position:relative; opacity:1">非敏感
       </div>
-			<div id="location" style="width:100%;height:300px;"></div>
-			<h2>hashtag</h2>
-      <div style="width:100%;height:30px;">
+			<div id="location" style="width:100%;height:300px;margin-left:20px"></div>
+      <hr>
+      <div id='hashtag_head'>
+        <h2 style="display:inline-block">hashtag</h2>
+      </div>
+			
+      <div style="width:100%;height:30px; text-align:center">
       <input type='radio'  name='hashtag' value = 1 checked='checked' style="position:relative; opacity:1">敏感
       <input type='radio'  name='hashtag' value = 0 style="position:relative; opacity:1">非敏感
       </div>
 			<div id="hashtag" style="width:900px;height:300px;"></div>
-      <h2>堆积图</h2>
+      <hr>
+      <div id='network_head'>
+       <h2 style="display:inline-block">群体集化程度</h2> 
+      </div>
       <div id="test" style="width:900px;height:300px;"></div>
 		</div>
 	</div>
@@ -95,6 +122,17 @@
             showSectionsMenu: true
         });
     });
+    // $(document).ready(function(){
+    //     var isHiden = true; /*控制切换菜单*/
+    //     $('#popView').click(function(){
+    //         if(isHiden){
+    //       $('#popView').animate({left:'+=380px'});//菜单块向右移动
+    //     }else{
+    //       $('#popView').animate({left:'-=380px'}); //菜单块向左移动
+    //     }
+    //     isHiden = !isHiden;
+    //     });
+    // });
  </script>
- <script type="text/javascript" src="/static/custom/js/group_redults.js"></script>
+ <script type="text/javascript" src="/static/custom/js/group_results.js"></script>
 {% endblock end_js%}
