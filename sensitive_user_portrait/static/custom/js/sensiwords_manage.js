@@ -49,9 +49,13 @@ function Draw_sensi_manage_table(data){
         //console.log(word_level);
         var html = '';
         html += '<div class="edit_word_model" style="margin-top:12px;"><input id="input_sensi" name="input_sensi" style="min-width: 100px;margin-top:0px;" value="'+$(this).parent().prev().prev().prev().html()+'">';
-        html += '本词等级:<select name="level" id="edit_sensi_level" class="edit_sensi_level" style="width:60px; margin-right:5px;">  <option value="1">1</option>   <option value="2" >2</option><option value="3">3</option></select>';
-        html += '请选择类别:<select name="classify" id="edit_sensi_class" class="edit_sensi_class" style="width:100px; margin-right:5px;">  <option value="politics" >politics</option><option value="military" >military</option><option value="law">law</option><option value="ideology">ideology</option><option value="democracy">democracy</option></select></div>';
-        
+        html += '选择等级<select name="level" id="edit_sensi_level" class="edit_sensi_level" style="width:60px; margin-right:5px;">';
+        html += '<option value="1">1</option>   <option value="2" >2</option><option value="3">3</option></select>';
+        html += '选择类别<select name="classify" id="edit_sensi_class" class="edit_sensi_class" style="width:100px; margin-right:5px;">';
+        for (var i = 0;i < category_list.length; i++){
+            html += '<option value=' + category_list[i] +'>' + category_list[i] + '</option>';
+        }
+        html += '</select></div>';
         //$('#edit_sensi_class option[value="'+ word_class +'"]').attr("selected", true);
         //$("#sel  option[value='s2'] ").attr("selected",true);
         //console.log(html);
@@ -112,11 +116,10 @@ function currentDate(){
 }
 //var category_name= ['politics', 'military','law','ideology','democracy']
 $('#free_add_class').off("click").click(function(){
-    var category_name= ['politics', 'military','law','ideology','democracy']
     $('#exist_categroy').empty();
     var html = ''
-    for (i=0;i<category_name.length;i++){
-         html += '<span class="tagbg" id="" name="attrName"><span class="tagName">'+category_name[i]+'</span><a  class="delCon" id="delIcon"></a></span>';
+    for (i=0;i<category_list.length;i++){
+         html += '<span class="tagbg" id="" name="attrName"><span class="tagName">'+category_list[i]+'</span><a  class="delCon" id="delIcon"></a></span>';
     }
     $('#exist_categroy').append(html);
     $('a[id^="delIcon"]').click(function(e){
@@ -190,19 +193,26 @@ $(".addIcon").off("click").click(function(){
     var html = '';
     html = '<div class="add_word_model" style="margin-top:12px;"><input name="input_sensi" class="input_sensi" style="min-width: 50px;margin-top:0px;float:left;" placeholder="输入敏感词">';
     html +='<span style="margin-left:10px;">等级</span><select name="level" class="add_sensi_level" style="width:90px;margin-left:10px;margin-right:5px;"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>';
-    html +='<span style="margin-left:10px;">类别</span><select name="classify" class="add_sensi_class" style="width:90px;margin-left:11px;margin-right:5px;">  <option value="politics">politics</option><option value="military">military</option><option value="law">law</option><option value="ideology">ideology</option><option value="democracy">democracy</option></select>';
+    html +='<span style="margin-left:10px;">类别</span><select name="classify" class="add_sensi_class" style="width:90px;margin-left:11px;margin-right:5px;">';
+    for (var i = 0; i < category_list.length; i++){
+        html += '<option value=' + category_list[i] + '>' + category_list[i] + '</option>';
+    }
+    html += '</select>';
     html +='</div>';
     $('#add_snesiword').append(html);
 });
 
 
 //var table_data1 = [{'words':'敏感词1','level':'A','sensi_class':'a类','date':'09-01'},{'words':'敏感词2','level':'A','sensi_class':'b类','date':'09-01'},{'words':'敏感词3','level':'B','sensi_class':'a类','date':'09-01'},{'words':'敏感词4','level':'B','sensi_class':'b类','date':'09-01'}];
-all_words='/manage_sensitive_words/search_sensitive_words/?level=0&category='
+var all_words='/manage_sensitive_words/search_sensitive_words/?level=0&category='
 call_ajax_request(all_words, Draw_sensi_manage_table);
+var category_list = new Array();
+var category_url = '/manage_sensitive_words/category_list/';
+call_ajax_request(category_url, get_category_list);
 
-$('#edit_word').click(function(){
-
-})
+function get_category_list(data){
+    category_list = data;
+}
 
 $('#show_sensi_manage').click(function (){
     var word_level=$("#sensi_manage_level").val();
