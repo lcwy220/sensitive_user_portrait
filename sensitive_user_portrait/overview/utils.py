@@ -92,7 +92,6 @@ def get_attr(date):
 
     query_body = query_body_module('sensitive_words_string')
     sw_list =  es.search(index='sensitive_user_portrait', doc_type='user', body=query_body)['aggregations']['all_interests']['buckets']
-    print sw_list
     sensitive_words = []
     for item in sw_list:
         temp = []
@@ -100,6 +99,16 @@ def get_attr(date):
         temp.append(item['doc_count'])
         sensitive_words.append(temp)
     results['sensitive_words'] = sensitive_words
+
+    query_body = query_body_module('sensitive_geo_string')
+    sg_list =  es.search(index='sensitive_user_portrait', doc_type='user', body=query_body)['aggregations']['all_interests']['buckets']
+    sensitive_geo = []
+    for item in sg_list:
+        temp = []
+        temp.append(item['key'])
+        temp.append(item['doc_count'])
+        sensitive_geo.append(temp)
+    results['sensitive_geo'] = sensitive_geo
 
     query_body = query_body_module('sensitive_hashtag_string')
     sh_list =  es.search(index='sensitive_user_portrait', doc_type='user', body=query_body)['aggregations']['all_interests']['buckets']
