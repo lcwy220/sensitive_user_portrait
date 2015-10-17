@@ -6,7 +6,7 @@ import json
 from flask import Blueprint, url_for, render_template, request, abort, flash, session, redirect
 from sensitive_user_portrait.global_utils import R_RECOMMENTATION as r
 from sensitive_user_portrait.time_utils import datetime2ts, ts2datetime
-from utils import lastest_identify_in, self_delete, self_add_in, search_sensitive_words, identify_in, recommend_new_words
+from utils import lastest_identify_in, self_delete, self_add_in, search_sensitive_words, identify_in, recommend_new_words, get_category_list
 mod = Blueprint('manage_sensitive_words', __name__, url_prefix='/manage_sensitive_words')
 
 @mod.route('/recommend_new_words/')
@@ -32,6 +32,7 @@ def ajax_identify_in():
     category_list = category_list.split(',')
     date = date.replace('-', '')
 
+    print words_list
     total = []
     for i in range(len(words_list)):
         detail = []
@@ -51,6 +52,13 @@ def ajax_search_sensitive_words():
     category = request.args.get('category', '')
     results = search_sensitive_words(level, category)
     return json.dumps(results)
+
+@mod.route('/category_list/')
+def ajax_get_category_list():
+    result = []
+    result = get_category_list()
+    return json.dumps(result)
+
 
 @mod.route('/self_add_in/')
 def ajax_self_add_in():

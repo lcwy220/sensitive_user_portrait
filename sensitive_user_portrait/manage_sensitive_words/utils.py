@@ -14,6 +14,10 @@ from sensitive_user_portrait.global_utils import R_RECOMMENTATION as r
 from sensitive_user_portrait.global_utils import es_user_profile
 from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts
 
+def get_category_list():
+    result = category_dict.values()
+    return result
+
 def recommend_new_words(date_list):
     results = []
     for date in date_list:
@@ -43,15 +47,18 @@ def recommend_new_words(date_list):
 def identify_in(date, words_list):
     # identify_in date and words_list(include level and category, [word, level, category])
     # date is date when new words were recommended
-    new_list = []
-    print words_list
+    ts = time.time()
+    ts = datetime2ts('2013-09-07')
+    time_list = []
+    for i in range(7):
+        now_ts = int(ts) - i*24*3600
+        now_date = ts2datetime(now_ts).replace('-', '')
+        time_list.append(now_date)
     for item in words_list:
         r.hset('sensitive_words', item[0], json.dumps([item[1], item[2]]))
-        new_list.append(item[0])
         r.hset('history_in_'+date, item[0], json.dumps([item[1], item[2]]))
-    if new_list:
-        for item in new_list:
-            r.hdel('recommend_sensitive_words_'+date, item)
+        for date in time_list:
+            r.hdel('recommend_sensitive_words_'+date, item[0])
     return '1'
 
 
@@ -91,6 +98,7 @@ def self_add_in(date, word, level, category):
     return '1'
 
 def self_delete(word):
+    print word
     r.hdel('sensitive_words', word)
     r.sadd('black_sensitive_words', word)
     return '1'
