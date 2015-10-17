@@ -48,7 +48,7 @@ function currentDate(){
   }
   
   var date = yy.toString()+ '-' + mm.toString() + '-' + dd.toString();
-  console.log(date);
+  //console.log(date);
   return date;
 }
 
@@ -58,7 +58,7 @@ var recommend_date=[];
 function Draw_sensi_recommend_table(data){
 	$('#sensi_manage_table').empty();
     var item = data;
-    console.log(item);
+    //console.log(item);
     var html = '';
 	html += '<table class="table table-bordered table-striped table-condensed datatable" >';
 	html += '<thead><tr style="text-align:center;">';
@@ -133,7 +133,7 @@ $('#show_recommend_word').click(function(){
 	if (choose_date=="最近七天"){
 		choose_date = data_list;
 	}
-  console.log(choose_date);
+  //console.log(choose_date);
   var url = '/manage_sensitive_words/recommend_new_words/?date_list='+choose_date;
 	call_ajax_request(url, Draw_sensi_recommend_table);
     var global_pre_page = 1;
@@ -162,7 +162,7 @@ $('#add_words').off("click").click(function(){
         domain_word.push(temp_list[i]);
       }
   }
-  console.log(domain_word);
+  //console.log(domain_word);
   var len = domain_word.length;
   if (len < 1){
       alert("请选择至少1个敏感词!");
@@ -200,10 +200,9 @@ $('#modifySave').off("click").click(function(){
   var word0 = word00.join(',');
   var level0 = level00.join(',');
   var category0 = category00.join(',');
-  console.log(word0);
-  var domain_url = '/manage_sensitive_words/self_add_in/?date='+date0+'&word_list='+word0+'&level_list='+level0+'&category_list='+category0;
+  //console.log(word0);
+  var domain_url = '/manage_sensitive_words/identify_in/?date='+date0+'&words_list='+word0+'&level_list='+level0+'&category_list='+category0;
+  //console.log(domain_url);
   call_ajax_request(domain_url, confirm_ok); 
-  //window.location.reload();
-  $('#confirm_add').modal('hide');
-  console.log(domain_url);
+  window.location.reload();
 });
