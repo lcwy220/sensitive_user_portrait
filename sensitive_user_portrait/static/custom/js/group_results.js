@@ -50,8 +50,9 @@ function basic_influence(div,data){
 }
 
 function draw_linechart(id,data,type,flag){
-    // $('#'+id).empty();
-    // $('#'+id).empty();
+    console.log('aaaaaaaaaaaaaaaaaaaaaaaaa');
+    console.log(data);
+    bind_weibo_word(type, data[1][0]['markPoint']['data'][0],flag);
     var myChart = echarts.init(document.getElementById(id)); 
     var option = {
     title : {
@@ -102,24 +103,27 @@ function draw_linechart(id,data,type,flag){
             var ecConfig = require('echarts/config');
             function focus(param){
                 var data = param.data;
-                if(type == 'active'){
-                    var count_weibo_url = '/group/get_count_weibo/?task_name='+name+ '&sensitive_status='+data['type']+'&timestamp='+data['xAxis'].getTime()/1000;
-                    call_ajax_request(count_weibo_url, draw_count_weibo);
-                }
-                if(type=='sentiment'){
-                    var sentiment_weibo_url = '/group/get_sentiment_weibo/?task_name='+name+ '&sensitive_status='+flag+'&sentiment='+data['type']+'&timestamp='+data['xAxis'].getTime()/1000;
-                    console.log(sentiment_weibo_url);
-                    call_ajax_request(sentiment_weibo_url, draw_sentiment_weibo);
-                }
-                if(type=='sensitivity'){
-                    var sentiment_weibo_url = '/group/get_sensitive_word/?task_name='+name+ '&timestamp='+data['xAxis'].getTime()/1000;
-                    call_ajax_request(sentiment_weibo_url, draw_sentivity_word);
-                }
+                bind_weibo_word(type, data, flag);
             }
             myChart.on(ecConfig.EVENT.CLICK,focus)
             myChart.on(ecConfig.EVENT.FORCE_LAYOUT_END, function () {});
         }
     )                   
+}
+
+function bind_weibo_word(type, data,flag){
+    if(type == 'active'){
+        var count_weibo_url = '/group/get_count_weibo/?task_name='+name+ '&sensitive_status='+data['type']+'&timestamp='+data['xAxis'].getTime()/1000;
+        call_ajax_request(count_weibo_url, draw_count_weibo);
+    }
+    if(type=='sentiment'){
+        var sentiment_weibo_url = '/group/get_sentiment_weibo/?task_name='+name+ '&sensitive_status='+flag+'&sentiment='+data['type']+'&timestamp='+data['xAxis'].getTime()/1000;
+        call_ajax_request(sentiment_weibo_url, draw_sentiment_weibo);
+    }
+    if(type=='sensitivity'){
+        var sentiment_weibo_url = '/group/get_sensitive_word/?task_name='+name+ '&timestamp='+data['xAxis'].getTime()/1000;
+        call_ajax_request(sentiment_weibo_url, draw_sentivity_word);
+    }
 }
 
 function draw_count_weibo(data){
@@ -285,73 +289,83 @@ function draw_barchart(id,data,type){
     myChart.setOption(option);                
 }
 
-function draw_stackbar(id){
+function draw_stackbar(id,data){
     var myChart = echarts.init(document.getElementById(id)); 
     var option = {
-        timeline:{
-            data:[
-               '2002-01-01','2003-01-01',
-            ],
-            label : {
-                formatter : function(s) {
-                    return s.slice(0, 4);
+        // tooltip : {
+        //     trigger: 'axis',
+        //     // axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+        //     //     type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+        //     // },
+        //     formatter:function(params){
+        //         console.log(params);
+        //         return 0;
+        //     }
+        // },
+        // 
+        tooltip : {         // Option config. Can be overwrited by series or data
+            trigger: 'axis',
+            //show: true,   //default true
+            showDelay: 0,
+            hideDelay: 50,
+            transitionDuration:0,
+            backgroundColor : 'rgba(255,0,255,0.7)',
+            borderColor : '#f50',
+            borderRadius : 8,
+            borderWidth: 2,
+            padding: 10,    // [5, 10, 15, 20]
+            position : function(p) {
+                // 位置回调
+                // console.log && console.log(p);
+                return [p[0] + 10, p[1] - 10];
+            },
+            textStyle : {
+                color: 'yellow',
+                decoration: 'none',
+                fontFamily: 'Verdana, sans-serif',
+                fontSize: 15,
+                fontStyle: 'italic',
+                fontWeight: 'bold'
+            },
+            formatter: function (params,ticket,callback) {
+                console.log(params)
+                var res = '<br/>' + params[0].name;
+                for (var i = 0, l = params.length; i < l; i++) {
+                    for(var j = 0; j < data[1].length; j++){
+                        if(params[0].name == data[1][j]){
+                            console.log(j);
+                            res += '<br/>' + params[i].seriesName + ' : ' + params[i].value + '用户名:' + params[i]['series']['uname'][j] ;
+                            break;
+                        }
+                    }
+                    // res += '<br/>' + params[i].seriesName + ' : ' + params[i].value;
                 }
-            },
-            autoPlay : true,
-            playInterval : 1000
+                setTimeout(function (){
+                    // 仅为了模拟异步回调
+                    callback(ticket, res);
+                }, 1000)
+                return 'loading';
+            }
+            //formatter: "Template formatter: <br/>{b}<br/>{a}:{c}<br/>{a1}:{c1}"
         },
-        options:[
+        legend: {
+            data:data[0]
+        },
+        calculable : true,
+        xAxis : [
             {
-                title : {
-                    text: '世界人口总量',
-                },
-                tooltip : {
-                    trigger: 'axis'
-                },
-                legend: {
-                    data:['微博数']
-                },
-                toolbox: {
-                    show : true,
-                    feature : {
-                        mark : {show: true},
-                        dataView : {show: true, readOnly: false},
-                        magicType: {show: true, type: ['line', 'bar']},
-                        restore : {show: true},
-                        saveAsImage : {show: true}
-                    }
-                },
-                calculable : true,
-                xAxis : [
-                    {
-                        type : 'value',
-                        boundaryGap : [0, 0.01]
-                    }
-                ],
-                yAxis : [
-                    {
-                        type : 'category',
-                        data : ['巴西','印尼','美国','印度','中国','世界人口(万)']
-                    }
-                ],
-                series : [
-                    {
-                        name:'微博数',
-                        type:'bar',
-                        data:[18203, 23489, 29034, 104970, 131744, 630230]
-                    },
-                ]},
-                {
-                title : {'text':'2003全国宏观经济指标'},
-                series : [
-                    {'data': [18203, 239, 29034, 104970, 131744, 630230]},
-       
-                ]
-            },
-
-
-        ]
+                type : 'value'
+            }
+        ],
+        yAxis : [
+            {
+                type : 'category',
+                data : data[1]
+            }
+        ],
+        series : data[2]
     };
+                    
                                        
     myChart.setOption(option);                
 }
@@ -572,6 +586,35 @@ function test_data(data){
     draw_domain_portrait(data['profile']);
 }
 
+function analysis_stack(data){
+    console.log(data);
+    var y_data = data[0];
+    var lengend_data = [];
+    var series_data = [];
+    for(var k in data[1]){
+        var temp_data = [];
+        var u_name = [];
+        lengend_data.push(k);
+        for(var j = 0; j < data[1][k].length; j++){
+            temp_data.push(data[1][k][j][2]);
+            u_name.push(data[1][k][j][1]);
+        }
+        var option = {
+            name:k,
+            type:'bar',
+            stack: '总量',
+            uname:u_name,
+            itemStyle : { normal: {label : {show: true, position: 'insideRight'}}},
+            data:temp_data
+        };
+        series_data.push(option);
+    }
+    console.log(series_data);
+    console.log(data);
+    $('#network_head').append('<h4 style="display:inline-block">(异常值为:'+data[2].toFixed(2)+')</h4>');
+    draw_stackbar('test',[lengend_data, y_data, series_data]) ;
+}
+
 function draw_domain_portrait(data){
     user_data = data;
   $('#img').empty();
@@ -718,12 +761,6 @@ function bind_radio_input(){
     var sentiment_1_129_peak = global_data['sentiment_1_129_peak'];
     var sentiment_1_130_peak = global_data['sentiment_1_130_peak'];
     var sentiment;
-    var option_data;
-    var geo_0 = global_data['geo_0'];
-    var geo_1 = global_data['geo_1'];
-    var hashtag_data ;
-    var hashtag_0 = global_data['hashtag_0'];
-    var hashtag_1 = global_data['hashtag_1'];
     $('input[name="count"]').click(function(){
         if($(this).attr('value') == 0){
             sentiment = analysis_sentiment(sentiment_0_126,sentiment_0_127,sentiment_0_128,sentiment_0_129,sentiment_0_130,sentiment_0_126_peak, sentiment_0_127_peak, sentiment_0_128_peak,sentiment_0_129_peak,sentiment_0_130_peak);
@@ -734,7 +771,12 @@ function bind_radio_input(){
             draw_linechart('emotion',sentiment,'sentiment',1);
         }
     });
-
+    var option_data;
+    var geo_0 = global_data['geo_0'];
+    var geo_1 = global_data['geo_1'];
+    var hashtag_data ;
+    var hashtag_0 = global_data['hashtag_0'];
+    var hashtag_1 = global_data['hashtag_1'];
     $('input[name="location_0"]').click(function(){
         if($(this).attr('value') == 0){
             option_data = analysis_geo(geo_0);
@@ -770,9 +812,12 @@ var user_data ;
 var user_name_data ;
 var test_url = '/group/track_task_results/?task_name='+name;
 var comment_url = '/group/track_task_results/?task_name='+name+'&module=comment_retweet';
+var stack_url = '/group/track_task_results/?task_name='+name+'&module=network';
+
 
 call_ajax_request(test_url, get_group_data);
 //call_ajax_request(comment_url, test_data);
+call_ajax_request(stack_url, analysis_stack);
 
 // draw_linechart('emotion');
 // draw_linechart('sensitivity');

@@ -90,7 +90,9 @@
       </div>
 			<div id="hashtag" style="width:900px;height:300px;"></div>
       <hr>
-      <h2>堆积图</h2>
+      <div id='network_head'>
+       <h2 style="display:inline-block">群体集化程度</h2> 
+      </div>
       <div id="test" style="width:900px;height:300px;"></div>
 		</div>
 	</div>
@@ -120,6 +122,17 @@
             showSectionsMenu: true
         });
     });
+    // $(document).ready(function(){
+    //     var isHiden = true; /*控制切换菜单*/
+    //     $('#popView').click(function(){
+    //         if(isHiden){
+    //       $('#popView').animate({left:'+=380px'});//菜单块向右移动
+    //     }else{
+    //       $('#popView').animate({left:'-=380px'}); //菜单块向左移动
+    //     }
+    //     isHiden = !isHiden;
+    //     });
+    // });
  </script>
  <script type="text/javascript" src="/static/custom/js/group_results.js"></script>
 {% endblock end_js%}
