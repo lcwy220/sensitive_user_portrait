@@ -74,8 +74,12 @@
 			<div style="padding:10px;">
 				<span style='color:#777;font-size:16px'>发布敏感微博人排名</span>
 				<span type="button"data-toggle="modal" data-target="#sensitive_rank" style='font-size:16px;margin-left:60px;cursor: pointer'><u>查看更多</u></span>
+				<span style='margin-left:40px;font-size:16px;color:#777;'>敏感地点排名</span>
+				<span type="button"data-toggle="modal" data-target="#rank_geo" style='font-size:16px;margin-left:125px;cursor: pointer'><u>查看更多</u></span>
 			</div>
 			<div class="table-responsive" id='top_user_sensitive' style='overflow-x:hidden;width:300px;height:250px;float:left'>
+			</div>
+			<div class="table-responsive" id='top_geo_sensitive' style='overflow-x:hidden;width:300px;height:250px;float:left; margin-left:25px;'>
 			</div>
             
         </div>
@@ -221,6 +225,22 @@
         <h4 class="modal-title" id="myModalLabel">发布敏感微博人排名</h4>
       </div>
       <div class="modal-body" id='more_sensitive_rank'>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="rank_geo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        <h4 class="modal-title" id="myModalLabel">敏感地点排名</h4>
+      </div>
+      <div class="modal-body" id='more_geo'>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
