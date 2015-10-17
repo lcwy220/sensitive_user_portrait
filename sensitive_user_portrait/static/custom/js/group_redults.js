@@ -50,8 +50,9 @@ function basic_influence(div,data){
 }
 
 function draw_linechart(id,data,type,flag){
-    // $('#'+id).empty();
-    // $('#'+id).empty();
+    console.log('aaaaaaaaaaaaaaaaaaaaaaaaa');
+    console.log(data);
+    bind_weibo_word(type, data[1][0]['markPoint']['data'][0],flag);
     var myChart = echarts.init(document.getElementById(id)); 
     var option = {
     title : {
@@ -103,18 +104,19 @@ function draw_linechart(id,data,type,flag){
 
             function focus(param){
                 var data = param.data;
-                if(type == 'active'){
-                    var count_weibo_url = '/group/get_count_weibo/?task_name='+name+ '&sensitive_status='+data['type']+'&timestamp='+data['xAxis'].getTime()/1000;
-                    group_results.call_sync_ajax_request(count_weibo_url, group_results.ajax_method, draw_count_weibo);
-                }
-                if(type=='sentiment'){
-                    var sentiment_weibo_url = '/group/get_sentiment_weibo/?task_name='+name+ '&sensitive_status='+flag+'&sentiment='+data['type']+'&timestamp='+data['xAxis'].getTime()/1000;
-                    group_results.call_sync_ajax_request(sentiment_weibo_url, group_results.ajax_method, draw_sentiment_weibo);
-                }
-                if(type=='sensitivity'){
-                    var sentiment_weibo_url = '/group/get_sensitive_word/?task_name='+name+ '&timestamp='+data['xAxis'].getTime()/1000;
-                    group_results.call_sync_ajax_request(sentiment_weibo_url, group_results.ajax_method, draw_sentivity_word);
-                }
+                bind_weibo_word(type, data);
+                // if(type == 'active'){
+                //     var count_weibo_url = '/group/get_count_weibo/?task_name='+name+ '&sensitive_status='+data['type']+'&timestamp='+data['xAxis'].getTime()/1000;
+                //     group_results.call_sync_ajax_request(count_weibo_url, group_results.ajax_method, draw_count_weibo);
+                // }
+                // if(type=='sentiment'){
+                //     var sentiment_weibo_url = '/group/get_sentiment_weibo/?task_name='+name+ '&sensitive_status='+flag+'&sentiment='+data['type']+'&timestamp='+data['xAxis'].getTime()/1000;
+                //     group_results.call_sync_ajax_request(sentiment_weibo_url, group_results.ajax_method, draw_sentiment_weibo);
+                // }
+                // if(type=='sensitivity'){
+                //     var sentiment_weibo_url = '/group/get_sensitive_word/?task_name='+name+ '&timestamp='+data['xAxis'].getTime()/1000;
+                //     group_results.call_sync_ajax_request(sentiment_weibo_url, group_results.ajax_method, draw_sentivity_word);
+                // }
 
             }
 
@@ -122,6 +124,21 @@ function draw_linechart(id,data,type,flag){
             myChart.on(ecConfig.EVENT.FORCE_LAYOUT_END, function () {});
         }
     )                   
+}
+
+function bind_weibo_word(type, data,flag){
+    if(type == 'active'){
+        var count_weibo_url = '/group/get_count_weibo/?task_name='+name+ '&sensitive_status='+data['type']+'&timestamp='+data['xAxis'].getTime()/1000;
+        group_results.call_sync_ajax_request(count_weibo_url, group_results.ajax_method, draw_count_weibo);
+    }
+    if(type=='sentiment'){
+        var sentiment_weibo_url = '/group/get_sentiment_weibo/?task_name='+name+ '&sensitive_status='+flag+'&sentiment='+data['type']+'&timestamp='+data['xAxis'].getTime()/1000;
+        group_results.call_sync_ajax_request(sentiment_weibo_url, group_results.ajax_method, draw_sentiment_weibo);
+    }
+    if(type=='sensitivity'){
+        var sentiment_weibo_url = '/group/get_sensitive_word/?task_name='+name+ '&timestamp='+data['xAxis'].getTime()/1000;
+        group_results.call_sync_ajax_request(sentiment_weibo_url, group_results.ajax_method, draw_sentivity_word);
+    }
 }
 
 function draw_count_weibo(data){
@@ -619,6 +636,8 @@ function analysis_stack(data){
         series_data.push(option);
     }
     console.log(series_data);
+    console.log(data);
+    $('#network_head').append('<h4 style="display:inline-block">(异常值为:'+data[2].toFixed(2)+')</h4>');
     draw_stackbar('test',[lengend_data, y_data, series_data]) ;
 }
 
