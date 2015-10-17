@@ -69,26 +69,26 @@ function Draw_sensi_manage_table(data){
        	
     })
     $('#word_modifySave').off("click").click(function(){
-    var url = '/manage_sensitive_words/identify_in/?date=';
-    var edit_date = currentDate();
-    var date = new Array;
-    date.push(edit_date);
-    var word_level=$(".edit_sensi_level").val();
-    var level = new Array;
-    level.push(word_level);
-    var word_class=$(".edit_sensi_class").val();
-    var class_word = new Array;
-    class_word.push(word_class);
-    var word = $('#input_sensi').val()
-    var word_list = new Array;
-    word_list.push(word);
-    if(word != ''){
-    url += date+'&words_list='+word_list+'&level_list='+level+'&category_list='+class_word;
-    console.log(url);
-    call_ajax_request(url, self_refresh);
-    }else{
-        alert('敏感词不能为空！')
-    } 
+        var url = '/manage_sensitive_words/identify_in/?date=';
+        var edit_date = currentDate();
+        var date = new Array;
+        date.push(edit_date);
+        var word_level=$(".edit_sensi_level").val();
+        var level = new Array;
+        level.push(word_level);
+        var word_class=$(".edit_sensi_class").val();
+        var class_word = new Array;
+        class_word.push(word_class);
+        var word = $('#input_sensi').val()
+        var word_list = new Array;
+        word_list.push(word);
+        if(word != ''){
+        url += date+'&words_list='+word_list+'&level_list='+level+'&category_list='+class_word;
+        console.log(url);
+        call_ajax_request(url, self_refresh);
+        }else{
+            alert('敏感词不能为空！')
+        } 
 	})
 
   }
@@ -138,6 +138,7 @@ $('#add_words_Save').off("click").click(function(){
         var each_word_class = $(this).val();
         add_words_class.push(each_word_class);
     });
+    var reg = "^[a-zA-Z0-9_\u4e00-\u9fa5\uf900-\ufa2d]+$";
     $('[name="input_sensi"]').each(function(){
         var each_word_name = $(this).val();
         if (each_word_name == ''){
@@ -145,6 +146,10 @@ $('#add_words_Save').off("click").click(function(){
             //return false;
             add_words_name.push(each_word_name);
         }else{
+            if (!each_word_name.match(reg)){
+                alert('敏感词只能包含英文、汉字、数字和下划线,请重新输入!');
+                return;
+            }
             //console.log(each_word_name);
             add_words_name.push(each_word_name);
         }
@@ -166,9 +171,14 @@ $('#add_words_Save').off("click").click(function(){
                 level_list.push(add_words_level[i]);
             }
         }
-        url += '?date='+ add_words_date + '&words_list=' + words_list.join(',') + '&level_list=' + level_list.join(',') + '&category_list=' + class_list.join(',');
-        //console.log(url);
-        call_ajax_request(url, self_refresh);
+        if (words_list.length > 0){
+            url += '?date='+ add_words_date + '&words_list=' + words_list.join(',') + '&level_list=' + level_list.join(',') + '&category_list=' + class_list.join(',');
+            //console.log(url);
+            call_ajax_request(url, self_refresh);
+        }
+        else{
+            $('#add_sensiword').modal('hide');
+        }
     }else{
         console.log('no');
         return 0;
