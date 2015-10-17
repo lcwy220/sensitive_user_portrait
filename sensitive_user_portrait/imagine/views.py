@@ -7,6 +7,7 @@ from flask import Blueprint, url_for, render_template, request, abort, flash, se
 from imagine import imagine
 
 mod = Blueprint('imagine', __name__, url_prefix='/imagine')
+shift_dict = {"sensitive_words": "sensitive_words_string", "activity_geo": "sensitive_geo_string", "hashtag": "sensitive_hashtag_string"}
 
 @mod.route('/')
 def ajax_imagine():
@@ -21,6 +22,8 @@ def ajax_imagine():
 
     query_fields_dict = {}
     for i in range(len(keywords_list)):
+        if shift_dict.has_key(keywords_list[i]):
+            keywords_list[i] = shift_dict[str(keywords_list[i])]
         query_fields_dict[keywords_list[i]] = int(weight_list[i])
 
     field = request.args.get('field', '')
@@ -28,7 +31,6 @@ def ajax_imagine():
 
     size = request.args.get('size', 15)
     query_fields_dict['size'] = int(size)
-
     if uid and query_fields_dict:
         result = imagine(uid, query_fields_dict)
     if result:
