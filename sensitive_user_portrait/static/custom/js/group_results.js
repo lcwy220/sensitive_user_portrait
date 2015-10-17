@@ -50,7 +50,6 @@ function basic_influence(div,data){
 }
 
 function draw_linechart(id,data,type,flag){
-    console.log('aaaaaaaaaaaaaaaaaaaaaaaaa');
     console.log(data);
     bind_weibo_word(type, data[1][0]['markPoint']['data'][0],flag);
     var myChart = echarts.init(document.getElementById(id)); 
@@ -580,12 +579,6 @@ function analysis_geo(data){
   return [time_data, options];
 }
 
-function test_data(data){
-    user_name_data = data;
-    add_head();
-    draw_domain_portrait(data['profile']);
-}
-
 function analysis_stack(data){
     console.log(data);
     var y_data = data[0];
@@ -616,15 +609,14 @@ function analysis_stack(data){
 }
 
 function draw_domain_portrait(data){
-    user_data = data;
-  $('#img').empty();
-    num = 0 
+    $('#img').empty();
+    var user_data = data;
+    var num = 0 
     var html = '';
     html += '<div ng-repeat="t in hotTopics" class="col-md-4 ng-scope"><div style="padding:5px; padding-left:15px; padding-right:15px; margin-bottom:15px" class="section-block">';
     html += '<h1 class="no-margin"><small><a style="color:#777;font-size:18px" class="ng-binding"></a></small></h1>';
     html += '<hr style="margin-top: 5px; margin-bottom: 15px">';
     html += '<ul style="margin-top:0px;margin-bottom:0;padding-left: 7px;height:50px; overflow-y:hidden" class="list-inline">';
-  
     for (key in data){ 
        num ++;
        if (num < 7){
@@ -634,12 +626,10 @@ function draw_domain_portrait(data){
                   domain_top_user_portrait = data[key][1];
                 };
               html += '<li ng-repeat="result in t.result" target="_blank" style="margin-bottom: 10px" class="img"  id='+key+'>';
-              html += '<div class="small-photo shadow-5"><span class="helper"></span><img src="' + domain_top_user_portrait + '" alt="' + data[key][0] +'"></div></li>';         
+              html += '<div class="small-photo shadow-5"><span class="helper"></span><img title="'+ key +'" src="' + domain_top_user_portrait + '" alt="' + data[key][0] +'"></div></li>';         
         }
-      
-
     }
-      html += '</ul></div></div>';
+    html += '</ul></div></div>';
     $('#img').append(html);
     bind_portait();
 }
@@ -669,6 +659,13 @@ function add_head(){
     $('#hashtag_head').append('<h4 style="display:inline-block">(异常值为:'+global_data['hashtag_abnormal']+')</h4>');
     $('#senstivity_head').append('<h4 style="display:inline-block">(异常值为:'+global_data['sensitive_abnormal']+')</h4>');
     $('#user_head').append('<h4 style="display:inline-block">(异常值为:'+user_name_data['abnormal_index'].toFixed(2)+')</h4>');
+}
+
+function test_data(data){
+    console.log(data);
+    user_name_data = data;
+    add_head();
+    draw_domain_portrait(user_name_data['profile']);
 }
 
 function get_group_data(data){
@@ -816,12 +813,10 @@ var stack_url = '/group/track_task_results/?task_name='+name+'&module=network';
 
 
 call_ajax_request(test_url, get_group_data);
-//call_ajax_request(comment_url, test_data);
-call_ajax_request(stack_url, analysis_stack);
+call_ajax_request(comment_url, test_data);
+//call_ajax_request(stack_url, analysis_stack);
 
-// draw_linechart('emotion');
 // draw_linechart('sensitivity');
-// draw_linechart('user');
 // draw_barchart('location');
 // draw_barchart('hashtag');
 // draw_stackbar('test');
