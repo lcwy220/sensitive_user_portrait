@@ -50,7 +50,7 @@ function basic_influence(div,data){
 }
 
 function draw_linechart(id,data,type,flag){
-    console.log(data);
+    //console.log(data);
     bind_weibo_word(type, data[1][0]['markPoint']['data'][0],flag);
     var myChart = echarts.init(document.getElementById(id)); 
     var option = {
@@ -149,7 +149,7 @@ function draw_count_weibo(data){
             var location = data[i][3];
             var message = data[i][4];
             html += '<div style="padding:10px;font-size:13px;background: whitesmoke;margin-bottom: 10px">';
-            html += '<p><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;发布:&nbsp;'+ message + '</p>';
+            html += '<p style="color:black;"><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;发布:&nbsp;'+ message + '</p>';
             html += '<p style="color:darkred;height:10px;"><span style="float:right">' + date + '&nbsp;&nbsp;' + location + '&nbsp;&nbsp;'+ '</span></p>';
             html += '</div>'
         }
@@ -222,7 +222,7 @@ function draw_table(data){
 
 function draw_barchart(id,data,type,flag){
     var myChart = echarts.init(document.getElementById(id)); 
-    console.log(data[1]);
+    //console.log(data[1]);
     var option = {
         timeline:{
             data:data[0],
@@ -236,8 +236,8 @@ function draw_barchart(id,data,type,flag){
         },
         options:data[1],
     };                    
-                                                 
-    myChart.setOption(option); 
+    myChart.setOption(option);                
+    /*
     require([
             'echarts'
         ],
@@ -250,30 +250,20 @@ function draw_barchart(id,data,type,flag){
             myChart.on(ecConfig.EVENT.CLICK,focus)
             myChart.on(ecConfig.EVENT.FORCE_LAYOUT_END, function () {});
         }
-    )                  
+    ) 
+    */
 }
 
 function draw_stackbar(id,data){
     var myChart = echarts.init(document.getElementById(id)); 
     var option = {
-        // tooltip : {
-        //     trigger: 'axis',
-        //     // axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-        //     //     type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-        //     // },
-        //     formatter:function(params){
-        //         console.log(params);
-        //         return 0;
-        //     }
-        // },
-        // 
         tooltip : {         // Option config. Can be overwrited by series or data
             trigger: 'axis',
             //show: true,   //default true
             showDelay: 0,
             hideDelay: 50,
             transitionDuration:0,
-            backgroundColor : 'rgba(255,0,255,0.7)',
+            backgroundColor : 'grey',
             borderColor : '#f50',
             borderRadius : 8,
             borderWidth: 2,
@@ -286,26 +276,27 @@ function draw_stackbar(id,data){
             textStyle : {
                 color: 'yellow',
                 decoration: 'none',
-                fontFamily: 'Verdana, sans-serif',
+                fontFamily: 'Microsoft Yahei',
                 fontSize: 15,
-                fontStyle: 'italic',
-                fontWeight: 'bold'
+                //fontStyle: 'italic',
+                //fontWeight: 'bold'
             },
             formatter: function (params,ticket,callback) {
-                console.log(params)
+                //console.log(params)
                 var res = '<br/>' + params[0].name;
                 for (var i = 0, l = params.length; i < l; i++) {
-                    for(var j = 0; j < data[1].length; j++){
-                        if(params[0].name == data[1][j]){
-                            console.log(j);
-                            res += '<br/>' + params[i].seriesName + ' : ' + params[i].value + '用户名:' + params[i]['series']['uname'][j] ;
-                            break;
+                    if (params[i].value != 0){
+                        for(var j = 0; j < data[1].length; j++){
+                            if(params[0].name == data[1][j] ){
+                                //console.log(j);
+                                res += '<br/>' + params[i].seriesName + ' : ' + params[i].value + '&nbsp;&nbsp;用户名：' + params[i]['series']['uname'][j] ;
+                                break;
+                            }
                         }
+                        // res += '<br/>' + params[i].seriesName + ' : ' + params[i].value;
                     }
-                    // res += '<br/>' + params[i].seriesName + ' : ' + params[i].value;
                 }
                 setTimeout(function (){
-                    // 仅为了模拟异步回调
                     callback(ticket, res);
                 }, 1000)
                 return 'loading';
@@ -329,8 +320,6 @@ function draw_stackbar(id,data){
         ],
         series : data[2]
     };
-                    
-                                       
     myChart.setOption(option);                
 }
 
@@ -369,7 +358,7 @@ function analysis_img(data1,data2,data3,data4){
     for(var m in data2){
         temp_data_1.push([new Date(m*1000),data2[m]]);
     }
-    console.log(temp_data_0);
+    //console.log(temp_data_0);
     for(var i = 0; i < data3.length; i++){
         point_data_0.push({'name':'拐点'+i, 'value':temp_data_0[data3[i]][1], 'xAxis':temp_data_0[data3[i]][0],'yAxis':temp_data_0[data3[i]][1],'type':0});
     }
@@ -443,7 +432,7 @@ function analysis_sentiment(data1,data2,data3,data4,data5,data6,data7,data8,data
 }
 
 function analysis_geo(data){
-    var legend_data = ['不敏感'];
+    var legend_data = ['微博数'];
     var time_data = [];
     var xAxis_data = [];
     var y_data = []; 
@@ -452,7 +441,7 @@ function analysis_geo(data){
         time_data.push(k);
         var tempx_data = [];
         var tempy_data = [];
-        for(loc in data[k]){
+        for(var loc in data[k]){
             tempx_data.push(loc);
             tempy_data.push(data[k][loc]);
         }
@@ -461,7 +450,7 @@ function analysis_geo(data){
         length_data.push(tempy_data.length);
     }
     var max_length = Math.max.apply(Math, length_data);
-    console.log(max_length);
+    //console.log(max_length);
     for(var i = 0; i < y_data.length; i++){
         if(y_data[i].length < max_length){
             for(var j = y_data[i].length; j < max_length; j++){
@@ -470,7 +459,6 @@ function analysis_geo(data){
             }
         }
     }
-
     if(xAxis_data.length == 0){
         return 0;
     }
@@ -514,7 +502,7 @@ function analysis_geo(data){
                 ],
                 series : [
                     {
-                        name:'不敏感',
+                        name:'微博数',
                         type:'bar',
                         data:y_data[0]
                     },
@@ -522,7 +510,6 @@ function analysis_geo(data){
             },
         ];
         if(xAxis_data.length > 1){
-                            
             for(var j = 1 ; j < xAxis_data.length; j++){
                 var other_data = {        
                     yAxis: [
@@ -540,12 +527,12 @@ function analysis_geo(data){
         }
 
     }
-    console.log(options);
-  return [time_data, options];
+    //console.log(options);
+    return [time_data, options];
 }
 
 function analysis_stack(data){
-    console.log(data);
+    //console.log(data);
     var y_data = data[0];
     var lengend_data = [];
     var series_data = [];
@@ -567,8 +554,9 @@ function analysis_stack(data){
         };
         series_data.push(option);
     }
-    console.log(series_data);
-    console.log(data);
+    lengend_data = lengend_data.reverse();
+    series_data = series_data.reverse();
+    //console.log(series_data);
     $('#network_head').append('<h4 style="display:inline-block">(异常值为:'+data[2].toFixed(2)+')</h4>');
     draw_stackbar('test',[lengend_data, y_data, series_data]) ;
 }
@@ -618,7 +606,7 @@ function draw_domain_portrait(data){
 
 function bind_portait(){
     $('.img').click(function(){
-        console.log(user_name_data);
+        //console.log(user_name_data);
         var id = $(this).attr('id');
         var comment_index = id + '_comment';
         var retweet_index = id+ '_retweet';
@@ -634,7 +622,7 @@ function bind_portait(){
 }
 
 function add_head(){
-    console.log('aaaaaaa');
+    //console.log('aaaaaaa');
     $('#count_head').append('<h4 style="display:inline-block">(异常值为:'+global_data['count_abnormal']+')</h4>');
     $('#emtion_head').append('<h4 style="display:inline-block">(异常值为:'+global_data['sentiment_abnormal']+')</h4>');
     $('#location_head').append('<h4 style="display:inline-block">(异常值为:'+global_data['geo_abnormal']+')</h4>');
@@ -644,7 +632,7 @@ function add_head(){
 }
 
 function test_data(data){
-    console.log(data);
+    //console.log(data);
     user_name_data = data;
     add_head();
     draw_domain_portrait(user_name_data['profile']);
@@ -662,19 +650,6 @@ function get_group_data(data){
     var count_data = analysis_count(count_0_data, count_1_data,count_0_peak,count_1_peak);
     draw_linechart('active',count_data,'active',0);
 
-    /*
-    var sentiment_0_126 = data['sentiment_0_126'];
-    var sentiment_0_127 = data['sentiment_0_127'];
-    var sentiment_0_128 = data['sentiment_0_128'];
-    var sentiment_0_129 = data['sentiment_0_129'];
-    var sentiment_0_130 = data['sentiment_0_130'];
-
-    var sentiment_0_126_peak = data['sentiment_0_126_peak'];
-    var sentiment_0_127_peak = data['sentiment_0_127_peak'];
-    var sentiment_0_128_peak = data['sentiment_0_128_peak'];
-    var sentiment_0_129_peak = data['sentiment_0_129_peak'];
-    var sentiment_0_130_peak = data['sentiment_0_130_peak'];
-    */
     bind_radio_input();
     var sentiment_1_126 = data['sentiment_1_126'];
     var sentiment_1_127 = data['sentiment_1_127'];
@@ -692,27 +667,26 @@ function get_group_data(data){
     
     var sensitive_data = data['sensitive_score'];
     var sensitive_peak = data['sensitive_score_peak'];
+    var sensitive = analysis_sensitive(sensitive_data, sensitive_peak);
+    draw_linechart('sensitivity',sensitive,'sensitivity',0);
 
     var geo_0 = data['geo_0'];
     var geo_1 = data['geo_1'];
-    var hashtag_0 = data['hashtag_0'];
-    var hashtag_1 = data['hashtag_1'];
-    
-    var sensitive = analysis_sensitive(sensitive_data, sensitive_peak);
     var option_data = analysis_geo(geo_1);
-    var hashtag_data = analysis_geo(hashtag_1);
-    draw_linechart('sensitivity',sensitive,'sensitivity',0);
     if(option_data == 0){
         $('#location').append('<h3>当前数值为空<h3>');
     }else{
         draw_barchart('location', option_data,'location',0);
     }
+
+    var hashtag_0 = data['hashtag_0'];
+    var hashtag_1 = data['hashtag_1'];
+    var hashtag_data = analysis_geo(hashtag_1);
     if(hashtag_data == 0){
         $('#hashtag').append('<h3>当前数值为空<h3>')
     }else{
         draw_barchart('hashtag', hashtag_data,'hashtag',0);
     }    
-    
 }
 
 function bind_radio_input(){
@@ -753,9 +727,6 @@ function bind_radio_input(){
     var option_data;
     var geo_0 = global_data['geo_0'];
     var geo_1 = global_data['geo_1'];
-    var hashtag_data ;
-    var hashtag_0 = global_data['hashtag_0'];
-    var hashtag_1 = global_data['hashtag_1'];
     $('input[name="location_0"]').click(function(){
         if($(this).attr('value') == 0){
             option_data = analysis_geo(geo_0);
@@ -769,7 +740,9 @@ function bind_radio_input(){
             draw_barchart('location', option_data,'location',0);
         }
     });
-
+    var hashtag_data ;
+    var hashtag_0 = global_data['hashtag_0'];
+    var hashtag_1 = global_data['hashtag_1'];
     $('input[name="hashtag"]').click(function(){
         if($(this).attr('value') == 0){
             hashtag_data = analysis_geo(hashtag_0);
@@ -798,8 +771,4 @@ call_ajax_request(test_url, get_group_data);
 call_ajax_request(comment_url, test_data);
 call_ajax_request(stack_url, analysis_stack);
 
-// draw_linechart('sensitivity');
-// draw_barchart('location');
-// draw_barchart('hashtag');
-// draw_stackbar('test');
 
