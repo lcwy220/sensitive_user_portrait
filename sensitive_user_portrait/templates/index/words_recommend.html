@@ -39,7 +39,7 @@ li{list-style-type:none;}
     margin-right:10px;
     margin-top:10px;
 }
-.box-content {padding-left:30px;padding-right:30px;}
+.box-content {margin-top:40px;padding-left:30px;padding-right:30px;}
 .searchTable {float:right;margin-right:20px;}
 #SearchTab{position: fixed;margin-top: -200px;left: 50%;top: 50%;z-index: 1002;width: 620px;background: #FFF none repeat scroll 0% 0%;
 border: 1px solid #AA8BE8;height: 320px;margin-left: -300px;}
@@ -85,7 +85,7 @@ tbody td{text-align:center;}
                            <span class="TabTitle"  >敏感词推荐</span>
                         </div>
                     <div class="fleft">
-                        <div style="margin-top:12px;margin-left:30px;">选择日期:
+                        <div style="margin-top:12px;margin-left:30px;margin-bottom:10px;">选择日期:
                             <select name="level" id="recommend_date_select" style="width:180px; margin-right:5px;"></select>
                             <button id="show_recommend_word" class="btn btn-primary btn-sm"  style="min-width: 50px;">确定</button>
                         </div>
@@ -143,8 +143,8 @@ tbody td{text-align:center;}
 {% endblock body %}
 
 {% block end_js %}
+<script src="/static/custom/js/table_init.js"></script>
 <script  src="/static/scripts/jquery-jelevator-1.0.3.min.js"></script>
 <script type="text/javascript" src="/static/custom/js/words_recommend.js"></script> 
 
-<script src="/static/custom/js/charisma.js"></script>
 {% endblock end_js %}
