@@ -19,12 +19,13 @@
         #pageGro .pageDown{ text-indent:5px;background:url(/static/custom/images/pageDown.png) 46px 6px no-repeat;}
         .pageList ul{margin-left:0px;} 
 	</style>
+	
 {% endblock custom_css  %}
 {% block body %}
 <div id="page">
 		<div id = "portrait_info" class="portait" style="font-family:'Microsoft YaHei UI'; font-size:16px;margin-top:10px;margin-bottom:80px">
 		</div>
-		<div style="float:left">
+		<div style="float:left;width:100%">
 		    <hr />
 		    <h2>统计信息</h2>
 	        <div id = "statictics_info" style="float:left;margin-top:20px;width:100%">
@@ -61,7 +62,7 @@
 		    </select>
 		    <button id="show_sensi_word" style="min-width: 50px;">确定</button></div>
 		   	<!--敏感词  -->
-		    <div id="sensi_word_table" style="overflow:hidden;height:220px;margin-top:15px"></div>
+		    <div id="sensi_word_table" style="overflow-x:hidden;height:220px;margin-top:15px"></div>
 		    </div>
 		    <div id="language_right" style="float:right">
 		    <div id="sensiword_hashtag">

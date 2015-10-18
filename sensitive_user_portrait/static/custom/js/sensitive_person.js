@@ -33,6 +33,7 @@ Search_weibo.prototype = {
       success:callback
     });
   },
+  
   Draw_basic: function(data){
     console.log(data);
     if (data['photo_url'] == 'unknown'){
