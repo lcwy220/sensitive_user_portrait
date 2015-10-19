@@ -203,6 +203,7 @@ function drawTopic(div_name, more_div_name, rank_data){
 	
 //画表格
 function drawRank(div_name, cname, rank_data, more_div){
+    var int_list = {'retweeted_user':'','top_comment_user':'', 'top_user_sensitive':''};
     if (!rank_data){
         rank_data = new Array();
     }
@@ -225,7 +226,12 @@ function drawRank(div_name, cname, rank_data, more_div){
            }
          html += '<tr><th style="text-align:center">' + m + '</th>';
          html += '<th style="text-align:center"><a title=' + item[0] +' target="_blank" href="/index/personal/?uid=' + item[0] + '">' + nickname + '</a></th>';
-         html += '<th style="text-align:center">' + item[2].toFixed(2) + '</th></tr>';
+         if (div_name in int_list){
+             html += '<th style="text-align:center">' + item[2] + '</th></tr>';
+         }
+         else{
+             html += '<th style="text-align:center">' + item[2].toFixed(2) + '</th></tr>';
+         }
         };
         html += '</table>'; 
         $('#' + div_name).append(html);  
@@ -249,7 +255,64 @@ function drawRank(div_name, cname, rank_data, more_div){
        }
        html += '<tr><th style="text-align:center">' + m + '</th>';
        html += '<th style="text-align:center"><a title=' + item[0] +' target="_blank" href="/index/personal/?uid=' + item[0] + '">' + nickname + '</a></th>';
-       html += '<th style="text-align:center">' + item[2].toFixed(2) + '</th></tr>';
+         if (div_name in int_list){
+             html += '<th style="text-align:center">' + item[2] + '</th></tr>';
+         }
+         else{
+             html += '<th style="text-align:center">' + item[2].toFixed(2) + '</th></tr>';
+         }
+    };
+    html += '</table>'; 
+    $('#' + more_div).append(html);                  
+}
+function drawLocationRank(div_name, cname, rank_data, more_div){
+    if (!rank_data){
+        rank_data = new Array();
+    }
+    $('#'+ div_name).empty();
+        var html = '';
+        html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
+        html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">地点</th>';
+        html += '<th style="text-align:center">' + cname + '</th></tr>';
+        var min_row = Math.min(5, rank_data.length);
+        for (var i = 0; i < min_row; i++) {
+           var s = i.toString();
+           var m = i + 1;
+           var item = rank_data[i];
+           var nickname;
+           if ((item[0] == 'unknown') || (item[0] == '0')){
+               nickname = '未知';
+           }
+           else{
+               nickname = item[0];
+           }
+         html += '<tr><th style="text-align:center">' + m + '</th>';
+         html += '<th style="text-align:center">' + nickname + '</th>';
+         html += '<th style="text-align:center">' + item[1] + '</th></tr>';
+        };
+        html += '</table>'; 
+        $('#' + div_name).append(html);  
+
+    //更多
+	$('#' + more_div).empty();
+    html = '';
+    html += '<table class="table table-striped table-bordered bootstrap-datatable datatype responsive">';
+    html += '<tr><th style="text-align:center">排名</th>';
+    html += '<th style="text-align:center">地点</th><th style="text-align:center">' + cname + '</th></tr>';
+	for (var i = 0; i < rank_data.length; i++) {
+       var s = i.toString();
+       var m = i + 1;
+       var item = rank_data[i];
+       var nickname;
+       if ((item[0] == 'unknown') || (item[0] == '0')){
+           nickname = '未知';
+       }
+       else{
+           nickname = item[0];
+       }
+       html += '<tr><th style="text-align:center">' + m + '</th>';
+       html += '<th style="text-align:center">' + nickname + '</th>';
+       html += '<th style="text-align:center">' + item[1] + '</th></tr>';
     };
     html += '</table>'; 
     $('#' + more_div).append(html);                  
@@ -295,6 +358,7 @@ function draw(data){
     rank_list['retweeted_user'] = 'retweeted_total';
     rank_list['top_comment_user'] = 'comment_total';
     rank_list['top_user_sensitive'] = 'top_weibo_number';
+    rank_list['top_geo_sensitive'] = 'sensitive_geo';
     var cname_list = new Array();
     cname_list['top_influence'] = '影响力';
     cname_list['importance'] = '重要性';
@@ -303,6 +367,7 @@ function draw(data){
     cname_list['retweeted_user'] = '转发量';
     cname_list['top_comment_user'] = '评论量';
     cname_list['top_user_sensitive'] = '敏感微博数';
+    cname_list['top_geo_sensitive'] = '敏感微博数';
     var more_div_list = new Array();
     more_div_list['top_influence'] = 'more_influence';
     more_div_list['importance'] = 'more_important';
@@ -311,11 +376,17 @@ function draw(data){
     more_div_list['retweeted_user'] = 'more_retweeted';
     more_div_list['top_comment_user'] = 'more_comment';
     more_div_list['top_user_sensitive'] = 'more_sensitive_rank';
+    more_div_list['top_geo_sensitive'] = 'more_geo';
     for (var div_name in rank_list){
         var key = rank_list[div_name];
         var cname = cname_list[div_name];
         var more_div = more_div_list[div_name];
-        drawRank(div_name, cname, data[key], more_div);
+        if (div_name == 'top_geo_sensitive'){
+            drawLocationRank(div_name, cname, data[key], more_div);
+        }
+        else{
+            drawRank(div_name, cname, data[key], more_div);
+        }
     }
 }
 var overview_url = '/overview/show/?date=2013-09-07';

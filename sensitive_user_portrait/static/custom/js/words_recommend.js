@@ -138,8 +138,7 @@ $('#show_recommend_word').click(function(){
 	call_ajax_request(url, Draw_sensi_recommend_table);
     var global_pre_page = 1;
     var global_choose_uids = new Array();
-	});
-
+});
 
 var global_pre_page = 1;
 var global_choose_uids = new Array();
@@ -147,6 +146,14 @@ date_initial();
 var data_list = recommend_date.join(',');
 var url_init = '/manage_sensitive_words/recommend_new_words/?date_list='+data_list;
 call_ajax_request(url_init, Draw_sensi_recommend_table); 
+var category_url = '/manage_sensitive_words/category_list/';
+var category_list = new Array();
+call_ajax_request(category_url, get_category_list);
+
+
+function get_category_list(data){
+    category_list = data;
+}
 
 $('#add_words').off("click").click(function(){
   $('.modal-body').empty();
@@ -175,8 +182,12 @@ $('#add_words').off("click").click(function(){
     for(var i=0;i<domain_word.length;i++){
         html += '<tr>';
         html += '<td class="changeword center" style="text-align:center;vertical-align:middle">'+ domain_word[i] +'</td>';
-        html += '<td class="center" style="text-align:center;vertical-align:middle"><select name="level" id="level_need" class="add_sensi_level" style="width:90px; margin-right:5px;"><option value="1">level 1</option><option value="2">level 2</option><option value="3">level 3</option></select></td>'
-        html += '<td class="center" style="text-align:center;vertical-align:middle"><select name="classify" class="add_sensi_class" style="width:90px; margin-right:5px;"><option value="politics">politics</option><option value="military">military</option><option value="law">law</option><option value="ideology">ideology</option><option value="democracy">democracy</option></select></td>'    
+        html += '<td class="center" style="text-align:center;vertical-align:middle"><select name="level" id="level_need" class="add_sensi_level" style="width:90px; margin-right:5px;"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></td>'
+        html += '<td class="center" style="text-align:center;vertical-align:middle"><select name="classify" class="add_sensi_class" style="width:90px; margin-right:5px;">';
+        for (var j = 0; j < category_list.length; i++){
+            html += '<option value=' + category_list[j] + '>' + category_list[j] + '</option>';
+        }
+        html += '</select></td>'    
         html += '</tr>';
    }
     html += '</tbody>';
@@ -202,7 +213,7 @@ $('#modifySave').off("click").click(function(){
   var category0 = category00.join(',');
   //console.log(word0);
   var domain_url = '/manage_sensitive_words/identify_in/?date='+date0+'&words_list='+word0+'&level_list='+level0+'&category_list='+category0;
-  //console.log(domain_url);
+  console.log(domain_url);
   call_ajax_request(domain_url, confirm_ok); 
   window.location.reload();
 });
