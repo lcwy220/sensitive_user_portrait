@@ -14,6 +14,7 @@ function bindSearchFunc(that){
             return false;
         }
     });
+    /*
     $('#simple_search').click(function(){
         var simple_url = that.simple_search_url;
         var term = $('#keyword').val();
@@ -21,7 +22,20 @@ function bindSearchFunc(that){
         console.log(simple_url);
         window.location.href = simple_url;
     });
-    
+    */
+    $('#words_list').click(function(){
+        var words = $('input[name="words_list"]').val();
+        var simple_url = that.simple_search_url;
+        if (words == ''){
+            alert('关键词不能为空');
+        }
+        else{
+            var words_list = words.split(" ");
+            //console.log(words_list);
+            simple_url += words_list.join(',');
+            window.location.href = simple_url;
+        }
+    });
     
     
     $("#bluebtn").off("click").click(function(){
