@@ -44,21 +44,21 @@
 			<h2>语言属性</h2>
 			<div id="today_sensitive_word" style="margin:20px;font-size:18px;"></div>
 			<div id="language_left" style="float:left">
-			<div>等级:
+			<div style="margin-left:20px;">等级:
 			<select name="level" id="sensi_word_level" style="width:90px; margin-right:5px;">   
 				<option value="0">所有等级</option> 
-		        <option value="1">level 1</option>   
-		        <option value="2">level 2</option>   
-		        <option value="3">level 3</option>           
+		        <option value="1">1</option>   
+		        <option value="2">2</option>   
+		        <option value="3">3</option>           
 		    </select>
 		    类别:
 		    <select name="classify" id="sensi_word_class" style="width:90px; margin-right:5px;"> 
 		        <option value="">所有类别</option>   
-		        <option value="politics">政治</option>   
-		        <option value="military">军事</option>   
-		        <option value="law">思想</option>
-		        <option value="ideology">意识形态</option>
-		     	<option value="democracy">民主</option>	                 
+		        <option value="政治">政治</option>   
+		        <option value="军事">军事</option>   
+		        <option value="法律">法律</option>
+		        <option value="意识形态">意识形态</option>
+		     	<option value="民运">民运</option>	                 
 		    </select>
 		    <button id="show_sensi_word" style="min-width: 50px;">确定</button></div>
 		   	<!--敏感词  -->
@@ -68,7 +68,7 @@
 		    <div id="sensiword_hashtag">
 			    <div style="width:250px;float:right;">
 			    	<span id="hash_word_detail" style="margin-right: 80px; margin-top: 10px;float:right;">
-			    		<a data-toggle="modal" data-target="#hash_detail">详情</a>
+			    		<a  style="cursor:pointer;" data-toggle="modal" data-target="#hash_detail">详情</a>
 			    	</span>
 			    	<span style="font-size:18px;float:left;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hashtag云</strong></span>
 			    	<div id="hashtag_cloud" style="width:320px;height:220px;float:left;margin-left:-20px;z-index:20"></div>
@@ -76,7 +76,7 @@
 			    </div>
 			    <div style="width:250px;float:right;">
 			    	<span id="hash_word_detail" style="margin-right: 20px; margin-top: 10px;float:right;">
-			    		<a data-toggle="modal"  data-target="#sensi_detail">详情</a>
+			    		<a style="cursor:pointer;" data-toggle="modal"  data-target="#sensi_detail">详情</a>
 			    	</span>
 			    	<span style="font-size:18px;float:left;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;敏感词云</strong></span>
 					<div id="sensi_word_cloud" style="width:320px;height:220px;float:left;margin-left:-20px;"></div>
@@ -127,7 +127,7 @@
 				<input type="radio" style="opacity:1; position:static;margin-left:10px;" name="seq_method" value="1">转发量
 				<input type="radio" style="opacity:1; position:static;margin-left:10px;" name="seq_method" value="2">评论量
 			</div>
-			<div id="weibo_content">
+			<div id="weibo_content" style="padding:10px;">
 				<div id="weibo_content2"></div>
 				<div id="pageGro" style="height:60px;margin-left:350px">
                 <div class="pageUp">上一页</div>
