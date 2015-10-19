@@ -56,6 +56,7 @@ Search_weibo.prototype = {
     else{
       uname = data['uname'];
     }
+    global_uname = uname;
     $('#portrait_info').empty();
     html = '';
     html += '<div class="PortraitImg" ><span class="sensitive_name"></span></div>';
@@ -107,14 +108,14 @@ Search_weibo.prototype = {
     $('#sensi_word_table').append(html);
   },
   Draw_sort_sensitive_text: function(data){
-    page_num = 5;
+    var page_num = 5;
+    var total_pages = 0;
     if (data.length < page_num) {
           page_num = data.length
           page_sensitive_weibo( 0, page_num, data);
       }
       else {
           page_sensitive_weibo( 0, page_num, data);
-          var total_pages = 0;
           if (data.length % page_num == 0) {
               total_pages = data.length / page_num;
           }
@@ -234,18 +235,18 @@ Search_weibo.call_sync_ajax_request(sort_sensitive_text, Search_weibo.ajax_metho
         for (var i=0; i < sensi_words_weibo.length;i++){
             sensi_words_str += sensi_words_weibo[i] +'&nbsp;&nbsp;&nbsp;&nbsp;';
         }
-        if (data[s][4] != 0){
-            var re_line = '<span style="margin-left:30px;"><a data-toggle="modal"  data-target="#retweeted_line'+s+'">转发链</a></span>';
+        if (retweeted_line_detail != 0){
+            var re_line = '<span style="margin-left:30px;"><a style="cursor:pointer;" data-toggle="modal"  data-target="#retweeted_line'+s+'">转发链</a></span>';
         }
         else{
             var re_line = '';
         }
-        if (data[s][4].length != 0){
-            var re_line_str='<p>'
-            for (var i=0; i < retweeted_line_detail.length-1;i++){
-                re_line_str += retweeted_line_detail[i] +'&nbsp;&nbsp;>>>>>&nbsp;&nbsp;';
+        if (retweeted_line_detail.length != 0){
+            var re_line_str='<p>';
+            for (var i = retweeted_line_detail.length -1; i > -1 ; i--){
+                re_line_str += retweeted_line_detail[i] +'&nbsp;&nbsp;<img style="width:40px;height:30px;" src="/static/custom/images/Arrow-icon.png">&nbsp;&nbsp;';
             }
-            re_line_str += retweeted_line_detail[retweeted_line_detail.length-1]+'</p>';
+            re_line_str += global_uname + '</p>';
             drawmodal(s,re_line_str);
         }
 
@@ -342,7 +343,7 @@ function draw_influence_chart_info(data){
 function draw_location_7_info(data){
     $('#location_7_info').empty();
     html = '';
-    html += '<h3>一周活动轨迹</h3><div class="clearfix course_nr"><ul class="course_nr2" style="margin:0px;">';
+    html += '<h3 style="margin-left:40px;">一周活动轨迹</h3><div class="clearfix course_nr"><ul class="course_nr2" style="margin:0px;">';
     for (var i =0;i < data['sensitive_geo_distribute'].length; i++){
         s = i.toString();
         distribute_date = data['sensitive_geo_distribute'][s]['0'];
@@ -547,7 +548,9 @@ function draw_sentiment_trend(data){
 emotion_charts.setOption(emotion_data); 
 }
 //请求数据
-var Search_weibo = new Search_weibo(); 
+var Search_weibo = new Search_weibo();
+var global_uname;
+
 $(document).ready(function(){
     console.log(uid);
     var sensitive_attribute_url = "/attribute/portrait_sensitive_attribute/?uid=" + uid;

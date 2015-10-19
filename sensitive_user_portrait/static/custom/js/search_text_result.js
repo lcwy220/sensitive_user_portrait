@@ -188,7 +188,10 @@ Search_weibo.prototype = {
 function draw_conditions(){
     $('#conditions').empty();
     var html = '';
-    html += '<span class="mouse" style="margin-left:10px">'+ words_list;
+    var words = words_list.split(',');
+    for (var i = 0; i < words.length; i++){
+        html += '<span class="mouse" style="margin-left:10px">'+ words[i] + '</span>';
+    }
     $('#conditions').html(html);
 }
 

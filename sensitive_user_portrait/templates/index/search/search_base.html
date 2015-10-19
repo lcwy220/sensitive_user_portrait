@@ -89,15 +89,3 @@
       <input name="submit" type="submit" class="bluebtn" id="bluebtn" value="确定" />
     </div>
 </div>
-
-<script>
-    $('#words_list').click(function(){
-        words = $("input[name='words_list']").val()
-        if (words == ''){
-            alert("关键词不能为空");
-        }
-        else{
-            window.location.href = '/index/text_search/?words_list=' + words;
-        }
-    })
-</script>
