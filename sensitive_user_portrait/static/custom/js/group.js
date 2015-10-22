@@ -24,12 +24,10 @@ function Draw_resultTable(data){
         html += '<td>'+item[i][4] +'</td>';
 		if(item[i][5]==1){
 			html += '<td><a style="cursor:hand;" href="/index/group_results/?name=' + item[i][0]+ '">正在监控</a></td>';
-            //html +='<td><a href="javascript:void(0)" id="del">删除&nbsp;&nbsp;</a><a href="javascript:void(0)" id="stop">停止监控</a></td>';
-            html +='<td></td>';
+            html +='<td><a href="javascript:void(0)" id="del">删除&nbsp;&nbsp;</a><a href="javascript:void(0)" id="stop">停止监控</a></td>';
 		}else{
 			html += '<td><a style="cursor:hand;" href="/index/group_results/?name=' + item[i][0]+ '">监控停止</a></td>';
-            //html +='<td><a href="javascript:void(0)" id="del">删除&nbsp;&nbsp;</a></td>';
-            html +='<td></td>';
+            html +='<td><a href="javascript:void(0)" id="del">删除&nbsp;&nbsp;</a></td>';
 		}
 		html += '</tr>';
 	}
@@ -37,7 +35,7 @@ function Draw_resultTable(data){
     html += '</table>';
 	$('#group_task').append(html);
 
-    deleteGroup();
+    // deleteGroup();
    
 }
 function self_refresh(){
