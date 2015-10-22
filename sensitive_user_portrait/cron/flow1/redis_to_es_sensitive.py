@@ -329,14 +329,18 @@ def compute(user_set, es, sensitive_uid_set):
         bulk_action.extend([x[0], x[1]])
         count_c += 1
         if count_c % 1000 == 0:
-            es.bulk(bulk_action, index=es_index, doc_type='bci', timeout=30)
-            bulk_action = []
+            try:
+                es.bulk(bulk_action, index=es_index, doc_type='bci', timeout=30)
+                bulk_action = []
+            except:
+                es.bulk(bulk_action, index=es_index, doc_type='bci', timeout=30)
+                bulk_action = []
             print count_c
 
 if __name__ == "__main__":
 
     #es_index = 's_'+time.strftime("%Y%m%d", time.localtime(time.time()-86400))
-    es_index = '20130907'
+    es_index = '20130905'
     bool = es.indices.exists(index=es_index)
     print bool
     if not bool:
