@@ -22,6 +22,9 @@ text_index_type = 'text'
 monitor_index_name = 'monitor_result'
 #monitor_index_type: task_name
 
+profile_index_name = 'weibo_user'
+profile_index_type = 'user'
+
 # identify the task_name exist and get basic result
 def identify_task(task_name):
     try:
@@ -437,7 +440,7 @@ def get_top_user_profile(union_user):
     for user in union_user:
         try:
             user_item = es_user_profile.get(index=profile_index_name, doc_type=profile_index_type,\
-                                            id=uid)['_source']
+                                            id=user)['_source']
         except:
             user_item = None
         if not user_item:
@@ -536,12 +539,13 @@ def get_user_info(uid_list):
     result = []
     for uid in uid_list:
         try:
-            uid_profile = es_user_profile(index='weibo_user', doc_type='user', id=uid)['_source']
+            uid_profile = es_user_profile.get(index='weibo_user', doc_type='user', id=uid)['_source']
         except:
             uid_profile = {}
         if uid_profile:
+            #print 'uid_profile:', uid_profile
             uname = uid_profile['nick_name']
-            location = uid_profile['location']
+            location = uid_profile['user_location']
             friendsnum = uid_profile['friendsnum']
             fansnum = uid_profile['fansnum']
             statusnum = uid_profile['statusnum']
