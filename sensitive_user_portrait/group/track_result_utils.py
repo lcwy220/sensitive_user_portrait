@@ -440,7 +440,7 @@ def get_top_user_profile(union_user):
     for user in union_user:
         try:
             user_item = es_user_profile.get(index=profile_index_name, doc_type=profile_index_type,\
-                                            id=uid)['_source']
+                                            id=user)['_source']
         except:
             user_item = None
         if not user_item:
