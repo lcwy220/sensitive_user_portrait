@@ -152,13 +152,21 @@ def compute_mid_result(task_name, task_submit_date):
     abnormal_index_dict = compute_abnormal(result)
     #print 'abnormal_index_dict:', abnormal_index_dict
     result = dict(result, **abnormal_index_dict)
-    #sort geo dict result
+    #sort geo dict result by date
     geo_dict_0 = result['geo_0']
     sort_geo_dict_0 = sorted(geo_dict_0.items(), key=lambda x:datetime2ts(x[0]))
     result['geo_0'] = sort_geo_dict_0
     geo_dict_1 = result['geo_1']
     sort_geo_dict_1 = sorted(geo_dict_1.items(), key=lambda x:datetime2ts(x[0]))
     result['geo_1'] = sort_geo_dict_1
+    #sort hashtag dict by date
+    hashtag_dict_0 = result['hashtag_0']
+    sort_hashtag_dict_0 = sorted(hashtag_dict_0.items(), key=lambda x:datetime2ts(x[0]))
+    result['hashtag_0'] = sort_hashtag_dict_0
+    hashtag_dict_1 = result['hashtag_1']
+    sort_hashtag_dict_1 = sorted(hashtag_dict_1.items(), key=lambda x:datetime2ts(x[0]))
+    result['hashtag_1'] = sort_hashtag_dict_1
+
     return result
 
 
