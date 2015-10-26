@@ -198,6 +198,23 @@ function draw_sentivity_word(data){
     html += '</table>';
     $('#weibo_sentivity').append(html);
 }
+function draw_stack_rank(data){
+    console.log(data);
+    $('#stack_rank').empty();
+    var html = '';
+    html += '<table id="delete_confirm_table" class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
+    html += '<thead><tr><th>序号</th><th>关键词</th></tr></thead>';
+    html += '<tbody>';
+    for(var i=0; i<data.length; i++){
+      html += '<tr id=' + data[i][0] +'>';
+      html += '<td class="center" >'+ i +'</td>';
+      html += '<td class="center">'+ data[i][0] + '</td>';
+      html += '</tr>';
+    }
+    html += '</tbody>';
+    html += '</table>';
+    $('#stack_rank').append(html);
+}
 
 function draw_table(data){
     $('#more_influence').empty();
@@ -539,7 +556,7 @@ function analysis_geo(data){
 }
 
 function analysis_stack(data){
-    //console.log(data);
+    console.log(data);
     var y_data = data[0];
     var lengend_data = [];
     var series_data = [];
