@@ -106,12 +106,14 @@ def compute_mid_result(task_name, task_submit_date):
                 for sensitive in sensitive_geo_dict:
                     if timestamp_date not in result['geo_'+sensitive]:
                         result['geo_'+sensitive][timestamp_date] = {}
+                        
                     geo_dict = sensitive_geo_dict[sensitive]
                     for geo in geo_dict:
                         try:
                             result['geo_'+sensitive][timestamp_date][geo] += geo_dict[geo]
                         except:
                             result['geo_'+sensitive][timestamp_date][geo] = geo_dict[geo]
+
                 #attr_hashtag
                 #print 'compute hashtag'
                 if 'hashtag' in result_item:
@@ -150,7 +152,13 @@ def compute_mid_result(task_name, task_submit_date):
     abnormal_index_dict = compute_abnormal(result)
     #print 'abnormal_index_dict:', abnormal_index_dict
     result = dict(result, **abnormal_index_dict)
-
+    #sort geo dict result
+    geo_dict_0 = result['geo_0']
+    sort_geo_dict_0 = sorted(geo_dict_0.items(), key=lambda x:datetime2ts(x[0]))
+    result['geo_0'] = sort_geo_dict_0
+    geo_dict_1 = result['geo_1']
+    sort_geo_dict_1 = sorted(geo_dict_1.items(), key=lambda x:datetime2ts(x[0]))
+    result['geo_1'] = sort_geo_dict_1
     return result
 
 
