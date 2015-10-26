@@ -221,7 +221,7 @@ function draw_table(data){
 }
 
 function draw_barchart(id,data,type,flag){
-    console.log('aaaaaaaa');
+    //console.log('aaaaaaaa');
     console.log(data[0]);
     var myChart = echarts.init(document.getElementById(id)); 
     //console.log(data[1]);
@@ -436,14 +436,14 @@ function analysis_sentiment(data1,data2,data3,data4,data5,data6,data7,data8,data
 }
 
 function analysis_geo(data){
-    console.log(data);
+    //console.log(data);
     var legend_data = ['微博数'];
     var time_data = [];
     var xAxis_data = [];
     var y_data = []; 
     var length_data = []; 
     for(var k in data){
-        console.log(k);
+        //console.log(k);
         time_data.push(data[k][0]);
         var tempx_data = [];
         var tempy_data = [];
@@ -455,7 +455,7 @@ function analysis_geo(data){
         y_data.push(tempy_data);
         length_data.push(tempy_data.length);
     }
-    console.log(time_data);
+    //console.log(time_data);
     var max_length = Math.max.apply(Math, length_data);
     //console.log(max_length);
     for(var i = 0; i < y_data.length; i++){
@@ -569,7 +569,7 @@ function analysis_stack(data){
 }
 
 function draw_domain_portrait(data){
-    console.log(data);
+    //console.log(data);
     $('#img').empty();
     var user_data = data;
     var num = 0 
