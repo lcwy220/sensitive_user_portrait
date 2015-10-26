@@ -186,17 +186,34 @@ function draw_sentivity_word(data){
     $('#weibo_sentivity').empty();
     var html = '';
     html += '<table id="delete_confirm_table" class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
-    html += '<thead><tr><th>序号</th><th>关键词</th></tr></thead>';
+    html += '<thead><tr><th>排名</th><th>关键词</th></tr></thead>';
     html += '<tbody>';
     for(var i=0; i<data.length; i++){
       html += '<tr id=' + data[i][0] +'>';
-      html += '<td class="center" >'+ i +'</td>';
+      html += '<td class="center" >'+ (i+1) +'</td>';
       html += '<td class="center">'+ data[i][0] + '</td>';
       html += '</tr>';
     }
     html += '</tbody>';
     html += '</table>';
     $('#weibo_sentivity').append(html);
+}
+function draw_stack_rank(data){
+    console.log(data);
+    $('#stack_rank').empty();
+    var html = '';
+    html += '<table id="delete_confirm_table" class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
+    html += '<thead><tr><th>排名</th><th>昵称</th></tr></thead>';
+    html += '<tbody>';
+    for(var i=0; i<data.length; i++){
+      html += '<tr id=' + data[i][0] +'>';
+      html += '<td class="center" >'+ (i+1) +'</td>';
+      html += '<td class="center">'+ data[i][0] + '</td>';
+      html += '</tr>';
+    }
+    html += '</tbody>';
+    html += '</table>';
+    $('#stack_rank').append(html);
 }
 
 function draw_table(data){
@@ -222,7 +239,7 @@ function draw_table(data){
 
 function draw_barchart(id,data,type,flag){
     //console.log('aaaaaaaa');
-    console.log(data[0]);
+    //console.log(data[0]);
     var myChart = echarts.init(document.getElementById(id)); 
     //console.log(data[1]);
     var option = {
@@ -565,7 +582,8 @@ function analysis_stack(data){
     series_data = series_data.reverse();
     //console.log(series_data);
     $('#network_head').append('<h4 style="display:inline-block">***异常程度'+data[2].toFixed(2)+'(异常值范围0~3)</h4>');
-    draw_stackbar('test',[lengend_data, y_data, series_data]) ;
+    draw_stackbar('test',[lengend_data, y_data, series_data]);
+    draw_stack_rank(data[3]);
 }
 
 function draw_domain_portrait(data){
