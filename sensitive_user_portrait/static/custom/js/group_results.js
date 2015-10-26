@@ -443,12 +443,12 @@ function analysis_geo(data){
     var length_data = []; 
     for(var k in data){
         console.log(k);
-        time_data.push(k);
+        time_data.push(data[k][0]);
         var tempx_data = [];
         var tempy_data = [];
-        for(var loc in data[k]){
+        for(var loc in data[k][1]){
             tempx_data.push(loc);
-            tempy_data.push(data[k][loc]);
+            tempy_data.push(data[k][1][loc]);
         }
         xAxis_data.push(tempx_data);
         y_data.push(tempy_data);
