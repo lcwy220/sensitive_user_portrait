@@ -34,11 +34,11 @@
       </div>
       <hr>
       <div id='emtion_head'>
-       <h2 style="display:inline-block">情绪</h2> 
+       <h2 style="display:inline-block">情绪分析</h2> 
       </div>
 			
 			<div style="width:100%;height:350px;">
-      <div style="width:70%;height:30px; text-align:center">
+      <div style="width:70%;height:30px; text-align:right;padding-right:80px;">
       <input type='radio'  name='count' value = 1 checked='checked' style="position:relative; opacity:1">敏感
       <input type='radio'  name='count' value = 0 style="position:relative; opacity:1">非敏感
       </div>
@@ -50,10 +50,11 @@
       </div>
       <hr>
       <div id='user_head'>
-        <h2 style="display:inline-block">用户</h2>
-      </div>
-			
-			<div id = 'img'></div>
+        <h2 style="display:inline-block">转发评论情况</h2>
+    </div>
+
+    <div style="margin-top:25px;"><span style="margin-left:37px;font-family:Microsoft Yahei;font-size:17px;">热门用户</span></div>
+      <div id = 'img'></div>
       <div style="width:100%;height:400px;">
 			<div id="user" style="width:900px;height:300px;"></div>
     </div>
@@ -64,8 +65,8 @@
 			
       <div style="width:100%;height:300px;">
 			<div style="width:70%;height:300px;float:left;" id="sensitivity"></div>
-			<div id="weibo_content" style="font-size:10px;width:30%;height:300px;float:right;" >
-				<div id="weibo_sentivity" style="padding:0px 10px;">
+			<div id="weibo_content" style="padding-top:30px;font-size:10px;width:30%;height:300px;float:right;" >
+                <div id="weibo_sentivity" style="padding:0px 10px;">
 				</div>
 			</div>
       </div>
@@ -81,7 +82,7 @@
 			<div id="location" style="width:100%;height:300px;margin-left:20px"></div>
       <hr>
       <div id='hashtag_head'>
-        <h2 style="display:inline-block">hashtag</h2>
+        <h2 style="display:inline-block">HASHTAG</h2>
       </div>
 			
       <div style="width:100%;height:30px; text-align:center">
@@ -91,13 +92,20 @@
 			<div id="hashtag" style="width:900px;height:300px;"></div>
       <hr>
       <div id='network_head'>
-       <h2 style="display:inline-block">群体集化程度</h2> 
+          <h2 style="display:inline-block">群体集化程度</h2><i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="群体内部被转发行为集中于少量用户的程度"></i> 
       </div>
-      <div id="test" style="width:900px;height:300px;"></div>
-		</div>
+      <div style="width:100%;height:300px;">
+          <div id="test" style="width:70%;height:300px;float:left;"></div>
+          <div id="stack_content" style="font-size:10px;width:30%;height:300px;float:right;" >
+            <div style="margin:10px 0px;"><span style="margin-left:100px;font-family:Microsoft Yahei;font-size:17px;">整体排名</span></div>
+            <div id="stack_rank" style="padding:0px 10px;">
+            </div>
+          </div>
+      </div>
+      </div>
 	</div>
 <div class="modal fade" id="user_list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog" role="document" style="width:800px;">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>

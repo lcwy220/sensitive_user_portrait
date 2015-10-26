@@ -493,6 +493,7 @@ def get_network(task_exist):
     iter_count = 1
     date_list = []
     top_list_dict = {}
+    user_score_dict = {}
     while True:
         if iter_count >= 8 or iter_date_ts < submit_ts:
             break
@@ -505,6 +506,7 @@ def get_network(task_exist):
             task_date_result = {}
         #print 'task_name, key, task_date_result:', task_name, key, task_date_result
         iter_field = ['top1', 'top2', 'top3', 'top4', 'top5']
+        field_score = {'top1':5, 'top2':4, 'top3':3, 'top4':2, 'top5':1}
         for field in iter_field:
             user_count_item = json.loads(task_date_result[field])
             uid = user_count_item[0]
@@ -514,6 +516,12 @@ def get_network(task_exist):
                 top_list_dict[field].append([uid, uname, count])
             except:
                 top_list_dict[field] = [[uid, uname, count]]
+            # use to give 7 days summarizing
+            score = field_score[field]
+            try:
+                user_score_dict[uname] += score
+            except:
+                user_score_dict[uname] = score
         
         iter_date_ts -= time_segment
         # get inner-retweet group from es---field: inner_graph
@@ -525,8 +533,11 @@ def get_network(task_exist):
         '''
 
     abnormal_index = compute_inner_polarization(top_list_dict)
-    
-    return [date_list, top_list_dict, abnormal_index]
+    #get top5 summarizing
+    sort_user_score = sorted(user_score_dict.items(), key=lambda x:x[1], reverse=True)
+    top5_user_score = sort_user_score[:5]
+
+    return [date_list, top_list_dict, abnormal_index, top5_user_score]
 
 
 # compute abnormal about inner polarization

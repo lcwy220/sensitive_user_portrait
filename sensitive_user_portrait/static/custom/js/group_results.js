@@ -186,17 +186,34 @@ function draw_sentivity_word(data){
     $('#weibo_sentivity').empty();
     var html = '';
     html += '<table id="delete_confirm_table" class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
-    html += '<thead><tr><th>序号</th><th>关键词</th></tr></thead>';
+    html += '<thead><tr><th>排名</th><th>关键词</th></tr></thead>';
     html += '<tbody>';
     for(var i=0; i<data.length; i++){
       html += '<tr id=' + data[i][0] +'>';
-      html += '<td class="center" >'+ i +'</td>';
+      html += '<td class="center" >'+ (i+1) +'</td>';
       html += '<td class="center">'+ data[i][0] + '</td>';
       html += '</tr>';
     }
     html += '</tbody>';
     html += '</table>';
     $('#weibo_sentivity').append(html);
+}
+function draw_stack_rank(data){
+    console.log(data);
+    $('#stack_rank').empty();
+    var html = '';
+    html += '<table id="delete_confirm_table" class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
+    html += '<thead><tr><th>排名</th><th>昵称</th></tr></thead>';
+    html += '<tbody>';
+    for(var i=0; i<data.length; i++){
+      html += '<tr id=' + data[i][0] +'>';
+      html += '<td class="center" >'+ (i+1) +'</td>';
+      html += '<td class="center">'+ data[i][0] + '</td>';
+      html += '</tr>';
+    }
+    html += '</tbody>';
+    html += '</table>';
+    $('#stack_rank').append(html);
 }
 
 function draw_table(data){
@@ -221,8 +238,8 @@ function draw_table(data){
 }
 
 function draw_barchart(id,data,type,flag){
-    console.log('aaaaaaaa');
-    console.log(data[0]);
+    //console.log('aaaaaaaa');
+    //console.log(data[0]);
     var myChart = echarts.init(document.getElementById(id)); 
     //console.log(data[1]);
     var option = {
@@ -291,8 +308,9 @@ function draw_stackbar(id,data){
                         for(var j = 0; j < data[1].length; j++){
                             if(params[0].name == data[1][j] ){
                                 //console.log(j);
-                                // res += '<br/>' + params[i].seriesName + ' : ' + params[i].value + '&nbsp;&nbsp;用户名：' + params[i]['series']['uname'][j] ;
-                                res += '<br/>用户名：' + params[i]['series']['uname'][j] ;
+                                //res += '<br/>' + params[i].seriesName + ' : ' + params[i].value + '&nbsp;&nbsp;用户名：' + params[i]['series']['uname'][j] ;
+                                //res += '<br/>用户名：' + params[i]['series']['uname'][j] ;
+                                res += '<br/>' + params[i].seriesName + ' : ' + params[i]['series']['uname'][j] ;
                                 break;
                             }
                         }
@@ -350,7 +368,7 @@ function analysis_count(data1,data2,data3,data4){
 }
 
 function analysis_img(data1,data2,data3,data4){
-    var legend_data = ['原创', '转发'];
+    var legend_data = ['评论', '转发'];
     var temp_data_0 = [];
     var temp_data_1 = [];
     var point_data_0 = [];
@@ -368,7 +386,7 @@ function analysis_img(data1,data2,data3,data4){
     for(var i = 0; i < data4.length; i++){
         point_data_1.push({'name':'拐点'+i, 'value':temp_data_1[data4[i]][1], 'xAxis':temp_data_1[data4[i]][0],'yAxis':temp_data_1[data4[i]][1],'type':1});
     }
-    var series_0 = {'name':'原创', 'type':'line', 'smooth':true, 'data':temp_data_0,'markPoint':{'data':point_data_0}};
+    var series_0 = {'name':'评论', 'type':'line', 'smooth':true, 'data':temp_data_0,'markPoint':{'data':point_data_0}};
     var series_1 = {'name':'转发', 'type':'line', 'smooth':true,'data': temp_data_1,'markPoint':{'data':point_data_1}};
     var data = [legend_data, [series_0, series_1]];
     return data;
@@ -435,14 +453,14 @@ function analysis_sentiment(data1,data2,data3,data4,data5,data6,data7,data8,data
 }
 
 function analysis_geo(data){
-    console.log(data);
+    //console.log(data);
     var legend_data = ['微博数'];
     var time_data = [];
     var xAxis_data = [];
     var y_data = []; 
     var length_data = []; 
     for(var k in data){
-        console.log(k);
+        //console.log(k);
         time_data.push(data[k][0]);
         var tempx_data = [];
         var tempy_data = [];
@@ -454,7 +472,7 @@ function analysis_geo(data){
         y_data.push(tempy_data);
         length_data.push(tempy_data.length);
     }
-    console.log(time_data);
+    //console.log(time_data);
     var max_length = Math.max.apply(Math, length_data);
     //console.log(max_length);
     for(var i = 0; i < y_data.length; i++){
@@ -563,12 +581,13 @@ function analysis_stack(data){
     lengend_data = lengend_data.reverse();
     series_data = series_data.reverse();
     //console.log(series_data);
-    $('#network_head').append('<h4 style="display:inline-block">(异常值为(0~3正常):'+data[2].toFixed(2)+')</h4>');
-    draw_stackbar('test',[lengend_data, y_data, series_data]) ;
+    $('#network_head').append('<h4 style="display:inline-block">***异常程度'+data[2].toFixed(2)+'(异常值范围0~3)</h4>');
+    draw_stackbar('test',[lengend_data, y_data, series_data]);
+    draw_stack_rank(data[3]);
 }
 
 function draw_domain_portrait(data){
-    console.log(data);
+    //console.log(data);
     $('#img').empty();
     var user_data = data;
     var num = 0 
@@ -630,12 +649,12 @@ function bind_portait(){
 
 function add_head(){
     //console.log('aaaaaaa');
-    $('#count_head').append('<h4 style="display:inline-block">(异常值为(0~3正常):'+global_data['count_abnormal']+')</h4>');
-    $('#emtion_head').append('<h4 style="display:inline-block">(异常值为(0~3正常):'+global_data['sentiment_abnormal']+')</h4>');
-    $('#location_head').append('<h4 style="display:inline-block">(异常值为(0~3正常):'+global_data['geo_abnormal'].toFixed(2)+')</h4>');
-    $('#hashtag_head').append('<h4 style="display:inline-block">(异常值为(0~3正常):'+global_data['hashtag_abnormal']+')</h4>');
-    $('#senstivity_head').append('<h4 style="display:inline-block">(异常值为(0~3正常):'+global_data['sensitive_abnormal']+')</h4>');
-    $('#user_head').append('<h4 style="display:inline-block">(异常值为(0~3正常):'+user_name_data['abnormal_index'].toFixed(2)+')</h4>');
+    $('#count_head').append('<h4 style="display:inline-block">***异常程度'+global_data['count_abnormal']+'(异常值范围0~3)</h4>');
+    $('#emtion_head').append('<h4 style="display:inline-block">***异常程度'+global_data['sentiment_abnormal']+'(异常值范围0~3)</h4>');
+    $('#location_head').append('<h4 style="display:inline-block">***异常程度'+global_data['geo_abnormal'].toFixed(2)+'(异常值范围0~3)</h4>');
+    $('#hashtag_head').append('<h4 style="display:inline-block">***异常程度'+global_data['hashtag_abnormal']+'(异常值范围0~3)</h4>');
+    $('#senstivity_head').append('<h4 style="display:inline-block">***异常程度'+global_data['sensitive_abnormal']+'(异常值范围0~3)</h4>');
+    $('#user_head').append('<h4 style="display:inline-block">***异常程度'+user_name_data['abnormal_index'].toFixed(2)+'(异常值范围0~3)</h4>');
 }
 
 function test_data(data){
