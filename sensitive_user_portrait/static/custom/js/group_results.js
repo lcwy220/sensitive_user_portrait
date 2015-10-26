@@ -221,6 +221,8 @@ function draw_table(data){
 }
 
 function draw_barchart(id,data,type,flag){
+    console.log('aaaaaaaa');
+    console.log(data[0]);
     var myChart = echarts.init(document.getElementById(id)); 
     //console.log(data[1]);
     var option = {
@@ -289,7 +291,8 @@ function draw_stackbar(id,data){
                         for(var j = 0; j < data[1].length; j++){
                             if(params[0].name == data[1][j] ){
                                 //console.log(j);
-                                res += '<br/>' + params[i].seriesName + ' : ' + params[i].value + '&nbsp;&nbsp;用户名：' + params[i]['series']['uname'][j] ;
+                                // res += '<br/>' + params[i].seriesName + ' : ' + params[i].value + '&nbsp;&nbsp;用户名：' + params[i]['series']['uname'][j] ;
+                                res += '<br/>用户名：' + params[i]['series']['uname'][j] ;
                                 break;
                             }
                         }
@@ -432,12 +435,14 @@ function analysis_sentiment(data1,data2,data3,data4,data5,data6,data7,data8,data
 }
 
 function analysis_geo(data){
+    console.log(data);
     var legend_data = ['微博数'];
     var time_data = [];
     var xAxis_data = [];
     var y_data = []; 
     var length_data = []; 
     for(var k in data){
+        console.log(k);
         time_data.push(k);
         var tempx_data = [];
         var tempy_data = [];
@@ -449,6 +454,7 @@ function analysis_geo(data){
         y_data.push(tempy_data);
         length_data.push(tempy_data.length);
     }
+    console.log(time_data);
     var max_length = Math.max.apply(Math, length_data);
     //console.log(max_length);
     for(var i = 0; i < y_data.length; i++){
@@ -557,11 +563,12 @@ function analysis_stack(data){
     lengend_data = lengend_data.reverse();
     series_data = series_data.reverse();
     //console.log(series_data);
-    $('#network_head').append('<h4 style="display:inline-block">(异常值为:'+data[2].toFixed(2)+')</h4>');
+    $('#network_head').append('<h4 style="display:inline-block">(异常值为(0~3正常):'+data[2].toFixed(2)+')</h4>');
     draw_stackbar('test',[lengend_data, y_data, series_data]) ;
 }
 
 function draw_domain_portrait(data){
+    console.log(data);
     $('#img').empty();
     var user_data = data;
     var num = 0 
@@ -595,7 +602,7 @@ function draw_domain_portrait(data){
                   domain_top_user_portrait = data[key][1];
                 };
               html += '<li ng-repeat="result in t.result" target="_blank" style="margin-bottom: 10px" class="img"  id='+key+'>';
-              html += '<div class="small-photo shadow-5"><span class="helper"></span><img style="cursor:pointer;" title="'+ key +'" src="' + domain_top_user_portrait + '" alt="' + data[key][0] +'"></div></li>';         
+              html += '<div class="small-photo shadow-5"><span class="helper"></span><img style="cursor:pointer;" title="'+ data[key][0] +'" src="' + domain_top_user_portrait + '" alt="' + data[key][0] +'"></div></li>';         
         }
     }
     html += '</ul></div></div>';
@@ -623,12 +630,12 @@ function bind_portait(){
 
 function add_head(){
     //console.log('aaaaaaa');
-    $('#count_head').append('<h4 style="display:inline-block">(异常值为:'+global_data['count_abnormal']+')</h4>');
-    $('#emtion_head').append('<h4 style="display:inline-block">(异常值为:'+global_data['sentiment_abnormal']+')</h4>');
-    $('#location_head').append('<h4 style="display:inline-block">(异常值为:'+global_data['geo_abnormal'].toFixed(2)+')</h4>');
-    $('#hashtag_head').append('<h4 style="display:inline-block">(异常值为:'+global_data['hashtag_abnormal']+')</h4>');
-    $('#senstivity_head').append('<h4 style="display:inline-block">(异常值为:'+global_data['sensitive_abnormal']+')</h4>');
-    $('#user_head').append('<h4 style="display:inline-block">(异常值为:'+user_name_data['abnormal_index'].toFixed(2)+')</h4>');
+    $('#count_head').append('<h4 style="display:inline-block">(异常值为(0~3正常):'+global_data['count_abnormal']+')</h4>');
+    $('#emtion_head').append('<h4 style="display:inline-block">(异常值为(0~3正常):'+global_data['sentiment_abnormal']+')</h4>');
+    $('#location_head').append('<h4 style="display:inline-block">(异常值为(0~3正常):'+global_data['geo_abnormal'].toFixed(2)+')</h4>');
+    $('#hashtag_head').append('<h4 style="display:inline-block">(异常值为(0~3正常):'+global_data['hashtag_abnormal']+')</h4>');
+    $('#senstivity_head').append('<h4 style="display:inline-block">(异常值为(0~3正常):'+global_data['sensitive_abnormal']+')</h4>');
+    $('#user_head').append('<h4 style="display:inline-block">(异常值为(0~3正常):'+user_name_data['abnormal_index'].toFixed(2)+')</h4>');
 }
 
 function test_data(data){
