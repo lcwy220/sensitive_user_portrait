@@ -67,6 +67,7 @@ Search_weibo.prototype = {
     html += '<span style="margin-right:20px">敏感度:<span>' + data['sensitive'].toFixed(2) + '</span></span>';
     html += '<span style="margin-right:20px">领域类别:<span>' + data['domain'] + '</span></span>';
     html += '</div>';
+    html += '<div style="float:right;margin-top:10px;"><span><a target="_blank" href="/index/personal/?uid=' + data['uid'] + '">返回普通属性页面</a></span></div>';
     $('#portrait_info').append(html);
   draw_statictics_info_table(data);
   draw_influence_chart_info(data);
