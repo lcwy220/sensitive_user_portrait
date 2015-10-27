@@ -137,8 +137,8 @@ function draw_graph(data){
   var total_date = [];
       //var timestamp = Date.parse(new Date());
   var timestamp = 1378483200000;
-  total_date[6] = new Date(parseInt(timestamp)).format("yyyy-MM-dd");    
-  for (var i = 0; i < 6; i++) {
+  total_date[0] = new Date(parseInt(timestamp)).format("yyyy-MM-dd");    
+  for (var i = 1; i < 7; i++) {
         timestamp = timestamp-24*3600*1000;
         total_date[i] = new Date(parseInt(timestamp)).format("yyyy-MM-dd");
   }
@@ -148,7 +148,7 @@ function draw_graph(data){
         trigger: 'axis'
     },
     legend: {
-        data:[total_date[6],total_date[5],total_date[4],total_date[3],total_date[2],total_date[1],total_date[0]]
+        data:[total_date[0],total_date[1],total_date[2],total_date[3],total_date[4],total_date[5],total_date[6]]
     },
     toolbox: {
         show : false,
@@ -177,17 +177,17 @@ function draw_graph(data){
     ],
     series : [
         {
-            name:total_date[6],
+            name:total_date[0],
             type:'line',
             data:item[1][0]
         },
         {
-            name:total_date[5],
+            name:total_date[1],
             type:'line',
             data:item[1][1]
         },
         {
-            name:total_date[4],
+            name:total_date[2],
             type:'line',
             data:item[1][2]
         },
@@ -197,17 +197,17 @@ function draw_graph(data){
             data:item[1][3]
         },
         {
-            name:total_date[2],
+            name:total_date[4],
             type:'line',
             data:item[1][4]
         },
         {
-            name:total_date[1],
+            name:total_date[5],
             type:'line',
             data:item[1][5]
         },
         {
-            name:total_date[0],
+            name:total_date[6],
             type:'line',
             data:item[1][6]
         }
