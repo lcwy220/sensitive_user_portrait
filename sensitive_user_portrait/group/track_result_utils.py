@@ -97,7 +97,8 @@ def compute_mid_result(task_name, task_submit_date):
                         word_identify = json.loads(word_r.hget('sensitive_words', search_word))
                     except:
                         word_identify = [2]
-                    ts_word_score += sensitive_word_dict[word] * word_identify[0]
+                    #print 'ts_word_score, sensitive_word_dict, word_identify:', type(ts_word_score), type(sensitive_word_dict[word]), type(word_identify[0])
+                    ts_word_score += sensitive_word_dict[word] * int(word_identify[0])
                 result['sensitive_score'][str(timestamp)] = ts_word_score
                 #attr_geo
                 #print 'compute geo'
