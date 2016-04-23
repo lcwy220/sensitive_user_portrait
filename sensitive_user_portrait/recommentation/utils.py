@@ -49,11 +49,12 @@ def get_sensitive_user_detail(uid_list, date, sensitive):
 # date = 20130901
 def recommend_in_sensitive(date):
     date = date.replace('-','')
-    results = r.hget('recommend_sensitive', date)
+    temp = r.hget('recommend_sensitive', date)
+    if not temp:
+        return [] # 那一天不存在数据
+    results = json.loads(r.hget('recommend_sensitive', date))
     if not results:
-        return results # return '0'
-    else:
-        uid_list = json.loads(results)
+        return results # 空列表，返回为空
     sensitive = 1
     return get_sensitive_user_detail(uid_list, date, sensitive)
 
@@ -77,7 +78,7 @@ def get_user_hashtag(uid):
     ts = datetime2ts(now_date)
 
     #test
-    ts = datetime2ts('2013-09-08')
+    #ts = datetime2ts('2013-09-08')
     for i in range(1,8):
         ts = ts - 3600*24
         date = ts2datetime(ts).replace('-','')
@@ -117,7 +118,7 @@ def get_user_sensitive_words(uid):
     ts = datetime2ts(now_date)
 
     #test
-    ts = datetime2ts('2013-09-08')
+    #ts = datetime2ts('2013-09-08')
     for i in range(1,8):
         ts = ts - 3600*24
         date = ts2datetime(ts).replace('-','')
@@ -170,7 +171,7 @@ def get_user_geo(uid):
     ts = datetime2ts(now_date)
 
     #test
-    ts = datetime2ts('2013-09-08')
+    #ts = datetime2ts('2013-09-08')
     for i in range(1,8):
         ts = ts - 3600*24
         date = ts2datetime(ts).replace('-','')
@@ -219,7 +220,7 @@ def get_user_trend(uid):
     ts = datetime2ts(date)
 
     #test
-    ts = datetime2ts('2013-09-08')
+    #ts = datetime2ts('2013-09-08')
     timestamp = ts
     results = dict()
     sensitive_results = {}
@@ -318,7 +319,7 @@ def identify_in(data):
             appoint_list.append([uid, source])
 
     sensitive_results = r.hget('recommend_sensitive', date)
-    if sensitive_results and sensitive_results != '0':
+    if sensitives_results:
         sensitive_results = json.loads(sensitive_results)
         revise_set = set(sensitive_results) - sensitive_list
         if revise_set:
@@ -326,7 +327,7 @@ def identify_in(data):
         else:
             r.hdel('recommend_sensitive', date)
     influence_results = r.hget('recommend_influence', date)
-    if influence_results and influence_results != '0':
+    if influence_results and influence_results != []:
         influence_results = json.loads(influence_results)
         revise_set = set(influence_results) - influence_list
         if revise_set:
