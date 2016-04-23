@@ -9,10 +9,10 @@ import os
 reload(sys)
 sys.path.append('../../')
 from global_config import ZMQ_CTRL_HOST_FLOW1, ZMQ_CTRL_VENT_PORT_FLOW1, BIN_FILE_PATH
-
+from time_utils import ts2datetime
 
 def delete_files():
-    localtime = int(time.time())
+    localtime = int(time.time()) - 24*3600 #隔天删除数据
     print "time to delete files ..."
     count = 0
     file_list = os.listdir(BIN_FILE_PATH)
@@ -32,11 +32,12 @@ if __name__ == "__main__":
     controller = context.socket(zmq.PUB)
     controller.bind("tcp://%s:%s" %(ZMQ_CTRL_HOST_FLOW1, ZMQ_CTRL_VENT_PORT_FLOW1))
  
-    for i in range(5):
+    for i in range(20):
         time.sleep(0.1)
         controller.send("PAUSE")
         # repeat to send to ensure 
 
+    ts = ts2datetime(time.time())
+    print "stop_zmq&start*%s" %ts
     #delete_files()
-  
 

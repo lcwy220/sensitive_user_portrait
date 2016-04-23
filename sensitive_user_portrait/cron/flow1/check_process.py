@@ -4,9 +4,26 @@ import subprocess
 import sys
 import os
 import time
+import re
+
+def check_zombie(p_name):
+    cmd = 'ps -A -ostat,pid,cmd|grep -e "^[Zz]"|grep %s' % p_name
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+    if p.wait() == 0:
+        val = p.stdout.read()
+        print val
+        if p_name in val:
+            print '%s is a zombie' % p_name
+            pattern = re.compile('\d+')
+            result = patern.findall(val)
+            for item in result:
+                kill_cmd = 'kill -9 %s' % item
+                k = subprocess.Popen(kill_cmd, shell=True, stdout=subprocess.PIPE)
+    else:
+        print 'no zombie exist'
 
 def check(p_name):
-    cmd = 'ps -ef|grep %s|grep -v "grep"' % p_name
+    cmd = 'ps aux|grep %s|grep -v "grep"' % p_name
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     if p.wait() == 0:
         val = p.stdout.read()
@@ -39,7 +56,7 @@ def check_elasticsearch(p_name):
         os.system(restart_cmd)
 
 if __name__ == '__main__':
-
+    '''
     # test procedure running
     d_name = ['redis_to_es.py','zmq_vent_weibo.py', 'zmq_work_weibo.py']
     for item in d_name:
@@ -51,3 +68,5 @@ if __name__ == '__main__':
     # test elasticsearch running
     check_elasticsearch("elasticsearch")
     sys.exit(0)
+    '''
+    check_zombie('apt-get')

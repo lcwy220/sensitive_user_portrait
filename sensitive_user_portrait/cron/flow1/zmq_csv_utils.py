@@ -58,23 +58,35 @@ def send_all(f, sender):
                 te = time.time()
                 print '[%s] read csv speed: %s sec/per %s' % (datetime.now().strftime('%Y-%m-%d %H:%M:%S'), te - ts, 10000)
                 ts = te
-                time.sleep(1.5)
+                time.sleep(1)
     except:
         print "pass"
     total_cost = time.time() - tb
     return count, total_cost
 
 
-def send_weibo(sender, total_count=0, total_cost=0):
+def send_weibo(sender, poller, controller, total_count=0, total_cost=0):
     """
     send weibo data to zmq_work
     """
 
     file_list = set(os.listdir(BIN_FILE_PATH))
     print "total file is ", len(file_list)
-    ordered_list = ordered_file_list(file_list)
-    for each in ordered_list:
-        if 'csv' in each:
+#    ordered_list = ordered_file_list(file_list)
+    for each in file_list:
+        event = poller.poll(0)
+        if event:
+            socks = dict(poller.poll(0))
+        else:
+            socks = None
+        if socks and socks.get(controller) == zmq.POLLIN:
+            item = controller.recv()
+            if str(item) == "PAUSE":
+                print item
+                break
+        else:
+            pass
+        if 'data' in each:
             filename = each.split('.')[0]
             if '%s.csv' % filename in file_list and '%s_yes1.txt' % filename not in file_list:
                 bin_input = load_items_from_bin(os.path.join(BIN_FILE_PATH, each))

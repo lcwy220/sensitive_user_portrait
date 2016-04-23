@@ -50,7 +50,6 @@ def main(es):
 
     #index_name = "20130903"
     index_name = 's_'+time.strftime("%Y%m%d", time.localtime(time.time()-86400))
-    index_name = '20130901'
     bool = es.indices.exists(index=index_name)
     print bool
     if not bool:
