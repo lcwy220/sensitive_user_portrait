@@ -121,7 +121,7 @@ def filter_mention(user_set):
 def filter_in(top_user_set):
     results = []
     try:
-        in_results = es_sensitive_user_portrait.mget(index='user_portrait', doc_type='user', body={'ids':list(top_user_set)})
+        in_results = es_sensitive_user_portrait.mget(index='sensitive_user_portrait', doc_type='user', body={'ids':list(top_user_set)})
     except Exception as e:
         raise e
     filter_list = [item['_id'] for item in in_results['docs'] if item['found'] is True]

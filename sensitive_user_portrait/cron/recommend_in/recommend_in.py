@@ -60,36 +60,37 @@ if __name__ == "__main__":
     former_date = ts2datetime(time.time()-7*24*3600).replace('-','')
     r_recommend.hdel('recommend_sensitive', former_date) # delete 7 days ago recommentation uid_list
     r_recommend.hdel('recommend_influence', former_date) # delete 7 days ago recommentation uid_list
-    now_date = '20130901' # test
-    sensitive_weibo_uid = search_sensitive_weibo(now_date) # sensitive words uid list, direct recommend in
-    top_influence_uid = search_top_k(now_date, 10000) # top influence uid list, filter
+
+    #sensitive_weibo_uid = search_sensitive_weibo(now_date) # sensitive words uid list, direct recommend in
+    #top_influence_uid = search_top_k(now_date, 10000) # top influence uid list, filter
+    sensitive_weibo_uid = list(r_recommend.smember('sensitive_user'))
 
     # step 1: no sensitive user in top influence
-    revise_influence_uid_list = set(top_influence_uid) - set(sensitive_weibo_uid)
-    black_uid_list = read_black_user_list()
-    revise_influence_uid_list = set(revise_influence_uid_list) - set(black_uid_list)
-    print 'filter black list: ', len(revise_influence_uid_list)
+    #revise_influence_uid_list = set(top_influence_uid) - sensitive_weibo_set
+    #black_uid_list = read_black_user_list()
+    #revise_influence_uid_list = set(revise_influence_uid_list) - set(black_uid_list)
+    #print 'filter black list: ', len(revise_influence_uid_list)
     #total = set(sensitive_weibo_uid) | set(top_influence_uid)
     # step 2: no recommending
     sensitive_uid_recommending_filter = filter_recommend(sensitive_weibo_uid)
-    top_influence_recommending_filter = filter_recommend(revise_influence_uid_list)
+    #top_influence_recommending_filter = filter_recommend(revise_influence_uid_list)
     # step 3: no one in portrait
     sensitive_uid_in_filter = filter_in(sensitive_uid_recommending_filter)
-    top_influence_in_filter = filter_in(top_influence_recommending_filter)
+    #top_influence_in_filter = filter_in(top_influence_recommending_filter)
 
     print len(sensitive_uid_in_filter)
-    print len(top_influence_in_filter)
+    #print len(top_influence_in_filter)
 
-    top_influence_filter_result = filter_rules(top_influence_in_filter)
+    #top_influence_filter_result = filter_rules(top_influence_in_filter)
 
     if sensitive_uid_in_filter:
         r_recommend.hset('recommend_sensitive', now_date, json.dumps(sensitive_uid_in_filter))
     else:
-        r_recommend.hset('recommend_sensitive', now_date, '0')
-
+        r_recommend.hset('recommend_sensitive', now_date, json.dumps([]))
+    '''
     if top_influence_filter_result:
         r_recommend.hset('recommend_influence', now_date, json.dumps(top_influence_in_filter))
     else:
         r_recommend.hset('recommend_influence', now_date, '0')
-
+    '''
 
