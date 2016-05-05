@@ -38,6 +38,8 @@ def send_all(f, sender):
             weibo_item = itemLine2Dict(line)
             if weibo_item:
                 weibo_item_bin = csv2bin(weibo_item)
+                if int(weibo_item_bin['sp_type']) != 1:
+                    continue
                 sender.send_json(weibo_item_bin)
                 count += 1
 
@@ -48,8 +50,8 @@ def send_all(f, sender):
                     print '[%s] total deliver %s, cost %s sec [avg %s per/sec]' % (datetime.now().strftime('%Y-%m-%d %H:%M:%S'), count, te - tb, count / (te - tb))
                 time.sleep(2)
                 ts = te
-    except:
-        print 'pass'
+    except Exception, r:
+        print Exception, r
     total_cost = time.time() - tb
     return count, total_cost
 

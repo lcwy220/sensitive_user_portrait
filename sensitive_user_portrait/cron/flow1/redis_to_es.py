@@ -8,13 +8,13 @@ import os
 import time
 from elasticsearch import Elasticsearch
 from index_cal import influence_weibo_cal, user_index_cal, deliver_weibo_brust, activity_weibo, statistic_weibo, expand_index_action 
-#from rediscluster import RedisCluster
 from bci_mappings import mappings
 from send_uid import send_uid
 
 reload(sys)
 sys.path.append('../../')
-from global_utils import  ES_CLUSTER_FLOW1, R_CLUSTER_FLOW1
+from global_utils import redis_influence as R_CLUSTER_FLOW1
+from global_utils import ES_CLUSTER_FLOW1
 from parameter import pre_influence_index, influence_doctype
 
 es = ES_CLUSTER_FLOW1

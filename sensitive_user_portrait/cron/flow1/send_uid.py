@@ -8,9 +8,8 @@ import time
 
 reload(sys)
 sys.path.append('../../')
-from global_utils import R_CLUSTER_FLOW1
+from global_utils import redis_influence as R_CLUSTER_FLOW1
 
-#weibo_redis = redis.StrictRedis(host='219.224.135.47', port='6379')
 
 weibo_redis = R_CLUSTER_FLOW1
 
@@ -26,7 +25,6 @@ def send_uid():
         if int(re_scan[0]) == 0:
             weibo_redis.lpush("active_user_id", json.dumps(re_scan[1]))
             count += len(re_scan[1])
-            print count
             print 'finish'
             break
         else:

@@ -14,7 +14,7 @@ from zmq_csv_utils import send_weibo
 reload(sys)
 sys.path.append('../../')
 from global_config import ZMQ_VENT_PORT_FLOW3, ZMQ_CTRL_VENT_PORT_FLOW3,\
-                          ZMQ_VENT_HOST_FLOW1, ZMQ_CTRL_HOST_FLOW1, BIN_FILE_PATH
+                          ZMQ_VENT_HOST_FLOW1, ZMQ_CTRL_HOST_FLOW1
 
 
 
@@ -41,15 +41,15 @@ if __name__=="__main__":
     
     total_count = 0
     total_cost = 0
-    message = "PAUSE" # default start
+    message = "RESTART" # default start
 
     while 1:
-        event = poller.poll(0)
+        event = poller.poll(1)
         if event:
-            socks = dict(poller.poll(0))
+            socks = dict(poller.poll(1))
         else:
             socks = None
-
+        
         if socks and socks.get(controller) == zmq.POLLIN: # receive data from zmq pollor
             item = controller.recv()
             if item == "PAUSE": # pause the vent work
@@ -58,16 +58,17 @@ if __name__=="__main__":
                 continue
             elif item == "RESTART": # restart the vent work
                 message = "RESTART"
-                total_count, total_cost = send_weibo(sender, total_count, total_cost)
+                total_count, total_cost = send_weibo(sender, poller, controller, total_count, total_cost)
         else:
             if message == "PAUSE":
                 time.sleep(1)
                 print message
                 continue
             else:
-                total_count, total_cost = send_weibo(sender, total_count, total_cost)
+                time.sleep(1)
+                total_count, total_cost = send_weibo(sender, poller, controller, total_count, total_cost)
 
-
+           
 
 
 

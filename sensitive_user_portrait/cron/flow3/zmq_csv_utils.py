@@ -14,6 +14,7 @@ sys.path.append('../../')
 from global_config import ZMQ_VENT_PORT_FLOW3, ZMQ_CTRL_VENT_PORT_FLOW3,\
                           ZMQ_VENT_HOST_FLOW1, ZMQ_CTRL_HOST_FLOW1, BIN_FILE_PATH, FIRST_FILE_PART
 
+
 def load_items_from_bin(bin_path):
     return open(bin_path, 'rb')
 
@@ -25,7 +26,6 @@ def ordered_file_list(file_list):
     new_list = []
     for i in sorted(rank_list):
         new_list.append(FIRST_FILE_PART + str(i) + '.csv')
-
     return new_list
 
 def send_all(f, sender):
@@ -38,6 +38,8 @@ def send_all(f, sender):
             weibo_item = itemLine2Dict(line)
             if weibo_item:
                 weibo_item_bin = csv2bin(weibo_item)
+                if int(weibo_item_bin['sp_type']) != 1:
+                    continue
                 sender.send_json(weibo_item_bin)
                 count += 1
 
@@ -46,15 +48,15 @@ def send_all(f, sender):
                 print '[%s] deliver speed: %s sec/per %s' % (datetime.now().strftime('%Y-%m-%d %H:%M:%S'), te - ts, 10000)
                 if count % 100000 == 0:
                     print '[%s] total deliver %s, cost %s sec [avg %s per/sec]' % (datetime.now().strftime('%Y-%m-%d %H:%M:%S'), count, te - tb, count / (te - tb))
-                time.sleep(2.5)
+                time.sleep(2)
                 ts = te
-    except:
-        print 'error'
+    except Exception, r:
+        print Exception, r
     total_cost = time.time() - tb
     return count, total_cost
 
 
-def send_weibo(sender, total_count=0, total_cost=0):
+def send_weibo(sender, poller, controller, total_count=0, total_cost=0):
     """
     send weibo data to zmq_work
     """

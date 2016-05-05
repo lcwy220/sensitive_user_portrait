@@ -42,7 +42,7 @@ index_info = {
                     "index": "no"
                 },
                 'origin_weibo_retweeted_average_number': {
-                    "type": "long",
+                    "type": "float",
                 },
                 'retweeted_weibo_comment_brust_n': {
                     "type": "string",
@@ -52,10 +52,10 @@ index_info = {
                     "type": "long",
                 },
                 'origin_weibo_comment_brust_average': {
-                    "type": "long",
+                    "type": "float",
                 },
                 'retweeted_weibo_retweeted_brust_average': {
-                    "type": "long",
+                    "type": "float",
                 },
                 'retweeted_weibo_top_retweeted_id': {
                     "type": "string",
@@ -78,7 +78,7 @@ index_info = {
                     "type": "long",
                 },
                 'retweeted_weibo_retweeted_average_number': {
-                    "type": "long",
+                    "type": "float",
                 },
                 'origin_weibo_retweeted_total_number': {
                     "type": "long",
@@ -99,10 +99,10 @@ index_info = {
                     "index": "no"
                 },
                 'origin_weibo_comment_average_number': {
-                    "type": "long",
+                    "type": "float",
                 },
                 'origin_weibo_retweeted_brust_average': {
-                    "type": "long",
+                    "type": "float",
                 },
                 'origin_weibo_retweeted_top_number': {
                     "type": "long",
@@ -127,13 +127,13 @@ index_info = {
                     "type": "long",
                 },
                 'retweeted_weibo_comment_brust_average': {
-                    "type": "long",
+                    "type": "float",
                 },
                 'origin_weibo_comment_total_number': {
                     "type": "long",
                 },
                 'retweeted_weibo_comment_average_number': {
-                    "type": "long",
+                    "type": "float",
                 } 
 
             }

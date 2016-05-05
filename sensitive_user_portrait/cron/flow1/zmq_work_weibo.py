@@ -11,7 +11,7 @@ from datetime import datetime
 reload(sys)
 sys.path.append('../../')
 from global_config import ZMQ_VENT_PORT_FLOW1, ZMQ_CTRL_VENT_PORT_FLOW1, ZMQ_VENT_HOST_FLOW1, ZMQ_CTRL_HOST_FLOW1 
-from global_utils import  R_CLUSTER_FLOW1
+from global_utils import redis_influence as R_CLUSTER_FLOW1
 from global_utils import uname2uid_redis as r_name
 from time_utils import ts2date
 

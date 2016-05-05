@@ -7,99 +7,72 @@ import time
 import json
 import math
 from datetime import datetime
-from test_save_attribute import save_ruid
-from DFA_filter import readInputText, createWordTree, searchWord
+from test_save_attribute import save_retweet, save_comment
 
 reload(sys)
 sys.path.append('../../')
 from time_utils import ts2datetime, datetime2ts
 from global_config import ZMQ_VENT_PORT_FLOW3, ZMQ_CTRL_VENT_PORT_FLOW3,\
                           ZMQ_VENT_HOST_FLOW1, ZMQ_CTRL_HOST_FLOW1
-from global_utils import R_CLUSTER_FLOW2 as r_cluster
+from global_config import UNAME2UID_HASH as uname2uid_hash
+from global_utils import uname2uid_redis
+from DFA_filter import createWordTree, searchWord
+from parameter import RUN_TYPE, RUN_TEST_TIME
 
-def extract_uname(text):
-    at_uname_list = []
-    if isinstance(text, str):
-        text = text.decode('utf-8', 'ignore')
-    text = text.split('//@')[0]
-    RE = re.compile(u'@([a-zA-Z-_⺀-⺙⺛-⻳⼀-⿕々〇〡-〩〸-〺〻㐀-䶵一-鿃豈-鶴侮-頻並-龎]+) ', re.UNICODE)
-    repost_chains = RE.findall(text)
+#uname2uid from redis
+def uname2uid(uname):
+    uid = uname2uid_redis.hget(uname2uid_hash, uname)
+    if not uid:
+        uid = ''
+    return uid
 
-    return repost_chains
-
-def cal_propage_work(item, sensitive):
+#use to extract retweet weibo direct uname
+#write in version:15-12-08
+def retweet_uname2uid(item):
+    direct_uid = None
     uid = item['uid']
+    root_uid = item['root_uid']
     timestamp = item['timestamp']
-
-    #r_uid = item['retweeted_uid']
-    r_uid = item['root_uid']
-    save_ruid(uid, r_uid, timestamp, sensitive)
-
-def cal_hashtag_work(item, sensitive):
     text = item['text']
-    uid = item['uid']
-    timestamp = item['timestamp']
-    ts = ts2datetime(timestamp).replace('-','')
-
+    sensitive_words_dict = searchWord(text.encode('utf-8', 'ignore'), DFA)
+    sensitive = len(sensitive_words_dict)
+    direct_uid = ''
     if isinstance(text, str):
         text = text.decode('utf-8', 'ignore')
-    RE = re.compile(u'#([a-zA-Z-_⺀-⺙⺛-⻳⼀-⿕々〇〡-〩〸-〺〻㐀-䶵一-鿃豈-鶴侮-頻並-龎]+)#', re.UNICODE)
-    hashtag_list = RE.findall(text)
-    if hashtag_list:
-        hashtag_dict = {}
-        for hashtag in hashtag_list:
-            try:
-                hashtag_dict[hashtag] += 1
-            except:
-                hashtag_dict[hashtag] = 1
+    RE = re.compile(u'//@([a-zA-Z-_⺀-⺙⺛-⻳⼀-⿕々〇〡-〩〸-〺〻㐀-䶵一-鿃豈-鶴侮-頻並-龎]+):', re.UNICODE)
+    repost_chains = RE.findall(text)
+    if repost_chains != []:
+        direct_uname = repost_chains[0]
+        direct_uid = uname2uid(direct_uname)
 
-        try:
-            if sensitive:
-                hashtag_count_string = r_cluster.hget('sensitive_hashtag_'+str(ts), str(uid))
-            else:
-                hashtag_count_string = r_cluster.hget('hashtag_'+str(ts), str(uid))
-            hashtag_count_dict = json.loads(hashtag_count_string)
-            for hashtag in hashtag_dict:
-                count = hashtag_dict[hashtag]
-                try:
-                    hashtag_count_dict[hashtag] += count
-                except:
-                    hashtag_count_dict[hashtag] = count
-            if sensitive:
-                r_cluster.hset('sensitive_hashtag_'+str(ts), str(uid), json.dumps(hashtag_count_dict))
-            else:
-                r_cluster.hset('hashtag_'+str(ts), str(uid), json.dumps(hashtag_count_dict))
-        except:
-            if sensitive:
-                r_cluster.hset('sensitive_hashtag_'+str(ts), str(uid), json.dumps(hashtag_dict))
-            else:
-                r_cluster.hset('hashtag_'+str(ts), str(uid), json.dumps(hashtag_dict))
+    if direct_uid == '':
+        direct_uid = root_uid
 
-def cal_sensitive_words_work(item, sw_list):
-    timestamp = item['timestamp']
+    save_retweet(uid, direct_uid, timestamp, sensitive)
+
+#use to extract comment weibo direct uname
+#write in version:15-12-08
+def comment_uname2uid(item):
+    direct_uid = None
     uid = item['uid']
-    timestamp = ts2datetime(timestamp).replace('-','')
-    ts = timestamp
-    map = {}
-    for w in sw_list:
-        word = "".join([chr(x) for x in w])
-        word = word.decode('utf-8')
-        if not map.__contains__(word):
-            map[word] = 1
-        else:
-            map[word] += 1
-    try:
-        sensitive_count_string = r_cluster.hget('sensitive_'+str(ts), str(uid))
-        sensitive_count_dict = json.loads(sensitive_count_string)
-        for word in map:
-            count = map[word]
-            if sensitive_count_dict.__contains__(word):
-                sensitive_count_dict[word] += count
-            else:
-                sensitive_count_dict[word] = count
-        r_cluster.hset('sensitive_'+str(ts), str(uid), json.dumps(sensitive_count_dict))
-    except:
-        r_cluster.hset('sensitive_'+str(ts), str(uid), json.dumps(map))
+    root_uid = item['root_uid']
+    timestamp = item['timestamp']
+    text = item['text']
+    sensitive_words_dict = searchWord(text.encode('utf-8', 'ignore'), DFA)
+    sensitive = len(sensitive_words_dict)
+    direct_uid = ''
+    if isinstance(text, str):
+        text = text.decode('utf-8', 'ignore')
+    RE = re.compile(u'回复@([a-zA-Z-_⺀-⺙⺛-⻳⼀-⿕々〇〡-〩〸-〺〻㐀-䶵一-鿃豈-鶴侮-頻並-龎]+):', re.UNICODE)
+    comment_chains = RE.findall(text)
+    if comment_chains != []:
+        direct_uname = comment_chains[0]
+        direct_uid = uname2uid(direct_uname)
+    if direct_uid == '':
+        direct_uid = root_uid
+    
+    save_comment(uid, direct_uid, timestamp, sensitive)
+
 
 if __name__ == "__main__":
     """
@@ -116,24 +89,22 @@ if __name__ == "__main__":
     count = 0
     tb = time.time()
     ts = tb
-    sensitive_words = createWordTree()
+    DFA = createWordTree()
+
     while 1:
         item = receiver.recv_json()
         if not item:
             continue 
 
+        if int(item['sp_type']) == 1:
+            message_type = item['message_type']
 
-        if item['sp_type'] == '1':
-            text = item['text']
-            sw_list = searchWord(text.encode('utf-8'))
-            sensitive = len(sw_list)
-            #cal_hashtag_work(item, sensitive) # hashtag 
-            #if item and item['message_type']==3:
-            #    cal_propage_work(item, sensitive) # retweet relationship
-            if sensitive:
-                cal_sensitive_words_work(item, sw_list) # sensitive_words
-            count += 1
+            if int(message_type)==3:
+                retweet_uname2uid(item)
+            elif int(message_type)==2:
+                comment_uname2uid(item)
 
+        count += 1
         if count % 10000 == 0:
             te = time.time()
             print '[%s] cal speed: %s sec/per %s' % (datetime.now().strftime('%Y-%m-%d %H:%M:%S'), te - ts, 10000) 
