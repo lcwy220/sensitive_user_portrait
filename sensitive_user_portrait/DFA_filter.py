@@ -3,6 +3,7 @@ import sys
 import json
 import redis
 from time import time
+from global_utils import R_ADMIN as r
 '''
 @author: ahuaxuan 
 @date: 2009-02-20
@@ -22,9 +23,9 @@ def createWordTree():
     wordTree.append(0)
     nodeTree = [wordTree, 0]
     awords = []
-    for b in open('sensitive_words.txt', 'rb'):
-        awords.append(b.strip())
-    #awords = r.hkeys('sensitive_words')
+    #for b in open('sensitive_words.txt', 'rb'):
+    #    awords.append(b.strip())
+    awords = r.hkeys('sensitive_words')
     for word in awords:
         temp = wordTree
         for a in range(0,len(word)):
@@ -42,14 +43,14 @@ def createWordTree():
                 temp[index] = 1
     return nodeTree
 
-def searchWord(str, nodeTree):
+def searchWord(string, nodeTree):
     words_dict = {}
     temp = nodeTree
     words = []
     word = []
     a = 0
-    while a < len(str):
-        index = ord(str[a])
+    while a < len(string):
+        index = ord(string[a])
         temp = temp[0][index]
         if temp == None:
             temp = nodeTree

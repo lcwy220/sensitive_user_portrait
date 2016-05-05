@@ -4,7 +4,8 @@ use to save parameter
 '''
 #for test
 RUN_TYPE = 0 #0 mark run for test; 1 mark run for operation
-RUN_TEST_TIME = '2016-03-13'
+WORK_TYPE = 0 # limited source
+RUN_TEST_TIME = '2013-09-02'
 
 #for all
 DAY = 24*3600
@@ -17,6 +18,20 @@ WEEK_TIME = 7*24*3600
 MONTH = 30
 MONTH_TIME = 30*24*3600
 EXPIRE_TIME = 8*24*3600
+
+pre_ip = "ip_"
+sen_pre_ip = "sensitive_ip_"
+pre_act = 'activity_'
+sen_pre_act = 'sensitive_activity_'
+
+ip_index_pre = "ip_"
+ip_doc_type = "ip"
+sen_ip_index_pre = "sensitive_ip_"
+sen_ip_doc_type = "sensitive_ip"
+act_index_pre = "activity_"
+act_doc_type = "activity"
+sen_act_index_pre = "sensitive_activity_"
+sen_act_doc_type = "sensitive_activity"
 
 #new attribute: verified_type
 verified_num2ch_dict = {-1: u'普通用户', 0:u'名人', 1: u'政府', 2: u'企业',\
@@ -93,8 +108,8 @@ psy_description_dict = {
 
 #recommend in
 RECOMMEND_IN_SENSITIVE_TOP = 2000
-RECOMMEND_IN_BLACK_USER1 = '/home/user_portrait_0320/revised_user_portrait/user_portrait/user_portrait/cron/recommentation_in/blacklist_2.csv'
-RECOMMEND_IN_BLACK_USER2 = '/home/user_portrait_0320/revised_user_portrait/user_portrait/user_portrait/cron/recommentation_in/blacklist_0808.txt'
+RECOMMEND_IN_BLACK_USER1 = '/home/ubuntu8/yuankun/sensitive_user_portrait/sensitive_user_portrait/cron/recommentation_in/blacklist_2.csv'
+RECOMMEND_IN_BLACK_USER2 = '/home/ubuntu8/yuankun/sensitive_user_portrait/sensitive_user_portrait/cron/recommentation_in/blacklist_0808.txt'
 RECOMMEND_IN_ACTIVITY_THRESHOLD = 50
 RECOMMEND_IN_IP_THRESHOLD = 7
 RECOMMEND_IN_RETWEET_THRESHOLD = 20
@@ -342,4 +357,11 @@ sensitive_score_dict = {
     "2": 5,
     "3": 10
 }
+
+# 个人属性页面
+emotion_mark_dict = {'126': 'positive', '127':'negative', '128':'anxiety', '129':'angry'}
+
+link_ratio_threshold = [0, 0.5, 1]
+
+
 
