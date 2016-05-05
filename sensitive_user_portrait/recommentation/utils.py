@@ -8,17 +8,44 @@ import json
 import IP
 from elasticsearch import Elasticsearch
 from sensitive_user_portrait.global_utils import R_RECOMMENTATION as r
-from sensitive_user_portrait.global_utils import R_CLUSTER_FLOW2 as r_cluster
-from sensitive_user_portrait.global_utils import ES_CLUSTER_FLOW1 as es_cluster
-from sensitive_user_portrait.global_utils import es_user_profile
+from sensitive_user_portrait.global_utils import redis_cluster
+from sensitive_user_portrait.global_utils import redis_ip, redis_activity
+#from sensitive_user_portrait.global_utils import es_user_profile as es_cluster
+from sensitive_user_portrait.global_utils import es_user_profile, es_sensitive_history
+from sensitive_user_portrait.global_utils import ES_CLUSTER_FLOW2 as es_cluster
+from sensitive_user_portrait.global_utils import ES_CLUSTER_FLOW1 as es_bci
 from sensitive_user_portrait.global_utils import es_sensitive_user_portrait
 from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts
+from sensitive_user_portrait.parameter import pre_influence_index, influence_doctype, RUN_TYPE
+
+r_cluster = redis_cluster
+
+def get_top_value(key, es, index_name, index_type):
+    query_body = {
+        "query":{
+            "match_all":{}
+        },
+        "size":1,
+        "sort":{key: {"order":"desc"}}
+    }
+
+    try:
+        result = es.search(index=index_name, doc_type=index_type, body=query_body, _source=False, fields=[key])["hits"]["hits"]
+        top_value = reuslt[0]['fields'][key][0]
+    except Exception, reason:
+        print Exception, reason
+        raise reason
+    return top_value
+
+
 
 # obtain user detail information, such as uid,nickname,location,fansnum,statusnum,influence,weibo_mid
 def get_sensitive_user_detail(uid_list, date, sensitive):
+    es_cluster = es_user_profile
+    ts = datetime2ts(date)
     results = []
-    index_name = str(date).replace('-','') # index_name:20130901
-    user_bci_results = es_cluster.mget(index=index_name, doc_type='bci', body={'ids':uid_list}, _source=True)['docs']
+    index_name = pre_influence_index + str(date).replace('-','') # index_name:20130901
+    user_bci_results = es_bci.mget(index=index_name, doc_type='bci', body={'ids':uid_list}, _source=True)['docs']
     user_profile_results = es_user_profile.mget(index="weibo_user", doc_type="user", body={"ids":uid_list}, _source=True)['docs']
     for i in range(0, len(uid_list)):
         personal_info = ['']*6
@@ -35,7 +62,7 @@ def get_sensitive_user_detail(uid_list, date, sensitive):
         else:
             personal_info[5] = 0
         if sensitive:
-            sensitive_words = r_cluster.hget('sensitive_' + index_name, str(uid))
+            sensitive_words = redis_cluster.hget('sensitive_' + str(ts), str(uid))
             if sensitive_words:
                 sensitive_dict = json.loads(sensitive_words)
                 personal_info.append(sensitive_dict.keys())
@@ -48,41 +75,55 @@ def get_sensitive_user_detail(uid_list, date, sensitive):
 # show recommend in, sensitive user, date
 # date = 20130901
 def recommend_in_sensitive(date):
-    date = date.replace('-','')
-    results = r.hget('recommend_sensitive', date)
-    if not results:
-        return results # return '0'
-    else:
-        uid_list = json.loads(results)
+    sensitive_name = "recomment_" + date + "_sensitive"
+    identify_in_name = "identify_in_" + str(date)
+    re_sen_set = r.hkeys(sensitive_name) # 敏感人物推荐
+    iden_in_set = r.hkeys(identify_in_name) # 已经入库用户
+    if not re_sen_set:
+        return [] # 那一天不存在数据
+    uid_list = list(set(re_sen_set) - set(iden_in_set))
     sensitive = 1
-    return get_sensitive_user_detail(uid_list, date, sensitive)
+    if uid_list:
+        results = get_sensitive_user_detail(uid_list, date, sensitive)
+    else:
+        results = []
+    return results
 
 # show top influence user recommend
 def recommend_in_top_influence(date):
-    date = date.replace('-','')
-    results = r.hget('recommend_influence', date)
-    if not results:
+    influence_name = "recomment_" + date + "_influence"
+    identify_in_name = "identify_in_" + str(date)
+    re_inf_set = r.hkeys(influence_name)
+    iden_in_set = r.hkeys(identify_in_name) # 已经入库用户
+
+    if not re_inf_set:
         return []
     else:
-        uid_list = json.loads(results)
+        uid_list = list(set(re_inf_set) - set(iden_in_set))
     sensitive = 0
-    return get_sensitive_user_detail(uid_list, date, sensitive)
+    if uid_list:
+        results = get_sensitive_user_detail(uid_list, date, sensitive)
+    else:
+        results = []
+    return results
 
 # get user hashtag
 def get_user_hashtag(uid):
     user_hashtag_dict = {}
     sensitive_user_hashtag_dict = {}
-    now_ts = time.time()
-    now_date = ts2datetime(now_ts) # 2015-09-22
+    if RUN_TYPE:
+        now_ts = time.time()
+        now_date = ts2datetime(now_ts) # 2015-09-22
+    else:
+        now_date = "2013-09-08"
     ts = datetime2ts(now_date)
 
     #test
-    ts = datetime2ts('2013-09-08')
+    #ts = datetime2ts('2013-09-08')
     for i in range(1,8):
         ts = ts - 3600*24
-        date = ts2datetime(ts).replace('-','')
-        results = r_cluster.hget('hashtag_'+str(date), uid)
-        sensitive_results = r_cluster.hget('sensitive_hashtag_'+str(date), uid)
+        results = r_cluster.hget('hashtag_'+str(ts), uid)
+        sensitive_results = r_cluster.hget('sensitive_hashtag_'+str(ts), uid)
         if results:
             hashtag_dict = json.loads(results)
             for hashtag in hashtag_dict:
@@ -112,16 +153,19 @@ def get_user_hashtag(uid):
 # get user sensitive words
 def get_user_sensitive_words(uid):
     user_sensitive_words_dict = {}
-    now_ts = time.time()
-    now_date = ts2datetime(now_ts) # 2015-09-22
+    if RUN_TYPE:
+        now_ts = time.time()
+        now_date = ts2datetime(now_ts) # 2015-09-22
+    else:
+        now_date = "2013-09-08"
     ts = datetime2ts(now_date)
 
     #test
-    ts = datetime2ts('2013-09-08')
+    #ts = datetime2ts('2013-09-08')
     for i in range(1,8):
         ts = ts - 3600*24
         date = ts2datetime(ts).replace('-','')
-        results = r_cluster.hget('sensitive_'+str(date), uid)
+        results = r_cluster.hget('sensitive_'+str(ts), uid)
         if results:
             sensitive_words_dict = json.loads(results)
             for word in sensitive_words_dict:
@@ -165,17 +209,18 @@ def get_user_geo(uid):
     user_ip_dict = {}
     user_ip_result = {} # ordinary ip
     user_sensitive_ip_result = {} # sensitive ip
-    now_ts = time.time()
-    now_date = ts2datetime(now_ts) # 2015-09-22
+    if RUN_TYPE:
+        now_ts = time.time()
+        now_date = ts2datetime(now_ts) # 2015-09-22
+    else:
+        now_date = "2013-09-08"
     ts = datetime2ts(now_date)
 
-    #test
-    ts = datetime2ts('2013-09-08')
     for i in range(1,8):
         ts = ts - 3600*24
         date = ts2datetime(ts).replace('-','')
-        results = r_cluster.hget('ip_'+str(date), uid)
-        sensitive_results = r_cluster.hget('sensitive_ip'+str(date), uid)
+        results = redis_ip.hget('ip_'+str(date), uid)
+        sensitive_results = redis_ip.hget('sensitive_ip'+str(date), uid)
         if results:
             ip_results = json.loads(results)
             for ip in ip_results:
@@ -214,20 +259,23 @@ def get_user_geo(uid):
 # get user time trend
 def get_user_trend(uid):
     activity_dict = {}
-    now_ts = time.time()
-    date = ts2datetime(now_ts)
-    ts = datetime2ts(date)
+    if RUN_TYPE:
+        now_ts = time.time()
+        now_date = ts2datetime(now_ts) # 2015-09-22
+    else:
+        now_date = "2013-09-08"
+    ts = datetime2ts(now_date)
 
     #test
-    ts = datetime2ts('2013-09-08')
+    #ts = datetime2ts('2013-09-08')
     timestamp = ts
     results = dict()
     sensitive_results = {}
     for i in range(1,8):
         ts = timestamp -24*3600*i
         date = ts2datetime(ts).replace('-','')
-        result_string = r_cluster.hget('activity_'+str(date), uid)
-        sensitive_string = r_cluster.hget('sensitive_activity_'+str(date), uid)
+        result_string = redis_activity.hget('activity_'+str(ts), uid)
+        sensitive_string = redis_activity.hget('sensitive_activity_'+str(ts), uid)
         if result_string:
             result_dict = json.loads(result_string)
             key_set = set(result_dict.keys())
@@ -302,23 +350,24 @@ def identify_in(data):
     influence_list = set()
     for item in data:
         date = item[0] # 2015-09-22
-        date = str(date).replace('-','')
         uid = item[1]
         status = str(item[2])
         source = str(item[3])
         if source == '1':
-            r.hset('identify_in_sensitive_'+str(date), uid, status) # identify in user_list and compute status
+            r.hset('identify_in_'+str(date), uid, json.dumps([1, source])) # identify in user_list and compute status
             sensitive_list.add(uid)
         elif source == '2':
-            r.hset('identify_in_influence_'+str(date), uid, status)
+            r.hset('identify_in_'+str(date), uid, json.dumps([1, source]))
             influence_list.add(uid)
-        if status == '1': # now
-            now_list.append([uid, source])
-        if status == '2': # appoint
-            appoint_list.append([uid, source])
+        #if status == '1': # now
+        #    now_list.append([uid, source])
+        #if status == '2': # appoint
+        #    appoint_list.append([uid, source])
+        r.hset('compute', uid, json.dumps([date, status]))
 
+    """
     sensitive_results = r.hget('recommend_sensitive', date)
-    if sensitive_results and sensitive_results != '0':
+    if sensitives_results:
         sensitive_results = json.loads(sensitive_results)
         revise_set = set(sensitive_results) - sensitive_list
         if revise_set:
@@ -326,7 +375,7 @@ def identify_in(data):
         else:
             r.hdel('recommend_sensitive', date)
     influence_results = r.hget('recommend_influence', date)
-    if influence_results and influence_results != '0':
+    if influence_results and influence_results != []:
         influence_results = json.loads(influence_results)
         revise_set = set(influence_results) - influence_list
         if revise_set:
@@ -349,26 +398,47 @@ def identify_in(data):
         r.hset('compute_appoint', date, json.dumps(appoint_list))
     else:
         r.hset('compute_appoint', date, json.dumps(appoint_list)) # finish compute, revise 'identify_in_state' uid status
+    """
     return '1'
 
 
 def show_in_history(date, sensitive):
     results = []
-    date = str(date).replace('-','')
+    sensitive_uid_list = []
+    influence_uid_list = []
+    iden_in_name = "identify_in_" + str(date)
+    iden_in_results = r.hgetall(iden_in_name)
+    print iden_in_results
+    for uid, item in iden_in_results.iteritems():
+        tmp = json.loads(item)
+        if int(tmp[1]) == 1:
+            sensitive_uid_list.append(uid)
+        else:
+            influence_uid_list.append(uid)
+    compute_results = r.hgetall('compute')
+
     if sensitive: # sensitive user recommentation history
-        sensitive_results = r.hgetall('identify_in_sensitive_'+str(date))
-        if sensitive_results:
-            uid_list = sensitive_results.keys()
-            results = get_sensitive_user_detail(uid_list, date, 1)
+        if sensitive_uid_list:
+            results = get_sensitive_user_detail(sensitive_uid_list, date, 1)
             for item in results:
-                item.append(sensitive_results[item[0]])
+                uid = item[0]
+                temp = compute_results[uid]
+                if temp:
+                    status = (json.loads(temp))[1]
+                else:
+                    status = "4"
+                item.append(status)
     else:
-        influence_results = r.hgetall('identify_in_influence_'+str(date))
-        if influence_results:
-            uid_list = influence_results.keys()
+        if influence_uid_list:
             results = get_sensitive_user_detail(uid_list, date, 0)
             for item in results:
-                item.append(influence_results[item[0]])
+                uid = item[0]
+                temp = compute_results[uid]
+                if temp:
+                    status = (json.loads(temp))[1]
+                else:
+                    status = "4"
+                item.append(status)
 
     return results
 

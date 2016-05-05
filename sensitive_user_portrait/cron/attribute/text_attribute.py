@@ -215,19 +215,26 @@ def attri_sensitive_hashtag(weibo_list):
 
     return sw_hashtag
 
-def compute_text_attribute(user, weibo_list):
+def temporary_text_update(user, weibo_list): # uid, [weibo_text]
     result = {}
     result['text_len'] = attr_text_len(weibo_list)
     result['emotion'] = json.dumps(attr_emoticon(weibo_list))
     result['emotion_words'] = json.dumps(attr_liwc(weibo_list))
     result['link'] = attr_link(weibo_list)
-    result['online_pattern'] = json.dumps(attr_online_pattern(weibo_list))
+    #result['online_pattern'] = json.dumps(attr_online_pattern(weibo_list))
     keywords_dict = attr_keywords(weibo_list)
     result['keywords'] = json.dumps(keywords_dict)
     result['keywords_string'] = '&'.join(keywords_dict.keys())
+
+    return result
+
+def compute_text_attribute(user, weibo_list):
+    result = {}
+    temporary_text_dict = temporary_text_update(user, weibo_list)
+    result.update(temporary_text_dict)
     # result['domain'] = attri_domain(weibo_list)
     result['domain'] = 'test_domain'
-    results['domain_string'] = "&".join(result['domain'])
+    result['domain_string'] = "&".join(result['domain'])
     # result['psycho_status'] = attr_psycho_status(user, weibo_list)
     # result['psycho_status_string'] = '&'.join(result['psycho_status'].keys())
     result['psycho_status'] = json.dumps({'level1':{'status1':1, 'status2':2}, 'level2':{'status1':1, 'status2':2}})
@@ -260,40 +267,40 @@ def read_uid_list():
 
     return uid_list
 
-def compute_attribute(uid_list=[]):
+def compute_attribute(user_weibo_dict):
     # test
-    user_weibo_dict = read_user_weibo(uid_list)
     uid_list = user_weibo_dict.keys()
-    flow_result = get_flow_information(uid_list)
-    register_result = get_profile_information(uid_list)
+    times = len(uid_list)/1000
     bulk_action = []
     count = 0
     count_list = set()
-    for user in uid_list:
-        weibo_list = user_weibo_dict[user]
-        uname = weibo_list[0]['uname']
-        results = compute_text_attribute(user, weibo_list)
-        results['uname'] = uname
-        results['uid'] = str(user)
-        flow_dict = flow_result[str(user)]
-        results.update(flow_dict)
-        user_info = {'uid':str(user), 'domain':results['domain'], 'topic':results['topic'], 'activity_geo':results['geo_string']}
-        evaluation_index = get_evaluate_index(user_info, status='insert')
-        results.update(evaluation_index)
-        register_dict = register_result[user]
-        results.update(register_dict)
-        action = {'index':{'_id':str(user)}}
-        bulk_action.extend([action, results])
-        count_list.add(user)
-        count += 1
-        if count % 200 == 0:
-            es.bulk(bulk_action, index=index_name, doc_type="user", timeout=60)
-            bulk_action = []
-            print count
+    for i in range(times+1):
+        flow_result = get_flow_information(uid_list[1000*i:1000*(i+1)]) # 流数据更新
+        register_result = get_profile_information(uid_list) # 背景信息数据更新
+        for user in uid_list:
+            weibo_list = user_weibo_dict[user]
+            results = compute_text_attribute(user, weibo_list) # 文本属性计算
+            results['uid'] = str(user)
+            flow_dict = flow_result[str(user)]
+            results.update(flow_dict)
+            user_info = {'uid':str(user), 'domain':results['domain'], 'topic':results['topic'], 'activity_geo':results['geo_string']}
+            evaluation_index = get_evaluate_index(user_info, status='insert')
+            results.update(evaluation_index)
+            register_dict = register_result[user]
+            results.update(register_dict)
+            action = {'index':{'_id':str(user)}}
+            bulk_action.extend([action, results])
+            count_list.add(user)
+            count += 1
+            if count % 200 == 0:
+                es.bulk(bulk_action, index='sensitive_user_portrait_0103', doc_type="user", timeout=60)
+                bulk_action = []
+                print count
     if bulk_action:
-        status = save_user_results(bulk_action)
+        es.bulk(bulk_action, index='sensitive_user_portrait_0103', doc_type="user", timeout=60)
     return "1"
 
+'''
 def update_portrait():
     user_weibo_dict = read_user_weibo()
     uid_list = user_weibo_dict.keys()
@@ -312,19 +319,7 @@ def update_portrait():
     if bulk_action:
         es.bulk(bulk_action, index='sensitive_user_portrait', doc_type='user', timeout=60)
     return '1'
-
+'''
 if __name__ == '__main__':
-    index_name = "test_sensitive_user_portrait"
-    doc_type = "user"
-    bool = es.indices.exists(index=index_name)
-    if not bool:
-        es.indices.create(index=index_name, ignore=400)
     #compute_attribute()
-    """
-    user_weibo_dict = read_user_weibo()
-    uid_list = user_weibo_dict.keys()
-    print compute_text_attribute(uid_list[0], user_weibo_dict[uid_list[0]])
-    print get_flow_information([uid_list[0]])
-    print get_profile_information([uid_list[0]])
-    """
     update_portrait()

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+from global_utils import es_sensitive_user_portrait as es
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import scan
 
@@ -156,9 +157,8 @@ index_info = {
     }
 }
 
+exist_bool = es.indices.exists(index="sensitive_user_portrait")
+if not exist_bool:
+    print "not exist"
+    es.indices.create(index="sensitive_user_portrait", body=index_info, ignore=400)
 
-es = Elasticsearch('219.224.135.93:9206', timeout=60)
-
-es.indices.create(index="sensitive_user_portrait", body=index_info, ignore=400)
-
-#es.index(index="test_mapping_index", doc_type="user", id="1917335617",body={"uid":"1917335617", "hashtag_string":"中国好声音&急速前进&花千骨", "hashtag":"中国好声音&急速前进&花千骨", "geo_activity":"中国		北京	北京&中国	上海	上海", "geo_activity_string":"北京&上海"})

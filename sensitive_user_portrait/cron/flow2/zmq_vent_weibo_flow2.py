@@ -9,12 +9,12 @@ import struct
 from datetime import datetime
 from bin2json import bin2json
 #from zmq_utils import load_items_from_bin, send_all, send_weibo
-from zmq_csv_utils import send_weibo
+from zmq_csv_utils import load_items_from_bin, send_all, send_weibo
 
 reload(sys)
 sys.path.append('../../')
 from global_config import ZMQ_VENT_PORT_FLOW2, ZMQ_CTRL_VENT_PORT_FLOW2,\
-                          ZMQ_VENT_HOST_FLOW1, ZMQ_CTRL_HOST_FLOW1, BIN_FILE_PATH
+                          ZMQ_VENT_HOST_FLOW1, ZMQ_CTRL_HOST_FLOW1
 
 
 
@@ -41,7 +41,7 @@ if __name__=="__main__":
     
     total_count = 0
     total_cost = 0
-    message = "PAUSE" # default start
+    message = "RESTART" # default start
 
     while 1:
         event = poller.poll(0)
@@ -65,6 +65,7 @@ if __name__=="__main__":
                 print message
                 continue
             else:
+                time.sleep(1)
                 total_count, total_cost = send_weibo(sender, total_count, total_cost)
 
 

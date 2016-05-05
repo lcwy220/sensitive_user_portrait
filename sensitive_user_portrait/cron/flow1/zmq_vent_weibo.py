@@ -7,12 +7,13 @@ import json
 import struct
 from datetime import datetime
 from bin2json import bin2json
-#from zmq_utils import load_items_from_bin, send_all, send_weibo
-from zmq_csv_utils import load_items_from_bin, send_all, send_weibo
+from zmq_utils import load_items_from_bin, send_all, send_weibo
+#from zmq_csv_utils import load_items_from_bin, send_all, send_weibo
 
 reload(sys)
 sys.path.append('../../')
 from global_config import ZMQ_VENT_PORT_FLOW1, ZMQ_CTRL_VENT_PORT_FLOW1, ZMQ_VENT_HOST_FLOW1, ZMQ_CTRL_HOST_FLOW1, BIN_FILE_PATH
+from time_utils import ts2datetime
 
 
 if __name__=="__main__":
@@ -39,7 +40,7 @@ if __name__=="__main__":
     
     total_count = 0
     total_cost = 0
-    message = "PAUSE" # default start
+    message = "RESTART" # default start
 
     while 1:
         event = poller.poll(0)
@@ -51,25 +52,28 @@ if __name__=="__main__":
         if socks and socks.get(controller) == zmq.POLLIN: 
             # receive control message from zmq pollor
             item = controller.recv()
-            if item == "PAUSE": # pause the vent work
+            if str(item) == "PAUSE": # pause the vent work
                 message = "PAUSE"
+                print "receive message from zmq", message
                 time.sleep(1)
                 continue
             elif item == "RESTART": # restart the vent work
                 message = "RESTART"
+                print "receive message from zmq", message
                 total_count = 0
                 total_cost = 0
-                total_count, total_cost = send_weibo(sender, total_count, total_cost)
-                break
+                total_count, total_cost = send_weibo(sender, poller, controller, total_count, total_cost)
             else:
                 pass
         else:
             if message == "PAUSE":
                 time.sleep(1)
-                print message
+                print "nothing receive from zmq, ", message
                 continue
             else:
-                total_count, total_cost = send_weibo(sender, total_count, total_cost)
+                print "waiting"
+                time.sleep(1)
+                total_count, total_cost = send_weibo(sender, poller, controller, total_count, total_cost)
 
 
 

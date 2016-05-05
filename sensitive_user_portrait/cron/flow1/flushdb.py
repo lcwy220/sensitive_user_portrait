@@ -1,35 +1,27 @@
+# -*-coding:utf-8-*-
+"""
+放弃原先设想的采用redis cluster方案，而使用单台redis形式
+"""
+import os
+import sys
+import time
+import redis
 from redis import StrictRedis
-from rediscluster import RedisCluster
-
+reload(sys)
+sys.path.append('../../')
+from global_utils import R_CLUSTER_FLOW1 as r
+from time_utils import ts2datetime
 if __name__ == '__main__':
-    """
-    for i in [94, 95, 96]:
-        for j in [7380]:
-            startup_nodes = [{"host": '219.224.135.%s'%i, "port": '%s'%j}]
-            print startup_nodes
-            weibo_redis = RedisCluster(startup_nodes = startup_nodes)
+    ts = ts2datetime(time.time())
 
-            weibo_redis.flushall()
-    print "finish flushing!"
-    """
-    startup_nodes = [{"host": '219.224.135.91', "port": '7380'}]
-    weibo_redis = RedisCluster(startup_nodes = startup_nodes)
-    weibo_redis.flushall()
+    r.flushdb()
+    print "/cron/flow1/flush_db.py&end&%s" %ts
 
-    startup_nodes = [{"host": '219.224.135.92', "port": '7380'}]
-    weibo_redis = RedisCluster(startup_nodes = startup_nodes)
-    weibo_redis.flushall()
-
-    startup_nodes = [{"host": '219.224.135.93', "port": '7380'}]
-    weibo_redis = RedisCluster(startup_nodes = startup_nodes)
-    weibo_redis.flushall()
-
-    #r = StrictRedis(host="219.224.135.97", port="7380")
-    #r.flushall()
-
-    print "ok"
-    """
-    startup_nodes = [{"host": '219.224.135.94', "port": '7379'}]
-    r =  RedisCluster(startup_nodes = startup_nodes)
-    r.flushall()
-    """
+    
+    path = "/home/ubuntu01/txt"
+    file_list = os.listdir(path)
+    for each in file_list:
+        filename = each.split('.')[0]
+        if filename.split('_')[-1] == 'yes':
+            os.remove(path+'/'+each)
+    print "/cron/flow1/del_file_yes.py&end&%s" %ts

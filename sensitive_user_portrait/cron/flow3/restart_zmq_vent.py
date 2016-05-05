@@ -25,7 +25,7 @@ if __name__ == "__main__":
     print "finish flushing"
     '''
     for i in range(5):
-        time.sleep(0.1)
         controller.send("RESTART")
+        time.sleep(0.2)
 
 

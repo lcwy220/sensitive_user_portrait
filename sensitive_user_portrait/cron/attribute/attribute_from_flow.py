@@ -62,14 +62,15 @@ def extract_string(result):
     return result_string
 
 def get_flow_information(uid_list):
+    # 每天更新，只计算前一天的数据
     result_dict = {}
-    now_ts = time.time()
+    now_ts = time.time()-3600*24
     now_date = ts2datetime(now_ts) # date: 2013-09-01
-    ts = datetime2ts # 1234567890
+    #now_date = "2013-09-08"
 
     hashtag_results = {}
     geo_results = {}
-    ts = datetime2ts('2013-09-08')
+    #ts = datetime2ts(now_date)
     user_hashtag_result = {}
     user_sensitive_hashtag = {}
     sensitive_words = {}
@@ -122,6 +123,7 @@ def get_flow_information(uid_list):
         hashtag_string = ''
         sensitive_hashtag_string = ''
         ip_string = ''
+        ip_all = ""
         sensitive_ip_string = ''
         hashtag_dict = {}
         sensitive_hashtag_dict = {}

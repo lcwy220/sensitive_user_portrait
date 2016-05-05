@@ -9,27 +9,18 @@ import math
 import redis
 from elasticsearch import Elasticsearch
 from description import active_geo_description, active_time_description, hashtag_description
-"""
-reload(sys)
-sys.path.append('./../')
-from time_utils import ts2datetime, datetime2ts
-from global_utils import R_DICT
-from global_utils import R_CLUSTER_FLOW2 as r_cluster
-from global_utils import es_sensitive_user_portrait as es
-from global_utils import es_user_profile
 
-
-"""
 from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts
-from sensitive_user_portrait.global_utils import R_DICT
 from sensitive_user_portrait.global_utils import R_RECOMMENTATION as r
-from sensitive_user_portrait.global_utils import R_CLUSTER_FLOW2 as r_cluster
+from sensitive_user_portrait.global_utils import portrait_index_name, portrait_index_type, flow_text_index_name_pre, flow_text_index_type, \
+    profile_index_name, profile_index_type, retweet_index_name_pre, retweet_index_type, be_retweet_index_name_pre, be_retweet_index_type, \
+    comment_index_name_pre, comment_index_type, be_comment_index_name_pre, be_comment_index_type
+from sensitive_user_portrait.global_utils import redis_cluster as r_cluster
 from sensitive_user_portrait.global_utils import es_sensitive_user_portrait as es
-from sensitive_user_portrait.global_utils import es_user_profile
+from sensitive_user_portrait.global_utils import es_user_profile, get_db_num, es_flow_text, es_retweet, es_comment, es_tag, ES_CLUSTER_FLOW1
 from sensitive_user_portrait.recommentation.utils import get_user_trend, get_user_geo, get_user_hashtag
+from sensitive_user_portrait.parameter import emotion_mark_dict, link_ratio_threshold
 
-emotion_mark_dict = {'126': 'positive', '127':'negative', '128':'anxiety', '129':'angry'}
-link_ratio_threshold = [0, 0.5, 1]
 sensitive_text = 'sensitive_user_text'
 
 def extract_uname(text):
@@ -79,6 +70,8 @@ def sort_sensitive_words(words_list):
     return sensitive_words_list
 
 def search_full_text(uid, date):
+    index_flow_text = flow_text_index_name_pre + date
+    doctype_flow_text = flow_text_index_type
     result = []
     ts = datetime2ts(date)
     next_ts = ts + 24*3600
@@ -88,26 +81,21 @@ def search_full_text(uid, date):
                 "filter":{
                     "bool": {
                         "must": [
-                            {"term": {"uid": uid}},
-                            {"range": {
-                                "timestamp":{
-                                     "gte": ts,
-                                     "lt": next_ts
-                                }
-                            }}
+                            {"term": {"uid": uid}}
                         ]
                     }
                 }
             }
         },
-        "size": 200
+        "size": 200,
+        "sort":{"timestamp":{"order": "desc"}}
     }
 
-    search_results = es.search(index='sensitive_user_text', doc_type="user", body=query_body)['hits']['hits']
+    search_results = es.search(index=index_flow_text, doc_type=doctype_flow_text, body=query_body)['hits']['hits']
     for item in search_results:
         detail = []
         source = item['_source']
-        detail.append(source['sensitive'])
+        detail.append(source.get('sensitive', 0))
         detail.append(source['message_type'])
         ts =source['timestamp']
         re_time = time.strftime('%H:%M:%S', time.localtime(float(ts)))
@@ -128,7 +116,7 @@ def search_full_text(uid, date):
             weibo_bci = {}
         retweeted_number = 0
         comment_number = 0
-        if source['sensitive']:
+        if source.get('sensitive', 0):
             if int(source['message_type']) == 1:
                 if weibo_bci:
                     if weibo_bci.get('s_origin_weibo_retweeted_detail', {}):
@@ -158,7 +146,6 @@ def search_full_text(uid, date):
         else:
             if int(source['message_type']) == 1:
                 if weibo_bci:
-                    print weibo_bci['origin_weibo_retweeted_detail']
                     if weibo_bci.get('origin_weibo_retweeted_detail', {}):
                         retweeted_detail = json.loads(weibo_bci['origin_weibo_retweeted_detail'])
                     else:
@@ -260,8 +247,8 @@ def search_retweet(uid, sensitive):
 def search_retweet(uid, sensitive):
     stat_results = dict()
     results = dict()
-    for db_num in R_DICT:
-        r = R_DICT[db_num]
+    if 1:
+        r = r_cluster
         if not sensitive:
             ruid_results = r.hgetall('retweet_'+str(uid))
         else:
@@ -304,8 +291,8 @@ def search_retweet(uid, sensitive):
 def search_follower(uid, sensitive):
     results = dict()
     stat_results = dict()
-    for db_num in R_DICT:
-        r = R_DICT[db_num]
+    if 1:
+        r = r_cluster
         if sensitive:
             br_uid_results = r.hgetall('sensitive_be_retweet_'+str(uid))
         else:
@@ -681,7 +668,6 @@ def search_attribute_portrait(uid):
             }
         }
         activeness_rank = es.count(index='sensitive_user_portrait', doc_type='user', body=query_body)
-        print activeness_rank
         if activeness_rank['_shards']['successful'] != 0:
             return_results['activeness_rank'] = activeness_rank['count']
         else:

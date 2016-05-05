@@ -18,14 +18,6 @@ mod = Blueprint('recommentation', __name__, url_prefix='/recommentation')
 @mod.route('/show_sensitive_list/')
 def ajax_recommentation_in_sensitive_list():
     date = request.args.get('date', '') # 2013-09-01
-    """
-    ts = datetime2ts(ts2datetime(time.time()-6*24*3600))
-    input_ts = datetime2ts(date)
-    if input_ts < ts:
-        return '0'
-    else:
-        results = recommend_in_sensitive(date)
-    """
     results = recommend_in_sensitive(date)
     if results:
         return json.dumps(results)
@@ -37,15 +29,8 @@ def ajax_recommentation_in_sensitive_list():
 @mod.route('/show_influence_list/')
 def ajax_recommentation_in_influence_list():
     date = request.args.get('date', '') # 2013-09-01
-    '''
-    ts = datetime2ts(ts2datetime(time.time()-6*24*3600))
-    input_ts = datetime2ts(date)
-    if input_ts < ts:
-        return '0'
-    else:
+    if date:
         results = recommend_in_top_influence(date)
-    '''
-    results = recommend_in_top_influence(date)
     if results:
         return json.dumps(results)
     else:
@@ -100,15 +85,13 @@ def ajax_show_sensitive_history_in():
     date = request.args.get('date', now_date) # in date:2013-09-01
     if str(date) == "all":
         ts = time.time()
-        now_ts = datetime2ts('2013-09-07')
+        now_ts = datetime2ts(now_date)
         for i in range(7):
             ts = now_ts - i*24*3600
             date = ts2datetime(ts)
-            date = str(date).replace('-', '')
             temp = show_in_history(date, 1)
             results.extend(temp)
     else:
-        date = str(date).replace('-','')
         results = show_in_history(date, 1) # history in, include status
     if results:
         return json.dumps(results)

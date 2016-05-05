@@ -3,12 +3,15 @@ from openpyxl import load_workbook
 import redis
 import random
 import json
+import sys
+reload(sys)
+sys.path.append('../')
+from global_utils import R_ADMIN as r
 
 data = load_workbook('sensitive_words.xlsx')
 table = data.get_sheet_by_name('Sheet2')
 category = ['政治', '军事', '法律', '意识形态', '民运']
 #print table.cell('A1').value
-r = redis.StrictRedis(host='219.224.135.97', port='7380', db=15)
 for i in range(1,549):
     word = table.cell(row=i, column=0).value
     level = table.cell(row=i, column=1).value

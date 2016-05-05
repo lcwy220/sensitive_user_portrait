@@ -2,6 +2,9 @@
 import csv
 import sys
 from elasticsearch import Elasticsearch
+
+reload(sys)
+sys.path.append('./../../')
 #from text_attribute import attr_liwc
 
 

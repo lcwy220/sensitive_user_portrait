@@ -29,7 +29,7 @@ def get_activeness(uid, activity_geo):
     now_date = ts2datetime(now_ts)
     timestamp = datetime2ts(now_date)
     #test
-    timestamp = datetime2ts('2013-09-08')
+    #timestamp = datetime2ts('2013-09-08')
     # deal activity_time fft and statusnum
     activity_list = []
     statusnum = 0
@@ -75,7 +75,7 @@ def get_influence(uid):
     now_ts = time.time()
     now_date = ts2datetime(now_ts - 3600*24)
     # test
-    now_date = '2013-09-07'
+    #now_date = '2013-09-07'
     index_time = ''.join(now_date.split('-'))
     index_type = 'bci'
     try:
@@ -183,7 +183,7 @@ def get_activity_geo(uid):
 #use to update
 def get_domain_topic(uid):
     result = dict()
-    index_time = 'user_portrait'
+    index_time = 'sensitive_user_portrait'
     index_type = 'user'
     result = es_user_portrait.get(index=index_time, doc_type=index_type, id=uid)['_source']
     if result:
