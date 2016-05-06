@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from elasticsearch import Elasticsearch
-from global_utils import ES_CLUSTER_FLOW1 as es
+from global_utils import ES_COPY_USER_PORTRAIT as es
 
 index_info = {
     "settings":{

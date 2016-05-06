@@ -18,20 +18,22 @@ from config import topic_en2ch_dict, domain_en2ch_dict
 from domain_topic_input import get_user_weibo_string, get_user_keywords_dict
 from character_input import character_input # use to prepare input for attribute---character
 # compute user event
-from event.event_user import event_classfiy
+#from event.event_user import event_classfiy
 # compute user domain
 from domain.test_domain_v2 import domain_classfiy
 # compute user topic
-from topic.test_topic import topic_classfiy
+#from topic.test_topic import topic_classfiy
+# compute politics
+from policy.political_main import political_classify
 # compute user psy
-from psy.new_psy import psychology_classfiy
+#from psy.new_psy import psychology_classfiy
 # compute user character
-from character.test_ch_sentiment import classify_sentiment
-from character.test_ch_topic import classify_topic
+#from character.test_ch_sentiment import classify_sentiment
+#from character.test_ch_topic import classify_topic
 
 sys.path.append('../../')
 from global_utils import es_user_profile, profile_index_name, profile_index_type
-from parameter import CHARACTER_TIME_GAP, DAY, WEIBO_API_INPUT_TYPE
+from parameter import  DAY, WEIBO_API_INPUT_TYPE
 from time_utils import ts2datetime, datetime2ts
 
 #abandon in version: 15-12-08
@@ -261,7 +263,7 @@ def compute2in(uid_list, user_weibo_dict):
     domain_results_dict = domain_results[0]
     domain_results_label = domain_results[1]
     #get user psy information
-    psy_results_dict = psychology_classfiy(user_weibo_dict)
+    #psy_results_dict = psychology_classfiy(user_weibo_dict)
     #get user profile information
     register_result = get_profile_information(uid_list)
     #get user fansnum max

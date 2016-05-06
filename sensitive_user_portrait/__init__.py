@@ -16,6 +16,8 @@ from sensitive_user_portrait.search.views import mod as searchModule
 from sensitive_user_portrait.manage_sensitive_words.views import mod as wordsmanagementModule
 from sensitive_user_portrait.delete_user.views import mod as deleteModule
 from sensitive_user_portrait.influence_application.views import mod as influenceModule
+from sensitive_user_portrait.user_rank.views import mod as userrankModule
+from sensitive_user_portrait.weibo_rank.views import mod as weiborankModule
 """
 from sensitive_user_portrait.attribute.views import mod as attributeModule
 from sensitive_user_portrait.manage.views import mod as manageModule
@@ -79,6 +81,8 @@ def register_blueprints(app):
     app.register_blueprint(wordsmanagementModule)
     app.register_blueprint(deleteModule)
     app.register_blueprint(influenceModule)
+    app.register_blueprint(userrankModule)
+    app.register_blueprint(weiborankModule)
     """
     app.register_blueprint(attributeModule)
     app.register_blueprint(manageModule)

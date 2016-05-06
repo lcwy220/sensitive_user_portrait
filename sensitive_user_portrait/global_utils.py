@@ -12,6 +12,7 @@ from global_config import USER_PROFILE_ES_HOST, USER_PROFILE_ES_PORT, \
 from parameter import RUN_TYPE
 
 redis_influence = redis.StrictRedis(host=REDIS_HOST_INFLUENCE, port=REDIS_PORT_INFLUENCE, db=0)
+R_CLUSTER_FLOW1 = redis_influence
 redis_ip = redis.StrictRedis(host=REDIS_HOST_IP, port=REDIS_PORT_IP, db=0)
 redis_activity = redis.StrictRedis(host=REDIS_HOST_ACTIVITY, port=REDIS_PORT_ACTIVITY, db=0)
 redis_cluster = redis.StrictRedis(host=REDIS_HOST_CLUSTER, port=REDIS_PORT_CLUSTER)
@@ -127,6 +128,8 @@ black_words = load_black_words()
 
 ES_SENSITIVE_INDEX = "sensitive_history"
 DOCTYPE_SENSITIVE_INDEX = "sensitive"
+USER_RANK_KEYWORD_TASK_INDEX = 'user_rank_keyword_task'
+USER_RANK_KEYWORD_TASK_TYPE = 'user_rank_task'
 
 COPY_USER_PORTRAIT_INFLUENCE = "copy_user_portrait_influence"
 COPY_USER_PORTRAIT_INFLUENCE_TYPE = 'bci'

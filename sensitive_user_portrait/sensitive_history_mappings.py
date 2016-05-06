@@ -32,6 +32,9 @@ index_info = {
                 "sensitive_month_ave":{
                     "type": "double"
                 },
+                "last_value":{
+                    "type": "double"
+                },
                 "sensitive_month_var":{
                     "type": "double"
                 }

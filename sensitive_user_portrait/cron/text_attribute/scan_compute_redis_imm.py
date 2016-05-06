@@ -14,6 +14,7 @@ def scan_compute_redis():
     results = r.hgetall('compute')
     iter_user_list = []
     mapping_dict = dict()
+    identify_in_dict = dict()
     #test
     count = 0
     for uid in results:
@@ -25,6 +26,14 @@ def scan_compute_redis():
             count += 1
             iter_user_list.append(uid)
             mapping_dict[uid] = json.dumps([in_date, '3']) # mark status:3 computing
+            #revise identify_in_date
+            influence_hashname = 'identify_in_influence_'+str(in_date)
+            sensitive_hashname = 'identify_in_sensitive_'+str(in_date)
+            tmp = r.hget(influence_hashname, uid)
+            if tmp:
+                r.hset(influence_hashname, uid, '3')
+            else:
+                r.hset(sensitive_hashname, uid, '3')
         if len(iter_user_list) % 100 == 0 and len(iter_user_list) != 0:
             r.hmset('compute', mapping_dict)
             #acquire bulk user weibo data

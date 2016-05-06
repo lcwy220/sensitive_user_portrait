@@ -7,6 +7,12 @@ RUN_TYPE = 0 #0 mark run for test; 1 mark run for operation
 WORK_TYPE = 0 # limited source
 RUN_TEST_TIME = '2013-09-02'
 
+#cron/text_attribute/domain
+DOMAIN_ABS_PATH = '/home/ubuntu8/yuanshi/sensitive_user_portrait/sensitive_user_portrait/cron/model_file/domain'
+
+#cron/text_attribute/policy
+POLICY_ABS_PATH = '/home/ubuntu8/yuanshi/sensitive_user_portrait/sensitive_user_portrait/cron/model_file/policy'
+
 #for all
 DAY = 24*3600
 Fifteen = 60 * 15
@@ -60,18 +66,18 @@ PATTERN_THRESHOLD = 3
 LOW_INFLUENCE_THRESHOULD = 50
 
 #attribute: domain
-domain_en2ch_dict = {'university':u'高校', 'homeadmin':u'境内机构', 'abroadadmin':u'境外机构', \
-                     'homemedia':u'媒体', 'abroadmedia':u'境外媒体', 'folkorg':u'民间组织',\
-                     'lawyer':u'法律机构及人士', 'politician':u'政府机构及人士', 'mediaworker':u'媒体人士',\
-                     'activer':u'活跃人士', 'grassroot':u'草根', 'other':u'其他', 'business':u'商业人士'}
+domain_en2ch_dict = {"writer":u'作家写手', 'professor':u'专家学者', 'root':u'草根红人', 'religion':u'宗教人士', \
+                     'lawyer':u'维权律师', 'well-known': u'公知分子', 'non-public':u'非公企业主', 'media':u'独立媒体人', \
+                     'official-media':u'官方媒体', 'governer':u'公职人员', 'star':u'文体明星', 'business':u'社会公益', 'other':u'其他'}
 
-domain_ch2en_dict = {u'高校': 'university', u'境内机构':'homeadmin', u'境外机构':'abroadadmin' ,\
-                     u'媒体': 'homemedia', u'境外媒体': 'abroadmedia', u'民间组织': 'folkorg', \
-                     u'法律机构及人士': 'lawyer', u'政府机构及人士':'politician', u'媒体人士':'mediaworker',\
-                     u'活跃人士': 'activer', u'草根': 'grassroot', u'其他':'other', u'商业人士':'business'}
+domain_ch2en_dict = {u'作家写手': 'writer', u'专家学者': 'professor', u'草根红人': 'root', u'宗教人士': 'religion', \
+                    u'维权律师': 'lawyer', u'公知分子': 'well-known', u'非公企业主': 'non_public', \
+                    u'独立媒体人': 'media', u'官方媒体':'official-media', u'公职人员': 'governer', \
+                    u'文体明星': 'star', u'社会公益': 'business', u'其他':'other'}
 
 
 #attribtue: topic
+topic_en2ch_dict = {"religion":u"宗教", "ideology":u"意识形态", "terrorist":u"民族及恐怖主义"}
 topic_en2ch_dict = {'art':u'文体类_娱乐','computer':u'科技类','economic':u'经济类', \
                     'education':u'教育类','environment':u'民生类_环保', 'medicine':u'民生类_健康',\
                     'military':u'军事类','politics':u'政治类_外交','sports':u'文体类_体育',\
