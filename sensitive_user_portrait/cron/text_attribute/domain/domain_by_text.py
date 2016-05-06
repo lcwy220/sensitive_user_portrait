@@ -45,14 +45,13 @@ def rank_dict(has_word):
     for k,v in has_word.iteritems():
         keyword.Push((v,k))
         count = count + Decimal(v)
-
+    keyword_data = keyword.TopK()
     if count > 0:
-        keyword_data = keyword.TopK()
-        label = txt_labels[txt_labels.index(keyword_data[0][1])]
+        label = [txt_labels[txt_labels.index(keyword_data[0][1])],txt_labels[txt_labels.index(keyword_data[1][1])],txt_labels[txt_labels.index(keyword_data[2][1])]]
     else:
-        label = 'other'
-        keyword_data = keyword.TopK()
-    return label,keyword_data
+        label = ['other']
+        
+    return label
 
 def domain_classfiy_by_text(user_weibo):#根据用户微博文本进行领域分类
     '''
@@ -63,16 +62,12 @@ def domain_classfiy_by_text(user_weibo):#根据用户微博文本进行领域分
     '''
 
     result_data = dict()
-    p_data = dict()
     for k,v in user_weibo.items():
-        start = time.time()
         domain_p = DOMAIN_P
         for d_k in domain_p.keys():
             domain_p[d_k] = com_p(v,DOMAIN_DICT[d_k],DOMAIN_COUNT[d_k],LEN_DICT[d_k],TOTAL)#计算文档属于每一个类的概率
-            end_time = time.time()
-        label,rank_data = rank_dict(domain_p)
+        label = rank_dict(domain_p)
         result_data[k] = label
-        p_data[k] = rank_data
 
-    return result_data,p_data
+    return result_data
     

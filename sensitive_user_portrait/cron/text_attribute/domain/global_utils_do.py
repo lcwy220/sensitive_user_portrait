@@ -8,19 +8,18 @@ import csv
 
 sys.path.append('../../../')
 from parameter import DOMAIN_ABS_PATH as abs_path
-from time_utils import get_db_num
-from global_utils import es_user_profile,es_retweet,profile_index_name,\
+from time_utils_ys import get_db_num
+from global_utils_ys import es_user_profile,es_retweet,profile_index_name,\
                          profile_index_type,retweet_index_name_pre,retweet_index_type
 
 ##加载领域标签
 
-labels = ['university', 'homeadmin', 'abroadadmin', 'homemedia', 'abroadmedia', 'folkorg', \
-          'lawyer', 'politician', 'mediaworker', 'activer', 'grassroot', 'other', 'business']
-zh_labels = ['高校', '境内机构', '境外机构', '媒体', '境外媒体', '民间组织', '法律机构及人士', \
-             '政府机构及人士', '媒体人士', '活跃人士', '草根', '其他', '商业人士']
-txt_labels = ['university', 'homeadmin', 'abroadadmin', 'homemedia', 'abroadmedia', 'folkorg', \
-          'lawyer', 'politician', 'mediaworker', 'activer', 'grassroot', 'business']
-r_labels = ['university', 'homeadmin', 'abroadadmin', 'homemedia', 'abroadmedia', 'folkorg',]
+labels = ['writer', 'professor', 'root', 'religion', 'lawyer', 'well-known', \
+          'non-public', 'media', 'official-media', 'governer', 'star', 'other', 'welfare']
+zh_labels = ['作家写手', '专家学者', '草根红人', '宗教人士', '维权律师', '公知分子', '非公企业主', \
+             '独立媒体', '官方媒体', '公职人员', '文体明星', '其他', '社会公益']
+txt_labels = ['writer', 'professor', 'root', 'religion', 'lawyer', 'well-known', \
+          'non-public', 'media', 'official-media', 'governer', 'star', 'welfare']
 
 ##领域标签加载结束
 
@@ -31,7 +30,7 @@ def load_train():
     domain_dict = dict()
     domain_count = dict()
     for i in txt_labels:
-        reader = csv.reader(file(abs_path+'/topic_dict/%s.csv'% i, 'rb'))
+        reader = csv.reader(file(abs_path+'/topic_dict/%s_tfidf.csv'% i, 'rb'))
         word_dict = dict()
         count = 0
         for f,w_text in reader:
@@ -51,84 +50,52 @@ def load_train():
 
 DOMAIN_DICT,DOMAIN_COUNT,LEN_DICT,TOTAL = load_train()
 
+def load_des_train():
+
+    domain_dict = dict()
+    domain_count = dict()
+    for i in txt_labels:
+        reader = csv.reader(file(abs_path+'/topic_dict/%s_des.csv'% i, 'rb'))
+        word_dict = dict()
+        count = 0
+        for f,w_text in reader:
+            f = f.strip('\xef\xbb\xbf')
+            word_dict[str(w_text)] = float(f)
+            count = count + float(f)
+        domain_dict[i] = word_dict
+        domain_count[i] = count
+
+    len_dict = dict()
+    total = 0
+    for k,v in domain_dict.items():
+        len_dict[k] = len(v)
+        total = total + len(v)
+    
+    return domain_dict,domain_count,len_dict,total
+
+DES_DICT,DES_COUNT,LEN_DES,TOTAL_DES = load_des_train()
+
 ##加载领域词典结束
 
-##加载特定身份的词典
-
-def getAdminWords():
-    adminw = []
-    f = open(abs_path+'/domain_dict/adw.txt', 'r')
-    for line in f:
-        w = line.strip()
-        adminw.append(w) # 政府职位相关词汇
-    f.close()
-
-    return adminw
-
-adminw = getAdminWords()
-
-def getMediaWords():
-    mediaw = []
-    mediaf = open(abs_path+'/domain_dict/mediaw.txt','r')
-    for line in mediaf:
-        mediaw.append(line.strip()) # 媒体相关词汇
-
-    return mediaw
-
-mediaw = getMediaWords()
-
-def getBusinessWords():
-    businessw = []
-    f = open(abs_path+'/domain_dict/businessw.txt', 'r')
-    for line in f:
-        businessw.append(line.strip()) # 商业人士词汇
-
-    return businessw
-
-businessw = getBusinessWords()
-
-outlist = ['海外', '香港', '台湾', '澳门']
-lawyerw = ['律师', '法律', '法务', '辩护']
-STATUS_THRE = 4000
-FOLLOWER_THRE = 1000
-
-##加载特定身份的词典结束
-
-##加载用户粉丝结构
-
-def readProtoUser():
-    f = open(abs_path+"/protou_combine/protou.txt", "r")
-    protou = dict()
-    for line in f:
-        area=line.split(":")[0]
-        if area not in protou:
-            protou[area]=set()
-        for u in (line.split(":")[1]).split():
-            protou[area].add(str(u))
-
-    return protou
-
-proto_users = readProtoUser()
+##加载种子用户
 
 def readTrainUser():
 
-    txt_list = ['abroadadmin','abroadmedia','business','folkorg','grassroot','activer',\
-                'homeadmin','homemedia','lawyer','mediaworker','politician','university']
     data = dict()
-    for i in range(0,len(txt_list)):
-        f = open(abs_path+"/domain_combine/%s.txt" % txt_list[i],"r")
+    for i in range(0,len(txt_labels)):
+        f = open(abs_path+"/user_seed/%s.txt" % txt_labels[i],"r")
         item = []
         for line in f:
             line = line.strip('\r\n')
             item.append(line)
-        data[txt_list[i]] = set(item)
+        data[txt_labels[i]] = set(item)
         f.close()
 
     return data
 
 train_users = readTrainUser()
 
-##加载用户粉丝结构结束
+##加载种子用户结束
 
 ##对微博文本进行预处理
 
@@ -216,6 +183,8 @@ def cut(s, text, f=None, cx=False):
         return tks
     else:
         return [tk[0] for tk in tks]
+
+sw = load_scws()
 ##加载分词工具结束
 
 ##标准化领域字典
