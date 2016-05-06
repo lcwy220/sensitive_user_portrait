@@ -39,9 +39,6 @@
    <link href='/static/bower_components/colorbox/example3/colorbox.css' rel='stylesheet'>
    <link href='/static/bower_components/responsive-tables/responsive-tables.css' rel='stylesheet'>
    <link href='/static/bower_components/bootstrap-tour/css_js/css/bootstrap-tour.min.css' rel='stylesheet'>
-   <!-- daohang -->
-   <link rel="stylesheet" type="text/css" href="/static/content/css/font-awesome.min.css" >
-   <link rel="stylesheet" type="text/css" href="/static/content/css/templatemo_main.css" >
 
    <!--  these two css are to use only for documentation -->
    <link rel="stylesheet" type="text/css" href="/static/content/css/demo.css">
@@ -58,7 +55,6 @@
        #nav-bar .dropdown-menu .divider{
          height:2px;
      }
-          *{font-family: 微软雅黑}
    </style>
    {% block custom_css %}
    
@@ -99,108 +95,87 @@
    <script type="text/javascript" src="/static/scripts/bootmetro.js"></script>
    <script type="text/javascript" src="/static/scripts/bootmetro-charms.js"></script>
    <script type="text/javascript" src="/static/scripts/demo.js"></script>
-
    <script type="text/javascript" src="/static/scripts/holder.js"></script>
    
    <script type="text/javascript" src="/static/scripts/echarts.js"></script>
    <script type="text/javascript" src="/static/scripts/echarts-all.js"></script>
    <script type="text/javascript" src="/static/scripts/highstock.js"></script>
-
    {% block custom_js %}
 
    {% endblock custom_js %}
 </head>
 
-<body data-accent="blue" style="padding-top:0px;padding-bottom:0px">
+<body data-accent="blue" style="background-color:#E4EFCC;">
   <!-- Prompt IE 6 users to install Chrome Frame. Remove this if you support IE 6.
        chromium.org/developers/how-tos/chrome-frame-getting-started -->
   <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
 
    <!-- Subhead
    ================================================== -->
-    <div class="navbar navbar-inverse" role="navigation">
-      <div class="navbar-header">
-        <div class="logo" ><h1 style="color:#FFF">敏感人物系统</h1></div> 
-      </div>   
-    </div>
-     <div class="navbar-collapse collapse templatemo-sidebar" style="margin:0px">
-        <ul class="templatemo-sidebar-menu">
-<!--           <li>
-            <form class="navbar-form">
-              <input type="text" class="form-control" id="templatemo_search_box" placeholder="Search...">
-              <span class="btn btn-default">Go</span>
-            </form>
-          </li> -->
-          <li ><a href="/index/overview/" id="base_overview"><i class="fa fa-home"></i>整体概览</a></li>
-          <li ><a href="/index/search/"><i class="fa fa-home"></i>检索</a></li>
-          <li class="sub open">
-            <a href="javascript:;">
-              <i class="fa fa-database"></i>人物画像 <div class="pull-right"><span class="caret"></span></div>
-            </a>
-            <ul class="templatemo-submenu">
-              <li><a href="/index/person/">查看人物画像</a></li>
-              <li><a href="/index/person_contect/">人物关联分析</a></li>
-            </ul>
-          </li> 
-          <li class="sub open">
-            <a href="javascript:;">
-              <i class="fa fa-database"></i>群体分析 <div class="pull-right"><span class="caret"></span></div>
-            </a>
-            <ul class="templatemo-submenu">
-              <li><a href="/index/group_identify/">群体发现</a></li>
-              <li><a href="/index/group_analysis/">群体分析</a></li>
-            </ul>
-          </li> 
-          <li><a href="/index/influence/"><i class="fa fa-cubes"></i>影响力分析</a></li>
-          <li><a href="/index/sensiwords_manage/"><i class="fa fa-users"></i>敏感微博监控</a></li>
-          <li class="sub open">
-            <a href="javascript:;">
-              <i class="fa fa-cog"></i>系统管理 <div class="pull-right"><span class="caret"></span></div>
-            </a>
-            <ul class="templatemo-submenu">
-              <li><a href="/index/recommend_in/">入库推荐</a></li>
-              <li><a href="/index/sensiwords_manage/">敏感词管理</a></li>
-              <li><a href="/index/tag_manage/">自定义标签</a></li>
-            </ul>
-          </li> 
-
-<!--           <li><a href="/index/recommend_in/"><i class="fa fa-map-marker"></i>入库管理</a></li>
-          <li><a href="/index/words_recommend/"><i class="fa fa-users"></i>敏感词推荐</a></li>
-          <li><a href="/index/sensiwords_manage/"><i class="fa fa-users"></i>敏感词管理</a></li>
-          <li><a href="/index/tag_manage/"><i class="fa fa-cog"></i>系统标签管理</a></li>
-          <li><a href="/index/tag_search/">用户标签标注</a></li>
-          <li><a href="/index/group_task/" ><i class="fa fa-sign-out"></i>系统监控管理</a></li>
-          <li><a href="/index/group_search/">系统用户监控</a></li> -->
-        </ul>
+   <header id="nav-bar" class="container-fluid">
+      <div class="row-fluid">
+         <div class="span8">
+            <div id="header-container">
+               <a id="backbutton" class="win-backbutton" href="/index/"></a>
+               <p></p>
+               <div class="dropdown">
+                  <a class="header-dropdown dropdown-toggle accent-color" style="font-family:Microsoft Yahei;" data-toggle="dropdown" href="#" >
+                      {% block subtitle %}
+                      {% endblock subtitle %}
+                     <b class="caret"></b>
+                  </a>
+                  <ul class="dropdown-menu">
+                  <li><a href="/index/search/">检索</a></li>
+                  <li><a href="/index/overview/">整体概览</a></li>
+                  <li><a href="/index/influence/">影响力分析</a></li>
+                  <li class="divider"></li>
+                  <li><a href="/index/recommend_in/">入库管理</a></li>
+                  <li><a href="/index/words_recommend/">敏感词推荐</a></li>
+                  <li><a href="/index/sensiwords_manage/">敏感词管理</a></li>
+                  <li class="divider"></li>
+                  <!--<li><a href="/index/tag/">自定义标签</a></li>-->
+                  <!--<li><a href="/index/group/">群体分析</a></li>-->
+                  <!--<li><a href="/index/group/">重点人物监控</a></li>-->
+                  <!-- <li><a href="/index/contrast/">对比分析</a></li>-->
+                  <li><a href="/index/tag_manage/">系统标签管理</a></li>
+                  <li><a href="/index/tag_search/">用户标签标注</a></li>
+                  <li class="divider"></li>
+                  <li><a href="/index/group_task/">系统监控管理</a></li>
+                  <li><a href="/index/group_search/">系统用户监控</a></li>
+                  <li class="divider"></li>
+                  <li><a href="/index/">主页Home</a></li>
+               </ul>
+            </div>
+            </div>
+         </div>
+         <div id="top-info" class="pull-right">
+         <a href="#" class="pull-left">
+            <div class="top-info-block">
+               <h3>FirstName</h3>
+               <h4>LastName</h4>
+            </div>
+            <div class="top-info-block">
+               <b class="icon-user"></b>
+            </div>
+         </a>
+         <hr class="separator pull-left"/>
+         <a id="settings" class="pull-left" href="#">
+            <b class="icon-settings"></b>
+         </a>
       </div>
-
-
-        <div class="templatemo-content">
-              {% block body %}
-      		  {% endblock body %}
-        </div>
-
+   </div>
+   </header>
+   <div class="container" style="padding-top:0px;min-height:600px;">
+      {% block body %}
+      <p class="lead">Fundamental HTML elements styled and enhanced with extensible classes.</p>
+      {% endblock body %}
+  </div>
   
    <script type="text/javascript">
       $(".metro").metro();
-      // $(".templatemo-sidebar-menu li").click(function(){
-      // 	console.log($(this));
-      // 	$(this).addClass("active").siblings().removeClass("active");
-
-      // });
-      $(".templatemo-sidebar-menu a").each(function(){
-        $this=$(this);
-        if($this[0].href==String(window.location)){
-          $this.parent().addClass('active');
-        }
-
-      });
    </script>
-      <!-- daohang:2 -->
-   <script type="text/javascript" src="/static/scripts/Chart.min.js"></script>
-   <script type="text/javascript" src="/static/scripts/templatemo_script.js"></script>
-  {% block end_js %}
 
+  {% block end_js %}
   {% endblock end_js %}
 </body>
 </html>
