@@ -19,8 +19,9 @@ from parameter import DAY, RUN_TYPE, RUN_TEST_TIME
 from parameter import RECOMMEND_IN_SENSITIVE_TOP, RECOMMEND_IN_BLACK_USER1, RECOMMEND_IN_BLACK_USER2
 
 def search_from_es(date):
-    index_time = 'bci_' + ''.join(date.split('-'))
+    index_time = 'bci_' + date.replace('-', '')
     index_type = 'bci'
+    print index_time
     query_body = {
         'query':{
             'match_all':{}
@@ -28,7 +29,7 @@ def search_from_es(date):
         'size':k,
         'sort':[{'user_index':{'order':'desc'}}]
         }
-    result = es_bci.search(index=index_time, doc_type=index_type, body=query_body)['hits']['hits']
+    result = es_bci.search(index=index_time, doc_type=index_type, body=query_body, _source=False, fields=['user_index'])['hits']['hits']
     user_set = []
     user_set = [user_dict['_id'] for user_dict in result]
     return set(user_set), result
@@ -53,6 +54,9 @@ def filter_rules(candidate_results):
     filter_result3 = filter_retweet_count(filter_result2)
     #rule4: mention count
     results = filter_mention(filter_result3)
+    #rule5: compute count
+    compute_uid_set = r.hkeys("compute")
+    results = set(results) - set(compute_uid_set)
     return results
 
 
@@ -109,6 +113,7 @@ def main():
         now_ts = time.time()
     else:
         now_ts = datetime2ts(RUN_TEST_TIME)
+        now_ts = datetime2ts('2013-09-02')
     date = ts2datetime(now_ts - DAY)
     # auto recommendation: step 1:4
     #step1: read from top es_daily_rank
@@ -121,6 +126,9 @@ def main():
     candidate_results = filter_in(subtract_user_set)
     #step4: filter rules about ip count& reposts/bereposts count&activity count
     results = filter_rules(candidate_results)
+    #step5: get sensitive user
+    sensitive_user = list(get_sensitive_user(date))
+    results = results - set(sensitive_user) # influence user - sensitive user
     new_date = ts2datetime(now_ts)
     hashname_influence = "recomment_" + new_date + "_influence"
     if results:
@@ -128,8 +136,6 @@ def main():
             #print uid
             r.hset(hashname_influence, uid, "0")
 
-    #step5: get sensitive user
-    sensitive_user = list(get_sensitive_user(date))
     hashname_sensitive = "recomment_" + new_date + "_sensitive"
     if sensitive_user:
         for uid in sensitive_user:

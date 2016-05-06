@@ -63,7 +63,7 @@ def main():
         now_ts = time.time()-DAY # 前一天
         ts = str(datetime2ts(ts2datetime(now_ts)))
     else:
-        ts = str(datetime2ts('2013-09-01'))
+        ts = str(datetime2ts('2013-09-02'))
     now_ts = int(ts)
     print now_ts
     sensitive_string = "sensitive_" + ts
@@ -111,6 +111,7 @@ def main():
                         revise_item['uid'] = uid
                         # 新更新的敏感度
                         revise_item[update_sensitive_key] = current_sensitive_score
+                        revise_item['last_value'] = current_sensitive_score
                         # 新更新的敏感词
                         revise_item[sensitive_dict_key] = sensitive_info[uid]
                         # 新更新的string
@@ -127,6 +128,7 @@ def main():
                         revise_item = dict()
                         revise_item['uid'] = uid
                         revise_item[update_sensitive_key] = current_sensitive_score
+                        revise_item['last_value'] = current_sensitive_score
                         revise_item[sensitive_dict_key] = sensitive_info[uid]
                         revise_item[sensitive_string_key] = "&".join(sensitive_words_dict.keys())
                         revise_item['sensitive_day_change'] = current_sensitive_score
@@ -163,6 +165,7 @@ def main():
             uid = tmp['_id']
             # 新更新的敏感度
             revise_item[update_sensitive_key] = 0
+            revise_item['last_value'] = 0
             # 新更新的敏感词
             revise_item[sensitive_dict_key] = json.dumps({})
             # 新更新的string
