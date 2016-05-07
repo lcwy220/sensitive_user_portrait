@@ -27,7 +27,7 @@ def read_flow_text_sentiment(uid_list):
     if RUN_TYPE == 1:
         now_date_ts = datetime2ts(ts2datetime(now_ts))
     else:
-        now_date_ts = datetime2ts(RUN_TEST_TIME)
+        now_date_ts = datetime2ts("2013-09-08")
 
     start_date_ts = now_date_ts - DAY * WEEK
     for i in range(0,WEEK):

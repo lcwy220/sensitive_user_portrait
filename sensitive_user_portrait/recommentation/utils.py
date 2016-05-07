@@ -456,6 +456,7 @@ def identify_in(data):
 
 
 def show_in_history(date):
+    print date
     results = []
     sensitive_uid_list = []
     influence_uid_list = []

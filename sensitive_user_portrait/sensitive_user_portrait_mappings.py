@@ -24,6 +24,14 @@ index_info = {
                     "type": "string",
                     "index": "not_analyzed"
                 },
+                "domain_list":{
+                    "type": "string",
+                    "index": "no"
+                },
+                "politics":{
+                    "type": "string",
+                    "index": "not_analyzed"
+                },
                 "sensitive_words_dict":{
                     "type":"string",
                     "index":"not_analyzed"
@@ -40,19 +48,30 @@ index_info = {
                     "type": "string",
                     "index": "not_analyzed"
                 },
-                "sensitive_geo_activity":{
+                "sensitive_activity_geo_dict":{
                     "type": "string",
-                    "index": "not_analyzed"
+                    "index": "no"
                 },
-                "sensitive_geo_string":{
+                "sensitive_activity_geo":{
                     "type": "string",
                     "analyzer": "my_analyzer"
                 },
-                "geo_activity":{
+                "sensitive_activity_geo_aggs":{
+                    "type": "string",
+                    "analyzer": "my_analyzer"
+                },
+                # 所有地点检索
+                "activity_geo":{
                     "type": "string",
                     "index": "not_analyzed"
                 },
-                "geo_string":{
+                # 地理轨迹
+                "activity_geo_dict":{
+                    "type": "string",
+                    "index": "no"
+                },
+                # 最后一个位置检索
+                "activity_geo_aggs":{
                     "type": "string",
                     "analyzer": "my_analyzer"
                 },
@@ -62,7 +81,7 @@ index_info = {
                 },
                 "sensitive_hashtag_dict":{
                     "type": "string",
-                    "index": "not_analyzed"
+                    "index": "no"
                 },
                 "hashtag_string":{
                     "type": "string",
@@ -70,11 +89,11 @@ index_info = {
                 },
                 "hashtag_dict":{
                     "type": "string",
-                    "index": "not_analyzed"
+                    "index": "no"
                 },
-                "keywords":{
+                "keywords_dict":{
                     "type": "string",
-                    "index": "not_analyzed"
+                    "index": "no"
                 },
                 "keywords_string":{
                     "type" : "string",
@@ -90,41 +109,35 @@ index_info = {
                 },
                 "topic":{
                     "type": "string",
-                    "index": "not_analyzed"
+                    "index": "no"
                 },
-
-
                 "topic_string":{
                     "type": "string",
                     "analyzer": "my_analyzer"
                 },
 
                 "importance": {
-                    "type": "long"
+                    "type": "float"
                 },
                 "influence": {
-                    "type": "long"
+                    "type": "float"
                 },
                 "activeness": {
-                    "type": "long"
+                    "type": "float"
+                },
+                "sensitive": {
+                    "type": "float"
                 },
 
-                "emoticon": {
-                    "type": "string",
-                    "index": "not_analyzed"
-                },
                 "online_pattern":{
                     "type": "string",
-                    "index": "not_analyzed"
+                    "index": "no"
                 },
-                "link": {
-                    "type": "long",
-                    "index": "not_analyzed"
+                "online_pattern_aggs":{
+                    "type":"string",
+                    "analyzer": "my_analyzer"
                 },
                 "fansnum": {
-                    "type": "long"
-                },
-                "text_len": {
                     "type": "long"
                 },
                 "photo_url": {
@@ -142,10 +155,6 @@ index_info = {
                     "type": "long"
                 },
                 "location": {
-                    "type": "string",
-                    "index": "not_analyzed"
-                },
-                "emotion_words": {
                     "type": "string",
                     "index": "not_analyzed"
                 },

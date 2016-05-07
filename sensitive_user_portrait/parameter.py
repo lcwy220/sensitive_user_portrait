@@ -5,18 +5,22 @@ use to save parameter
 #for test
 RUN_TYPE = 0 #0 mark run for test; 1 mark run for operation
 WORK_TYPE = 0 # limited source
-RUN_TEST_TIME = '2013-09-02'
+RUN_TEST_TIME = '2013-09-08'
 
 #cron/text_attribute/domain
-DOMAIN_ABS_PATH = '/home/ubuntu8/yuanshi/sensitive_user_portrait/sensitive_user_portrait/cron/model_file/domain'
+DOMAIN_ABS_PATH = '/home/ubuntu8/yuankun/sensitive_user_portrait/sensitive_user_portrait/cron/model_file/domain'
 
 #cron/text_attribute/policy
-POLICY_ABS_PATH = '/home/ubuntu8/yuanshi/sensitive_user_portrait/sensitive_user_portrait/cron/model_file/policy'
+POLICY_ABS_PATH = '/home/ubuntu8/yuankun/sensitive_user_portrait/sensitive_user_portrait/cron/model_file/policy'
+
+#cron/text_attribute/topic
+TOPIC_ABS_PATH = '/home/ubuntu8/yuankun/sensitive_user_portrait/sensitive_user_portrait/cron/model_file/topic'
 
 #for all
 DAY = 24*3600
 Fifteen = 60 * 15
 HALF_HOUR = 1800
+HOUR = 3600
 FOUR_HOUR = 3600*4
 MAX_VALUE = 99999999
 WEEK = 7
@@ -78,13 +82,6 @@ domain_ch2en_dict = {u'作家写手': 'writer', u'专家学者': 'professor', u'
 
 #attribtue: topic
 topic_en2ch_dict = {"religion":u"宗教", "ideology":u"意识形态", "terrorist":u"民族及恐怖主义"}
-topic_en2ch_dict = {'art':u'文体类_娱乐','computer':u'科技类','economic':u'经济类', \
-                    'education':u'教育类','environment':u'民生类_环保', 'medicine':u'民生类_健康',\
-                    'military':u'军事类','politics':u'政治类_外交','sports':u'文体类_体育',\
-                    'traffic':u'民生类_交通','life':u'其他类','anti-corruption':u'政治类_反腐',\
-                    'employment':u'民生类_就业','fear-of-violence':u'政治类_暴恐',\
-                    'house':u'民生类_住房','law':u'民生类_法律','peace':u'政治类_地区和平',\
-                    'religion':u'政治类_宗教','social-security':u'民生类_社会保障'}
 
 topic_ch2en_dict = {u'文体类_娱乐': 'art', u'科技类':'computer', u'经济类':'economic', \
                     u'教育类':'education', u'民生类_环保': 'environment', u'民生类_健康':'medicine',\
@@ -175,21 +172,10 @@ ACTIVENESS_TREND_TAG_VECTOR = {
 # weibo_api.py read_flow_text_sentiment/read_flow_text 
 WEIBO_API_INPUT_TYPE = 1 # 1 mark: need compute sentiment
                          # 0 mark: not need compute sentiment
-#cron/text_attribute/topic
-TOPIC_ABS_PATH = '/home/ubuntu8/huxiaoqian/user_portrait_151220/user_portrait/user_portrait/cron/model_file/topic'
 
-#cron/text_attribute/domain
-DOMAIN_ABS_PATH = '/home/ubuntu8/huxiaoqian/user_portrait_151220/user_portrait/user_portrait/cron/model_file/domain'
 
-#cron/text_attribute/psy
-PSY_ABS_PATH = '/home/ubuntu8/huxiaoqian/user_portrait_151220/user_portrait/user_portrait/cron/model_file/psy'
 
-#cron/text_attribute/event
-EVENT_ABS_PATH = '/home/ubuntu8/huxiaoqian/user_portrait_151220/user_portrait/user_portrait/cron/model_file/event'
 
-#cron/text_attribute/character
-CH_ABS_PATH = '/home/ubuntu8/huxiaoqian/user_portrait_151220/user_portrait/user_portrait/cron/model_file/character'
-CHARACTER_TIME_GAP = 7
 
 # pre-influence index
 pre_influence_index = "bci_"
