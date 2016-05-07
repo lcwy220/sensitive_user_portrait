@@ -117,9 +117,9 @@ def contrast():
     return render_template('index/contrast.html')
 
 
-@mod.route('/group_analysis/')
-def group_analysis():
-    return render_template('index/group_analysis.html')
+@mod.route('/group_list/')
+def group_list():
+    return render_template('index/group_list.html')
 
 @mod.route('/personal/')
 def personal():
