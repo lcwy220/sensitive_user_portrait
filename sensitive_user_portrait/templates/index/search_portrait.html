@@ -1,0 +1,25 @@
+{% extends "index/base.html" %} 
+{% block title %}检索{% endblock title %}
+{% block subtitle %}检索{% endblock subtitle %}
+
+{% block custom_css %}
+    <link href="/static/custom/css/search.css" rel="stylesheet">
+{% endblock custom_css %}
+
+{% block body %}
+{% include "index/search/search_base.html" %}
+{% endblock %}
+{% block end_js %}
+<script src="/static/custom/js/search_base.js"></script>
+<script>
+    function Base(){
+        this.simple_search_url = "/index/text_search/?words_list=";
+        this.advanced_search_url = "/index/search_results/?stype=1&";
+    }
+
+    var base = new Base();
+    bindSearchFunc(base);
+    getAttributeName();
+    bindAddFunction();
+</script>
+{% endblock end_js %}
