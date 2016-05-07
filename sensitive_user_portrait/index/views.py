@@ -46,11 +46,11 @@ def sensiwords_manage():
 @mod.route('/words_recommend/')
 def word_recommend():
     return render_template('index/words_recommend.html')
-"""
-@mod.route('/group/')
+
+@mod.route('/group_identify/')
 def group():
-    return render_template('index/group.html')
-"""
+    return render_template('index/group_identify.html')
+
 @mod.route('/group_results/')
 def group_results():
     name = request.args.get('name', '')
@@ -111,7 +111,7 @@ def text_search():
 @mod.route('/influence/')
 def influence():
     return render_template('index/influence.html')
-"""
+
 @mod.route('/monitor/')
 def monitor():
     return render_template('index/monitor.html')
@@ -121,16 +121,18 @@ def contrast():
     return render_template('index/contrast.html')
 
 
-@mod.route('/group_analysis/')
-def group_analysis():
-    return render_template('index/group_analysis.html')
-"""
+@mod.route('/group_list/')
+def group_list():
+    return render_template('index/group_list.html')
+
 @mod.route('/personal/')
 def personal():
     uid = request.args.get('uid', '1215031834')
     uid = str(uid)
     return render_template('index/personal.html', uid=uid)
-
+@mod.route('/personal_contect/')
+def personal_contect():
+    return render_template('index/contact.html')
 @mod.route('/sensitive_person/')
 def sensitive_person():
     uid = request.args.get('uid', '2697649164')
