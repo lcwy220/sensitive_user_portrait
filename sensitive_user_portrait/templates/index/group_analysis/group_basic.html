@@ -1,0 +1,656 @@
+<!-- <div id='sex' style='float:left;width:300px;height:200px'></div>         -->
+<!-- <div id='verify' style='float:right;width:300px;height:200px'></div> -->
+<div class="col-lg-4">
+    <div class="panel panel-default">
+        <div class="panel-heading" style="border-bottom: 1px solid transparent;border-color: #dddddd;">
+            男女比例
+        </div>
+        <div class="panel-body">
+        	<div id='group_sex' style='float:left;width:300px;height:200px' >
+        	</div>
+    	</div>
+	</div>
+</div>
+<!-- <div class="col-lg-4" id='totalnumber'></div> -->
+<div class="col-lg-4">
+    <div class="panel panel-default">
+        <div class="panel-heading" style="border-bottom: 1px solid transparent;border-color: #dddddd;">
+            群组信息
+        </div>
+        <div class="panel-body">
+        	<div id='group_info' style='float:left;width:300px;height:200px' >
+        		<div style="width:100%;">群组人数：</div>
+				<div id ="group_num" style="width:100%;"></div>
+        		<div style="width:100%;">群组领域：</div>
+				<div ><span id ="group_top" style="width:100%;"></span><a href="#" data-toggle="modal" data-target="#more_domain" id="moredom" style="margin-left:10px;" >更多</a></div>
+        		<div style="width:100%;" >群组身份：</div>
+				<div ><span id ="group_dom" style="width:100%;"></span><a href="#" data-toggle="modal" data-target="#more_topic" id="moretopic" style="margin-left:10px;" >更多</a></div>
+        	</div>
+    	</div>
+    </div>
+</div>
+<div class="col-lg-4">
+    <div class="panel panel-default">
+        <div class="panel-heading" style="border-bottom: 1px solid transparent;border-color: #dddddd;">
+            认证比例
+        </div>
+        <div class="panel-body">
+        	<div id='group_verify' style='float:left;width:300px;height:200px' >
+        	</div>
+    	</div>
+    </div>
+</div>
+
+<div class='col-lg-12' style="margin-top:15px;">
+ <div class="panel panel-default">
+    <div class="panel-heading" style="border-bottom: 1px solid transparent;border-color: #dddddd;">
+            用户自定义标签
+    </div>
+    <div class="panel-body">
+       	<div id='group_tag' style='width:800px;height:400px' >
+       	</div>
+   	</div>
+</div>
+</div>
+        <div id="framecontent" style="width:850px;">
+            <div class ="framepost" style="height:600px;">
+                <h3 class="title">发帖内容</h3>
+                <div style="width:100%;margin-top:10px;">
+	    <span style= "color:red;margin-left:20px;float:left;">相关微博</span>
+		<ul style="float:left;" id="modechoose">
+			<li>
+		        <input type="radio" name="mode_choose" value="timestamp" checked="checked">
+                <span class="mode" style="">时间</span>
+			</li>
+			<li>
+                <input type="radio" name="mode_choose" value="retweet_count">
+                <span class="mode" style="">转发数</span>
+			</li>
+			<li>
+				<input type="radio" name="mode_choose" value="count_count" >
+				<span class="mode" style="">评论数</span>
+			</li>
+			<li>
+                <input type="radio" name="mode_choose" value="sensitive">
+                <span class="mode" style="">敏感性</span>
+			</li>
+		</ul>
+	</div>
+            </div>
+        </div>
+		
+		<div class="tang-scrollpanel-content" style="margintop:10px;">
+	    <div id='group_influ_weibo' style='overflow-x:hidden;width:730px;float:left;'>
+ 			<div id="group_influ_weibo_result" style="float:left;width:100%;"></div>
+            <div id="pageGro" class="cb" style="display:none;float:left;width:600px;height:60px;margin-left:200px;margin-top:40px;line-height:23px;">
+                <span class="pageUp" style="float:left;">上一页</span>
+                <span class="pageList" style="float:left;">
+                    <ul>
+                        <li>1</li>
+                        <li>2</li>
+                        <li>3</li>
+                        <li>4</li>
+                        <li>5</li>
+                    </ul>
+                </span>
+                <span class="pageDown" style="margin-left:20px;cursor:pointer;">下一页</span>
+            </div>	       
+        </div>
+	</div>
+		
+<div class="modal fade" id="more_domain" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="width: 500px;">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" style="font-size:18px" id="myModalLabel">身份排名</h4>
+      </div>
+      <div class="modal-body" id='domian_WordList'>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="more_topic" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="width: 500px;">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" style="font-size:18px" id="myModalLabel">话题排名</h4>
+      </div>
+      <div class="modal-body" id='topic_WordList'>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+function g_basic(){
+  this.ajax_method = 'GET';
+}
+g_basic.prototype = {   //获取数据，重新画表
+  call_sync_ajax_request:function(url, method, callback){
+    $.ajax({
+      url: url,
+      type: method,
+      dataType: 'json',
+      async: false,
+      success:callback
+    });
+  },
+  weiboData:function(data){;
+		DrawWeibo(data,'group_influ_weibo', 'group_influ_weibo_result');
+	}
+}
+function draw_basic(data){
+    console.log(data);
+	draw_sex(data);
+	draw_verify(data);
+	Draw_totalnumber(data);
+	draw_tag(data);
+	g_info(data);
+	//draw_tag({'user_tag':{'好':13,'中':21,'坏':9}});
+}
+g_basic = new g_basic();
+function g_info(data){
+	$('#group_num').html(data.count);
+	
+	var group_top = document.getElementById('group_top');
+		if(data.topic.length>3){
+		    group_top.innerHTML = data.topic[0][0] +'&nbsp&nbsp' +data.topic[1][0]+'&nbsp&nbsp' +data.topic[2][0];
+			console.log('more');
+		    DrawMore(data.topic,'topic_WordList','topic');
+		}else if(data.topic.length>0 && ddata.topic.length<4){
+		    var html ='';
+			for(var i=0;i<data.topic.length;i++){
+			    html = html + data.topic[i][0] + '&nbsp&nbsp';
+			}
+			group_top.innerHTML = html ;
+			$('#moretopic').css('display','none');
+		}else if(data.topic.length == 0){
+		    group_top.innerHTML = '暂无数据';
+			$('#moretopic').css('display','none');
+		}
+	
+	
+	var group_dom = document.getElementById('group_dom');
+		if(data.domain.length>3){
+		    group_dom.innerHTML = data.domain[0][0] +'&nbsp&nbsp' +data.domain[1][0]+'&nbsp&nbsp' +data.domain[2][0];
+		    DrawMore(data.domain,'domian_WordList','domain');
+		}else if(data.domain.length>0 && data.domain.length<4){
+		    var html ='';
+			for(var i=0;i<data.domain.length;i++){
+			    html = html + data.domain[i][0] + '&nbsp&nbsp';
+			}
+			group_dom.innerHTML = html ;
+			$('#moredomain').css('display','none');
+		}else if(data.domain.length == 0){
+		    group_dom.innerHTML = '暂无数据';
+			$('#moredomain').css('display','none');
+		}
+}
+function draw_sex(data){
+	var mychart1 =  echarts.init(document.getElementById('group_sex')); 
+	var option = {
+	    tooltip : {
+	        trigger: 'item',
+	        formatter: "{a} <br/>{b} : {c} ({d}%)"
+	    },
+	    legend: {
+	        orient : 'vertical',
+	        x : 'left',
+	        data:['男','女']
+	    },
+	    toolbox: {
+	        show : false,
+	        feature : {
+	            mark : {show: true},
+	            dataView : {show: true, readOnly: false},
+	            magicType : {
+	                show: true, 
+	                type: ['pie', 'funnel'],
+	                option: {
+	                    funnel: {
+	                        x: '25%',
+	                        width: '50%',
+	                        funnelAlign: 'center',
+	                        max: 1548
+	                    }
+	                }
+	            },
+	            restore : {show: true},
+	            saveAsImage : {show: true}
+	        }
+	    },
+	    calculable : true,
+	    series : [
+	        {
+	            name:'性别',
+	            type:'pie',
+	            radius : ['50%', '70%'],
+	            itemStyle : {
+	                normal : {
+	                    label : {
+	                        show : false
+	                    },
+	                    labelLine : {
+	                        show : false
+	                    }
+	                },
+	                emphasis : {
+	                    label : {
+	                        show : true,
+	                        position : 'center',
+	                        textStyle : {
+	                            fontSize : '30',
+	                            fontWeight : 'bold'
+	                        }
+	                    }
+	                }
+	            },
+	            data:[
+	                {value:data['gender']['1'], name:'男'},
+	                {value:data['gender']['2'], name:'女'}
+	            ]
+	        }
+	    ]
+	};
+	                  
+  mychart1.setOption(option);
+}
+function draw_verify(data){
+	var veri = data['verified'];
+	var yes = 0;
+	var no = 0;
+	for (var k in veri){
+		if (k == ''){
+			no = veri[k];
+		}else{
+			yes = veri[k];
+		}
+	}
+	var mychart1 =  echarts.init(document.getElementById('group_verify')); 
+	var option = {
+	    tooltip : {
+	        trigger: 'item',
+	        formatter: "{a} <br/>{b} : {c} ({d}%)"
+	    },
+	    legend: {
+	        orient : 'vertical',
+	        x : 'left',
+	        data:['已认证','未认证']
+	    },
+	    toolbox: {
+	        show : false,
+	        feature : {
+	            mark : {show: true},
+	            dataView : {show: true, readOnly: false},
+	            magicType : {
+	                show: true, 
+	                type: ['pie', 'funnel'],
+	                option: {
+	                    funnel: {
+	                        x: '25%',
+	                        width: '50%',
+	                        funnelAlign: 'center',
+	                        max: 1548
+	                    }
+	                }
+	            },
+	            restore : {show: true},
+	            saveAsImage : {show: true}
+	        }
+	    },
+	    calculable : true,
+	    series : [
+	        {
+	            name:'认证情况',
+	            type:'pie',
+	            radius : ['50%', '70%'],
+	            itemStyle : {
+	                normal : {
+	                    label : {
+	                        show : false
+	                    },
+	                    labelLine : {
+	                        show : false
+	                    }
+	                },
+	                emphasis : {
+	                    label : {
+	                        show : true,
+	                        position : 'center',
+	                        textStyle : {
+	                            fontSize : '20',
+	                            fontWeight : 'bold'
+	                        }
+	                    }
+	                }
+	            },
+	            data:[
+	                {value:yes, name:'已认证'},
+	                {value:no, name:'未认证'}
+	            ]
+	        }
+	    ]
+	};
+  mychart1.setOption(option);
+}
+function Draw_totalnumber(data){
+    $('#totalnumber').empty();
+    html = '';
+    html += '<a class="well top-block" style="height: 200px;width: 200px;border-radius: 450px;margin-top: 40px;margin-left: 50px;">';
+    html += '<div><img src="/static/img/user_group.png" style="height:40px;margin-top:40px"></div>';
+    html += '<div>群组总人数</div>'
+    html += '<div>' + data['count'] + '</div></a>';
+    $('#totalnumber').append(html);
+}
+function toarray(a,b){
+	this.names=a;
+	this.num=b;
+}
+function draw_tag(data){
+	var mychart1 = echarts.init(document.getElementById('group_tag'));
+	var item = data['user_tag'];
+	var items = [];
+	var tagname= [];
+	var tagvalue = [];
+	for (var k in item){
+		items.push(new toarray(k,item[k]));
+	}
+	items.sort(function(a,b){return a.num-b.num});
+	//console.log(items);
+	for (var i=0;i< items.length;i++){
+		tagname.push(items[i].names);
+		tagvalue.push(items[i].num);
+	}
+	var option = {
+    tooltip : {
+        trigger: 'axis',
+        formatter:"{b} : {c}",
+    },
+    toolbox: {
+        show : false,
+        feature : {
+            mark : {show: true},
+            dataView : {show: true, readOnly: false},
+            magicType: {show: true, type: ['line', 'bar']},
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    calculable : true,
+    xAxis : [
+        {
+            type : 'value',
+            boundaryGap : [0, 0.01]
+        }
+    ],
+    yAxis : [
+        {
+            type : 'category',
+            data :tagname
+        }
+    ],
+    series : [
+        {
+            // name:'2011年',
+            type:'bar',
+            data:tagvalue
+        }
+    ]
+};
+  mychart1.setOption(option);
+}
+
+
+function DrawMore(data,div,option){
+    if (option =="topic"){
+	    var theme = '话题';
+	}else{
+	    var theme = '身份';
+	}
+	var html = '';
+    $('#'+div).empty();
+	html += '<table class="table table-striped table-bordered" style="width:450px;">';
+    html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">'+theme+'</th><th style="text-align:center">频数</th></tr>';
+    for (var i = 0; i < data.length; i++) {
+        var s = i.toString();
+        var m = i + 1;
+		if(data[i][1]=="unknown"){
+		    data[i][1] = "未知";
+		}
+        html += '<tr style=""><th style="text-align:center">' + m + '</th><th style="text-align:center">' + data[i][0] +  '</th><th style="text-align:center">' + data[i][1] + '</th></tr>';
+    };
+    html += '</table>'; 
+    $('#'+ div).append(html);
+}
+
+
+
+//var basic_name=document.getElementById('').text();
+//var basic_name=$("#stickynote").text();
+//var basic_url='/group/show_group_result/?task_name='+name +'&submit_user=admin&module=basic';
+var basic_url='/group/show_group_result/?task_name=mytest030303&submit_user=admin&module=basic';
+console.log(basic_url);
+g_basic.call_sync_ajax_request(basic_url,g_basic.ajax_method,draw_basic);
+
+
+$(function(){
+	$('#modechoose').click(function(){
+	var box = document.getElementsByName('mode_choose');
+	for(var i=0;i<box.length;i++){
+		if(box[i].checked){
+			sort_type = box[i].value;
+		}
+	}
+	//var url = "/attribute/new_user_weibo/?uid="+uid+"&sort_type="+sort_type;
+	var url = "/group/group_user_weibo/?task_name=mytest0303&submit_user=admin&sort_type=timestamp";
+	console.log(url);
+    g_basic.call_sync_ajax_request(url, g_basic.ajax_method, g_basic.weiboData);
+	});
+});
+
+
+
+function DrawWeibo(data, div_name, sub_div_name){
+    page_num = 5;
+	//console.log(data);	
+    if (data.length < page_num) {
+        //console.log('data_length', data.length);
+        $('#'+ div_name + ' #pageGro .pageUp').css('display', 'none');
+        $('#'+ div_name + ' #pageGro .pageList').css('display', 'none'); 
+        $('#'+ div_name + ' #pageGro .pageDown').css('display', 'none'); 
+        if (data.length == 0) {
+            $('#' + sub_div_name).empty();
+            $('#' + sub_div_name).append('此条件下没有与此事件相关的微博！');
+        }else{
+            $('#'+ div_name + ' #pageGro').css('display', 'block');
+            page_num = data.length
+            page_group_influ_weibo( 0, page_num, data, sub_div_name);
+        }
+    }else {
+          $('#'+ div_name + ' #pageGro').css('display', 'block');
+          page_group_influ_weibo( 0, page_num, data, sub_div_name);
+          var total_pages = 0;
+          if (data.length % page_num == 0) {
+              total_pages = data.length / page_num;
+          }
+          else {
+              total_pages = Math.round(data.length / page_num) + 1;
+          }
+        }
+    var pageCount = total_pages;
+    
+    if(pageCount>5){
+        page_icon(1,5,0, div_name);
+    }else{
+        page_icon(1,pageCount,0, div_name);
+    }
+    
+    $("#"+div_name+" #pageGro li").live("click", function(){
+        if(pageCount > 5){
+            var pageNum = parseInt($(this).html());
+            pageGroup(pageNum,pageCount);
+        }else{
+            $(this).addClass("on");
+            $(this).siblings("li").removeClass("on");
+        }
+      page = parseInt($("#"+div_name+" #pageGro li.on").html())  
+      //console.log('page', page);         
+      start_row = (page - 1)* page_num;
+      end_row = start_row + page_num;
+      if (end_row > data.length)
+          end_row = data.length;
+        // console.log('start', start_row);
+        // console.log('end', end_row);
+        // console.log('data',data);
+        page_group_influ_weibo(start_row,end_row,data, sub_div_name);
+    });
+
+    $("#"+div_name+" #pageGro .pageUp").off('click').click(function(){
+        if(pageCount > 5){
+            var pageNum = parseInt($("#"+div_name+" #pageGro li.on").html());
+            pageUp(pageNum,pageCount);
+        }else{
+            var index = $("#"+div_name+" #pageGro ul li.on").index();
+            if(index > 0){
+                $("#"+div_name+" #pageGro li").removeClass("on");
+                $("#"+div_name+" #pageGro ul li").eq(index-1).addClass("on");
+            }
+        }
+      page = parseInt($("#"+div_name+" #pageGro li.on").html())  
+      //console.log(page);
+      start_row = (page-1)* page_num;
+      end_row = start_row + page_num;
+      if (end_row > data.length){
+          end_row = data.length;
+      }
+        page_group_influ_weibo(start_row,end_row,data, sub_div_name);
+    });
+	
+	$("#" + div_name + " #pageGro .pageDown").off('click').click(function(){
+        if(pageCount > 5){
+            var pageNum = parseInt($("#"+div_name+" #pageGro li.on").html());
+            pageDown(pageNum,pageCount);
+        }else{
+            var index = $("#"+div_name+" #pageGro ul li.on").index();
+            if(index+1 < pageCount){
+                $("#"+div_name+" #pageGro li").removeClass("on");
+                $("#"+div_name+" #pageGro ul li").eq(index+1).addClass("on");
+            }
+        }
+      page = parseInt($("#"+div_name+" #pageGro li.on").html()) 
+      //console.log(page);
+      start_row = (page-1)* page_num;
+      end_row = start_row + page_num;
+      if (end_row > data.length){
+          end_row = data.length;
+      }
+        page_group_influ_weibo(start_row,end_row,data, sub_div_name);
+    });
+
+}
+
+
+function page_group_influ_weibo(start_row,end_row,data, sub_div_name){
+    weibo_num = end_row - start_row;
+    $('#'+ sub_div_name).empty();
+    var html = "";
+    html += '<div class="group_weibo_font" style="margin-right:5px;">';
+    for (var i = start_row; i < end_row; i += 1){
+        s=i.toString();
+		var mid = data[s][0];
+		var uid = data[s][1];
+        var text = data[s][2];
+		var retweet_count = data[s][7];
+		var comment_count = data[s][8];
+        //var location = data[s][2];
+        var date = data[s][6];
+        var tweet_ulr = data[s][10];
+        //date = new Date(parseInt(timestamp)*1000).format("yyyy-MM-dd hh:mm:ss");
+        if (i%2 ==0){
+            html += '<div style="padding:5px;background:whitesmoke;">';
+            html += '<p style="margin-left:10px;"><a target="_blank" href="/index/personal/?uid=' + uid + '">' + Pname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
+            html += '<p style="margin-top:-5px;margin-left:10px;"><a color:#e0e0e0 target="_blank" style="text-decoration: underline;" href="'+tweet_ulr+'">' + date + '</a>-<a target="_blank" href="/index/personal_detail/?uid=' + uid + '">用户详情</a>-<a>转发树</a>';
+            html += '<span style="margin-left:300px;"><a>转发数（'+ retweet_count +'）</a><a>评论数（'+ comment_count +'）</a></span></p>';
+			html += '</div>'
+    }
+        else{
+            html += '<div style="padding;5px;">';
+            html += '<p style="margin-left:10px;"><a target="_blank" href="/index/personal/?uid=' + uid + '">' + Pname + '</a>&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';    
+            html += '<p style="margin-top:-5px;margin-left:10px;"><a color:#e0e0e0 target="_blank" style="text-decoration: underline;" href="'+tweet_ulr+'">' + date + '</a>-<a target="_blank" href="/index/personal_detail/?uid=' + uid + '">用户详情</a>-<a>转发树</a>';
+            html += '<span style="margin-left:300px;"><a>转发数（'+ retweet_count +'）</a><a>评论数（'+ comment_count +'）</a></span></p>';
+			html += '</div>';
+        }
+    }
+    html += '</div>'; 
+    $('#'+sub_div_name).append(html);
+}
+
+function pageGroup(pageNum,pageCount){
+	switch(pageNum){
+		case 1:
+			page_icon(1,5,0);
+		break;
+		case 2:
+			page_icon(1,5,1);
+		break;
+		case pageCount-1:
+			page_icon(pageCount-4,pageCount,3);
+		break;
+		case pageCount:
+			page_icon(pageCount-4,pageCount,4);
+		break;
+		default:
+			page_icon(pageNum-2,pageNum+2,2);
+		break;
+	}
+}
+function page_icon(page,count,eq){
+	var ul_html = "";
+	for(var i=page; i<=count; i++){
+		ul_html += "<li>"+i+"</li>";
+	}
+	$("#pageGro ul").html(ul_html);
+	$("#pageGro ul li").eq(eq).addClass("on");
+}
+
+function pageUp(pageNum,pageCount){
+	switch(pageNum){
+		case 1:
+		break;
+		case 2:
+			page_icon(1,5,0);
+		break;
+		case pageCount-1:
+			page_icon(pageCount-4,pageCount,2);
+		break;
+		case pageCount:
+			page_icon(pageCount-4,pageCount,3);
+		break;
+		default:
+			page_icon(pageNum-2,pageNum+2,1);
+		break;
+	}
+}
+
+//下一页
+function pageDown(pageNum,pageCount){
+	switch(pageNum){
+		case 1:
+			page_icon(1,5,1);
+		break;
+		case 2:
+			page_icon(1,5,2);
+		break;
+		case pageCount-1:
+			page_icon(pageCount-4,pageCount,4);
+		break;
+		case pageCount:
+		break;
+		default:
+			page_icon(pageNum-2,pageNum+2,3);
+		break;
+	}
+}
+</script>

@@ -1,0 +1,65 @@
+<style type="text/css">
+.group_block{
+	background-color:#FF8C00;width:50px;height: 30px;padding: 5px 8px;color: white;font-weight: bold;border-radius: 0.25em;margin: 5px;display: inline-block;text-align: center;
+}
+</style>
+
+
+<div class="col-lg-12" style="margin-bottom:15px;">
+	<div class="panel panel-default" >
+        <div class="panel-heading" style="border-bottom: 1px solid transparent;border-color: #dddddd;">
+           情绪变动曲线
+        </div>
+        <div class="panel-body">
+        	<div style="width:600px;height:470px;float:left;margin-right:20px;">
+			    <div style="width:580px;height:470px;margin;0px;" id="group_emotion"></div>
+			</div>
+			<div id='group_select_time' style="font-weight:bold;margin:0px;margin-left:20px;font-size:12px;"></div>
+
+			<div style="margin-top:15px;height:340px;background-color:whitesmoke;margin-left:20px;overflow-y:auto;" id="group_content">
+			    <div id="group_weibo_text_1" style="font-size:10px;padding:0px 10px;">
+			    </div>
+			</div>
+    	</div>
+	</div>
+</div>
+
+
+<div class="col-lg-6">
+	<div class="panel panel-default" >
+        <div class="panel-heading" style="border-bottom: 1px solid transparent;border-color: #dddddd;">
+            性格特征
+        </div>
+        <div class="panel-body" style="height:320px;width:420px;">
+        	<div id="group_kind" style="height:320px;width:420px;">
+        	</div>
+    	</div>
+	</div>
+</div>
+
+<div class="col-lg-6">
+	<div class="panel panel-default" >
+        <div class="panel-heading" style="border-bottom: 1px solid transparent;border-color: #dddddd;">
+            心理状态
+        </div>
+        <div class="panel-body" style="height:320px;width:420px;">
+        	<div id="group_think" style="height:320px;width:420px;"></div>
+    	</div>
+	</div>
+</div>
+
+<div class="modal fade" id="psy_more" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" >
+      <div class="modal-header" >
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">心理状态</h4>
+      </div>
+      <div class="modal-body" style="float:none;" id="psy0">
+      </div>
+      <div class="modal-footer" >
+        <button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
