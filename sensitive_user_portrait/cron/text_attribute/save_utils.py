@@ -5,11 +5,11 @@ import time
 reload(sys)
 sys.path.append('../../')
 from global_utils import es_user_portrait as es
-from global_utils import R_CLUSTER_FLOW2 as r_cluster
+from global_utils import redis_cluster
 from time_utils import datetime2ts, ts2datetime
 
 index_type = 'user'
-index_name = 'user_portrait_1222'
+index_name = 'sensitive_user_portrait'
 
 def attr_hash(uid):
     hashtag_results = {}
@@ -35,6 +35,6 @@ def attr_hash(uid):
 def save_user_results(bulk_action):
     print 'save utils bulk action len:', len(bulk_action)
     #print 'bulk action:', bulk_action
-    es.bulk(bulk_action, index='user_portrait_1222', doc_type=index_type, timeout=60)
+    es.bulk(bulk_action, index='sensitive_user_portrait', doc_type=index_type, timeout=60)
     return True    
 

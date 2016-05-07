@@ -13,7 +13,7 @@ from global_utils_do import labels,zh_labels,txt_labels,train_users
 
 def user_domain_classifier_v1(friends, fields_value=txt_labels, protou_dict=train_users):#根据用户的粉丝列表对用户进行分类
     mbr = {'writer':0, 'professor':0, 'root':0, 'religion':0, 'lawyer':0, 'well-known':0, 
-          'non-public':0, 'media':0, 'official-media':0, 'governer':0, 'star':0, 'other':0, 'business':0}
+          'non-public':0, 'media':0, 'official-media':0, 'governer':0, 'star':0, 'other':0, 'welfare':0}
    
     # to record user with friends in proto users
 

@@ -53,11 +53,11 @@ def main():
             weight_dict[k1] = Decimal(tf)*Decimal(idf)
         weight[k] = weight_dict
 
-    return weight,domain_dict    
+    return weight,DOMAIN_DICT_ORI    
 
 def rank_tfidf(word_dict):
 
-    n = int(len(word_dict)*0.8)
+    n = int(len(word_dict)*0.4)
     keyword = TopkHeap(n)
 
     for k,v in word_dict.items():
@@ -81,14 +81,14 @@ def write_file(result_data,name,domain_dict):
 if __name__ == '__main__':
     
     result_data,domain_dict = main()
-##    count = 0
-##    for k,v in result_data.items():
-##        n = write_file(v,k,domain_dict[k])
-##        count = count + n
-##
-##    print count
+    count = 0
+    for k,v in result_data.items():
+        n = write_file(v,k,domain_dict[k])
+        count = count + n
 
-    print result_data
+    print count
+
+    #print result_data
 
 
 
