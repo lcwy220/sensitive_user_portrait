@@ -7,7 +7,7 @@ import csv
 import heapq
 import random
 from decimal import *
-from config import abs_path,DOMAIN_DICT,DOMAIN_COUNT,LEN_DICT,TOTAL,name_list,TOPIC_DICT
+from config import abs_path,DOMAIN_DICT,DOMAIN_COUNT,LEN_DICT,TOTAL,name_list,sta_dict
 #from test_data import input_data #测试输入
 
 class TopkHeap(object):
@@ -41,13 +41,12 @@ def load_weibo(uid_weibo):
     result_data = dict()
     p_data = dict()
     for k,v in uid_weibo.iteritems():
-        domain_p = TOPIC_DICT
+        domain_p = sta_dict()
         for d_k in domain_p.keys():
             domain_p[d_k] = com_p(v,DOMAIN_DICT[d_k],DOMAIN_COUNT[d_k],LEN_DICT[d_k],TOTAL)#计算文档属于每一个类的概率
-            end_time = time.time()
         result_data[k] = domain_p
         p_data[k] = rank_result(domain_p)
-
+    
     return result_data,p_data
 
 def rank_dict(has_word):
@@ -89,7 +88,7 @@ def topic_classfiy(uid_list,uid_weibo):#话题分类主函数
         result_data = dict()
         uid_topic = dict()
         for uid in uid_list:
-            result_data[uid] = TOPIC_DICT
+            result_data[uid] = sta_dict()
             uid_topic[uid] = ['life']
         return result_data,uid_topic
     elif len(uid_weibo) and not len(uid_list):
@@ -105,7 +104,7 @@ def topic_classfiy(uid_list,uid_weibo):#话题分类主函数
 
     for uid in uid_list:
         if not result_data.has_key(uid):
-            result_data[uid] = TOPIC_DICT
+            result_data[uid] = sta_dict()
             uid_topic[uid] = ['life']
     
     return result_data,uid_topic
@@ -114,10 +113,8 @@ def topic_classfiy(uid_list,uid_weibo):#话题分类主函数
 if __name__ == '__main__':
 
     uid_list,uid_weibo = input_data()
-    uid_weibo = dict()
     result_data,uid_topic = topic_classfiy(uid_list,uid_weibo)
-    print result_data
-    print uid_topic
+    #print result_data
 
 
 

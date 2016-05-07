@@ -18,10 +18,11 @@ from config import activeness_weight_dict, importance_weight_dict,\
                    domain_weight_dict, topic_weight_dict
 reload(sys)
 sys.path.append('../../')
-from global_utils import R_CLUSTER_FLOW2 as r_cluster
+from global_utils import redis_cluster, redis_ip, redis_activity
 from global_utils import ES_CLUSTER_FLOW1 as es
+from global_utils import ES_CLUSTER_FLOW2 as es_cluster
 from global_utils import es_user_portrait, es_user_profile, profile_index_name, profile_index_type
-from parameter import DAY, WEEK, RUN_TYPE, RUN_TEST_TIME
+from parameter import DAY, WEEK, RUN_TYPE, RUN_TEST_TIME, WORK_TYPE
 from time_utils import ts2datetime, datetime2ts
 
 WEEK = 7
@@ -38,11 +39,26 @@ def get_activity_time(uid_list):
     if RUN_TYPE == 1:
         timestamp = datetime2ts(now_date)
     else:
-        timestamp = datetime2ts(RUN_TEST_TIME)
+        timestamp = datetime2ts("2013-09-08")
     activity_list_dict = {} # {uid:[activity_list], uid:[]}
     for i in range(1,WEEK+1):
         ts = timestamp - DAY*i
-        r_result = r_cluster.hmget('activity_'+str(ts), uid_list)
+        if WORK_TYPE != 0:
+            r_result = redis_activity.hmget('activity_'+str(ts), uid_list)
+        else:
+            r_result = []
+            index_name = "activity_" + str(ts2datetime(ts))
+            exist_bool = es_cluster.indices.exists(index=index_name)
+            if exist_bool:
+                es_results = es_cluster.mget(index=index_name, doc_type="activity", body={"ids":uid_list})["docs"]
+                for item in es_results:
+                    if item['found']:
+                        r_result.append(item['_source']['activity_dict'])
+                    else:
+                        r_result.append(json.dumps({}))
+            else:
+                r_result = [json.dumps(dict())]*len(uid_list)
+
         if r_result:
             for j in range(0, len(uid_list)):
                 uid = uid_list[j]
@@ -108,13 +124,13 @@ def get_influence(uid_list):
     index_time = 'bci_' + ''.join(now_date.split('-'))
     index_type = 'bci'
     try:
-        es_result = es.mget(index=index_time, doc_type=index_type, body={'ids': uid_list})['docs']
+        es_result = es.mget(index=index_time, doc_type=index_type, body={'ids': uid_list}, _source=False, fields=['user_index'])['docs']
     except Exception, e:
         raise e
     for es_item in es_result:
         uid = es_item['_id']
         if es_item['found'] == True:
-            result[uid] = es_item['_source']['user_index']
+            result[uid] = es_item['fields']['user_index'][0]
         else:
             result[uid] = 0
 

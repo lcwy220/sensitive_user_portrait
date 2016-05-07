@@ -9,15 +9,9 @@ from decimal import *
 sys.path.append('../../../')
 from parameter import TOPIC_ABS_PATH as abs_path
 
-name_list = ['art','computer','economic','education','environment','medicine',\
-            'military','politics','sports','traffic','life',\
-            'anti-corruption','employment','fear-of-violence','house',\
-            'law','peace','religion','social-security']
+name_list = ['fear-of-violence','heresy','ideology','livelihood','religion','life']
 
-zh_data = ['文体类_娱乐','科技类','经济类','教育类','民生类_环保','民生类_健康',\
-        '军事类','政治类_外交','文体类_体育','民生类_交通','其他类',\
-        '政治类_反腐','民生类_就业','政治类_暴恐','民生类_住房','民生类_法律',\
-        '政治类_地区和平','政治类_宗教','民生类_社会保障']
+zh_data = ['暴恐','邪教','意识形态','民生','宗教','其他']
 
 ## 加载分词工具
 
@@ -85,7 +79,7 @@ def re_cut(w_text):#根据一些规则把无关内容过滤掉
     w_text = a1.sub('',w_text)
     a1 = re.compile(r'\@.*?\s' )
     w_text = a1.sub('',w_text)
-    if w_text == u'转发微博':
+    if w_text == '转发微博':
         w_text = ''
 
     return w_text
@@ -120,7 +114,7 @@ def load_train_ori():#加载原始词频文档，计算每个词语的tfidf，�
     domain_dict = dict()
     domain_count = dict()
     for i in name_list:
-        reader = csv.reader(file(abs_path + '/topic_dict/%s_ori.csv' % i, 'rb'))
+        reader = csv.reader(file(abs_path + '/topic_dict/word_%s.csv' % i, 'rb'))
         word_dict = dict()
         count = 0
         for f,w_text in reader:
@@ -142,5 +136,5 @@ def sta_dict():#标准化话题字典
 
     return topic_dict
 
-TOPIC_DICT = sta_dict()
+#TOPIC_DICT = sta_dict()
     

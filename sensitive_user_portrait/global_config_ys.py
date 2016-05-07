@@ -1,0 +1,16 @@
+# -*- coding: utf-8 -*-
+
+import os
+from flask import Flask
+
+# need three ES identification 
+USER_PROFILE_ES_HOST = ['219.224.134.216:9208','219.224.134.217:9208','219.224.134.218:9208']
+USER_PROFILE_ES_PORT = 9208
+USER_PORTRAIT_ES_HOST = ['219.224.134.213', '219.224.134.211']
+USER_PORTRAIT_ES_PORT = 9200
+FLOW_TEXT_ES_HOST = ['219.224.134.213:9206', '219.224.134.214:9206']
+FLOW_TEXT_ES_PORT = 9206
+
+# use to identify the db number of redis-97
+R_BEGIN_TIME = '2013-09-01'
+

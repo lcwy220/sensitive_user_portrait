@@ -35,7 +35,7 @@ def get_profile_information(uid_list):
                 elif field=='gender':
                     user_dict[field] = 0
                 elif field=='uname':
-                    user_dict[field] = u'unknown'
+                    user_dict[field] = item['_id']
                 else:
                     user_dict[field] = 'unknown'
         result_dict[item['_id']] = user_dict

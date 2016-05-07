@@ -10,26 +10,20 @@ import sys
 import json
 import time
 from datetime import datetime
-from flow_information import get_flow_information, get_flow_information_v2
+from attribute_from_flow import get_flow_information
+#from flow_information import get_flow_information, get_flow_information_v2
 from evaluate_index import get_importance, get_activity_time, get_activeness, get_influence
 from user_profile import get_profile_information
-from save_utils import attr_hash, save_user_results
-from config import topic_en2ch_dict, domain_en2ch_dict
+from save_utils import save_user_results
+from config import topic_en2ch_dict, domain_en2ch_dict, politics_en2ch_dict
 from domain_topic_input import get_user_weibo_string, get_user_keywords_dict
-from character_input import character_input # use to prepare input for attribute---character
-# compute user event
-#from event.event_user import event_classfiy
+#from character_input import character_input # use to prepare input for attribute---character
 # compute user domain
 from domain.test_domain_v2 import domain_classfiy
 # compute user topic
-#from topic.test_topic import topic_classfiy
+from topic.test_topic import topic_classfiy
 # compute politics
 from policy.political_main import political_classify
-# compute user psy
-#from psy.new_psy import psychology_classfiy
-# compute user character
-#from character.test_ch_sentiment import classify_sentiment
-#from character.test_ch_topic import classify_topic
 
 sys.path.append('../../')
 from global_utils import es_user_profile, profile_index_name, profile_index_type
@@ -77,9 +71,16 @@ def topic_en2ch(topic_label):
     return insert_topic_label_string
 
 #make domain_en to domain_ch
-def domain_en2ch(domain_en_label):
-    insert_domain_label = ''
-    ch_label = domain_en2ch_dict[domain_en_label]
+def domain_en2ch(domain_list):
+    ch_domain_list = []
+    for item in domain_list:
+        ch_label = domain_en2ch_dict[item]
+        ch_label = ch_label.encode('utf-8')
+        ch_domain_list.append(ch_label)
+    return ch_domain_list
+
+def politics_en2ch(politics_label):
+    ch_label = politics_en2ch_dict[politics_label]
     ch_label = ch_label.encode('utf-8')
     return ch_label
 
@@ -174,7 +175,7 @@ def test_cron_text_attribute_v2(user_keywords_dict, user_weibo_dict, online_patt
     
     #get user flow information: hashtag, activity_geo, keywords
     print 'get flow result'
-    flow_result = get_flow_information_v2(uid_list, user_keywords_dict)
+    flow_result = get_flow_information(uid_list)
     print 'flow result len:', len(flow_result)
     
     #get user profile information
@@ -183,24 +184,24 @@ def test_cron_text_attribute_v2(user_keywords_dict, user_weibo_dict, online_patt
     print 'register result len:', len(register_result)
     
     #get user topic and domain by bulk action
-    print 'get topic and domain'
+    print 'get topic and domain, politics'
     topic_results_dict, topic_results_label = topic_classfiy(uid_list, user_keywords_dict)
     domain_results = domain_classfiy(uid_list, user_keywords_dict)
-    domain_results_dict = domain_results[0]
-    domain_results_label = domain_results[1]
-    print 'topic result len:', len(topic_results_dict)
-    print 'domain result len:', len(domain_results_dict)
-    
+    politics_results = political_classify(uid_list, user_keywords_dict)
+
+    print "topic: ", topic_results_dict, topic_results_label
+    print "domain: ", domain_results
+    print "politics:", politics_results
     #get user character attribute
-    print 'get character result'
+    #print 'get character result'
     #type_mark = 0/1 for identify the task input status---just sentiment or text
-    character_start_time = ts2datetime(character_start_ts)
-    character_end_time = ts2datetime(character_start_ts + DAY * CHARACTER_TIME_GAP - DAY)
-    print 'character_start_time:', character_start_time
-    print 'character_end_time:', character_end_time
-    character_sentiment_result_dict = classify_sentiment(uid_list, user_weibo_dict, character_start_time, character_end_time, WEIBO_API_INPUT_TYPE)
-    character_text_result_dict = classify_topic(uid_list, user_keywords_dict)
-    print 'character result len:', len(character_sentiment_result_dict), len(character_text_result_dict)
+    #character_start_time = ts2datetime(character_start_ts)
+    #character_end_time = ts2datetime(character_start_ts + DAY * CHARACTER_TIME_GAP - DAY)
+    #print 'character_start_time:', character_start_time
+    #print 'character_end_time:', character_end_time
+    #character_sentiment_result_dict = classify_sentiment(uid_list, user_weibo_dict, character_start_time, character_end_time, WEIBO_API_INPUT_TYPE)
+    #character_text_result_dict = classify_topic(uid_list, user_keywords_dict)
+    #print 'character result len:', len(character_sentiment_result_dict), len(character_text_result_dict)
     
     #get user fansnum max
     fansnum_max = get_fansnum_max()
@@ -237,17 +238,20 @@ def test_cron_text_attribute_v2(user_keywords_dict, user_weibo_dict, online_patt
         results['topic_string'] = topic_en2ch(user_label_dict) # 'topic1_ch&topic2_ch&topic3_ch'
         
         #add user domain attribute
-        user_domain_dict = domain_results_dict[user]
-        user_label_dict = domain_results_label[user]
-        results['domain_v3'] = json.dumps(user_domain_dict) # [label1_en, label2_en, label3_en]
-        results['domain'] = domain_en2ch(user_label_dict)      # label_ch
-        
+        user_domain_dict = domain_results[user]
+        domain_list = domain_en2ch(user_domain_dict)
+        results['domain_list'] = json.dumps(domain_list) # [label1_en, label2_en, label3_en]
+        results['domain'] = domain_list[0]     # label_ch
+
+        politics_label = politics_results[user]
+        results['politics'] = politics_en2ch(politics_label)
+
         #add user character_sentiment attribute
-        character_sentiment = character_sentiment_result_dict[user]
-        results['character_sentiment'] = character_sentiment
+        #character_sentiment = character_sentiment_result_dict[user]
+        #results['character_sentiment'] = character_sentiment
         #add user character_text attribtue
-        character_text = character_text_result_dict[user]
-        results['character_text'] = character_text
+        #character_text = character_text_result_dict[user]
+        #results['character_text'] = character_text
         
         #add user profile attribute
         register_dict = register_result[str(user)]
@@ -266,6 +270,7 @@ def test_cron_text_attribute_v2(user_keywords_dict, user_weibo_dict, online_patt
         bulk_action.extend([action, results])
         
     status = save_user_results(bulk_action)
+    print "status:", status
     
     return status
 

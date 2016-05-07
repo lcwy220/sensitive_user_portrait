@@ -8,11 +8,13 @@ from elasticsearch import Elasticsearch
 
 reload(sys)
 sys.path.append('./../../')
-from global_utils import R_CLUSTER_FLOW2 as r_cluster #ip activity es
+from global_utils import R_ADMIN as r_sensitive
 from global_utils import redis_cluster, redis_ip, redis_activity
-from global_utils import es_user_profile, 
-from time_utils import datetime2ts, ts2datetime, RUN_TYPE, WORK_TYPE,ip_index_pre,\
-                       sen_ip_index_pre, act_index_pre, sen_act_index_pre, DAY
+from global_utils import ES_CLUSTER_FLOW2 as es_cluster
+from global_utils import es_user_profile, es_flow_text,flow_text_index_name_pre, flow_text_index_type
+from parameter import  RUN_TYPE, WORK_TYPE,ip_index_pre,MAX_VALUE,\
+                       sen_ip_index_pre, act_index_pre, sen_act_index_pre, DAY, sensitive_score_dict
+from time_utils import datetime2ts, ts2datetime,ts2date
 
 def ip2geo(ip_dict):
     city_set = set()
@@ -29,7 +31,7 @@ def ip2geo(ip_dict):
         if city:
             len_city = len(city.split('\t'))
             if len_city == 4:
-                city = '&'.join(city.split('\t')[0:3])
+                city = '\t'.join(city.split('\t')[0:3])
             try:
                 geo_city[city] += ip_dict[ip]
             except:
@@ -72,46 +74,41 @@ def get_flow_information(uid_list):
     iter_results = {}
     result_dict = {}
     if RUN_TYPE:
-        now_ts = time.time()-3600*24
+        now_ts = time.time()
         now_date = ts2datetime(now_ts) # date: 2013-09-01
     else:
         now_date = "2013-09-08"
     ts = datetime2ts(now_date)
 
-    hashtag_results = {}
-    user_sensitive_hashtag = {}
-    geo_results = {}
-    sensitive_geo_results = {}
-    user_hashtag_result = {}
-    sensitive_words = {}
-    user_ip_result = {}
-    user_sensitive_ip = {}
-    activity_results = {}
-    sensitive_activity_results = {}
+    start_ts = ts - 8*3600*24
     for i in range(1,8):
-        ts = ts - 3600*24
+        ts = start_ts + i*3600*24
         date = ts2datetime(ts)
+        print "date:", date
+        uid_day_geo = {}
+        sensitive_uid_day_geo = {}
+        flow_index_name = flow_text_index_name_pre + str(date)
         # hashtag
-        hashtag_results = redis_cluster.hmget('hashtag_'+str(date), uid_list)
-        sensitive_hashtag = redis_cluster.hmget('sensitive_hashtag_'+str(date), uid_list)
+        hashtag_results = redis_cluster.hmget('hashtag_'+str(ts), uid_list)
+        sensitive_hashtag = redis_cluster.hmget('sensitive_hashtag_'+str(ts), uid_list)
         # sensitive_words
-        sensitive_results = redis_cluster.hmget('sensitive_'+str(date), uid_list)
+        sensitive_results = redis_cluster.hmget('sensitive_'+str(ts), uid_list)
         # ip
         if WORK_TYPE == 0:
             ip_index_name = ip_index_pre + str(date)
             sensitive_ip_index_name = sen_ip_index_pre + str(date)
-            activity_index_name = act_index_pre + str(date)
-            sensitive_activity_index_name = sen_act_index_pre + str(date)
+            #activity_index_name = act_index_pre + str(date)
+            #sensitive_activity_index_name = sen_act_index_pre + str(date)
             exist_bool = es_cluster.indices.exists(index=ip_index_name)
             sensitive_exist_bool = es_cluster.indices.exists(index=sensitive_ip_index_name)
             #activity_exist_bool = es_cluster.indices.exists(index=activity_index_name)
             #sensitive_activity_exist_bool = es_cluster.indices.exists(index=sensitive_activity_index_name)
             if exist_bool:
-                ip_results = es_cluster.mget(index=index_name, doc_type="ip", body={"ids":uid_list})["docs"]
+                ip_results = es_cluster.mget(index=ip_index_name, doc_type="ip", body={"ids":uid_list})["docs"]
             else:
                 ip_results = [dict()]*lenth
             if sensitive_exist_bool:
-                sensitive_ip_results = es_cluster.mget(index=sensitive_index_name, doc_type="sensitive_ip", body={"ids":uid_list})["docs"]
+                sensitive_ip_results = es_cluster.mget(index=sensitive_ip_index_name, doc_type="sensitive_ip", body={"ids":uid_list})["docs"]
             else:
                 sensitive_ip_results = [dict()]*lenth
             """
@@ -125,8 +122,8 @@ def get_flow_information(uid_list):
                 sensitive_activity_results = [dict()]*lenth
             """
         else:
-            ip_results = redis_ip.hmget('ip_'+str(date), uid_list)
-            sensitive_ip_results = redis_ip.hmget('sensitive_ip_'+str(date), uid_list)
+            ip_results = redis_ip.hmget('ip_'+str(ts), uid_list)
+            sensitive_ip_results = redis_ip.hmget('sensitive_ip_'+str(ts), uid_list)
             #activity_results = redis_activity.hmget('activity_'+str(date), uid_list)
             #sensitive_activity_results = redis_activity.hmget('sensitive_activity_'+str(date), uid_list)
 
@@ -143,6 +140,7 @@ def get_flow_information(uid_list):
                         iter_results[uid]["sensitive_words"][sensitive_word] += sensitive_words_results[sensitive_word]
                     except:
                         iter_results[uid]["sensitive_words"][sensitive_word] = sensitive_words_results[sensitive_word]
+            #print "sensitive_words:", iter_results[uid]["sensitive_words"]
 
             if hashtag_results[j]:
                 hashtag_dict = json.loads(hashtag_results[j])
@@ -151,14 +149,16 @@ def get_flow_information(uid_list):
                         iter_results[uid]['hashtag'][hashtag] += hashtag_dict[hashtag]
                     except:
                         iter_results[uid]['hashtag'][hashtag] = hashtag_dict[hashtag]
+            #print "hashtag: ", iter_results[uid]['hashtag']
 
             if sensitive_hashtag[j]:
                 sensitive_hashtag_dict = json.loads(sensitive_hashtag[j])
                 for hashtag in sensitive_hashtag_dict:
                     try:
-                        iter_results[uid]['sensitive_hashtag'] += sensitive_hashtag_dict[hashtag]
+                        iter_results[uid]['sensitive_hashtag'][hashtag] += sensitive_hashtag_dict[hashtag]
                     except:
-                        iter_results[uid]['sensitive_hashtag'] = sensitive_hashtag_dict[hashtag]
+                        iter_results[uid]['sensitive_hashtag'][hashtag] = sensitive_hashtag_dict[hashtag]
+            #print "sensitive_hashtag:", iter_results[uid]['sensitive_hashtag']
 
             uid_day_geo[uid] = {}
             sensitive_uid_day_geo[uid] = {}
@@ -177,7 +177,7 @@ def get_flow_information(uid_list):
                 else:
                     ip_dict = {}
             if ip_dict:
-                iter_results[uid]['ip'].append(ip_dict)
+                #iter_results[uid]['ip'].append(ip_dict)
                 geo_dict = ip2geo(ip_dict)
                 for geo, count in geo_dict.iteritems():
                     try:
@@ -188,12 +188,12 @@ def get_flow_information(uid_list):
                         uid_day_geo[uid][geo] += count
                     except:
                         uid_day_geo[uid][geo] = count
-            else:
-                iter_results[uid]['ip'].append({})
-                iter_results[uid]['geo_track'].append(uid_day_geo[uid])
+            #iter_results[uid]['ip'].append(ip_dict)
+            iter_results[uid]['geo_track'].append(uid_day_geo[uid])
+            #print "ip:", iter_results[uid]['ip'], iter_results[uid]['geo_track']
 
             if WORK_TYPE == 0:
-                if sensitive_ip[j]:
+                if sensitive_ip_results[j]:
                     if sensitive_ip_results[j]['found']:
                         detail_item = sensitive_ip_results[j]['_source']
                         sensitive_ip_dict = json.loads(detail_item['sensitive_ip_dict'])
@@ -208,8 +208,8 @@ def get_flow_information(uid_list):
                     sensitive_ip_dict = dict()
             if sensitive_ip_dict:
                 sensitive_geo_dict = ip2geo(sensitive_ip_dict)
-                iter_results[uid]['sensitive_ip'].append(sensitive_ip_dict)
-                for geo, count in sensitive_ip_dict.iteritems():
+                #iter_results[uid]['sensitive_ip'].append(sensitive_ip_dict)
+                for geo, count in sensitive_geo_dict.iteritems():
                     try:
                         iter_results[uid]['sensitive_geo'][geo] += count
                     except:
@@ -218,49 +218,75 @@ def get_flow_information(uid_list):
                         sensitive_uid_day_geo[uid][geo] += count
                     except:
                         sensitive_uid_day_geo[uid][geo] = count
-            else:
-                iter_results[uid]['sensitive_ip'].append({})
-                iter_results[uid]['sensitive_geo_track'].append(sensitive_uid_day_geo[uid])
+            #iter_results[uid]['sensitive_ip'].append(sensitive_ip_dict)
+            iter_results[uid]['sensitive_geo_track'].append(sensitive_uid_day_geo[uid])
+            #print "sensitive_ip:", iter_results[uid]['sensitive_ip'], iter_results[uid]['sensitive_geo_track']
 
+        # compute keywords
+        flow_text_exist = es_flow_text.indices.exists(index=flow_index_name)
+        if flow_text_exist:
+             text_results = es_flow_text.search(index=flow_index_name, doc_type=flow_text_index_type,\
+                    body={'query':{'filtered':{'filter':{'terms':{'uid': uid_list}}}}, 'size':MAX_VALUE},_source=False, fields=['uid', 'keywords_dict'])['hits']['hits']
+        else:
+            text_results = {}
+        for item in text_results:
+            uid = item['fields']['uid'][0]
+            uid_keywords_dict = json.loads(item['fields']['keywords_dict'][0])
+            for keywords in uid_keywords_dict:
+                try:
+                    iter_results[uid]['keywords'][keywords] += uid_keywords_dict[keywords]
+                except:
+                    iter_results[uid]['keywords'][keywords] = uid_keywords_dict[keywords]
+        #print "keywords:", iter_results[uid]['keywords']
 
     for uid in uid_list:
-        hashtag_string = ''
-        sensitive_hashtag_string = ''
-        ip_string = ''
-        ip_all = ""
-        sensitive_ip_string = ''
-        hashtag_dict = {}
-        sensitive_hashtag_dict = {}
-        ip_dict = {}
-        sensitive_ip_dict = {}
-        sensitive_words_string = ''
-        sensitive_words_dict = {}
+        results[uid] = {}
+        # hashtag
+        hashtag_dict = iter_results[uid]['hashtag']
+        results[uid]['hashtag_dict'] = json.dumps(hashtag_dict)
+        results[uid]['hashtag_string'] = '&'.join(hashtag_dict.keys())
+        # sensitive hashtag
+        sensitive_hashtag_dict = iter_results[uid]['sensitive_hashtag']
+        results[uid]['sensitive_hashtag_dict'] = json.dumps(sensitive_hashtag_dict)
+        results[uid]['sensitive_hashtag_string'] = '&'.join(sensitive_hashtag_dict.keys())
+        # sensitive_words
+        sensitive_word_dict = iter_results[uid]['sensitive_words']
+        results[uid]['sensitive_words_dict'] = json.dumps(sensitive_word_dict)
+        results[uid]['sensitive_words_string'] = '&'.join(sensitive_word_dict.keys())
+        sensitive_score = 0
+        for k,v in sensitive_word_dict.iteritems():
+            tmp = r_sensitive.hget('sensitive_words', k)
+            if tmp:
+                tmp_stage = json.loads(tmp)
+                sensitive_score += sensitive_score_dict[str(tmp_stage[0])]*v
+        results[uid]['sensitive'] = sensitive_score
+        # geo
+        geo_dict = iter_results[uid]['geo']
+        geo_track_list = iter_results[uid]['geo_track']
+        results[uid]['activity_geo_dict'] = json.dumps(geo_track_list)
+        geo_dict_keys = geo_dict.keys()
+        results[uid]['activity_geo'] = '&'.join(['&'.join(item.split('\t')) for item in geo_dict_keys])
+        results[uid]['activity_geo_aggs'] = '&'.join([item.split('\t')[-1] for item in geo_dict_keys])
+        sensitive_geo_dict = iter_results[uid]['sensitive_geo']
+        sensitive_geo_track_list = iter_results[uid]['sensitive_geo_track']
+        results[uid]['sensitive_activity_geo_dict'] = json.dumps(sensitive_geo_track_list)
+        sensitive_geo_dict_keys = sensitive_geo_dict.keys()
+        results[uid]['sensitive_activity_geo'] = '&'.join(['&'.join(item.split('\t')) for item in sensitive_geo_dict_keys])
+        results[uid]['sensitive_activity_geo_aggs'] = '&'.join([item.split('\t')[-1] for item in sensitive_geo_dict_keys])
 
-        if sensitive_words.has_key(uid):
-            sensitive_words_string = extract_string(sensitive_words[uid])
-            sensitive_words_dict = json.dumps(sensitive_words[uid])
-        if user_hashtag_result.has_key(uid):
-            hashtag_string = extract_string(user_hashtag_result[uid])
-            hashtag_dict = json.dumps(user_hashtag_result[uid])
-        if user_sensitive_hashtag.has_key(uid):
-            sensitive_hashtag_string = extract_string(user_sensitive_hashtag[uid])
-            sensitive_hashtag_dict = json.dumps(user_sensitive_hashtag[uid])
-        if user_ip_result.has_key(uid):
-            ip_string = extract_geo(user_ip_result[uid])
-            ip_dict = json.dumps(ip_to_geo(user_ip_result[uid]))
-            ip_all = json.dumps(user_ip_result[uid])
-        if user_sensitive_ip.has_key(uid):
-            sensitive_ip_string = extract_geo(user_sensitive_ip[uid])
-            sensitive_ip_dict = json.dumps(ip_to_geo(user_sensitive_ip[uid]))
+        keywords_dict = iter_results[uid]['keywords']
+        keywords_top50 = sorted(keywords_dict.items(), key=lambda x:x[1], reverse=True)[:50]
+        keywords_top50_string = '&'.join([keyword_item[0] for keyword_item in keywords_top50])
+        results[uid]['keywords_dict'] = json.dumps(keywords_top50)
+        results[uid]['keywords_string'] = keywords_top50_string
 
-        result_dict[uid] = {"hashtag_string": hashtag_string, "hashtag_dict": hashtag_dict, \
-                            "sensitive_hashtag_string": sensitive_hashtag_string, "sensitive_hashtag_dict": sensitive_hashtag_dict, \
-                            "geo_activity": ip_dict, "geo_string": ip_string, 'ip': ip_all, \
-                             "sensitive_geo_activity": sensitive_ip_dict, "sensitive_geo_string":sensitive_ip_string, \
-                             'sensitive_words_string': sensitive_words_string, 'sensitive_words_dict': sensitive_words_dict}
-    return result_dict
+    return results
+
+
+
 
 
 if __name__ == '__main__':
-    test_uid = ['3542550035']
+    test_uid = ['2112067715', '3356923604']
     result = get_flow_information(test_uid)
+    print result
