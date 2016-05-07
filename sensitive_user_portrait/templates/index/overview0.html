@@ -10,12 +10,9 @@
     .important{}
     #page {height:2175px;}
     #basic span {color:red;}
-    /*h2 {font-family:'微软雅黑';}*/
+    h2 {font-family:'微软雅黑';}
 	</style>
 {% endblock custom_css  %}
-
-
-
 {% block body %}
   <div id="page">
         <div id="content">
@@ -252,9 +249,17 @@
   </div>
 </div>
 {% endblock body %}
-
 {% block end_js %}
-
+  <script  src="/static/scripts/jquery-jelevator-1.0.3.min.js"></script>
+  <script type="text/javascript">
+    jQuery(function($){
+        $("h2").jElevator({
+            howTopButton: true,
+            showBottomButton: true,
+            showSectionsMenu: true
+        });
+    });
+ </script>
   <script  src="/static/custom/js/overview.js"></script>
 {% endblock end_js%}
 
