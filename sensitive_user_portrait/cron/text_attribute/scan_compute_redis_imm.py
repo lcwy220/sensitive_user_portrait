@@ -92,6 +92,7 @@ def change_status_computed(mapping_dict):
         user_list = json.loads(mapping_dict[uid])
         user_list[1] = '4'
         new_mapping_dict[uid] = json.dumps(user_list)
+    print new_mapping_dict[uid]
     r.hmset(hash_name, new_mapping_dict)
 
 #use to deal compute fail situation
@@ -103,7 +104,7 @@ def change_status_compute_fail(mapping_dict):
         user_list = json.loads(mapping_dict[uid])
         user_list[1] = '1'
         new_mapping_dict[uid] = json.dumps(user_list)
-    r.hmset(hashname, new_mapping_dict)
+    r.hmset(hash_name, new_mapping_dict)
 
 
 if __name__=='__main__':
