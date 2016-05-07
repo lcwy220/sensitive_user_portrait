@@ -68,6 +68,10 @@ def group_search():
 def search():
     return render_template('index/search/search.html')
 
+@mod.route('/search_all/')
+def search_all():
+    return render_template('index/search/search_all.html')
+
 @mod.route('/search_results/')
 def search_results():
     stype = request.args.get('stype','')

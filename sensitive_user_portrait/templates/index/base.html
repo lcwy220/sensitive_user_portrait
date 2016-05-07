@@ -106,6 +106,7 @@
    <script type="text/javascript" src="/static/scripts/echarts-all.js"></script>
    <script type="text/javascript" src="/static/scripts/highstock.js"></script>
 
+      <script src='/static/scripts/time_for_test.js'></script>
    {% block custom_js %}
 
    {% endblock custom_js %}
@@ -132,8 +133,19 @@
             </form>
           </li> -->
           <li ><a href="/index/overview/" id="base_overview"><i class="fa fa-home"></i>整体概览</a></li>
-          <li ><a href="/index/search/"><i class="fa fa-home"></i>检索</a></li>
-          <li class="sub open">
+
+          <li class="sub ">
+            <a href="javascript:;">
+              <i class="fa fa-database"></i>检索 <div class="pull-right"><span class="caret"></span></div>
+            </a>
+            <ul class="templatemo-submenu">
+              <li><a href="/index/search_all/">全文检索</a></li>
+              <li><a href="/index/search/">人物属性检索</a></li>
+              <li><a href="/index/person_contect/">背景信息检索</a></li>
+            </ul>
+          </li>
+
+          <li class="sub ">
             <a href="javascript:;">
               <i class="fa fa-database"></i>人物画像 <div class="pull-right"><span class="caret"></span></div>
             </a>
@@ -142,7 +154,7 @@
               <li><a href="/index/person_contect/">人物关联分析</a></li>
             </ul>
           </li> 
-          <li class="sub open">
+          <li class="sub ">
             <a href="javascript:;">
               <i class="fa fa-database"></i>群体分析 <div class="pull-right"><span class="caret"></span></div>
             </a>
@@ -153,7 +165,7 @@
           </li> 
           <li><a href="/index/influence/"><i class="fa fa-cubes"></i>影响力分析</a></li>
           <li><a href="/index/sensiwords_manage/"><i class="fa fa-users"></i>敏感微博监控</a></li>
-          <li class="sub open">
+          <li class="sub ">
             <a href="javascript:;">
               <i class="fa fa-cog"></i>系统管理 <div class="pull-right"><span class="caret"></span></div>
             </a>
@@ -190,8 +202,12 @@
       // });
       $(".templatemo-sidebar-menu a").each(function(){
         $this=$(this);
+        console.log($this.parent().parent().parent().hasClass('sub'));
         if($this[0].href==String(window.location)){
           $this.parent().addClass('active');
+          if($this.parent().parent().parent().hasClass('sub')){
+            $this.parent().parent().parent().addClass('open');
+          }
         }
 
       });

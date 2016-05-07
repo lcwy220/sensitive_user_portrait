@@ -8,7 +8,7 @@
     	input[type='radio'] {margin:4px; line-height: normal;opacity: 1; position: static;}
     .box{width:310px;height:300px;float:left;}
     .important{}
-    #page {width:990px;padding:10px;background-color:#fff;margin:auto}}
+    #page {width:990px;background-color:#fff;margin-left:50px}}
     #basic span {color:red;}
     h2 {font-family:'微软雅黑';}
     hr {border-top:4px solid #eee;}
@@ -16,37 +16,56 @@
 {% endblock custom_css  %}
 {% block body %}
   <div id="page">
-        <div id="content">
-    	<h2>影响力排名</h2>
-        <div class="tab-pane" id="custom" style="margin-top:10px">
-        	<span>选择日期：</span>
-            <span id="domain_date" style="margin-left:10px">
+    <div id="content">
+        <div class="box-content">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="active" title="热门人物"><a href="#inf_recom">热门人物</a></li>
+                <li title="热门微博"><a href="#sen_recom">热门微博</a></li>
+            </ul>
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane active" id="inf_recom" style="margin-top:10px">
+                    <h2>影响力排名</h2>
+                    <div class="tab-pane" id="custom" style="margin-top:10px">
+                        <span>选择日期：</span>
+                        <span id="domain_date" style="margin-left:10px">
 
-            </span>
-        	<span style="margin-left:15px">选择领域：</span>
-                <span id="domain"></span>
-        	<div id="domain_rank" style="margin-top:10px"></div>
-        	<div class="tab-pane" id="custom" style="margin-top:10px">
-        		<span>排名指标:</span>
-        		<span id="domain_date" style="margin-left:10px">
-        			<span id="index" style="margin-left:10px">
-        				<input type="radio" name="index_select" checked="" value="1"> 影响力
-        				<input type="radio" name="index_select" value="2" style="margin-left:5px"> 转发量
-        				<input type="radio" name="index_select" value="3" style="margin-left:5px"> 评论量
-        				<input type="radio" name="index_select" value="4" style="margin-left:5px"> 转发爆发度
-        				<input type="radio" name="index_select" value="5" style="margin-left:5px"> 评论爆发度
-        			</span>
-        			<span style="margin-left:55px">
-        				<button class="btn btn-primary btn-sm" style="width:80px;height:30px;float:right;" id="domain_button" title="确定选择">确定</button>	
-	        		</span>
-    	    	</span>
-        	</div>
-    	</div>
-    	<div id="total_table0"> <br><br><br><br><br>       </div>
-        <hr style="height:5px;">
+                        </span>
+                        <span style="margin-left:15px">选择领域：</span>
+                            <span id="domain"></span>
+                        <div id="domain_rank" style="margin-top:10px"></div>
+                        <div class="tab-pane" id="custom" style="margin-top:10px">
+                            <span>排名指标:</span>
+                            <span id="domain_date" style="margin-left:10px">
+                                <span id="index" style="margin-left:10px">
+                                    <input type="radio" name="index_select" checked="" value="1"> 影响力
+                                    <input type="radio" name="index_select" value="2" style="margin-left:5px"> 转发量
+                                    <input type="radio" name="index_select" value="3" style="margin-left:5px"> 评论量
+                                    <input type="radio" name="index_select" value="4" style="margin-left:5px"> 转发爆发度
+                                    <input type="radio" name="index_select" value="5" style="margin-left:5px"> 评论爆发度
+                                </span>
+                                <span style="margin-left:55px">
+                                    <button class="btn btn-primary btn-sm" style="width:80px;height:30px;float:right;" id="domain_button" title="确定选择">确定</button>  
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <div id="total_table0"> <br><br><br><br><br>       </div>
+                </div>
+                <div class="tab-pane " id="sen_recom" style="margin-top:10px">
+                    
+                </div>
+            </div>
+        </div>
+
+
+
+
+        
+
+<!--         <hr style="height:5px;">
         <h2>影响力分布</h2>
         <div id="distribute"  style="width:900px;height:400px;"></div>
-        <div style="margin-left:50px;width:900px;">0-200：极低影响力；200-500：较低影响力；500-700：一般影响力；700-900：较高影响力；900-1100：高影响力；1100以上：极高影响力</div>
+        <div style="margin-left:50px;width:900px;">0-200：极低影响力；200-500：较低影响力；500-700：一般影响力；700-900：较高影响力；900-1100：高影响力；1100以上：极高影响力</div> -->
     </div>
 </div>
 {% endblock body %}
