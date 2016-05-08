@@ -8,6 +8,7 @@ from sensitive_user_portrait.global_utils import es_user_profile, es_sensitive_u
 from sensitive_user_portrait.global_utils import portrait_index_name, portrait_index_type, flow_text_index_name_pre, \
                                                  flow_text_index_type, profile_index_name, profile_index_type
 from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts
+from sensitive_user_portrait.parameter import RUN_TYPE
 from utils import search_portrait,full_text_search
 
 mod = Blueprint('search', __name__, url_prefix='/search')
@@ -21,7 +22,7 @@ def ajax_portrait_search():
     query_list = []
     condition_num = 0
 
-    if stype == '1':
+    if stype:
         fuzz_item = ['uid', 'uname']
         item_data = request.args.get('term', '')
         for item in fuzz_item:
@@ -96,11 +97,13 @@ def ajax_full_text_search():
     else:
         ts = datetime2ts("2013-09-02")
     now_date = ts2datetime(ts)
-    start_time = request.args.get("start_time", '') # 2013-09-01
+    start_time = request.args.get("start_time", now_date) # 2013-09-01
     end_time = request.args.get("end_time", now_date)
     uid = request.args.get("uid", "")
     size = request.args.get("number", 100)
     keywords = request.args.get("keywords", "") # 逗号分隔
 
     results = full_text_search(keywords, uid, start_time, end_time, size)
+
+    return json.dumps(results)
 
