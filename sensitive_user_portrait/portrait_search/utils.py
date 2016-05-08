@@ -15,12 +15,12 @@ from sensitive_user_portrait.parameter import RUN_TYPE
 
 def get_history_max():
     max_results = {}
-    bci_max = ES_CLISTER_FLOW1.search(index="bci_hisotry", doc_type="bci", body={"query":{"match_all":{}}, "size":1, \
+    bci_max = ES_CLUSTER_FLOW1.search(index="bci_history", doc_type="bci", body={"query":{"match_all":{}}, "size":1, \
             "sort":{"bci_day_last":{"order":"desc"}}})["hits"]["hits"]
     sensitive_max = es_sensitive_history.search(index="sensitive_history", doc_type="sensitive", body={"query":{"match_all":{}},\
             "size":1,"sort":{"last_value":{"order":"desc"}}})["hits"]["hits"]
-    max_results["max_bci"] = bci_max["_source"]["bci_day_last"]
-    max_results["max_sensitive"] = sensitive_max["_source"]["last_value"]
+    max_results["max_bci"] = bci_max[0]["_source"]["bci_day_last"]
+    max_results["max_sensitive"] = sensitive_max[0]["_source"]["last_value"]
 
     return max_results
 
@@ -92,7 +92,7 @@ def full_text_search(keywords, uid, start_time, end_time, size):
         "sort":{"timestamp":{"order": 'desc'}}
     }
 
-    if not RUN_TYPE:
+    if RUN_TYPE:
         query_body["sort"] = {"user_fansnum":{"order": 'desc'}}
 
     if uid:
@@ -119,18 +119,19 @@ def full_text_search(keywords, uid, start_time, end_time, size):
             else:
                 ts -= 3600*24
 
+    print index_list
     #  没有可行的es
     if not index_list:
         return []
 
     search_results = es_flow_text.search(index=index_list, doc_type="text", body=query_body)["hits"]["hits"]
     for item in search_results:
-        uid_list.append(item['_id'])
+        uid_list.append(item['_source']['uid'])
     history_max = get_history_max()
     personal_field = ["nick_name", "fansnum", "statusnum","user_location"]
     user_info = get_user_profile(uid_list, personal_field)
     bci_results = ES_CLUSTER_FLOW1.mget(index="bci_history", doc_type="bci", body={"ids":uid_list}, _source=False, fields=["bci_day_last"])["docs"]
-    sensitive_results = es_history_sensitive.mget(index="sensitive_history", doc_type="sensitive", body={"ids":uid_list}, _source=False, fields=["last_value"])["docs"]
+    sensitive_results = es_sensitive_history.mget(index="sensitive_history", doc_type="sensitive", body={"ids":uid_list}, _source=False, fields=["last_value"])["docs"]
 
     count = 0
     for item in search_results:
