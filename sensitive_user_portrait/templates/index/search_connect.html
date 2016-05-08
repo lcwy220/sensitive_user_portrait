@@ -1,0 +1,45 @@
+{% extends "index/base.html" %}
+{% block title %}人物关联分析{% endblock title %}
+{% block head_title %}人物关联分析{% endblock head_title %}
+{% block css %}
+{{ super() }}
+<style>
+    .dataTables_filter{text-align:right;margin-bottom:5px;}
+    .dataTables_paginate{margin-top:-10px;margin-bottom:-20px;}
+    .mouse {border:#d0d0d0 solid 1px;}
+</style>
+{% endblock css %}
+{% block head_js %}
+{{ super() }}
+<script src='/static/js/portrait/identify_table.js'></script>
+{% endblock head_js %}
+{% block custom_css %}
+    <link href="/static/custom/css/search.css" rel="stylesheet">
+{% endblock custom_css %}
+
+{% block body %}
+{% include "index/search/search_base.html" %}
+{% endblock %}
+{% block end_js %}
+<script src="/static/custom/js/search_base.js"></script>
+<script src='/static/js/portrait/search_connect.js'></script>
+    <script>
+        var url = '/attribute/portrait_search/?stype=1';
+        url += get_simple_par();
+        url += '&submit_user=admin';
+        draw_conditions(url);
+        base_call_ajax_request(url, draw_search_results);
+
+    </script>
+<script>
+    function Base(){
+        this.simple_search_url = "/index/text_search/?words_list=";
+        this.advanced_search_url = "/index/search_results/?stype=1&";
+    }
+
+    var base = new Base();
+    bindSearchFunc(base);
+    getAttributeName();
+    bindAddFunction();
+</script>
+{% endblock end_js %}
