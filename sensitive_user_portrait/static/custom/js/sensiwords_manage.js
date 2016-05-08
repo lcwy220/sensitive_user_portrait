@@ -236,25 +236,3 @@ function self_refresh(data){
     window.location.reload();
 }
 
-
-$.ajax({
-    type:"POST",
-    url:"/ucenter/add_sensitive_words/",
-    contentType:"application/json",
-    data:JSON.stringify(sub_sen),
-    dataType:"json",
-    success:self_refresh,
-});
-    $('#recommend_table_new').dataTable({
-        "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
-        "sPaginationType": "custom_bootstrap",
-        "aoColumnDefs":[ {"bSortable": false, "aTargets":[6]}, {"bSortable": false, "aTargets":[7]}],   把第6 7列不排序
-        "aaSorting":[[5,"desc"]],   
-
-        "oLanguage": {
-            "sLengthMenu": "_MENU_ 每页",
-        }
-    });
-
-                "aoColumnDefs": [ {"sWidth": "4.5em" ,"aTargets":[0]},{"sWidth": "4.5em" ,"aTargets":[1]}, {"sWidth": "6em" ,"aTargets":[2]},{"sWidth": "6em" ,"aTargets":[3]},{"sWidth": "7em" ,"aTargets":[4]},{"sWidth": "5em" ,"aTargets":[5]},{"sWidth": "6.6em" ,"aTargets":[6]},{"sWidth": "4em" ,"aTargets":[7]},{"sWidth": "6em" ,"aTargets":[8]},{"sWidth": "6em" ,"aTargets":[9]}],
-            "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>"  宽度

@@ -11,7 +11,7 @@
 }
 .dataTables_wrapper .row .col-md-6,
 .dataTables_wrapper .row .col-md-12{
-    padding-left:0px;
+  /*  padding-left:0px;*/
 }
 .pagination ul > .active > a,
 .pagination ul > .active > span {
