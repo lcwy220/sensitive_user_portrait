@@ -1,17 +1,27 @@
 {% extends "index/base.html" %} 
-{% block title %}检索{% endblock title %}
-{% block subtitle %}检索{% endblock subtitle %}
+{% block title %}查看人物画像{% endblock title %}
+{% block subtitle %}查看人物画像{% endblock subtitle %}
 
 {% block custom_css %}
     <link href="/static/custom/css/search.css" rel="stylesheet">
 {% endblock custom_css %}
 
 {% block body %}
-{% include "index/search/search_base.html" %}
+{% include "index/search/search_base_table.html" %}
 {% endblock %}
 {% block end_js %}
 <script src="/static/custom/js/search_base.js"></script>
+<script src="/static/js/portrait/search_portrait.js"></script>
 <script>
+    /*
+    var url = '/attribute/portrait_search/?stype=1';
+    url += get_simple_par();
+    url += '&submit_user=admin';
+    draw_conditions(url);
+    base_call_ajax_request(url, draw_search_results);
+    */
+    data = [2803301701,'人民日报','北京',85.39,94.42,100.00,1.00]
+    draw_search_results(data)
     function Base(){
         this.simple_search_url = "/index/text_search/?words_list=";
         this.advanced_search_url = "/index/search_results/?stype=1&";
