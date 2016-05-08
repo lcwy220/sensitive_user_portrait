@@ -12,7 +12,7 @@ WEIBO_RANK_KEYWORD_TASK_TYPE = 'weibo_rank_task'
 
 MAX_ITEMS = 2 ** 10
 
-def add_task(user_name ,type = "keyword",range = "all"  ,pre ='flow_text_' , during = '1' , start_time ='2013-09-07' ,end_time ='2013-09-07', keyword = 'hello,world' , sort_norm = 'bci' , sort_scope  = 'in_limit_keyword', time = 1, isall = False, number=100 ):
+def add_task(user_name , type="keyword", range="all", pre='flow_text_', during='1', start_time='2013-09-07', end_time='2013-09-07', keyword='hello,world', sort_norm='reposts_count', sort_scope='all_limit_keyword', time=1, number=100):
     time_now = int(TIME.time())
     task_id = user_name + "-" + str(time_now)
     tmp_list = keyword.split(',')

@@ -89,7 +89,7 @@ def get_sensitive_user_detail(uid_list, date, sensitive):
 # date = 20130901
 def recommend_in_sensitive(date):
     sensitive_name = "recomment_" + str(date) + "_sensitive"
-    compute_name = "compute_" + str(date)
+    compute_name = "compute"
     re_sen_set = r.hkeys(sensitive_name) # 敏感人物推荐
     iden_in_set = r.hkeys(compute_name) # 已经入库用户
     if not re_sen_set:
@@ -106,7 +106,7 @@ def recommend_in_sensitive(date):
 # show top influence user recommend
 def recommend_in_top_influence(date):
     influence_name = "recomment_" + date + "_influence"
-    identify_in_name = "compute_" + str(date)
+    identify_in_name = "compute"
     re_inf_set = r.hkeys(influence_name)
     iden_in_set = r.hkeys(identify_in_name) # 已经入库用户
 

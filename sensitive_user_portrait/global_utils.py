@@ -44,6 +44,8 @@ R_RECOMMENTATION_OUT = _default_redis(host=REDIS_HOST, port=REDIS_PORT, db=12)
 
 R_ADMIN = _default_redis(host=REDIS_HOST, port=REDIS_PORT, db=12)
 
+# social sensing redis
+R_SOCIAL_SENSING = _default_redis(host=REDIS_HOST, port=REDIS_PORT, db=14)
 
 update_day_redis = _default_redis(host=REDIS_HOST, port=REDIS_PORT, db=6)
 UPDATE_DAY_REDIS_KEY = 'update_day'
@@ -115,8 +117,6 @@ sensitive_be_comment_index_name_pre = 'sensitive_be_comment_'
 sensitive_be_comment_index_type = 'user'
 copy_portrait_index_name = 'copy_sensitive_user_portrait'
 copy_portrait_index_type = 'manage'
-
-
 
 BLACK_WORDS_PATH = '/home/ubuntu8/yuankun/sensitive_user_portrait/sensitive_user_portrait/cron/text_attribute/black.txt'
 

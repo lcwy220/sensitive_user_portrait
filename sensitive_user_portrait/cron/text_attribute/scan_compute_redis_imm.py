@@ -91,8 +91,16 @@ def change_status_computed(mapping_dict):
     for uid in mapping_dict:
         user_list = json.loads(mapping_dict[uid])
         user_list[1] = '4'
+        in_date = user_list[0]
         new_mapping_dict[uid] = json.dumps(user_list)
-    print new_mapping_dict[uid]
+        #revise identify_in_date
+        influence_hashname = 'identify_in_influence_'+str(in_date)
+        sensitive_hashname = 'identify_in_sensitive_'+str(in_date)
+        tmp = r.hget(influence_hashname, uid)
+        if tmp:
+            r.hset(influence_hashname, uid, '4')
+        else:
+            r.hset(sensitive_hashname, uid, '4')
     r.hmset(hash_name, new_mapping_dict)
 
 #use to deal compute fail situation
@@ -104,6 +112,15 @@ def change_status_compute_fail(mapping_dict):
         user_list = json.loads(mapping_dict[uid])
         user_list[1] = '1'
         new_mapping_dict[uid] = json.dumps(user_list)
+        in_date = user_list[0]
+        #revise identify_in_date
+        influence_hashname = 'identify_in_influence_'+str(in_date)
+        sensitive_hashname = 'identify_in_sensitive_'+str(in_date)
+        tmp = r.hget(influence_hashname, uid)
+        if tmp:
+            r.hset(influence_hashname, uid, '1')
+        else:
+            r.hset(sensitive_hashname, uid, '1')
     r.hmset(hash_name, new_mapping_dict)
 
 

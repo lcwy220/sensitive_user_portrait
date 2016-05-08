@@ -236,12 +236,16 @@ def test_cron_text_attribute_v2(user_keywords_dict, user_weibo_dict, online_patt
         user_label_dict = topic_results_label[user]
         results['topic'] = json.dumps(user_topic_dict)         # {'topic1_en':pro1, 'topic2_en':pro2...}
         results['topic_string'] = topic_en2ch(user_label_dict) # 'topic1_ch&topic2_ch&topic3_ch'
-        
+
         #add user domain attribute
         user_domain_dict = domain_results[user]
         domain_list = domain_en2ch(user_domain_dict)
-        results['domain_list'] = json.dumps(domain_list) # [label1_en, label2_en, label3_en]
-        results['domain'] = domain_list[0]     # label_ch
+        if domain_list:
+            results['domain_list'] = json.dumps(domain_list) # [label1_en, label2_en, label3_en]
+            results['domain'] = domain_list[0]     # label_ch
+        else:
+            results['domain'] = "其他"
+            results['domain_list'] = json.dumps(["其他"])
 
         politics_label = politics_results[user]
         results['politics'] = politics_en2ch(politics_label)
