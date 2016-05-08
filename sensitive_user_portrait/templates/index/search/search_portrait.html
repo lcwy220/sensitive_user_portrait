@@ -1,15 +1,16 @@
 {% extends "index/base.html" %}
-{% block title %}查看人物画像{% endblock title %}
-{% block head_title %}查看人物画像{% endblock head_title %}
-{% block css %}
-{{ super() }}
+{% block title %}人物属性检索{% endblock title %}
+{% block head_title %}人物属性检索{% endblock head_title %}
+   {% block custom_css %}
 <style>
     .dataTables_filter{text-align:right;margin-bottom:5px;}
     .dataTables_paginate{margin-top:-10px;margin-bottom:-20px;}
     .mouse {border:#d0d0d0 solid 1px;}
 </style>
 <link  type="text/css" href="/static/personal/css/style.css" rel="stylesheet"/>
-{% endblock css %}
+   
+   {% endblock custom_css %}
+
    {% block custom_js %}
 <script src='/static/custom/js/identify_table.js'></script>
    {% endblock custom_js %}

@@ -3,11 +3,21 @@
 {% block subtitle %}检索{% endblock subtitle %}
 
 {% block custom_css %}
+    <style>
+        .dataTables_filter{text-align:right;margin-bottom:5px;}
+        .dataTables_paginate{margin-top:-10px;margin-bottom:-20px;}
+        .mouse {border:#d0d0d0 solid 1px;}
+    </style>
     <link href="/static/custom/css/search.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/content/css/jquery.datetimepicker.css"/>
 {% endblock custom_css %}
+   {% block custom_js %}
+   <script type="text/javascript" src="/static/custom/js/jquery.datetimepicker.js"></script>
+    <script src='/static/custom/js/identify_table.js'></script>
+   {% endblock custom_js %}
 
 {% block body %}
-<div id="textsearch" style="margin-top:200px">
+<!-- <div id="textsearch" style="margin-top:200px">
         <span style="float:left;line-height:30px;margin-right:15px;">全文检索</span>
         <span class="searchborder fleft">
             <input style="width:330px;"name="words_list" type="text" value="" placeholder="请输入要搜索的微博内容"/>
@@ -17,7 +27,46 @@
                 <input type="submit" class="bluebtn" id="words_list" value="确定"/>
             </a>
         </span>
+</div> -->
+
+
+<div id="supersearch" >
+    <table class='table table-border bootstrap-datatable' style="margin-bottom:0px">
+        <tr>
+            <td class='search_name'>关键词</td>
+            <td><input style="width:330px;"name="words_list" type="text" value="" placeholder="请输入要搜索的微博内容"/></td>
+        </tr>
+        <tr>
+            <td class='search_name'>用户id</td>
+            <td><input style="width:330px;"name="user_list" type="text" value="" placeholder="多个id用空格隔开"/></td>
+        </tr>
+        <tr>
+            <td  class='search_name'>时间</td>
+            <td>
+              <span id='time_choose'>
+                  <input id="weibo_from" type="text" class="form-control" style="width:145px; display:inline-block;height:25px;">&nbsp;-&nbsp;
+                  <input id="weibo_to" type="text" class="form-control" style="width:145px; display:inline-block;height:25px">
+              </span>
+            </td>
+        </tr>
+        <tr>
+            <td class='search_name'>排序人数</td>
+            <td>
+                <input name="sort_num_range" type="radio" value="100"  checked='checked'>100
+                <input name="sort_num_range" type="radio" value="200" style="margin-left:20px;">200
+                <input name="sort_num_range" type="radio" value="300" style="margin-left:20px;">300                
+                <input name="sort_num_range" type="radio" value="400" style="margin-left:20px;">400                
+                <input name="sort_num_range" type="radio" value="500" style="margin-left:20px;">500                
+                <span id="search_all_btn" onclick="search_all()" class="portrait_button" style='float:right;cursor:pointer;margin-right:20px;width: 45px;height: 25px;text-align: center;line-height: 25px;'>提交</span>    
+            </td>
+        </tr>
+
+    </table>
 </div>
+<div>
+    <div id="search_result" style="margin-top:0px;"></div>
+</div>
+<script src= '/static/custom/js/tbase.js'></script>
 
 
 {% endblock %}
@@ -25,18 +74,49 @@
 <script src="/static/custom/js/search_base.js"></script>
 
 <script type="text/javascript">
-    $('#words_list').click(function(){
+    function date_init(){
+        var date = choose_time_for_mode();
+        //console.log(date)
+        date.setHours(0,0,0,0);
+        var max_date = date.format('yyyy/MM/dd');
+        var current_date = date.format('yyyy/MM/dd');
+        var from_date_time = Math.floor(date.getTime()/1000);
+        var min_date_ms = new Date()
+        min_date_ms.setTime(from_date_time*1000);
+        var from_date = min_date_ms.format('yyyy/MM/dd');
+            if(global_test_mode==0){
+            $('#time_choose #weibo_from').datetimepicker({value:from_date,step:1440,format:'Y/m/d',timepicker:false});
+            $('#time_choose #weibo_to').datetimepicker({value:from_date,step:1440,format:'Y/m/d',timepicker:false});
+
+        }else{
+            $('#time_choose #weibo_from').datetimepicker({value:from_date,step:1440,minDate:'-1970/01/30',format:'Y/m/d',timepicker:false,maxDate:'+1970/01/01'});
+            $('#time_choose #weibo_to').datetimepicker({value:from_date,step:1440,minDate:'-1970/01/30',format:'Y/m/d',timepicker:false,maxDate:'+1970/01/01'});
+        }
+    }
+
+    date_init();
+
+    $('#search_all_btn').click(function(){
         var words = $('input[name="words_list"]').val();
-        var simple_url = "/index/text_search/?words_list=";
+        var users = $('input[name="user_list"]').val();
+        var number_sort = $("input[name='sort_num_range']:checked").val();
+        var time_from =$('#time_choose #weibo_from').val().split('/').join('-');
+        var time_to =$('#time_choose #weibo_to').val().split('/').join('-');
+        var from_stamp = new Date($('#time_choose #weibo_from').val());
+        var end_stamp = new Date($('#time_choose #weibo_to').val());
+        if(from_stamp > end_stamp){
+            alert('起始时间不得大于终止时间！');
+            return false;
+        }
+        //var simple_url = "/index/text_search/?words_list=";
         if (words == ''){
             alert('关键词不能为空');
+            return false;
         }
-        else{
             var words_list = words.split(" ");
             //console.log(words_list);
             simple_url += words_list.join(',');
             window.location.href = simple_url;
-        }
     });
 
 </script>
