@@ -64,9 +64,9 @@ def group_task():
 def group_search():
     return render_template('index/search/group_search.html')
 
-@mod.route('/search/')
-def search():
-    return render_template('index/search/search.html')
+@mod.route('/search_portrait/')
+def search_portrait():
+    return render_template('index/search/search_portrait.html')
 
 @mod.route('/search_all/')
 def search_all():
