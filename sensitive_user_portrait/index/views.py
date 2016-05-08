@@ -64,9 +64,13 @@ def group_task():
 def group_search():
     return render_template('index/search/group_search.html')
 
-@mod.route('/search/')
-def search():
-    return render_template('index/search/search.html')
+@mod.route('/search_portrait/')
+def search_portrait():
+    return render_template('index/search/search_portrait.html')
+
+@mod.route('/search_all/')
+def search_all():
+    return render_template('index/search/search_all.html')
 
 @mod.route('/search_results/')
 def search_results():
@@ -112,10 +116,13 @@ def influence():
 def monitor():
     return render_template('index/monitor.html')
 
-@mod.route('/contrast/')
-def contrast():
-    return render_template('index/contrast.html')
+@mod.route('/connect/')
+def connect():
+    return render_template('index/search_connect.html')
 
+@mod.route('/portrait/')
+def portrait():
+    return render_template('index/search_portrait.html')
 
 @mod.route('/group_list/')
 def group_list():

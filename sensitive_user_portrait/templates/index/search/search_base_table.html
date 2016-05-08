@@ -1,0 +1,110 @@
+<div id="textsearch" style='margin-left:20%'>
+        <span style="float:left;line-height:30px;margin-right:15px;">全文检索</span>
+        <span class="searchborder fleft">
+            <input style="width:330px;"name="words_list" type="text" value="" placeholder="请输入要搜索的微博内容"/>
+        </span>
+        <span class="fleft" style="margin-left:20px;" id="show_advanced">
+            <a title=""  style="line-height:30px;"onclick="show()">高级搜索 </a>
+        </span>
+        <span class="fleft" style="margin-left:20px;display:none" id="hidden_advanced">
+            <a title=""  style="line-height:30px;" onclick="notshow()">收起高级搜索 </a>
+        </span>
+        <span class="fleft" style="margin-left:20px;">
+            <a title="">
+                <input type="submit" class="bluebtn" id="words_list" value="确定"/>
+            </a>
+        </span>
+</div>
+
+<div id="supersearch" style="display:none;">
+    
+    <div class="search-content">
+        <div class="cols">
+            <span class="fleft lineh42" style="margin-right:15px;">用户ID</span>
+            <input name="uid" class="inputbox fleft ad-search" type="text" value="" placeholder="请输入用户ID" />
+            <span class="fleft lineh42 mright13">用户名</span>
+            <input name="uname" class="inputbox fleft ad-search" type="text" value="" placeholder="请输入用户名" />
+            <span class="fleft lineh42 right30">地点</span>
+            <input name="location" class="inputbox fleft ad-search" type="text" value="" placeholder="北京"/>
+        </div>
+        <div class="cols">
+            <span class="fleft lineh42 mright5 ">hashtag</span>
+            <input name="hashtag" class="inputbox fleft ad-search" type="text" value="" placeholder="请输入hashtag" />
+            <span class="fleft lineh42 mright15 ">关键字</span>
+            <input name="adkeyword" class="inputbox fleft ad-search" type="text" value="" placeholder="请输入关键字" />
+            <span class="fleft lineh42 mright30">心理状态</span>
+            <select name="psycho_status" class="fleft select-box ad-search">
+                <option value="">不限</option>
+                <option value="积极">积极</option>
+                <option value="焦虑">焦虑</option>
+                <option value="生气">生气</option>
+                <option value="悲伤">悲伤</option>
+                <option value="中性">中性</option>
+            </select>
+        </div>
+        <div class="cols">
+            <form action="" method="get">
+                <span class="fleft lineh42 mright20 ">领域</span>
+                <label class="cols-label"><input name="domain" class=" fleft chosebox" type="checkbox" value="维权律师" />维权律师</label>
+                <label class="cols-label"><input name="domain" class=" fleft chosebox" type="checkbox" value="独立媒体人" />独立媒体人</label>
+                <label class="cols-label"><input name="domain" class=" fleft chosebox" type="checkbox" value="非公企业主" />非公企业主</label>
+                <label class="cols-label"><input name="domain" class=" fleft chosebox" type="checkbox" value="社会公益" />社会公益</label>
+                <label class="cols-label"><input name="domain" class=" fleft chosebox" type="checkbox" value="草根红人" />草根红人</label>
+                <label class="cols-label"><input name="domain" class=" fleft chosebox" type="checkbox" value="文体明星" />文体明星</label>
+                <label class="cols-label"><input name="domain" class=" fleft chosebox" type="checkbox" value="公知分子" />公知分子</label>
+                <label class="cols-label"><input name="domain" class=" fleft chosebox" type="checkbox" value="官方媒体" />官方媒体</label>
+                <label class="cols-label"><input name="domain" class=" fleft chosebox" type="checkbox" value="宗教人士" />宗教人士</label>
+                <label class="cols-label"><input name="domain" class=" fleft chosebox" type="checkbox" value="作家写手" />作家写手</label>
+                <label class="cols-label"><input name="domain" class=" fleft chosebox" type="checkbox" value="公职人员" />公职人员</label>
+                <label class="cols-label"><input name="domain" class=" fleft chosebox" type="checkbox" value="专家学者" />专家学者</label>
+            </form>
+        </div>
+        <div class="cols">
+            <form action="" method="get">
+                <span class="fleft lineh42 mright20">话题</span>
+                <label class="cols-label"><input name="topic" class=" fleft chosebox" type="checkbox" value="民族及恐怖主义" />民族及恐怖主义</label>
+                <label class="cols-label"><input name="topic" class=" fleft chosebox" type="checkbox" value="意识形态" />意识形态</label>
+                <label class="cols-label"><input name="topic" class=" fleft chosebox" type="checkbox" value="港澳台" />港澳台</label>
+                <label class="cols-label"><input name="topic" class=" fleft chosebox" type="checkbox" value="民生稳定" />民生稳定</label>
+                <label class="cols-label"><input name="topic" class=" fleft chosebox" type="checkbox" value="宗教" />宗教</label>
+                <label class="cols-label"><input name="topic" class=" fleft chosebox" type="checkbox" value="邪教" />邪教</label>
+                <label class="cols-label"><input name="topic" class=" fleft chosebox" type="checkbox" value="民运" />民运</label>
+                <label class="cols-label"><input name="topic" class=" fleft chosebox" type="checkbox" value="涉外" />涉外</label>
+            </form>
+        </div>
+        <div class="cols">
+            <span class="fleft lineh42 mright30">标签</span>
+            <select name="tag_type" class="fleft select-box"></select>
+            <select name="tag_name" class="fleft select-box"></select>
+            <div style="margin-top:10px;"><a id="tag_add" style="cursor:pointer;text-decoration:underline;">添加</a></div>
+        </div>
+        <div id="tags" style="margin-left:52px;"></div>
+        <!--
+            <span class="fleft lineh42 mright17" style="display:none">心理特征</span>
+            <select name="psycho_feature" class="fleft select-box ad-search" style="display:none">
+                <option value="">不限</option>
+                <option value="dzz">胆汁质</option>
+                <option value="dxz">多血质</option>
+                <option value="nyz">黏液质</option>
+                <option value="yyz">抑郁质</option>
+            </select>
+            
+        -->
+    </div>
+    <div class="clearfix lineh42">
+      <input name="submit" type="submit" class="bluebtn" id="bluebtn" value="确定" />
+    </div>
+</div>
+<div id="search_result" style="margin-top:40px;"></div>
+<script>
+function show(){
+    $('#supersearch').css('display','block');
+    $('#show_advanced').css('display','none');
+    $('#hidden_advanced').css('display','block');
+}
+function notshow(){
+    $('#supersearch').css('display','none');
+    $('#show_advanced').css('display','block');
+    $('#hidden_advanced').css('display','none');
+}
+</script>

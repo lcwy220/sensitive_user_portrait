@@ -102,23 +102,23 @@ function draw_line_chart(xaxis, yaxis, div, uname){
   var draw_init2 = echarts.init(document.getElementById(div));
   draw_init2.setOption(line_chart_option);
 }
-function draw_recommend(data){
-    var div = '#recommend';
-    console.log(data);
+function draw_recommend(data,div0){
+    var div = '#'+div0+'recommend';
+    console.log(div0);
     //console.log(div);
     $(div).empty();
     var user_url;
     //console.log(user_url);
     var html = '';
-    html += '<table id="recommend_table_new" class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
+    html += '<table id="'+div0+'recommend_table_new" class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
     html += '<thead><tr><th style="width:100px">用户ID</th><th style=width:150px;"">昵称</th><th style="width:100px;">注册地</th>';
     html += '<th style="width:50px">粉丝数</th><th style="width:50px">微博数</th><th style="width:50px">影响力</th>';
     // global_index
-    if(global_index == 2){
+    if(div0 == 'sen_'){
         html += '<th style="width:100px">敏感词</th>';
     }
     html += '<th style="width:100px">用户详情</th>';
-    html += '<th style="width:18px;"><input name="recommend_all" id="recommend_all" type="checkbox" value="" onclick="recommend_all()" />' + '</th>';
+    html += '<th style="width:18px;"><input name="'+div0+'recommend_all" id="'+div0+'recommend_all" type="checkbox" value="" onclick="'+div0+'recommend_all()" />' + '</th>';
     html += '</tr></thead>';
     html += '<tbody>';
 
@@ -145,14 +145,14 @@ function draw_recommend(data){
       html += '<td class="center">'+ item[i][2] +'</td>';
       html += '<td class="center" style="width:100px">'+ item[i][3] +'</td>';
       html += '<td class="center" style="width:100px">'+ item[i][4] +'</td>';
-      html += '<td class="center" style="width:100px">'+ item[i][5] +'</td>';
+      html += '<td class="center" style="width:100px">'+ item[i][5].toFixed(2) +'</td>';
       // global_index
-      if(global_index == 2){
+      if(div0 == 'sen_'){
           html += '<td class="center" style="width:100px">'+ item[i][6] +'</td>';
           //[i][6]预留敏感词
       }
       html += '<td class="center" style="width:100px"><a style="cursor:pointer;" name="details" id="'+ item[i][0] +'" title="'+ item[i][1] +'">详情</a></td>';
-      html += '<td class="center"><input name="in_status" class="in_status" type="checkbox" value="' + item[i][0] + '" /></td>';
+      html += '<td class="center"><input name="'+div0+'in_status" class="in_status" type="checkbox" value="' + item[i][0] + '" /></td>';
       html += '</tr>';
     }
     html += '</tbody>';
@@ -168,7 +168,7 @@ function draw_recommend(data){
       var detail_uname = $(this).attr('title');
       var detail_url;
       // global_index
-      if(global_index == 2){
+      if(div0 == 'sen_'){
         detail_url = '/recommentation/sensitive_show_in_more/?uid=' + detail_uid;
       }else{
         detail_url = '/recommentation/influence_show_in_more/?uid=' + detail_uid;
@@ -243,10 +243,10 @@ function draw_recommend(data){
       }
     });
     // global_index
-    if (global_index == 2){
-        $('#recommend_table_new').dataTable({
+    if (div0 == 'sen_'){
+        $('#'+div0+'recommend_table_new').dataTable({
             "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
-            "sPaginationType": "recommend_boot",
+            "sPaginationType": div0+"recommend_boot",
             "aoColumnDefs":[ {"bSortable": false, "aTargets":[8]}],
             "oLanguage": {
                 "sLengthMenu": "_MENU_ 每页",
@@ -254,9 +254,9 @@ function draw_recommend(data){
         });
     }
     else{
-        $('#recommend_table_new').dataTable({
+        $('#'+div0+'recommend_table_new').dataTable({
             "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
-            "sPaginationType": "recommend_boot",
+            "sPaginationType": div0+"recommend_boot",
             "aoColumnDefs":[ {"bSortable": false, "aTargets":[7]}],
             "oLanguage": {
                 "sLengthMenu": "_MENU_ 每页",
@@ -275,12 +275,13 @@ function draw_history(data){
     html += '<thead><tr><th style="width:100px">用户ID</th><th style="150px;">昵称</th><th style="100px;">注册地</th><th style="width:50px">粉丝数</th>';
     html += '<th style="width:50px">微博数</th><th style="width:50px">影响力</th>';
     // global_index
-    if(global_index == 2){
+    //if(global_index == 2){
         html += '<th style="width:100px">敏感词</th>';
-    }
+    //}
     html += '<th>计算状态</th></tr></thead>';
     html += '<tbody>';
     var item = data;
+          console.log(item)
     for(var i in item){
       item[i] = replace_space(item[i]);
       if(item[i][5]!='未知'){
@@ -297,11 +298,14 @@ function draw_history(data){
       }
       user_url = 'http://weibo.com/u/';
       user_url = user_url + item[i][0];
+
       var in_status;
       if(item[i][7]==2)
         in_status = "预约计算";
       else if(item[i][7]==3)
         in_status = "正在计算";
+      else if(item[i][7]==1)
+        in_status = "立即计算";
       else
         in_status = "计算完成";
       html += '<tr>';
@@ -310,12 +314,12 @@ function draw_history(data){
       html += '<td class="center">'+ item[i][2] +'</td>';
       html += '<td class="center" style="width:100px">'+ item[i][3] +'</td>';
       html += '<td class="center" style="width:100px">'+ item[i][4] +'</td>';
-      html += '<td class="center" style="width:100px">'+ item[i][5] +'</td>';
+      html += '<td class="center" style="width:100px">'+ item[i][5].toFixed(2) +'</td>';
       // global_index
-      if(global_index == 2){
+      //if(global_index == 2){
         html += '<td class="center" style="width:100px">'+ item[i][6] +'</td>';
         //[i][6]预留敏感词
-      }
+      //}
       html += '<td class="center">'+ in_status +'</td>';
       html += '</tr>';
     }
@@ -331,37 +335,47 @@ function draw_history(data){
         }
     });
 }
-function recommend_all(){
-  $('input[name="in_status"]:not(:disabled)').prop('checked', $("#recommend_all").prop('checked'));
+function inf_recommend_all(){
+  $('input[name="inf_in_status"]:not(:disabled)').prop('checked', $("#inf_recommend_all").prop('checked'));
+}
+function sen_recommend_all(){
+  $('input[name="sen_in_status"]:not(:disabled)').prop('checked', $("#sen_recommend_all").prop('checked'));
 }
 function bindButtonClick(){
-  $('input[name="important"]').click(function(){
-      //console.log($("#recommend_date_select").val());
-      var recommend_date;
-      var history_recommend;
-      global_index = $(this).val();
-      console.log(global_index);
+  // $('input[name="important"]').click(function(){
+  //     //console.log($("#recommend_date_select").val());
+  //     var recommend_date;
+  //     var history_recommend;
+  //     global_index = $(this).val();
+  //     console.log(global_index);
         
-      date_initial();
-      var date = $('#recommend_date_select').val();
-      call_ajax_request(recommend_url_list[global_index]+date, draw_recommend);
-      call_ajax_request(history_url_list[global_index]+date, draw_history);
+  //     date_initial();
+  //     var date = $('#recommend_date_select').val();
+  //     call_ajax_request(recommend_url_list[global_index]+date, draw_recommend);
+  //     call_ajax_request(history_url_list[global_index]+date, draw_history);
 
-  });
-  $('#recommend_date_button').click(function(){
-      //console.log($("#recommend_date_select").val());
-      var url_recommend_new = recommend_url_list[global_index] + $("#recommend_date_select").val();
+  // });
+  $('[id$=recommend_date_button]').click(function(){
+      var sub = $(this)[0].id.substr(0,3);
+      if(sub=='inf'){
+        recommend_url = '/recommentation/show_influence_list/?date=';
+      }else{
+        recommend_url = '/recommentation/show_sensitive_list/?date=';
+      }
+      var url_recommend_new = recommend_url + $("[id$=recommend_date_select]").val();
+      console.log(url_recommend_new);
       call_ajax_request(url_recommend_new, draw_recommend);
   });
   $('#history_date_button').click(function(){
       //console.log($("#history_date_select").val());
-      var url_history_new = history_url_list[global_index] + $("#history_date_select").val();
+      var url_history_new = history_url + $("#history_date_select").val();
       //console.log(url_history_new);
       call_ajax_request(url_history_new, draw_history);
   });
-    $('#recommend_button').click(function(){
+    $('[id$=recommend_button]').click(function(){
           var cur_uids = [];
-          $('input[name="in_status"]:checked').each(function(){
+          var sub = $(this)[0].id.substr(0,4);
+          $('input[name="'+sub+'in_status"]:checked').each(function(){
             cur_uids.push($(this).attr('value'));
           })
           recommend_choose_uids[recommend_pre_page] = cur_uids;
@@ -372,7 +386,7 @@ function bindButtonClick(){
                   recommend_uids.push(temp_list[i]);
               }
           }
-          var recommend_date = $("#recommend_date_select").val()
+          var recommend_date = $("#"+sub+"recommend_date_select").val()
           //console.log(recommend_date);
           //console.log(recommend_uids);
           var uids_trans = '';
@@ -390,7 +404,7 @@ function bindButtonClick(){
             if (global_index == 1){
                 source = 2;
             }
-            if($('input[name="instant"]:checked').val()==1){
+            if($('input[name="'+sub+'instant"]:checked').val()==1){
               compute_time = '1';
               sure = confirm('立即计算会消耗系统较多资源，您确定要立即计算吗？');
             }
@@ -400,17 +414,19 @@ function bindButtonClick(){
             }
             if (sure == true){
                   //console.log(compute_time);
-                  $('#recommend').empty();
+                  $('#'+sub+'recommend').empty();
                   var waiting_html = '<div style="text-align:center;vertical-align:middle;height:40px">数据正在加载中，请稍后...</div>';
-                  $('#recommend').append(waiting_html);
+                  $('#'+sub+'recommend').append(waiting_html);
 
                   var recommend_confirm_url = '/recommentation/identify_in/?date=' + recommend_date + '&uid_list=' + uids_trans + '&status=' + compute_time + '&source=' + source;
                   call_ajax_request(recommend_confirm_url, confirm_ok);
                   //console.log(recommend_confirm_url);
-                  var url_recommend_new = recommend_url_list[global_index] + $("#recommend_date_select").val();
-                  call_ajax_request(url_recommend_new, draw_recommend);
 
-                  var url_history_new = history_url_list[global_index] + $("#history_date_select").val();
+
+                  var url_recommend_new = inf_recommend_url + $("#"+sub+"recommend_date_select").val();
+                  call_ajax_request(url_recommend_new, function(data){draw_recommend(data,sub)});
+
+                  var url_history_new = history_url + $("#history_date_select").val();
                   call_ajax_request(url_history_new, draw_history);
             }
           }
@@ -418,11 +434,15 @@ function bindButtonClick(){
 }
 
 function date_initial(){
-    $("#recommend_date_select").empty();
+    $("#inf_recommend_date_select").empty();
+    $("#sen_recommend_date_select").empty();
     $("#history_date_select").empty();
     //var timestamp = Date.parse(new Date());
-    var timestamp = 1378555200000;
-    var date = new Date(parseInt(timestamp)).format("yyyy-MM-dd");
+    var now_date = choose_time_for_mode();
+    var timestamp = now_date.getTime();
+    var date = now_date.format('yyyy-MM-dd');
+    //var timestamp = 1378555200000;
+    //var date = new Date(parseInt(timestamp)).format("yyyy-MM-dd");
     var html;
     html += '<option value="' + date + '" selected="selected">' + date + '</option>';      
     for (var i = 0; i < 6; i++) {
@@ -431,9 +451,11 @@ function date_initial(){
         html += '<option value="' + date + '">' + date + '</option>';
     }
 
-    $("#recommend_date_select").append(html);
-    html += '<option value="all">全部</option>';
+    $("#inf_recommend_date_select").append(html);
+    $("#sen_recommend_date_select").append(html);
+    //html += '<option value="all">全部</option>';
     $("#history_date_select").append(html);
+    console.log('here');
 }
 
 // page control start
@@ -442,14 +464,13 @@ var recommend_choose_uids = new Array();
 // page control end
 
 var global_index = 1;
-var recommend_url_list = new Array();
-recommend_url_list[1] = '/recommentation/show_influence_list/?date=';
-recommend_url_list[2] = '/recommentation/show_sensitive_list/?date=';
-var history_url_list = new Array();
-history_url_list[1] = '/recommentation/show_influence_history_in/?date=';
-history_url_list[2] = '/recommentation/show_sensitive_history_in/?date=';
+//var recommend_url_list = new Array();
+inf_recommend_url = '/recommentation/show_influence_list/?date=';
+sen_recommend_url = '/recommentation/show_sensitive_list/?date=';
+history_url = '/recommentation/show_history_in/?date=';
 date_initial();
-var date = $('#recommend_date_select').val();
-call_ajax_request(recommend_url_list[global_index]+date, draw_recommend);
-call_ajax_request(history_url_list[global_index]+date, draw_history);
+var date = $('#inf_recommend_date_select').val();
+call_ajax_request(inf_recommend_url+date, function(data){draw_recommend(data,'inf_')});
+call_ajax_request(sen_recommend_url+date, function(data){draw_recommend(data,'sen_')});
+call_ajax_request(history_url+date, draw_history);
 bindButtonClick();

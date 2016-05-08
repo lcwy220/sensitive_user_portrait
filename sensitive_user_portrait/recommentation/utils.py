@@ -78,6 +78,8 @@ def get_sensitive_user_detail(uid_list, date, sensitive):
                 personal_info.append(sensitive_dict.keys())
             else:
                 personal_info.append([])
+        else:
+            personal_info.append([])
         results.append(personal_info)
     return results
 
@@ -471,11 +473,13 @@ def show_in_history(date):
     #compute_results = r.hgetall('compute')
     results = []
     work_date = ts2datetime(datetime2ts(date)-DAY)
+    print work_date
 
     if sensitive_uid_list:
         sensitive_results = get_sensitive_user_detail(sensitive_uid_list, work_date, 1)
     else:
         sensitive_results = []
+    print sensitive_uid_list
     for item in sensitive_results:
         uid = item[0]
         status = sen_iden_in_results[uid]
@@ -486,12 +490,13 @@ def show_in_history(date):
         influence_results = get_sensitive_user_detail(influence_uid_list, work_date, 0)
     else:
         influence_results = []
-    for item in results:
+    for item in influence_results:
         uid = item[0]
         status = inf_iden_in_results[uid]
         item.append(status)
         results.append(item)
 
     sorted_results = sorted(results, key=lambda x:x[5], reverse=True)
+    print results
     return sorted_results
 

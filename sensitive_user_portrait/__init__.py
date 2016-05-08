@@ -84,8 +84,12 @@ def register_blueprints(app):
     app.register_blueprint(deleteModule)
     app.register_blueprint(influenceModule)
     app.register_blueprint(userrankModule)
+<<<<<<< HEAD
     app.register_blueprint(weiborankModule)
     app.register_blueprint(socialsensingModule)
+=======
+    #app.register_blueprint(weiborankModule)
+>>>>>>> 63656ba67bead5b4aba82b5550d78979b172b9fb
     """
     app.register_blueprint(attributeModule)
     app.register_blueprint(manageModule)

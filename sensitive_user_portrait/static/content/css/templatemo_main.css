@@ -106,9 +106,14 @@ h1 { font-size: 24px; }
 .templatemo-sidebar-menu > li.sub.open > a {
     background-color: rgba(145,145,145,0.3);
 }
+.templatemo-sidebar .templatemo-sidebar-menu >li>ul>li.active, .templatemo-sidebar .templatemo-sidebar-menu>li>ul>li.a:hover {
+    background-color: rgb(191, 232, 167);
+}
+
 .templatemo-sidebar .templatemo-sidebar-menu >li.active, .templatemo-sidebar .templatemo-sidebar-menu>li>a:hover {
     background-color: rgb(191, 232, 167);
 }
+
 .templatemo-submenu li > a:hover {
     background-color: rgb(228,228,228);
 }
