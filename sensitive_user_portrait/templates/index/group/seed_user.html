@@ -3,14 +3,14 @@
         <div class="box-inner" id = 'box-height'>
             <div class='col-md-12' style="margin-bottom:4px">
                 <div class='col-lg-6' style='margin-left:195px;font-size:32px;'>
-                    <input type='radio' name="mode_choose" value='single_user' checked='checked'>
+                    <input type='checkbox' name="mode_choose" value='single_user' checked='checked'>
                     <span class="input-group-addon" style="width:140px;border:1px solid white;font-weight:bold; background-color:white;display:inline-block" >单个种子用户</span>
-                    <input type='radio' name="mode_choose" value='multi_user'>
+                    <input type='checkbox' name="mode_choose" value='multi_user'>
                     <span class="input-group-addon" style="width:140px;border:1px solid white;font-weight:bold; background-color:white;display:inline-block" >多个种子用户</span>
                 </div>
             </div>
             <hr style='width:800px;margin-bottom:0px;margin-left:10px;'>
-            <div id='single_user_ext' class="box-content" style="height:440px;padding-top:0px;">
+            <div id='single_user_ext' class="box-content" style="height:500px;padding-top:0px;">
                 <div class='col-lg-8' style='padding:0px;'>
                     <span style='float:left;color:#c00;font-size:15px;margin-left:15px;margin-top:15px;'>*</span>
                      <span class="input-group-addon" style="margin-top:10px;width:110px;border:1px solid white;float:left;background-color:white;display:inline-block">用户ID或昵称</span>
@@ -25,9 +25,9 @@
                 </form>
                 <div class='col-lg-5' style='margin:10px 55px;'>
                     <span class="input-group-addon" style="width:120px;border:1px solid white;background-color:white;display:inline-block">是否进行扩展：</span>
-                    <input type='radio' name="ext_choose" value='0' checked='checked'>
+                    <input type='checkbox' name="ext_choose" value='0' checked='checked'>
                     <span class="input-group-addon" style="width:40px;border:1px solid white;background-color:white;display:inline-block" >否</span>
-                    <input type='radio' name="ext_choose" value='1'>
+                    <input type='checkbox' name="ext_choose" value='1'>
                     <span class="input-group-addon" style="width:40px;border:1px solid white;background-color:white;display:inline-block" >是</span>
                 </div>
                 <div class="col-lg-9" id="file_status" style="display:none;padding:0px;">
@@ -51,8 +51,8 @@
             <div id="group_out_list" style="margin-top:30px"></div>
           </div>
           <div class="modal-footer">
-            <input type="radio" name="instant" checked value="0" /> 预约计算
-            <input type="radio" name="instant" value="1" style="margin-left:5px" /> 立即计算
+            <input type="checkbox" name="instant" checked value="0" /> 预约计算
+            <input type="checkbox" name="instant" value="1" style="margin-left:5px" /> 立即计算
             <button id="group_recommend_confirm" type="button" class="btn btn-primary">确认</button>
           </div>
         </div>
@@ -130,9 +130,9 @@
                         <span class="input-group-addon" style="width:75px;border:1px solid white; background-color:white;display:inline-block" id="hop">跳数</span>
                     </div>
                     <div class='col-lg-3'>
-                        <input type='radio' name="hop_choose" value='1' checked='checked' disabled>
+                        <input type='checkbox' name="hop_choose" value='1' checked='checked' disabled>
                         <span class="input-group-addon" style="width:30px;border:1px solid white; background-color:white;display:inline-block" >1</span>
-                        <input type='radio' name="hop_choose" value='2' disabled>
+                        <input type='checkbox' name="hop_choose" value='2' disabled>
                         <span class="input-group-addon" style="width:30px;border:1px solid white; background-color:white;display:inline-block" >2</span>
                     </div>
                 </div>
@@ -190,7 +190,7 @@
                     <div class='col-lg-6' style='padding:0px;'>
                          <span style='float:left;color:#c00;font-size:15px;margin-top:5px;'>*</span>
                          <span class="input-group-addon" style="width:70px;padding-right:0px;border:1px solid white;float:left;background-color:white;display:inline-block">名称</span>
-                         <input id="first_name" type='text' class="form-control" style='width:80%; display:inline-block;height:25px' placeholder='（必填）仅包含汉字、英文、数字和下划线'>
+                         <input id="first_name" type='text' class="form-control" style='width:60%; display:inline-block;height:25px' placeholder='（必填）仅包含汉字、英文、数字和下划线'>
                     </div>
                     <div class='col-lg-6' style='padding:0px;'>
                          <span class="input-group-addon" style="width:75px;border:1px solid white;float:left;background-color:white;display:inline-block">备注</span>
