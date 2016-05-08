@@ -357,3 +357,7 @@ link_ratio_threshold = [0, 0.5, 1]
 
 
 
+attribute_index_name = 'custom_attribute'
+attribute_index_type = 'attribute'
+
+topic_value_dict = {"art": 1, "computer":2, "economic":7, "education":7.5, "environment":8.7, "medicine":7.8,"military":7.4, "politics":10, "sports":4, "traffic":6.9, "life":1.8, "anti-corruption":9.5, "employment":6, "fear-of-violence":9.3, "house":6.4, "law":8.6, "peace":5.5, "religion":7.6, "social-security":8.6}

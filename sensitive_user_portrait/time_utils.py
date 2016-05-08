@@ -28,6 +28,9 @@ def ts2HourlyTime(ts, interval):
     ts = ts - ts % interval
     return ts
 
+def ts2date_min(ts):
+    return time.strftime('%Y-%m-%d %H:%M', time.localtime(ts))
+
 def ts2datetime_full(ts):
     return time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(ts))
 
