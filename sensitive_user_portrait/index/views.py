@@ -112,10 +112,13 @@ def influence():
 def monitor():
     return render_template('index/monitor.html')
 
-@mod.route('/contrast/')
-def contrast():
-    return render_template('index/contrast.html')
+@mod.route('/connect/')
+def connect():
+    return render_template('index/search_connect.html')
 
+@mod.route('/portrait/')
+def portrait():
+    return render_template('index/search_portrait.html')
 
 @mod.route('/group_list/')
 def group_list():
