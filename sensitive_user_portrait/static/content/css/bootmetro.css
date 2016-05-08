@@ -352,7 +352,7 @@ Range control.
 input[type=range] {
    width: 280px;
    height: auto;
-   padding: 17px 0 32px 0;
+   '''padding: 17px 0 32px 0;'''
 }
 
 /*
