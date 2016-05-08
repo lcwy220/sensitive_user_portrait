@@ -1,21 +1,21 @@
 {% extends "index/base.html" %}
-    {% block title %}群体分析{% endblock title %}
-    {% block css %}
-        {{ super() }}
-        <style>
+{% block title %}群体分析{% endblock title %}
+{% block custom_css %}
+    {{ super() }}
+       <style>
             .dataTables_length{display:none;}
             .dataTables_filter{display:none;text-align:right;margin-bottom:5px;}
             .dataTables_paginate{margin-top:-10px;margin-bottom:-20px;}
             .wrapper{min-height:330px;margin-top:50px;margin-left:-20px;background: #fff;position: relative;}
         </style>
         <link rel="stylesheet" type="text/css" href="/static/css/jquery.datetimepicker.css"/>
-    {% endblock css %}
-    {% block head_js %}
+{% endblock custom_css %}
+{% block head_js %}
         {{ super() }}
         <script type="text/javascript" src="/static/js/jquery.datetimepicker.js"></script>
         <script type="text/javascript" src="/static/js/portrait/identify_table.js"></script>
-    {% endblock head_js %}
-    {% block body %}
+{% endblock head_js %}
+{% block body %}
 	
     <div class="box-content">
 
@@ -93,4 +93,8 @@
     {% block end_js %}
         {{ super() }}
         <script type="text/javascript" src="/static/js/portrait/group_list.js"></script>
+        <script>
+		data = [['生气情绪用户群体','2016/04/26 16:41',90,'24日于北京发布生气情绪的群体',1],['sdfghjk','2016/04/26 16:41',90,' ',0]]
+        Draw_resultTable(data)
+		</script>
     {% endblock end_js %}

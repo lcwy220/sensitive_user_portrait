@@ -13,26 +13,20 @@ mod = Blueprint('weibo_rank', __name__, url_prefix='/weibo_rank')
 def weibo_sort():
     username = request.args.get('username', '')
     search_time = request.args.get('time', '') # 1 7 30
-    sort_norm = request.args.get('sort_norm', '') # reposts comments
-    sort_scope = request.args.get('sort_scope', '') # "all_limit_keyword" "all_nolimit" 'in_limit_keyword' 'in_limit_hashtag'
+    sort_norm = request.args.get('sort_norm', '') # reposts_count comments_count
+    sort_scope = request.args.get('sort_scope', '') # "all_limit_keyword" "all_nolimit"
     arg = request.args.get('arg', '')
     st = request.args.get('st', '') # "2013-09-01"
     et = request.args.get('et', '') # "2013-09-01"
-    isall = request.args.get('all','') # True or False
     number = request.args.get('number', 100)
     task_number = request.args.get('task_number', 5)
-    _all = True
-    if isall == 'True':
-        _all = True
-    else :
-        _all = False
 
     if arg :
         pass
     else :
         arg = None
 
-    results = weibo_sort_interface(username, int(search_time), sort_scope, sort_norm, arg, st, et, _all, task_number, number)
+    results = weibo_sort_interface(username, int(search_time), sort_scope, sort_norm, arg, st, et, task_number, number)
 
     return json.dumps(results)
 

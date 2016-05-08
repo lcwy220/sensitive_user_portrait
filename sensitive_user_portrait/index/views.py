@@ -147,6 +147,7 @@ def contact():
     uid = request.args.get('uid', '1022866242')
     return render_template('index/contact.html', uid=uid)
 
-
-
+@mod.route('/social_sensing/')
+def social_sensing():
+    return render_template('index/social_sensing.html')
 
