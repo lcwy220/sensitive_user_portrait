@@ -1,0 +1,43 @@
+{% extends "index/base.html" %} 
+{% block title %}检索{% endblock title %}
+{% block subtitle %}检索{% endblock subtitle %}
+
+{% block custom_css %}
+    <link href="/static/custom/css/search.css" rel="stylesheet">
+{% endblock custom_css %}
+
+{% block body %}
+<div id="textsearch" style="margin-top:200px">
+        <span style="float:left;line-height:30px;margin-right:15px;">全文检索</span>
+        <span class="searchborder fleft">
+            <input style="width:330px;"name="words_list" type="text" value="" placeholder="请输入要搜索的微博内容"/>
+        </span>
+        <span class="fleft" style="margin-left:20px;">
+            <a title="">
+                <input type="submit" class="bluebtn" id="words_list" value="确定"/>
+            </a>
+        </span>
+</div>
+
+
+{% endblock %}
+{% block end_js %}
+<script src="/static/custom/js/search_base.js"></script>
+
+<script type="text/javascript">
+    $('#words_list').click(function(){
+        var words = $('input[name="words_list"]').val();
+        var simple_url = "/index/text_search/?words_list=";
+        if (words == ''){
+            alert('关键词不能为空');
+        }
+        else{
+            var words_list = words.split(" ");
+            //console.log(words_list);
+            simple_url += words_list.join(',');
+            window.location.href = simple_url;
+        }
+    });
+
+</script>
+{% endblock end_js %}
