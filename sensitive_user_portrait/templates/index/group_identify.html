@@ -20,8 +20,7 @@
     {% endblock custom_css %}
     {% block head_js %}
         {{ super() }}
-        <script type="text/javascript" src="/static/js/jquery.datetimepicker.js"></script>
-        <script type="text/javascript" src="/static/js/portrait/identify_table.js"></script>
+        
     {% endblock head_js %}
     {% block body %}
     <h4 class="page-header">群体发现任务</h4>
@@ -203,6 +202,8 @@
     {% endblock body %}
     {% block end_js %}
         {{ super() }}
+		<script type="text/javascript" src="/static/js/jquery.datetimepicker.js"></script>
+        <script type="text/javascript" src="/static/js/portrait/identify_table.js"></script>
         <script type="text/javascript" src="/static/js/portrait/group_identify_task.js"></script>
         <script type="text/javascript" src="/static/js/portrait/group_pattern.js"></script>
         <script>
