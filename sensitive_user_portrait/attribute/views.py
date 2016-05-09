@@ -81,59 +81,6 @@ def ajax_get_remark():
         results = ''
     return json.dumps(results)
 
-@mod.route('/portrait_search/')
-def ajax_portrait_search():
-    stype = request.args.get('stype', '')
-    result = {}
-    query_data = {}
-    query = []
-    query_list = []
-    condition_num = 0
-
-    if stype == '1':
-        fuzz_item = ['uid', 'uname']
-        item_data = request.args.get('term', '')
-        for item in fuzz_item:
-            if item_data:
-                query_list.append({'wildcard':{item:'*'+item_data+'*'}})
-                condition_num += 1
-        query.append({'bool':{'should':query_list}})
-    else:
-        fuzz_item = ['uid', 'uname', 'location', 'activity_geo', 'keywords_string', 'hashtag']
-        multi_item = ['character_sentiment','character_text','domain','topic_string']
-        for item in fuzz_item:
-            item_data = request.args.get(item, '')
-            if item_data:
-                query.append({'wildcard':{item:'*'+item_data+'*'}})
-                condition_num += 1
-        # custom_attribute
-        tag_items = request.args.get('tag', '')
-        if tag_items != '':
-            tag_item_list = tag_items.split(',')
-            for tag_item in tag_item_list:
-                attribute_name_value = tag_item.split(':')
-                attribute_name = attribute_name_value[0]
-                attribute_value = attribute_name_value[1]
-                if attribute_name and attribute_value:
-                    query.append({'wildcard':{attribute_name:'*'+attribute_value+'*'}})
-                    condition_num += 1
-
-        for item in multi_item:
-            nest_body = {}
-            nest_body_list = []
-            item_data = request.args.get(item, '')
-            if item_data:
-                term_list = item_data.split(',')
-                for term in term_list:
-                    nest_body_list.append({'wildcard':{item:'*'+term+'*'}})
-                condition_num += 1
-                query.append({'bool':{'should':nest_body_list}})
-        
-        
-    size = 1000
-    sort = '_score'
-    result = search_portrait(condition_num, query, sort, size)
-    return json.dumps(result)
 
 #use to get activity geo from user_portrait for week and month
 #write in version:15-12-08
@@ -516,11 +463,7 @@ def ajax_retweetd_weibo():
 def ajax_basic_info():
     uid = request.args.get('uid', '')
     uid = str(uid)
-
-    # test 
     uid = '1713926427'
-
-
     results = es_get_source(uid)
 
     return json.dumps(results)

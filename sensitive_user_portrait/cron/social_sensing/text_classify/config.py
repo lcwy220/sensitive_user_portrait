@@ -7,7 +7,7 @@ import csv
 import sys
 from decimal import *
 sys.path.append('../../../')
-from parameter import TOPIC_ABS_PATH as abs_path
+from parameter import SOCIAL_SENSING_TOPIC_ABS_PATH as abs_path
 
 name_list = ['art','computer','economic','education','environment','medicine',\
             'military','politics','sports','traffic','life',\

@@ -151,3 +151,10 @@ def contact():
 def social_sensing():
     return render_template('index/social_sensing.html')
 
+@mod.route('/sensing_analysis/')
+def sensing_analysis():
+    task_name = request.args.get('task_name','监督维权律师' )
+    user = request.args.get('user', 'admin')
+    ts = request.args.get('ts', '1378567800' )
+    return render_template('index/sensing_analysis.html', task_name=task_name,user=user,ts=ts)
+

@@ -32,6 +32,7 @@ def ajax_create_task():
     task_number = request.args.get('task_number', 5)
     task_name = request.args.get('task_name','') # must
     create_by = request.args.get('create_by', 'admin') # 用户
+    create_at = str(request.args.get('create_at', int(time.time())))
     stop_time = request.args.get('stop_time', "default") #timestamp, 1234567890
     keywords = request.args.get("keywords", "") # keywords_list, split with " "
     remark = request.args.get("remark", "")
@@ -63,13 +64,13 @@ def ajax_create_task():
         task_detail["create_by"] = create_by # 创建任务, user
         task_detail["stop_time"] = stop_time
         task_detail["remark"] = remark
-        now_ts = int(time.time())
-        task_detail["create_at"] = now_ts # now_ts
+        task_detail["create_at"] = create_at
         task_detail["warning_status"] = '0'
         task_detail["finish"] = "0" # not end the task
         task_detail["history_status"] = json.dumps([]) # ts, keywords, warning_status
         task_detail['burst_reason'] = ''
         task_detail['processing_status'] = "1" #任务正在进行
+        task_detail['keywords'] = keywords
 
     # store task detail into es
     es.index(index=index_manage_sensing_task, doc_type=task_doc_type, id=_id, body=task_detail)
@@ -203,9 +204,6 @@ def ajax_get_task_detail_info():
     user = request.args.get('user', 'admin')
     _id = user + "-" + task_name
     task_detail = es.get(index=index_manage_sensing_task, doc_type=task_doc_type, id=_id)['_source']
-    task_detail["social_sensors"] = json.loads(task_detail["social_sensors"])
-    #task_detail['keywords'] = json.loads(task_detail['keywords'])
-    #task_detail["sensitive_words"]= json.loads(task_detail["sensitive_words"])
     history_status = json.loads(task_detail['history_status'])
     if history_status:
         temp_list = []
@@ -222,6 +220,7 @@ def ajax_get_task_detail_info():
     task_detail['social_sensors_portrait'] = []
     portrait_detail = []
 
+    """
     if task_detail["social_sensors"]:
         search_results = es.mget(index=portrait_index_name, doc_type=portrait_index_type, body={"ids": task_detail["social_sensors"]})['docs']
         if search_results:
@@ -237,9 +236,9 @@ def ajax_get_task_detail_info():
         if portrait_detail:
             portrait_detail = sorted(portrait_detail, key=lambda x:x[5], reverse=True)
     task_detail['social_sensors_portrait'] = portrait_detail
+    """
 
     return json.dumps(task_detail)
-
 
 
 @mod.route('/get_admin_sensi_words/')

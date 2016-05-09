@@ -17,6 +17,7 @@ from sensitive_user_portrait.parameter import DOC_TYPE_MANAGE_SOCIAL_SENSING as 
 from sensitive_user_portrait.parameter import DETAIL_SOCIAL_SENSING as index_sensing_task
 from sensitive_user_portrait.parameter import SOCIAL_SENSOR_INFO, signal_count_varition, signal_sentiment_varition, CURRENT_WARNING_DICT, IMPORTANT_USER_THRESHOULD, signal_sensitive_variation, DAY
 from sensitive_user_portrait.time_utils import ts2date_min, datetime2ts, ts2datetime
+from sensitive_user_portrait.get_user_info import get_user_profile
 
 
 def get_top_influence(key):
@@ -64,7 +65,6 @@ def get_task_detail_2(task_name, ts, user):
     _id = user + "-" + task_name
     task_detail = es.get(index=index_manage_sensing_task, doc_type=task_doc_type, id=_id)["_source"]
     task_name = task_detail['task_name']
-    social_sensors = json.loads(task_detail['social_sensors'])
     history_status = json.loads(task_detail['history_status'])
     start_time = task_detail['create_at']
     create_by = task_detail['create_by']
@@ -76,25 +76,6 @@ def get_task_detail_2(task_name, ts, user):
     top_influence = get_top_influence("influence")
     top_activeness = get_top_influence("activeness")
     top_importance = get_top_influence("importance")
-
-    if social_sensors:
-        search_results = es.mget(index=portrait_index_name, doc_type=portrait_index_type, body={"ids":social_sensors}, fields=SOCIAL_SENSOR_INFO)['docs']
-        for item in search_results:
-            temp = []
-            if item['found']:
-                for iter_item in SOCIAL_SENSOR_INFO:
-                    if iter_item == "topic_string":
-                        temp.append(item["fields"][iter_item][0].split('&'))
-                    elif iter_item == "activeness":
-                        temp.append(math.log(item['fields']['activeness'][0]/float(top_activeness)*9+1, 10)*100)
-                    elif iter_item == "importance":
-                        temp.append(math.log(item['fields']['importance'][0]/float(top_importance)*9+1, 10)*100)
-                    elif iter_item == "influence":
-                        temp.append(math.log(item['fields']['influence'][0]/float(top_influence)*9+1, 10)*100)
-                    else:
-                        temp.append(item["fields"][iter_item][0])
-                portrait_detail.append(temp)
-        portrait_detail = sorted(portrait_detail, key=lambda x:x[5], reverse=True)
 
     time_series = [] # 时间
     #positive_sentiment_list = [] # 情绪列表
@@ -214,7 +195,6 @@ def get_task_detail_2(task_name, ts, user):
     # 获取重要用户的个人信息
     important_uid_list = list(important_user_set)
     out_portrait_users_list = list(out_portrait_users)
-    social_sensor_set = set(social_sensors)
     user_detail_info = [] #
     out_user_detail_info = []
     if important_uid_list:
@@ -237,10 +217,6 @@ def get_task_detail_2(task_name, ts, user):
                 temp.append(math.log(item['fields']['importance'][0]/float(top_importance)*9+1, 10)*100)
                 temp.append(math.log(item['fields']['influence'][0]/float(top_influence)*9+1, 10)*100)
                 temp.append(math.log(item['fields']['activeness'][0]/float(top_activeness)*9+1, 10)*100)
-                if item['fields']['uid'][0] in social_sensor_set:
-                    temp.append(1)
-                else:
-                    temp.append(0)
                 user_detail_info.append(temp)
     # 排序
     if user_detail_info:
@@ -259,17 +235,27 @@ def get_task_detail_2(task_name, ts, user):
             for item in profile_results:
                 temp = []
                 if item['found']:
+                    uid = item['_source']['uid']
+                    temp = get_user_profile([uid], ['nick_name', 'user_location', 'statusnum', 'fansnum'])[0]
+                else:
+                    temp = [item['_id'], item['_id'], '', '', '']
+
+                """
+                if item['found']:
                     temp.append(item['_source']['uid'])
                     if item['_source']['nick_name']:
                         temp.append(item['_source']['nick_name'])
                     else:
                         temp.append(item['_source']['uid'])
                     temp.append(item['_source']['user_location'])
-                    #temp.append(item['_source']['fansnum'])
+                    temp.append(item['_source']['statusnum'])
+                    temp.append(item['_source']['friendsnum'])
                 else:
                     temp.append(item['_id'])
                     temp.append(item['_id'])
                     temp.extend([''])
+                    temp.append('--')
+                    temp.append('--')
                 try:
                     user_fansnum = bci_results[count]["fields"]["user_fansnum"][0]
                 except:
@@ -281,8 +267,9 @@ def get_task_detail_2(task_name, ts, user):
                     temp.append(math.log(user_index/float(top_influence)*9+1, 10)*100)
                 else:
                     temp.append(0)
+                """
                 count += 1
-            out_user_detail_info.append(temp)
+                out_user_detail_info.append(temp)
 
     revise_time_series = []
     for item in time_series:
@@ -301,7 +288,6 @@ def get_task_detail_2(task_name, ts, user):
     #results['comment_weibo_count'] = comment_weibo_count
     #results['retweeted_weibo_count'] = retweeted_weibo_count
     #results['total_number_list'] = total_number_count
-    results['social_sensors_detail'] = portrait_detail
 
     return results
 

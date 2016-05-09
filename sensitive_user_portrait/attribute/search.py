@@ -11,33 +11,31 @@ import math
 import redis
 from description import active_geo_description, active_time_description, hashtag_description
 
-from user_portrait.time_utils import ts2datetime, datetime2ts, ts2date, datetimestr2ts
+from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts, ts2date, datetimestr2ts
 
-from user_portrait.global_utils import R_CLUSTER_FLOW2 as r_cluster
-from user_portrait.global_utils import R_DICT
-from user_portrait.global_utils import es_user_portrait, portrait_index_name, portrait_index_type
-from user_portrait.global_utils import es_user_profile, profile_index_name, profile_index_type
-from user_portrait.global_utils import es_flow_text, flow_text_index_name_pre, flow_text_index_type
-from user_portrait.global_utils import es_retweet, es_comment, es_copy_portrait
-from user_portrait.global_utils import retweet_index_name_pre, retweet_index_type
-from user_portrait.global_utils import be_retweet_index_name_pre, be_retweet_index_type
-from user_portrait.global_utils import comment_index_name_pre, comment_index_type
-from user_portrait.global_utils import be_comment_index_name_pre, be_comment_index_type
-from user_portrait.global_utils import copy_portrait_index_name, copy_portrait_index_type
-from user_portrait.global_utils import R_RECOMMENTATION as r_recomment
-from user_portrait.global_config import R_BEGIN_TIME
-from user_portrait.parameter import DAY, WEEK, MAX_VALUE, HALF_HOUR, FOUR_HOUR, GEO_COUNT_THRESHOLD, PATTERN_THRESHOLD
-from user_portrait.parameter import PSY_DESCRIPTION_FIELD, psy_en2ch_dict, psy_description_dict
-from user_portrait.search_user_profile import search_uid2uname
-from user_portrait.filter_uid import all_delete_uid
-from user_portrait.parameter import IP_TIME_SEGMENT, IP_TOP, DAY, IP_CONCLUSION_TOP, domain_en2ch_dict, topic_en2ch_dict
-from user_portrait.parameter import INFLUENCE_TREND_SPAN_THRESHOLD, INFLUENCE_TREND_AVE_MIN_THRESHOLD,\
+from sensitive_user_portrait.global_utils import  redis_cluster, redis_ip, redis_activity, uname2uid_redis
+from sensitive_user_portrait.global_utils import es_user_portrait, portrait_index_name, portrait_index_type
+from sensitive_user_portrait.global_utils import es_user_profile, profile_index_name, profile_index_type
+from sensitive_user_portrait.global_utils import es_flow_text, flow_text_index_name_pre, flow_text_index_type
+from sensitive_user_portrait.global_utils import es_retweet, es_comment, es_copy_portrait
+from sensitive_user_portrait.global_utils import retweet_index_name_pre, retweet_index_type
+from sensitive_user_portrait.global_utils import be_retweet_index_name_pre, be_retweet_index_type
+from sensitive_user_portrait.global_utils import comment_index_name_pre, comment_index_type
+from sensitive_user_portrait.global_utils import be_comment_index_name_pre, be_comment_index_type
+from sensitive_user_portrait.global_utils import copy_portrait_index_name, copy_portrait_index_type
+from sensitive_user_portrait.global_utils import R_RECOMMENTATION as r_recomment
+from sensitive_user_portrait.global_config import R_BEGIN_TIME
+from sensitive_user_portrait.parameter import DAY, WEEK, MAX_VALUE, HALF_HOUR, FOUR_HOUR, GEO_COUNT_THRESHOLD, PATTERN_THRESHOLD
+from sensitive_user_portrait.search_user_profile import search_uid2uname
+#from sensitive_user_portrait.filter_uid import all_delete_uid
+from sensitive_user_portrait.parameter import IP_TIME_SEGMENT, IP_TOP, DAY, IP_CONCLUSION_TOP, domain_en2ch_dict, topic_en2ch_dict
+from sensitive_user_portrait.parameter import INFLUENCE_TREND_SPAN_THRESHOLD, INFLUENCE_TREND_AVE_MIN_THRESHOLD,\
                                     INFLUENCE_TREND_AVE_MAX_THRESHOLD, INFLUENCE_TREND_DESCRIPTION_TEXT
-from user_portrait.parameter import ACTIVENESS_TREND_SPAN_THRESHOLD, ACTIVENESS_TREND_AVE_MIN_THRESHOLD ,\
+from sensitive_user_portrait.parameter import ACTIVENESS_TREND_SPAN_THRESHOLD, ACTIVENESS_TREND_AVE_MIN_THRESHOLD ,\
                                     ACTIVENESS_TREND_AVE_MAX_THRESHOLD, ACTIVENESS_TREND_DESCRIPTION_TEXT
-from user_portrait.parameter import SENTIMENT_DICT,  ACTIVENESS_TREND_TAG_VECTOR
-from user_portrait.parameter import SENTIMENT_SECOND
-from user_portrait.parameter import RUN_TYPE, RUN_TEST_TIME
+from sensitive_user_portrait.parameter import SENTIMENT_DICT,  ACTIVENESS_TREND_TAG_VECTOR
+from sensitive_user_portrait.parameter import SENTIMENT_SECOND
+from sensitive_user_portrait.parameter import RUN_TYPE, RUN_TEST_TIME
 
 r_beigin_ts = datetime2ts(R_BEGIN_TIME)
 
@@ -65,6 +63,16 @@ def get_db_num(timestamp):
         db_number = 1
     return db_number
 
+# get sensitive db_number
+def sensitive_get_db_num(timestamp):
+    date = ts2datetime(timestamp)
+    date_ts = datetime2ts(date)
+    db_number = (((date_ts - r_begin_ts) / DAY) / 7) % 2 + 3
+
+    if RUN_TYPE == 0:
+        db_number = 3
+    return db_number
+
 
 #use to get user remark
 #write in version: 15-12-08
@@ -89,12 +97,12 @@ def search_remark(uid):
 #output: status
 def edit_remark(uid, remark):
     status = 'yes'
-    try:
-        user_portrait_result = es_user_portrait.get(index=portrait_index_name, doc_type=portrait_index_type, id=uid)['_source']
-    except:
+    user_exist = es_user_portrait.exists(index=portrait_index_name, doc_type=portrait_index_type, id=uid)
+    if user_exist:
+        es_user_portrait.update(index=portrait_index_name, doc_type=portrait_index_type, id=uid, body={'doc':{'remark': remark}})
+    else:
         return 'no uid'
-    es_user_portrait.update(index=portrait_index_name, doc_type=portrait_index_type, id=uid, body={'doc':{'remark': remark}})
-    
+
     return status
 
 #use to search user attention from es: retweet_1 or retweet_2

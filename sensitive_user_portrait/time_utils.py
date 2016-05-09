@@ -2,8 +2,14 @@
 
 import time
 
+def date_hour2ts(date):
+    return int(time.mktime(time.strptime(date, '%Y-%m-%d %H')))
+
 def unix2hadoop_date(ts):
     return time.strftime('%Y_%m_%d', time.localtime(ts))
+
+def ts2date_hour(ts):
+    return time.strftime('%Y-%m-%d %H', time.localtime(ts))
 
 def ts2datetime(ts):
     return time.strftime('%Y-%m-%d', time.localtime(ts))

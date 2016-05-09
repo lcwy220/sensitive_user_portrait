@@ -9,7 +9,7 @@ a#basic_info:hover{cursor:hand;}
 /* soft_function */
 .soft_function{width:1000px;/*height:636px;*/margin:0 auto}
 .soft_con_icon{width:1000px;height:190px;display:block;padding-top:10px}
-.soft_con_icon ul li{float:left;display:block;list-style:none;height:180px;width:120px; margin:0 25px;}
+.soft_con_icon ul li{float:left;display:block;list-style:none;height:180px;width:120px; margin-left:30px;margin-right:45px;}
 .soft_con_icon ul li a p{color:#333333;font-size:20px;font-family:"微软雅黑";text-align:center}
 .soft_con{/*height:296px;*/width:1000px}
 .soft_con1{height:20px;width:1000px;background:url(images/line_select_001.gif)}
@@ -21,7 +21,7 @@ a#basic_info:hover{cursor:hand;}
 .soft_con2 div p{text-align:center}
 .p1{font-size:20px;color:#555555;font-family:"微软雅黑";line-height:45px}
 .p2{font-size:14px;color:#c0c0c0;font-family:"微软雅黑";width:208px;height:50px;line-height:24px;margin:auto;overflow: hidden;}
-.soft_con_icon ul li a img{width:90px;height:90px;margin-left:20px;margin-top:40px;}
+.soft_con_icon ul li a img{width:90px;height:90px;margin-left:10px;margin-top:40px;}
 .soft_con_icon ul li a p{margin-top:10px;}
 
 .PortraitImg{margin-top:0px;margin-bottom:0px;margin-left:auto;margin-right:auto;width:50px;height:50px;overflow: hidden;}

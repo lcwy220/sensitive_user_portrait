@@ -63,7 +63,7 @@ index_info = {
                 # 所有地点检索
                 "activity_geo":{
                     "type": "string",
-                    "index": "not_analyzed"
+                    "analyzer": "my_analyzer"
                 },
                 # 地理轨迹
                 "activity_geo_dict":{
@@ -169,5 +169,5 @@ index_info = {
 exist_bool = es.indices.exists(index="sensitive_user_portrait")
 if not exist_bool:
     print "not exist"
-    es.indices.create(index="sensitive_user_portrait", body=index_info, ignore=400)
+    print es.indices.create(index="sensitive_user_portrait", body=index_info, ignore=400)
 

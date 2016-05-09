@@ -80,13 +80,9 @@ def full_text_search(keywords, uid, start_time, end_time, size):
     user_profile_list = []
     query_body = {
         "query": {
-            "filtered":{
-                "filter":{
                     "bool": {
                         "must": []
                     }
-                }
-            }
         },
         "size":size,
         "sort":{"timestamp":{"order": 'desc'}}
@@ -96,12 +92,12 @@ def full_text_search(keywords, uid, start_time, end_time, size):
         query_body["sort"] = {"user_fansnum":{"order": 'desc'}}
 
     if uid:
-        query_body["query"]["filtered"]["filter"]["bool"]["must"].append({"term":{"uid":uid}})
+        query_body["query"]["bool"]["must"].append({"term":{"uid":uid}})
 
     if keywords:
         keywords_list = keywords.split(',')
         for word in keywords_list:
-            query_body["query"]["filtered"]["filter"]["bool"]["must"].append({'wildcard':{'text':{'wildcard':'*'+word+'*'}}})
+            query_body["query"]["bool"]["must"].append({'wildcard':{'text':{'wildcard':'*'+word+'*'}}})
 
     index_list = []
     exist_bool = es_flow_text.indices.exists(index="flow_text_"+end_time)
@@ -134,6 +130,7 @@ def full_text_search(keywords, uid, start_time, end_time, size):
     sensitive_results = es_sensitive_history.mget(index="sensitive_history", doc_type="sensitive", body={"ids":uid_list}, _source=False, fields=["last_value"])["docs"]
 
     count = 0
+    # uid uname text date geo sensitive_words retweeted comment
     for item in search_results:
         item = item['_source']
         uid_list.append(item['uid'])
@@ -154,6 +151,7 @@ def full_text_search(keywords, uid, start_time, end_time, size):
 
     user_set = set()
     count = 0
+    # uid "nick_name", "fansnum", "statusnum","user_location", bci, sensitive
     for item in user_info:
         if item[0] in user_set:
             continue

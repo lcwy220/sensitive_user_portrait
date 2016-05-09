@@ -4,22 +4,20 @@ import time
 import json
 import math
 from mid2weibolink import weiboinfo2url
-#test
-'''
-reload(sys)
-sys.path.append('../')
-from global_utils import R_GROUP as r
-from global_utils import es_user_portrait as es
-from time_utils import ts2datetime, datetime2ts
-'''
 from sensitive_user_portrait.global_config import UPLOAD_FOLDER
 from sensitive_user_portrait.global_utils import R_GROUP as r
-from sensitive_user_portrait.global_utils import es_sensitive_user_portrait as es
-from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts
+from sensitive_user_portrait.global_utils import es_user_portrait as es
+from sensitive_user_portrait.global_utils import es_user_portrait, portrait_index_name, portrait_index_type,\
+                        es_flow_text, flow_text_index_name_pre, flow_text_index_type,\
+                        es_user_profile, profile_index_name, profile_index_type,\
+                        es_group_result, group_index_name, group_index_type
+from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts, ts2date
+from sensitive_user_portrait.parameter import MAX_VALUE, DAY, FOUR_HOUR, SENTIMENT_SECOND
+from sensitive_user_portrait.global_utils import group_analysis_queue_name
+from sensitive_user_portrait.parameter import RUN_TYPE, RUN_TEST_TIME
 
-
-index_name = 'group_result'
-index_type = 'group'
+index_name = group_index_name
+index_type = group_index_type
 
 '''
 #submit new task and identify the task name unique
@@ -72,30 +70,22 @@ def submit_task(input_data):
     status = 0 # mark it can not submit
     task_name = input_data['task_name']
     try:
-        result = es.get(index=index_name, doc_type=index_type, id=task_name)
+        result = es_group_result.get(index=group_index_name, doc_type=group_index_type, id=task_name)['_source']
     except:
         status = 1
     
     if status != 0 and 'uid_file' not in input_data:
-        r.lpush('group_task', json.dumps(input_data))
         input_data['status'] = 0 # mark the task not compute
         count = len(input_data['uid_list'])
         input_data['count'] = count
-        uid_list_string = json.dumps(input_data['uid_list'])
-        es.index(index='group_result', doc_type='group', id=task_name, body=input_data)
-    elif status != 0 and 'uid_file' in input_data:
-        input_data['status'] = 0 # mark the task not compute
-        uid_file = input_data['uid_file']
-        uid_list = read_uid_file(uid_file)
-        input_data['count'] = len(uid_list)
-        input_data['uid_list'] = json.dumps(uid_list)
-        r.lpush('group_task', json.dumps(input_data))
-        es.index(index='group_result', doc_type='group', id=task_name, body=input_data)
-        delete_status = delete_uid_file(uid_file)
-        if delete_status == 0:
-            print 'fail delete uid file'
-        elif delete_status == 1:
-            print 'success delete uid file'
+        input_data['task_type'] = 'analysis'
+        input_data['submit_user'] = 'admin'
+        input_data['detect_type'] = ''
+        input_data['detect_process'] = ''
+        add_es_dict = {'task_information': input_data, 'query_condition':''}
+        es_group_result.index(index=group_index_name, doc_type=group_index_type, id=task_name, body=input_data)
+        r.lpush(group_analysis_queue_name, json.dumps(input_data))
+    
     return status
 
 
@@ -108,11 +98,13 @@ def search_task(task_name, submit_date, state, status):
     if task_name:
         task_name_list = task_name.split(' ')
         for item in task_name_list:
-            #print 'item:', item
             query.append({'wildcard':{'task_name': '*' + item + '*'}})
             condition_num += 1
     if submit_date:
-        query.append({'match':{'submit_date': submit_date}})
+        submit_date_ts = datetime2ts(submit_date)
+        submit_date_start = submit_date_ts
+        submit_date_end = submit_date_ts + DAY
+        query.append({'range':{'submit_date': {'gte': submit_date_start, 'lt': submit_date_end}}})
         condition_num += 1
     if state:
         state_list = state.split(' ')
@@ -123,31 +115,35 @@ def search_task(task_name, submit_date, state, status):
         query.append({'match':{'status': status}})
         condition_num += 1
     if condition_num > 0:
+        query.append({'term':{'task_type': 'analysis'}})
         try:
-            source = es.search(
-                    index = 'group_result',
-                    doc_type = 'group',
+            source = es_group_result.search(
+                    index = group_index_name,
+                    doc_type = group_index_type,
                     body = {
                         'query':{
                             'bool':{
                                 'must':query
                                 }
                             },
-                        # 'sort': [{'count':{'order': 'desc'}}],
-                        'size': 10000
+                        'sort': [{'count':{'order': 'desc'}}],
+                        'size': MAX_VALUE
                         }
                     )
         except Exception as e:
             raise e
     else:
+        query.append({'term':{'task_type': 'analysis'}})
         source = es.search(
-                index = 'group_result',
-                doc_type = 'group',
+                index = group_index_name,
+                doc_type = group_index_type,
                 body = {
-                    'query':{'match_all':{}
+                    'query':{'bool':{
+                        'must':query
+                        }
                         },
-                    # 'sort': [{'count': {'order': 'desc'}}],
-                    'size': 10000
+                    'sort': [{'count': {'order': 'desc'}}],
+                    'size': MAX_VALUE
                     }
                 )
 
@@ -155,13 +151,120 @@ def search_task(task_name, submit_date, state, status):
         task_dict_list = source['hits']['hits']
     except:
         return None
+    print 'step yes'
     result = []
-    #print 'len task_dict_list:', len(task_dict_list)
     for task_dict in task_dict_list:
-        result.append([task_dict['_source']['task_name'], task_dict['_source']['submit_date'], task_dict['_source']['count'], task_dict['_source']['state'], task_dict['_source']['status']])
+        try:
+            state = task_dict['_source']['state']
+        except:
+            state = ''
+        try:
+            status = task_dict['_source']['status']
+        except:
+            status = 0
+        result.append([task_dict['_source']['task_name'], task_dict['_source']['submit_date'], task_dict['_source']['count'], state, status])
     
     return result
 
+
+#search group analysis result
+#input: task_name, module
+#output: module_result
+def search_group_results(task_name, module):
+    result = {}
+    #step1:identify the task_name exist
+    try:
+        source = es_group_result.get(index=group_index_name, doc_type=group_index_type, \
+                id=task_name)['_source']
+    except:
+        return 'group task is not exist'
+    #step2: identify the task status=1(analysis completed)
+    status = source['status']
+    if status != 1:
+        return 'group task is not completed'
+    #step3:get module result
+    if module == 'overview':
+        result['task_name'] = source['task_name']
+        result['submit_date'] = ts2datetime(source['submit_date'])
+        result['state'] = source['state']
+        result['submit_user'] = source['submit_user']
+        result['density_star'] = source['density_star']
+        result['activeness_star'] = source['activeness_star']
+        result['influence_star'] = source['influence_star']
+        result['importance_star'] = source['importance_star']
+        result['tag_vector'] = json.loads(source['tag_vector'])
+    elif module == 'basic':
+        result['gender'] = json.loads(source['gender'])
+        result['verified'] = json.loads(source['verified'])
+        result['user_tag'] = json.loads(source['user_tag'])
+        result['count'] = source['count']
+    elif module == 'activity':
+        result['activity_trend'] = json.loads(source['activity_trend'])
+        result['activity_time'] = json.loads(source['activity_time'])
+        #result['activity_geo_disribution'] = json.loads(source['activity_geo_distribution'])
+        new_activity_geo_distribution = deal_geo_distribution(json.loads(source['activity_geo_distribution']))
+        result['activity_geo_disribution'] = new_activity_geo_distribution
+        result['activiy_geo_vary'] = json.loads(source['activity_geo_vary'])
+        result['activeness_trend'] = json.loads(source['activeness'])
+        result['activeness_his'] = json.loads(source['activeness_his'])
+        result['activeness_description'] = source['activeness_description']
+        result['online_pattern'] = json.loads(source['online_pattern'])
+    elif module == 'preference':
+        result['keywords'] = json.loads(source['keywords'])
+        result['hashtag'] = json.loads(source['hashtag'])
+        result['sentiment_word'] = json.loads(source['sentiment_word'])
+        result['domain'] = json.loads(source['domain'])
+        result['topic'] = json.loads(source['topic'])
+    elif module == 'influence':
+        result['influence_his'] = json.loads(source['influence_his'])
+        result['influence_trend'] = json.loads(source['influence'])
+        result['influence_in_user'] = json.loads(source['influence_in_user'])
+        result['influence_out_user'] = json.loads(source['influence_out_user'])
+    elif module == 'social':
+        result['in_density'] = source['in_density']
+        result['in_inter_user_ratio'] = source['in_inter_user_ratio']
+        result['in_inter_weibo_ratio'] = source['in_inter_weibo_ratio']
+        result['social_in_record'] = json.loads(source['social_in_record'])
+        result['out_inter_user_ratio'] = source['out_inter_user_ratio']
+        result['out_inter_weibo_ratio'] = source['out_inter_weibo_ratio']
+        result['social_out_record'] = json.loads(source['social_out_record'])
+        result['density_description'] = source['density_description']
+        result['mention'] = source['mention']
+    elif module == 'think':
+        result['sentiment_trend'] = json.loads(source['sentiment_trend'])
+        result['sentiment_pie'] = json.loads(source['sentiment_pie'])
+        result['character'] = json.loads(source['character'])
+    return result
+
+#activity_geo_dict: {ts:{geo1:count}, ts:{},...}
+def deal_geo_distribution(activity_geo_dict):
+    results = {}
+    for ts in activity_geo_dict:
+        results[ts] = []
+        new_ts_dict = {}
+        ts_dict = activity_geo_dict[ts]
+        for geo_item in ts_dict:
+            geo_item_list = geo_item.split('\t')
+            new_geo_item = geo_item_list[-1]
+            if new_geo_item:
+                try:
+                    new_ts_dict[new_geo_item] += ts_dict[geo_item]
+                except:
+                    new_ts_dict[new_geo_item] = ts_dict[geo_item]
+        sort_new_ts_dict = sorted(new_ts_dict.items(), key=lambda x:x[1], reverse=True)[:10]
+        for i in range(0, 10):
+            try:
+                item = sort_new_ts_dict[i]
+            except:
+                sort_new_ts_dict.append(['', 0])
+
+        results[ts] = sort_new_ts_dict
+    return results
+
+
+
+#abandon
+'''
 #show group results
 def get_group_results(task_name, module):
     result = []
@@ -286,49 +389,15 @@ def get_group_results(task_name, module):
                     weibolink = None
                 result_item.append((number, mid, weibolink))
             user_influence_result.append(result_item)
-        '''
-        origin_max_retweeted_number =es_result['origin_max_retweeted_number']
-        origin_max_retweeted_id = es_result['origin_max_retweeted_id']
-        origin_max_retweeted_user = es_result['origin_max_retweeted_user']
-        if origin_max_retweeted_id != 0 and origin_max_retweeted_user != 0:
-            origin_max_retweeted_weibolink = weiboinfo2url(origin_max_retweeted_user, origin_max_retweeted_id)
-        else:
-            origin_max_retweeted_weibolink = None
-
-        origin_max_comment_number = es_result['origin_max_comment_number']
-        origin_max_comment_id = es_result['origin_max_comment_id']
-        origin_max_comment_user = es_result['origin_max_comment_user']
-        if origin_max_comment_id !=0 and origin_max_comment_user != 0:
-            origin_max_comment_weibolink = weiboinfo2url(origin_max_comment_user, origin_max_comment_id)
-        else:
-            origin_max_comment_weibolink = None
         
-        retweet_max_retweeted_number = es_result['retweet_max_retweeted_number']
-        retweet_max_retweeted_id = es_result['retweet_max_retweeted_id']
-        retweet_max_retweeted_user = es_result['retweet_max_retweeted_user']
-        if retweet_max_retweeted_id != 0 and retweet_max_retweeted_user != 0:
-            retweet_max_retweeted_weibolink = weiboinfo2url(retweet_max_retweeted_user, retweet_max_retweeted_id)
-        else:
-            retweet_max_retweeted_weibolink = None
-
-        retweet_max_comment_number = es_result['retweet_max_comment_number']
-        retweet_max_comment_id = es_result['retweet_max_comment_id']
-        retweet_max_comment_user = es_result['retweet_max_comment_user']
-        if retweet_max_comment_id != 0 and retweet_max_comment_user != 0:
-            retweet_max_comment_weibolink = weiboinfo2url(retweet_max_comment_user, retweet_max_comment_id)
-        else:
-            retweet_max_comment_weibolink = None
-        '''
         result = [importance_dis, activeness_his, influence_his, user_influence_result]
     #print result
     return result
-
+'''
 
 # get importance max & activeness max & influence max
 def get_evaluate_max():
     max_result = {}
-    index_name = 'user_portrait'
-    index_type = 'user'
     evaluate_index = ['importance', 'influence']
     for evaluate in evaluate_index:
         query_body = {
@@ -339,7 +408,7 @@ def get_evaluate_max():
             'sort': [{evaluate: {'order': 'desc'}}]
             }
         try:
-            result = es.search(index=index_name, doc_type=index_type, body=query_body)['hits']['hits']
+            result = es_user_portrait.search(index=portrait_index_name, doc_type=portrait_index_type, body=query_body)['hits']['hits']
         except Exception, e:
             raise e
         max_evaluate = result[0]['_source'][evaluate]
@@ -350,12 +419,11 @@ def get_evaluate_max():
 def get_group_list(task_name):
     results = []
     try:
-        es_results = es.get(index=index_name, doc_type=index_type, id=task_name)['_source']
+        es_results = es_group_result.get(index=group_index_name, doc_type=group_index_type, id=task_name)['_source']
     except:
         return results
-    #print 'es_result:', es_results['uid_list'], type(es_results['uid_list'])
     uid_list = es_results['uid_list']
-    user_portrait_attribute = es.mget(index='user_portrait', doc_type='user', body={'ids':uid_list})['docs']
+    user_portrait_attribute = es_user_portrait.mget(index=portrait_index_name, doc_type=portrait_index_type, body={'ids':uid_list})['docs']
     evaluate_max = get_evaluate_max()
     for item in user_portrait_attribute:
         uid = item['_id']
@@ -370,31 +438,307 @@ def get_group_list(task_name):
             normal_influence = math.log(influence / evaluate_max['influence'] * 9 + 1, 10) * 100
             results.append([uid, uname, gender, location, normal_importance, normal_influence])
         except:
-            results.append([uid])
+            results.append([uid, '', '', '', '', ''])
     return results
+
+#use to get group member uid_uname
+#version: write in 2016-02-26
+#input: task_name
+#output: uid_uname dict
+def get_group_member_name(task_name):
+    results = {}
+    try:
+        group_result = es_group_result.get(index=group_index_name, doc_type=group_index_type,\
+                id=task_name)['_source']
+    except:
+        return results
+    uid_list = group_result['uid_list']
+    try:
+        user_portrait_result = es_user_portrait.mget(index=portrait_index_name, doc_type=portrait_index_type ,\
+                body={'ids':uid_list})['docs']
+    except:
+        return results
+    for item in user_portrait_result:
+        uid = item['_id']
+        if item['found'] == True:
+            source = item['_source']
+            uname = source['uname']
+        else:
+            uname = 'unkown'
+        results[uid] = uname
+
+    return results
+
 
 
 # delete group results from es_user_portrait 'group_analysis'
 def delete_group_results(task_name):
-    '''
-    query_body = {
-        'query':{
-            'term':{
-                'task_name': task_name
-                }
-            }
-        }
-    '''
-    #result = es.delete_by_query(index=index_name, doc_type=index_type, body=query_body)
-    result = es.delete(index=index_name, doc_type=index_type, id=task_name)
-    #print 'result:', result
-    '''
-    if result['_indices']['twitter']['_shards']['failed'] == 0:
-        return True
-    else:
+    try:
+        result = es.delete(index=index_name, doc_type=index_type, id=task_name)
+    except:
         return False
-    '''
     return True
+
+
+#show group user geo track
+#input: uid
+#output: results [geo1,geo2,..]
+def get_group_user_track(uid):
+    results = []
+    #step1:get user_portrait activity_geo_dict
+    try:
+        portrait_result = es_user_portrait.get(index=portrait_index_name, doc_type=portrait_index_type,\
+                id=uid, _source=False, fields=['activity_geo_dict'])
+    except:
+        portrait_result = {}
+    if portrait_result == {}:
+        return 'uid is not in user_portrait'
+    activity_geo_dict = json.loads(portrait_result['fields']['activity_geo_dict'][0])
+    now_date_ts = datetime2ts(ts2datetime(int(time.time())))
+    start_ts = now_date_ts - DAY * len(activity_geo_dict)
+    #step2: iter date to get month track
+    for geo_item in activity_geo_dict:
+        iter_date = ts2datetime(start_ts)
+        sort_day_dict = sorted(geo_item.items(), key=lambda x:x[1], reverse=True)
+        if sort_day_dict:
+            results.append([iter_date, sort_day_dict[0][0]])
+        else:
+            results.append([iter_date, ''])
+        start_ts = start_ts + DAY
+
+    return results
+
+
+
+# show group members weibo for activity ---week
+# input: task_name, start_ts
+# output: weibo_list
+def get_activity_weibo(task_name, start_ts):
+    results = []
+    #step1: get task_name uid
+    try:
+        group_result = es_group_result.get(index=group_index_name, doc_type=group_index_type ,\
+                id=task_name, _source=False, fields=['uid_list'])
+    except:
+        group_result = {}
+    if group_result == {}:
+        return 'task name invalid'
+    try:
+        uid_list = group_result['fields']['uid_list']
+    except:
+        uid_list = []
+    if uid_list == []:
+        return 'task uid list null'
+    #step2: get uid2uname
+    uid2uname = {}
+    try:
+        user_portrait_result = es_user_portrait.mget(index=portrait_index_name, doc_type=portrait_index_type, \
+                body = {'ids':uid_list}, _source=False, fields=['uname'])['docs']
+    except:
+        user_portrait_result = []
+    for item in user_portrait_result:
+        uid = item['_id']
+        if item['found']==True:
+            uname = item['fields']['uname'][0]
+        uid2uname[uid] = uname
+    #step3: search time_segment weibo
+    time_segment = FOUR_HOUR
+    end_ts = start_ts + time_segment
+    time_date = ts2datetime(start_ts)
+    flow_text_index_name = flow_text_index_name_pre + time_date
+    query = []
+    query.append({'terms':{'uid': uid_list}})
+    query.append({'range':{'timestamp':{'gte':start_ts, 'lt':end_ts}}})
+    try:
+        flow_text_es_result = es_flow_text.search(index=flow_text_index_name, doc_type=flow_text_index_type, \
+                body={'query':{'bool':{'must':query}}, 'sort':'timestamp', 'size':MAX_VALUE})['hits']['hits']
+    except:
+        flow_text_es_result = []
+    for item in flow_text_es_result:
+        weibo = {}
+        source = item['_source']
+        weibo['timestamp'] = ts2date(source['timestamp'])
+        weibo['ip'] = source['ip']
+        weibo['text'] = source['text']
+        if source['geo']:
+            weibo['geo'] = '\t'.join(source['geo'])
+        else:
+            weibo['geo'] = ''
+        results.append(weibo)
+
+    return results
+
+#show group members weibo for influence content
+#input: uid, timestamp_from, timestamp_to
+#output: weibo_list
+def get_influence_content(uid, timestamp_from, timestamp_to):
+    weibo_list = []
+    #split timestamp range to new_range_dict_list
+    from_date_ts = datetime2ts(ts2datetime(timestamp_from))
+    to_date_ts = datetime2ts(ts2datetime(timestamp_to))
+    new_range_dict_list = []
+    if from_date_ts != to_date_ts:
+        iter_date_ts = from_date_ts
+        while iter_date_ts < to_date_ts:
+            iter_next_date_ts = iter_date_ts + DAY
+            new_range_dict_list.append({'range':{'timestamp':{'gte':iter_date_ts, 'lt':iter_next_date_ts}}})
+            iter_date_ts = iter_next_date_ts
+        if new_range_dict_list[0]['range']['timestamp']['gte'] < timestamp_from:
+            new_range_dict_list[0]['range']['timestamp']['gte'] = timestamp_from
+        if new_range_dict_list[-1]['range']['timestamp']['lt'] > timestamp_to:
+            new_range_dict_list[-1]['range']['timestamp']['lt'] = timestamp_to
+    else:
+        new_range_dict_list = [{'range':{'timestamp':{'gte':timestamp_from, 'lt':timestamp_to}}}]
+    #iter date to search flow_text
+    iter_result = []
+    for range_item in new_range_dict_list:
+        range_from_ts = range_item['range']['timestamp']['gte']
+        range_from_date = ts2datetime(range_from_ts)
+        flow_text_index_name = flow_text_index_name_pre + range_from_date
+        query = []
+        query.append({'term':{'uid':uid}})
+        query.append(range_item)
+        try:
+            flow_text_exist = es_flow_text.search(index=flow_text_index_name, doc_type=flow_text_index_type,\
+                    body={'query':{'bool':{'must': query}}, 'sort':[{'timestamp':'asc'}]})['hits']['hits']
+        except:
+            flow_text_exist = []
+        iter_result.extend(flow_text_exist)
+    # get weibo list
+    for item in flow_text_exist:
+        source = item['_source']
+        weibo = {}
+        weibo['timestamp'] = ts2date(source['timestamp'])
+        weibo['ip'] = source['ip']
+        weibo['text'] = source['text']
+        if source['geo']:
+            weibo['geo'] = '\t'.join(source['geo'].split('&'))
+        else:
+            weibo['geo'] = ''
+        weibo_list.append(weibo)
+        
+    return weibo_list
+
+#show group members interaction weibo content
+#input: uid1, uid2
+#ouput: weibo_list
+def get_social_inter_content(uid1, uid2, type_mark):
+    weibo_list = []
+    #get two type relation about uid1 and uid2
+    #search weibo list
+    now_ts = int(time.time())
+    #run_type
+    if RUN_TYPE == 1:
+        now_date_ts = datetime2ts(ts2datetime(now_ts))
+    else:
+        now_date_ts = datetime2ts(RUN_TEST_TIME)
+    #uid2uname
+    uid2uname = {}
+    try:
+        portrait_result = es_user_portrait.mget(index=portrait_index_name, doc_type=portrait_index_type ,\
+                                body={'ids': [uid1, uid2]}, _source=False, fields=['uid', 'uname'])['docs']
+    except:
+        portrait_result = []
+    
+    for item in portrait_result:
+        uid = item['_id']
+        if item['found'] == True:
+            uname = item['fields']['uname'][0]
+            uid2uname[uid] = uname
+        else:
+            uid2uname[uid] = 'unknown'
+    #iter date to search weibo list
+    for i in range(7, 0, -1):
+        iter_date_ts = now_date_ts - i*DAY
+        iter_date = ts2datetime(iter_date_ts)
+        flow_text_index_name = flow_text_index_name_pre + str(iter_date)
+        query = []
+        query.append({'bool':{'must':[{'term':{'uid':uid1}}, {'term':{'directed_uid': int(uid2)}}]}})
+        if type_mark=='out':
+            query.append({'bool':{'must':[{'term':{'uid':uid2}}, {'term':{'directed_uid': int(uid1)}}]}})
+        try:
+            flow_text_result = es_flow_text.search(index=flow_text_index_name, doc_type=flow_text_index_type,\
+                    body={'query': {'bool':{'should': query}}, 'sort':[{'timestamp':{'order': 'asc'}}], 'size':MAX_VALUE})['hits']['hits']
+        except:
+            flow_text_result = []
+        for flow_text in flow_text_result:
+            source = flow_text['_source']
+            weibo = {}
+            weibo['timestamp'] = source['timestamp']
+            weibo['ip'] = source['ip']
+            weibo['geo'] = source['geo']
+            weibo['text'] = '\t'.join(source['text'].split('&'))
+            weibo['uid'] =  source['uid']
+            weibo['uname'] = uid2uname[weibo['uid']]
+            weibo['directed_uid'] = str(source['directed_uid'])
+            weibo['directed_uname'] = uid2uname[str(source['directed_uid'])]
+            weibo_list.append(weibo)
+
+    return weibo_list
+
+#show group members sentiment weibo
+#input: task_name, start_ts ,sentiment_type
+#output: weibo_list
+def search_group_sentiment_weibo(task_name, start_ts, sentiment):
+    weibo_list = []
+    #step1:get task_name uid
+    try:
+        group_result = es_group_result.get(index=group_index_name, doc_type=group_index_type,\
+                        id=task_name, _source=False, fields=['uid_list'])
+    except:
+        group_result = {}
+    if group_result == {}:
+        return 'task name invalid'
+    try:
+        uid_list = group_result['fields']['uid_list']
+    except:
+        uid_list = []
+    if uid_list == []:
+        return 'task uid list null'
+    #step3: get ui2uname
+    uid2uname = {}
+    try:
+        user_portrait_result = es_user_portrait.mget(index=portrait_index_name, doc_type=portrait_index_type,\
+                        body={'ids':uid_list}, _source=False, fields=['uname'])['docs']
+    except:
+        user_portrait_result = []
+    for item in user_portrait_result:
+        uid = item['_id']
+        if item['found']==True:
+            uname = item['fields']['uname'][0]
+            uid2uname[uid] = uname
+    #step4:iter date to search weibo
+    weibo_list = []
+    iter_date = ts2datetime(start_ts)
+    flow_text_index_name = flow_text_index_name_pre + str(iter_date)
+    #step4: get query_body
+    if sentiment != '2':
+        query_body = [{'terms': {'uid': uid_list}}, {'term':{'sentiment': sentiment}}, \
+                {'range':{'timestamp':{'gte':start_ts, 'lt': start_ts+DAY}}}]
+    else:
+        query_body = [{'terms':{'uid':uid_list}}, {'terms':{'sentiment': SENTIMENT_SECOND}},\
+                {'range':{'timestamp':{'gte':start_ts, 'lt':start_ts+DAY}}}]
+    try:
+        flow_text_result = es_flow_text.search(index=flow_text_index_name, doc_type=flow_text_index_type,\
+                body={'query':{'bool':{'must': query_body}}, 'sort': [{'timestamp':{'order':'asc'}}], 'size': MAX_VALUE})['hits']['hits']
+    except:
+        flow_text_result = []
+    for flow_text_item in flow_text_result:
+        source = flow_text_item['_source']
+        weibo = {}
+        weibo['uid'] = source['uid']
+        weibo['uname'] = uid2uname[weibo['uid']]
+        weibo['ip'] = source['ip']
+        try:
+            weibo['geo'] = '\t'.join(source['geo'].split('&'))
+        except:
+            weibo['geo'] = ''
+        weibo['text'] = source['text']
+        weibo['timestamp'] = source['timestamp']
+        weibo['sentiment'] = source['sentiment']
+        weibo_list.append(weibo)
+
+    return weibo_list
 
 
 if __name__=='__main__':
