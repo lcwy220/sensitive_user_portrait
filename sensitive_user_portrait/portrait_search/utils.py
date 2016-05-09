@@ -118,7 +118,7 @@ def full_text_search(keywords, uid, start_time, end_time, size):
     print index_list
     #  没有可行的es
     if not index_list:
-        return []
+        return [[], []]
 
     search_results = es_flow_text.search(index=index_list, doc_type="text", body=query_body)["hits"]["hits"]
     for item in search_results:

@@ -57,7 +57,7 @@
                 <input name="sort_num_range" type="radio" value="300" style="margin-left:20px;">300                
                 <input name="sort_num_range" type="radio" value="400" style="margin-left:20px;">400                
                 <input name="sort_num_range" type="radio" value="500" style="margin-left:20px;">500                
-                <span id="search_all_btn"  class="portrait_button" style='float:right;cursor:pointer;margin-right:20px;width: 45px;height: 25px;text-align: center;line-height: 25px;'>提交</span>    
+                <span id="search_all_btn"  class="portrait_button " style='float:right;cursor:pointer;margin-right:20px;width: 45px;height: 25px;text-align: center;line-height: 25px;'>提交</span>    
             </td>
         </tr>
 
@@ -78,9 +78,10 @@
             <button class="btn btn-primary btn-sm" style="width:80px;height:40px;margin-left:10px" name="recommend_button" id="recommend_button">选择入库</button>
         </div> -->
 <!--         <p><span onclick="user_recom_in_modal()" class="portrait_button" style="float:right;cursor:pointer;margin-right:68px;width: 60px;height: 25px;text-align: center;line-height: 25px;margin-top: -60px;" id="recom_in">推荐入库</span></p> -->
-        <div id="result_rank_table" style="margin-top:20px;">
+        <div id="result_rank_table" style="margin-top:20px;width: 980px;margin-left: 80px;
+">
         </div>
-        <div id="rank_weibo" style="width: 900px;margin-left: 30px;margin-top:20px;margin-bottom:50px;">
+        <div id="weibo_text" style="width: 980px;margin-left: 80px;margin-top:20px;margin-bottom:50px;">
         </div>
 <script src= '/static/custom/js/tbase.js'></script>
 
@@ -152,8 +153,8 @@ function draw_key_rank(data){
     var num = data.number;
     //$('#rec_num_range').empty();
     //$('#rec_num_range').append(num);
-    draw_key_rank_table(data[0]);
-    Draw_get_top_weibo(data[1], 'rank_weibo');
+    draw_key_rank_table(data[1]);
+    Draw_get_top_weibo(data[0], 'rank_weibo');
 }
 
 //选择条件，调用画表函数
@@ -193,9 +194,10 @@ function draw_all_rank_table(data){
                 $('#result_rank_table').append(html);
         }else{
                 var html = '';
-                html += '<table id="rank_table" class="table table-bordered table-striped table-condensed datatable" style="margin-left:30px;width:900px;">';
+                html += '<table id="rank_table" class="table table-bordered table-striped table-condensed datatable" style="width:980px;">';
                 //html += '<table id="rank_table" class="table table-striped table-bordered bootstrap-datatable datatable responsive" style="margin-left:30px;" width:100%>';
-                html += '<thead><th style="width:65px;text-align:center;">排名</th>';
+                html += '<thead>';
+                //<th style="width:65px;text-align:center;">排名</th>';
                 html += '<th style="text-align:center;">用户ID</th>';
                 html += '<th style="text-align:center;">昵称</th>';
                 html += '<th style="text-align:center;">是否入库</th>';
@@ -213,7 +215,7 @@ function draw_all_rank_table(data){
                         uname = uid;
                     }
                     var is_warehousing = '';
-                    if(data[i].is_warehousing == true){
+                    if(data[i][7] == true){
                         var user_url = '/index/personal/?uid='+uid;
                         is_warehousing = '是';
                     }else{
@@ -234,6 +236,7 @@ function draw_all_rank_table(data){
                         var weibo_num = data[i][3];
                     };
                     var influcence = data[i][5];
+                    console.log(influcence);
                     if(influcence == null || influcence == undefined){
                         influcence = '';
                     }else{
@@ -246,7 +249,7 @@ function draw_all_rank_table(data){
                         sensitive = sensitive.toFixed(2);
                     };
                     html += '<tr>';
-                    html += '<td style="text-align:center;">'+(i+1)+'</td>';
+                    //html += '<td style="text-align:center;">'+(i+1)+'</td>';
                     html += '<td style="text-align:center;"><a href='+user_url+ ' target="_blank">'+uid+'</a></td>';
                     //html += '<td style="text-align:center;"><a href="/index/personal/?uid='+uid+'" target="_blank">'+uid+'</a></td>';
                     html += '<td style="text-align:center;">'+uname+'</a></td>';
@@ -256,11 +259,11 @@ function draw_all_rank_table(data){
                     html += '<td style="text-align:center;">'+weibo_num+'</td>';
                     html += '<td style="text-align:center;">'+influcence+'</td>';
                     html += '<td style="text-align:center;">'+sensitive+'</td>';
-                    if(data[i].is_warehousing == false){
-                        html += '<td style="width:20px;text-align:center;"><input name="user_out_check" id="user_out_check" type="checkbox" value='+ uid +'></td>';
-                    }else{
-                        html += '<td style="text-align:center;">-</td>';
-                    }
+                    // if(data[i].is_warehousing == false){
+                    //     html += '<td style="width:20px;text-align:center;"><input name="user_out_check" id="user_out_check" type="checkbox" value='+ uid +'></td>';
+                    // }else{
+                    //     html += '<td style="text-align:center;">-</td>';
+                    // }
                     html += '</tr>';
                 }
                 html += '</table>';
@@ -268,7 +271,7 @@ function draw_all_rank_table(data){
                 $('#result_rank_table').append(html);
                 $('#recom_in').css('display','block')
                 $('#rank_table').dataTable({
-                    "aoColumnDefs": [ {"sWidth": "5em", "aTargets":[0]}, {"sWidth": "7em", "aTargets":[3]}, {"sWidth": "10em", "aTargets":[2]},{"bSortable": false, "aTargets":[9]}],
+                    //"aoColumnDefs": [ {"sWidth": "5em", "aTargets":[0]}, {"sWidth": "7em", "aTargets":[3]}, {"sWidth": "10em", "aTargets":[2]},{"bSortable": false, "aTargets":[9]}],
                     "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
                     "sPaginationType": "bootstrap",
                     //"aoColumnDefs":[ {"bSortable": false, "aTargets":[1]}],
@@ -304,15 +307,16 @@ function Draw_get_top_weibo(data){
             var weibo = data[i]
             //var mid = weibo[0];
             var uid = weibo[0];
-            var name = weibo[9];
+            var name = weibo[1];
             if(name == 'unknown'){
                 name = uid;
             }       
-            var date = weibo[5];
+            var date = weibo[3];
             var text = weibo[2];
-            var geo = weibo[6];
-            var reposts_count = weibo[7];
-            var comments_count = weibo[8];
+            var geo = weibo[4];
+            var sen = weibo[5];
+            var reposts_count = weibo[6];
+            var comments_count = weibo[7];
             var sentiment_dict ={'0':'中性', '1':'积极', '2':'生气', '3':'焦虑', '4':'悲伤', '5':'厌恶', '6':'消极其他', '7':'消极'} 
             var type_list = ['原创','评论','转发']
             if (geo == null){
@@ -327,8 +331,13 @@ function Draw_get_top_weibo(data){
                     var geo_after = geo.join(' ');
                 }   
             }
-            var weibo_link = weibo[10];
-            var user_link = 'http://weibo.com/u/' + uid;
+            if(sen.length!=0){
+                sen='&nbsp;-&nbsp;'+sen;
+            }else{
+                sen='';
+            }
+            //var weibo_link = weibo[10];
+            var user_link = '/index/personal/?uid=' + uid;
             html += '<li class="item">';
             html += '<div class="weibo_detail" style="width:100%">';
             html += '<p style="text-align:left;margin-bottom:0;margin-left:10px;">' +s +'、</span>昵称:<a class="undlin" target="_blank" href="' + user_link  + '">' + name + '</a>(' + geo_after + ')&nbsp;&nbsp;发布内容：&nbsp;&nbsp;' + text + '</p>';
@@ -341,9 +350,9 @@ function Draw_get_top_weibo(data){
             //html += '<span class="comment_count">敏感度(' + sensitive_score + ')</span></div>';
             html += '</div>';
             html += '<div class="m">';
-            html += '<u>' + date + '</u>&nbsp;-&nbsp;';
-            html += '<a target="_blank" href="' + weibo_link + '">微博</a>&nbsp;-&nbsp;';
-            html += '<a target="_blank" href="' + user_link + '">用户</a>';
+            html += '<u>' + date + '</u>'+sen ;
+            //html += '<a target="_blank" href="' + weibo_link + '">微博</a>&nbsp;-&nbsp;';
+            //html += '<a target="_blank" href="' + user_link + '">用户</a>';
 
             //html += type_list[weibo[3]-1] + '微博&nbsp;-&nbsp;';
             //html += sentiment_dict[weibo[4]];
