@@ -61,6 +61,59 @@ def get_user_portrait(uid_list, specify_field=[]):
 
     return results
 
+def get_user_portrait_byidname(uid, isuid=True, specify_field=[]):
+    uid_list = [uid]
+    results = []
+    max_result = get_evaluate_max()
+    fields_list = ['uname','domain','topic_string','politics','fansnum','statusnum','friendsnum','location', 'hashtag', 'activity_geo', 'keywords_string']
+    if specify_field:
+        fields_list = specify_field
+
+    if isuid:
+        search_results = es.mget(index=portrait_index_name,doc_type=portrait_index_type,body={"ids":uid_list}, _source=False, \
+            fields=['uname','domain','topic_string','politics','fansnum','statusnum', 'hashtag_string', 'activity_geo', 'friendsnum','location','activeness','importance','influence','sensitive', 'keywords_string'])["docs"]
+        for item in search_results:
+            iter_result = []
+            iter_result.append(item['_id'])
+            if item['found']:
+                for iter_field in fields_list:
+                    if iter_field == "topic_string":
+                        iter_result.append(item['fields'][iter_field][0])
+                        #iter_result.append(item['fields'][iter_field][0].split('&'))
+                    else:
+                        iter_result.append(item['fields'][iter_field][0])
+
+            else:
+                iter_result = None
+            results.append(iter_result)
+    else:
+        query_body = {
+            "query":{
+                "bool": {
+                    "should": [
+                        {"term": {"uname": uid}}
+                    ]
+                }
+            },
+            "size": 1
+        }
+        search_results = es.search(index=portrait_index_name,doc_type=portrait_index_type,body=query_body, \
+            fields=['uname','domain','topic_string','politics','fansnum','statusnum', 'hashtag_string', 'activity_geo', 'friendsnum','location','activeness','importance','influence','sensitive', 'keywords_string'])['hits']['hits']
+        if len(search_results) == 0:
+            results.append(None)
+        for item in search_results:
+            iter_result = []
+            iter_result.append(item['_id'])
+            for iter_field in fields_list:
+                if iter_field == "topic_string":
+                    iter_result.append(item['fields'][iter_field][0])
+                    #iter_result.append(item['fields'][iter_field][0].split('&'))
+                else:
+                    iter_result.append(item['fields'][iter_field][0])
+
+            results.append(iter_result)
+
+    return results
 
 def get_user_profile(uid_list,specify_field=[]):
     if not uid_list:
@@ -78,7 +131,10 @@ def get_user_profile(uid_list,specify_field=[]):
             for iter_field in field_list:
                 iter_result.append(item['_source'][iter_field])
         else:
-            iter_result.extend(['']*len(field_list))
+            if specify_field:
+                iter_result.extend(['']*len(specify_field))
+            else:
+                iter_result.extend(['']*len(field_list))
             iter_result[1] = item['_id']
         results.append(iter_result)
 

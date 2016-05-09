@@ -20,6 +20,7 @@ from sensitive_user_portrait.influence_application.views import mod as influence
 from sensitive_user_portrait.user_rank.views import mod as userrankModule
 from sensitive_user_portrait.weibo_rank.views import mod as weiborankModule
 from sensitive_user_portrait.portrait_search.views import mod as searchModule
+from sensitive_user_portrait.detect.views import mod as detectModule
 """
 from sensitive_user_portrait.attribute.views import mod as attributeModule
 from sensitive_user_portrait.manage.views import mod as manageModule
@@ -86,6 +87,7 @@ def register_blueprints(app):
     app.register_blueprint(userrankModule)
     app.register_blueprint(weiborankModule)
     app.register_blueprint(socialsensingModule)
+    app.register_blueprint(detectModule)
     """
     app.register_blueprint(attributeModule)
     app.register_blueprint(manageModule)

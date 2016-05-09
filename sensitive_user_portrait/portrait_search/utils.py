@@ -123,11 +123,15 @@ def full_text_search(keywords, uid, start_time, end_time, size):
     search_results = es_flow_text.search(index=index_list, doc_type="text", body=query_body)["hits"]["hits"]
     for item in search_results:
         uid_list.append(item['_source']['uid'])
-    history_max = get_history_max()
-    personal_field = ["nick_name", "fansnum", "statusnum","user_location"]
-    user_info = get_user_profile(uid_list, personal_field)
-    bci_results = ES_CLUSTER_FLOW1.mget(index="bci_history", doc_type="bci", body={"ids":uid_list}, _source=False, fields=["bci_day_last"])["docs"]
-    sensitive_results = es_sensitive_history.mget(index="sensitive_history", doc_type="sensitive", body={"ids":uid_list}, _source=False, fields=["last_value"])["docs"]
+    user_info = []
+    if uid_list:
+        history_max = get_history_max()
+        personal_field = ["nick_name", "fansnum", "statusnum","user_location"]
+        user_info = get_user_profile(uid_list, personal_field)
+        bci_results = ES_CLUSTER_FLOW1.mget(index="bci_history", doc_type="bci", body={"ids":uid_list}, _source=False, fields=["bci_day_last"])["docs"]
+        in_portrait = es_user_portrait.mget(index="sensitive_user_portrait", doc_type="user", body={"ids":uid_list}, _source=False)["docs"]
+        sensitive_results = es_sensitive_history.mget(index="sensitive_history", doc_type="sensitive", body={"ids":uid_list}, _source=False, fields=["last_value"])["docs"]
+    print "len search: ", len(search_results)
 
     count = 0
     # uid uname text date geo sensitive_words retweeted comment
@@ -167,6 +171,10 @@ def full_text_search(keywords, uid, start_time, end_time, size):
             item.append(normalize_index(sensitive_value, history_max["max_sensitive"]))
         else:
             item.append(0)
+        if in_portrait[count]["found"]:
+            item.append("1")
+        else:
+            item.append("0")
         user_profile_list.append(item)
 
     return results, user_profile_list
