@@ -10,16 +10,13 @@ import copy
 import os
 from social_sensing import social_sensing_task 
 reload(sys)
-sys.path.append("./../")
+sys.path.append("../../")
 from global_utils import es_user_profile as es_profile
 from global_utils import R_SOCIAL_SENSING as r
 from global_utils import es_user_portrait as es
 from time_utils import ts2datetime, datetime2ts, ts2date, ts2date_hour, date_hour2ts
 from parameter import DOC_TYPE_MANAGE_SOCIAL_SENSING as task_doc_type
 from parameter import INDEX_MANAGE_SOCIAL_SENSING as index_name
-from parameter import DETAIL_SOCIAL_SENSING as index_sensing_task
-from parameter import SOCIAL_SENSOR_TIME_INTERVAL as time_interval
-from parameter import INITIAL_EXIST_COUNT, SOCIAL_SENSOR_TIME_INTERVAL
 
 def create_task_list():
     # 1. search from manage_sensing_task
@@ -28,7 +25,8 @@ def create_task_list():
     # print start info
     current_path = os.getcwd()
     file_path = os.path.join(current_path, 'task_list.py')
-    now_ts = date_hour2ts(ts2date_hour(time.time()))
+    #now_ts = date_hour2ts(ts2date_hour(time.time()))
+    now_ts = 1378011600 # 1378008000
     print_log = "&".join([file_path, "start", ts2date(now_ts)])
     print print_log
     #ts = ts - 3600
@@ -57,7 +55,7 @@ def create_task_list():
             item = iter_item['_source']
             task = []
             task.append(item['task_name']) # task_name
-            task.append(json.loads(item['social_sensors'])) # social sensors
+            task.append(item['keywords']) # keywords
             task.append(item['stop_time']) # stop time
             task.append(item['create_by'])
             task.append(now_ts)
@@ -70,8 +68,6 @@ def create_task_list():
 
 
 if __name__ == "__main__":
-
     create_task_list()
     social_sensing_task()
-
 

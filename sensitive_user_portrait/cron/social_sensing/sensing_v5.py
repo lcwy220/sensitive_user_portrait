@@ -26,6 +26,7 @@ from parameter import DETAIL_SOCIAL_SENSING as index_sensing_task
 from parameter import INDEX_MANAGE_SOCIAL_SENSING as index_manage_social_task
 from parameter import DOC_TYPE_MANAGE_SOCIAL_SENSING as task_doc_type
 from parameter import FORWARD_N as forward_n
+from parameter import RUN_TYPE
 from parameter import INITIAL_EXIST_COUNT as initial_count
 from parameter import IMPORTANT_USER_NUMBER, IMPORTANT_USER_THRESHOULD, signal_brust, signal_track,\
                        signal_count_varition, signal_sentiment_varition, signal_nothing,signal_nothing_variation, \
@@ -77,30 +78,27 @@ def get_forward_numerical_info(task_name, ts, create_by):
 
     return results
 
-# 给定社会传感器，查找原创微博列表
-def query_mid_list(ts, social_sensors, time_segment, message_type=1):
+# 给定keywords，查找原创微博列表
+def query_mid_list(ts, keywords, time_segment, message_type=1):
     query_body = {
         "query": {
-            "filtered": {
-                "filter": {
-                    "bool": {
-                        "must":[
-                            {"range": {
-                                "timestamp": {
-                                    "gte": ts - time_segment,
-                                    "lt": ts
-                                }
-                            }},
-                            {"terms":{"uid": social_sensors}},
-                            {"term":{"message_type": message_type}}
-                        ]
-                    }
-                }
+            "bool": {
+                "must":[
+                    {"range": {
+                        "timestamp": {
+                            "gte": ts - time_segment,
+                            "lt": ts
+                        }
+                    }},
+                    {"term":{"message_type": message_type}}
+                ]
             }
         },
         "sort": {"sentiment": {"order": "desc"}},
         "size": 10000
     }
+    for keyword in keywords:
+        query_body["query"]["bool"]["must"].append({'wildcard':{'text':{'wildcard':'*'+keyword+'*'}}})
 
     datetime_1 = ts2datetime(ts)
     datetime_2 = ts2datetime(ts-24*3600)
@@ -348,6 +346,8 @@ def get_important_user(ts, origin_mid_list, time_segment):
         "sort":{"user_fansnum":{"order":"desc"}},
         "size": 1000
     }
+    if RUN_TYPE == 0:
+        query_all_body["sort"] = {"timestamp": {"order": "desc"}}
 
     datetime = ts2datetime(ts - time_segment)
     index_name = flow_text_index_name_pre + datetime
@@ -364,23 +364,24 @@ def get_important_user(ts, origin_mid_list, time_segment):
 
 
 def social_sensing(task_detail):
-    # 任务名 传感器 终止时间 之前状态 创建者 时间
+    # 任务名 keywords 终止时间 之前状态 创建者 时间
     task_name = task_detail[0]
-    social_sensors = task_detail[1]
+    keywords = task_detail[1]
     stop_time = task_detail[2]
     create_by = task_detail[3]
     ts = int(task_detail[4])
 
     print ts2date(ts)
     # PART 1
+    keywords = keywords.split(" ")
     
     #forward_result = get_forward_numerical_info(task_name, ts, create_by)
     # 之前时间阶段内的原创微博list/retweeted
-    forward_origin_weibo_list = query_mid_list(ts-time_interval, social_sensors, forward_time_range)
-    forward_retweeted_weibo_list = query_mid_list(ts-time_interval, social_sensors, forward_time_range, 3)
+    forward_origin_weibo_list = query_mid_list(ts-time_interval, keywords, forward_time_range)
+    forward_retweeted_weibo_list = query_mid_list(ts-time_interval, keywords, forward_time_range, 3)
     # 当前阶段内原创微博list
-    current_mid_list = query_mid_list(ts, social_sensors, time_interval)
-    current_retweeted_mid_list = query_mid_list(ts, social_sensors, time_interval, 3)
+    current_mid_list = query_mid_list(ts, keywords, time_interval)
+    current_retweeted_mid_list = query_mid_list(ts, keywords, time_interval, 3)
     all_mid_list = []
     all_mid_list.extend(current_mid_list)
     all_mid_list.extend(current_retweeted_mid_list)
@@ -433,8 +434,8 @@ def social_sensing(task_detail):
                 #if item['_source']['importance'] > IMPORTANT_USER_THRESHOULD:
                 filter_important_list.append(item['_id'])
 
-    print "filter_important_list", filter_important_list
-    print "important_results", important_uid_list
+    print "filter_important_list: ", len(filter_important_list)
+    print "important_results: ", len(important_uid_list)
 
     #判断感知
     finish = unfinish_signal # "0"

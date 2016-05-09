@@ -148,7 +148,10 @@ def get_origin_weibo_detail(ts, user, task_name, size, order, message_type=1):
                 temp.append(item[3])
                 temp.append(iter_text.get('sensitive', 0))
                 temp.append(iter_text['timestamp'])
-                temp.append(mid_value[mid])
+                try:
+                    temp.append(mid_value[mid])
+                except:
+                    continue
                 temp.append(mid)
                 results.append(temp)
             count_n += 1
