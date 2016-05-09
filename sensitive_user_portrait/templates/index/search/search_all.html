@@ -37,7 +37,7 @@
             <td><input style="width:330px;"name="words_list" type="text" value="" placeholder="请输入要搜索的微博内容"/></td>
         </tr>
         <tr>
-            <td class='search_name'>用户id</td>
+            <td class='search_name'>用户ID</td>
             <td><input style="width:330px;"name="user_list" type="text" value="" placeholder="多个id用空格隔开"/></td>
         </tr>
         <tr>
@@ -65,7 +65,8 @@
 </div>
         <div id="result_analysis" style="margin-top:20px;margin-left: 80px;padding:10px;background-color:#E1E6FF;width: 900px;font-size:14px;border:1px solid #B0CEFB">
         <b>
-            <span>识别范围：<span id="rec_range"></span></span>
+            <span>关键词：<span id="rec_key"></span></span>
+            <span>用户ID：<span id="rec_user"></span></span>
             <span id="rec_type"></span><span id='rec_detail'></span>
             <span style="margin-left: 20px;">时间范围：<span id="rec_time_range"></span></span>
             <span   style="margin-left: 20px;">排序指标：<span id="rec_rank_by"></span></span>
@@ -169,11 +170,11 @@ function draw_key_rank_table(data){
         var sort_scope = data.sort_scope;
         var key = data.keyword;
         var time_range = data.start_time + '至' +data.end_time;
-        $('#rec_range').empty();
+        $('#rec_key').empty();
         $('#rec_rank_by').empty();
         $('#rec_time_range').empty();
-        $('#rec_range').append(scope_dict[sort_scope]);
-        $('#rec_range').append('-'+key);
+        $('#rec_key').append(scope_dict[sort_scope]);
+        $('#rec_key').append('-'+key);
 
         $('#rec_rank_by').append(norm_dict[sort_norm]);
         $('#rec_time_range').append(time_range);
