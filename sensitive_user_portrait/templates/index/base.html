@@ -219,7 +219,7 @@
       // });
       $(".templatemo-sidebar-menu a").each(function(){
         $this=$(this);
-        console.log($this.parent().parent().parent().hasClass('sub'));
+        //console.log($this.parent().parent().parent().hasClass('sub'));
         if($this[0].href==String(window.location)){
           $this.parent().addClass('active');
           if($this.parent().parent().parent().hasClass('sub')){

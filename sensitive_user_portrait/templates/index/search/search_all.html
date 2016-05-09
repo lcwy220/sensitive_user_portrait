@@ -63,7 +63,7 @@
 
     </table>
 </div>
-        <div id="result_analysis" style="margin-top:20px;margin-left: 80px;padding:10px;background-color:#E1E6FF;width: 900px;font-size:14px;border:1px solid #B0CEFB">
+<!--         <div id="result_analysis" style="margin-top:20px;margin-left: 80px;padding:10px;background-color:#E1E6FF;width: 900px;font-size:14px;border:1px solid #B0CEFB">
         <b>
             <span>关键词：<span id="rec_key"></span></span>
             <span>用户ID：<span id="rec_user"></span></span>
@@ -71,7 +71,7 @@
             <span style="margin-left: 20px;">时间范围：<span id="rec_time_range"></span></span>
             <span   style="margin-left: 20px;">排序指标：<span id="rec_rank_by"></span></span>
         </b>
-        </div>
+        </div> -->
 <!--         <div style="text-align:right">
             <input type="radio" name="instant"  style="opacity:1; position:static;" checked value="0" /> 预约计算
             <input type="radio" name="instant" value="1" style="opacity:1; position:static;margin-left:5px" /> 立即计算
@@ -150,10 +150,10 @@
 
 function draw_key_rank(data){
     var num = data.number;
-    $('#rec_num_range').empty();
-    $('#rec_num_range').append(num);
-    draw_key_rank_table(data);
-    Draw_get_top_weibo(data.text_results, 'rank_weibo');
+    //$('#rec_num_range').empty();
+    //$('#rec_num_range').append(num);
+    draw_key_rank_table(data[0]);
+    Draw_get_top_weibo(data[1], 'rank_weibo');
 }
 
 //选择条件，调用画表函数
@@ -166,20 +166,20 @@ function draw_key_rank_table(data){
     }else{
         
         //结果分析默认值
-        var sort_norm = data.sort_norm;
-        var sort_scope = data.sort_scope;
-        var key = data.keyword;
-        var time_range = data.start_time + '至' +data.end_time;
-        $('#rec_key').empty();
-        $('#rec_rank_by').empty();
-        $('#rec_time_range').empty();
-        $('#rec_key').append(scope_dict[sort_scope]);
-        $('#rec_key').append('-'+key);
+        // var sort_norm = data.sort_norm;
+        // var sort_scope = data.sort_scope;
+        // var key = data.keyword;
+        // var time_range = data.start_time + '至' +data.end_time;
+        // $('#rec_key').empty();
+        // $('#rec_rank_by').empty();
+        // $('#rec_time_range').empty();
+        // //$('#rec_key').append(scope_dict[sort_scope]);
+        // $('#rec_key').append('-'+key);
 
-        $('#rec_rank_by').append(norm_dict[sort_norm]);
-        $('#rec_time_range').append(time_range);
+        // $('#rec_rank_by').append(sort_norm);
+        // $('#rec_time_range').append(time_range);
         
-        var data = data.result;
+        // var data = data.result;
         draw_all_rank_table(data);
     }
 }
@@ -204,11 +204,11 @@ function draw_all_rank_table(data){
                 html += '<th style="text-align:center;">微博数</th>';
                 html += '<th style="text-align:center;">影响力</th>';
                 html += '<th style="text-align:center;">言论敏感度</th>';
-                html += '<th style="min-width:40px;text-align:center;">入库</th>';
+                //html += '<th style="min-width:40px;text-align:center;">入库</th>';
                 html += '</thead>';
                 for(var i=0;i<data.length;i++){
-                    var uid = data[i].uid;
-                    var uname = data[i].uname;
+                    var uid = data[i][0];
+                    var uname = data[i][1];
                     if(uname == 'unknown' || uname == null){
                         uname = uid;
                     }
@@ -220,26 +220,26 @@ function draw_all_rank_table(data){
                         var user_url = '/index/personal_out/?uid='+uid;
                         is_warehousing = '否'
                     };
-                    var location = data[i].location;
+                    var location = data[i][4];
                     if(location == null){
                         location = '未知'
                     }
-                    var fans = data[i].fans;
+                    var fans = data[i][2];
                     if(fans == null || fans == undefined){
                         fans = ''
                     }
-                    if(data[i].weibo_count == undefined || data[i].weibo_count == null ){
+                    if(data[i][3] == undefined || data[i][3] == null ){
                         var weibo_num = '';
                     }else{
-                        var weibo_num = data[i].weibo_count;
+                        var weibo_num = data[i][3];
                     };
-                    var influcence = data[i].bci;
+                    var influcence = data[i][5];
                     if(influcence == null || influcence == undefined){
                         influcence = '';
                     }else{
                         influcence = influcence.toFixed(2);
                     };
-                    var sensitive = data[i].sen;
+                    var sensitive = data[i][6];
                     if(sensitive == null || sensitive == undefined){
                         sensitive = '';
                     }else{
