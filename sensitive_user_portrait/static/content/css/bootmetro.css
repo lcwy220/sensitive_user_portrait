@@ -352,7 +352,7 @@ Range control.
 input[type=range] {
    width: 280px;
    height: auto;
-   padding: 17px 0 32px 0;
+   '''padding: 17px 0 32px 0;'''
 }
 
 /*
@@ -1879,12 +1879,12 @@ input[type=radio] ~ span.metro-radio::after {
    vertical-align: middle;
    display: inline-block;
 }
-input[type=radio] {
+/*input[type=radio] {
    position: absolute;
    filter: alpha(opacity=0);
    -moz-opacity: 0;
    opacity: 0;
-}
+}*/
 input[type=radio] ~ span.metro-radio {
    padding-left: 36px;
    padding-top: 4px;

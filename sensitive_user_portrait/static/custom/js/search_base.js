@@ -38,14 +38,18 @@ function bindSearchFunc(that){
     });
     
     
-    $("#bluebtn").off("click").click(function(){
-        var advanced_url = that.advanced_search_url;
-        $("#float-wrap").addClass("hidden");
-        $("#supersearch").addClass("hidden");
-        advanced_url += get_base_input_data();
-        window.location.href = advanced_url;
-    });
+    // $("#bluebtn").off("click").click(function(){
+    //     var advanced_url = that.advanced_search_url;
+    //     $("#float-wrap").addClass("hidden");
+    //     $("#supersearch").addClass("hidden");
+    //     advanced_url += get_base_input_data();
+    //     window.location.href = advanced_url;
+    // });
 }
+
+
+
+
 function get_base_input_data(){
     var temp='';
     var input_value;
