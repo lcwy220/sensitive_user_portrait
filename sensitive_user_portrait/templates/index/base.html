@@ -23,7 +23,7 @@
 
    <link rel="stylesheet" type="text/css" href="/static/content/css/bootstrap.css">
    <link rel="stylesheet" type="text/css" href="/static/css/font/iconfont.css">
-   <link rel="stylesheet" type="text/css" href="/static/contenit/css/bootstrap.min.css">
+   <link rel="stylesheet" type="text/css" href="/static/content/css/bootstrap.min.css">
    <link rel="stylesheet" type="text/css" href="/static/content/css/bootstrap-responsive.css">
    <link rel="stylesheet" type="text/css" href="/static/content/css/bootmetro.css">
    <link rel="stylesheet" type="text/css" href="/static/content/css/bootmetro-tiles.css">
@@ -73,6 +73,12 @@
     }
     #supersearch label {
         font-weight: normal;
+    }
+    .portrait_button{
+         background-clip: border-box;
+   background-color: rgb(70, 23, 180);
+   border-color: transparent;
+   color: #FFF;
     }
    </style>
    {% block custom_css %}
@@ -181,7 +187,7 @@
             </ul>
           </li> 
           <li><a href="/index/influence/"><i class="icon iconfont"  style="font-weight: lighter; font-size: 18px;">&#xe60a;</i>影响力分析</a></li>
-          <li><a href="/index/sensiwords_manage/"><i class="icon iconfont"  style="font-weight: lighter; font-size: 18px;">&#xe617;</i>敏感微博监控</a></li>
+          <li><a href="/index/sensing_weibo/"><i class="icon iconfont"  style="font-weight: lighter; font-size: 18px;">&#xe617;</i>敏感微博监控</a></li>
           <li class="sub ">
             <a href="javascript:;">
               <i class="icon iconfont"  style="font-weight: lighter; font-size: 18px;">&#xe61a;</i>系统管理 <div class="pull-right"><span class="caret"></span></div>
@@ -219,7 +225,7 @@
       // });
       $(".templatemo-sidebar-menu a").each(function(){
         $this=$(this);
-        console.log($this.parent().parent().parent().hasClass('sub'));
+        //console.log($this.parent().parent().parent().hasClass('sub'));
         if($this[0].href==String(window.location)){
           $this.parent().addClass('active');
           if($this.parent().parent().parent().hasClass('sub')){
