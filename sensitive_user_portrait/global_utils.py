@@ -64,6 +64,18 @@ MONITOR_REDIS = _default_redis(host=MONITOR_REDIS_HOST, port=MONITOR_REDIS_PORT,
 # use to save monitor user inner group retweet
 MONITOR_INNER_REDIS = _default_redis(host=MONITOR_REDIS_HOST, port=MONITOR_REDIS_PORT, db=2)
 
+# es for group detect and analysis
+group_index_name = 'group_manage'
+group_index_type = 'group'
+
+# use to write group task
+# two type data----group task;  group task members
+# type1 list: group_task  index   group_task_basic_information
+# type2 list: group_task_name index group_task_members
+R_GROUP = _default_redis(host=REDIS_HOST, port=REDIS_PORT, db=14)
+group_detect_queue_name = 'group_detect_task'
+group_analysis_queue_name = 'group_analysis_task'
+
 def get_db_num(timestamp):
     date = ts2datetime(timestamp)
     date_ts = datetime2ts(date)
@@ -89,6 +101,7 @@ ES_CLUSTER_FLOW2 = Elasticsearch(ES_CLUSTER_HOST_FLOW2, timeout=600)
 es_sensitive_user_text = es_flow_text
 es_user_portrait = es_sensitive_user_portrait
 es_sensitive_history = Elasticsearch(ES_CLUSTER_HOST_FLOW1, timeout=600)
+es_group_result = Elasticsearch(SENSITIVE_USER_PORTRAIT_ES_HOST, time_out=600)
 
 
 portrait_index_name = "sensitive_user_portrait"

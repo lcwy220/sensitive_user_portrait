@@ -79,6 +79,7 @@ def get_user_profile(uid_list,specify_field=[]):
                 iter_result.append(item['_source'][iter_field])
         else:
             iter_result.extend(['']*len(field_list))
+            iter_result[1] = item['_id']
         results.append(iter_result)
 
     return results

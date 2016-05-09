@@ -89,7 +89,6 @@ def register_blueprints(app):
     """
     app.register_blueprint(attributeModule)
     app.register_blueprint(manageModule)
-    app.register_blueprint(profileModule)
     app.register_blueprint(overviewModule)
     app.register_blueprint(influenceModule)
     app.register_blueprint(loginModule)
