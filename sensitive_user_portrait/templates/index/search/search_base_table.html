@@ -4,7 +4,7 @@
             <input style="width:330px;"name="words_list" type="text" value="" id="uiduname" placeholder="请输入用户ID或昵称"/>
         </span>
         <span class="fleft" style="margin-left:20px;" id="show_advanced">
-            <a title=""  style="line-height:30px;"onclick="show()">高级搜索 </a>
+            <a title=""  style="line-height:30px;" onclick="show()">高级搜索 </a>
         </span>
         <span class="fleft" style="margin-left:20px;display:none" id="hidden_advanced">
             <a title=""  style="line-height:30px;" onclick="notshow()">收起高级搜索 </a>
@@ -135,27 +135,26 @@ function advanced_search(){
 	$('#al_choose').empty();
 	var html = '';
 	html += '已选条件：';
-	console.log(advanced);
+	//console.log(advanced);
 	var condition = advanced.split('&');
-	for(var i= 0;i<condition.length;i++){
-		var conds = condition[i].split('&');
-		console.log(conds);
-		for(var i=0;i<conds.length;i++){
-			var val = conds[i].split('=');
-			console.log(val);
-			/*
-			if(val[1]){
-				if(val[0]=='tag'){
-					tml += '<span class="cdt" style="margin-right:40px;">'+ condition[i].replace('=',':');
-					html += '&nbsp;<a class="cross" href="#">X</a></span>';
-				}else{
-					html += '<span class="cdt" style="margin-right:40px;">'+ condition[i];
-					html += '&nbsp;<a class="cross" href="#">X</a></span>';
-				}
-			}		
-			*/
+	console.log(condition);
+	for(var i=0;i<condition.leng;i++){
+		console.log(condition[i]);
+		var val = condition[i].split('=');
+		console.log(val[0]);
+		console.log(val[1]);
+		if(val[1]){
+			var chosen = new Array();
+			if(val[0]=='tag'){
+				html += '<span class="cdt" style="margin-right:40px;">'+ val[1];
+				html += '&nbsp;<a class="cross" href="#">X</a></span>';
+			}else{
+				html += '<span class="cdt" style="margin-right:40px;">'+ val[0] +':'+val[1];
+				html += '&nbsp;<a class="cross" href="#">X</a></span>';
+			}
 		}
 	}
+	console.log(html);
 	$('#al_choose').append(html);
 	$('#al_choose').css('display','block');
 	$('.cdt>a').click(function(){
