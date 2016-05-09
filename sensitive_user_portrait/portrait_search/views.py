@@ -107,3 +107,69 @@ def ajax_full_text_search():
 
     return json.dumps(results)
 
+@mod.route('/profile_search/')
+def ajax_profile_search():
+    stype = request.args.get('stype', '')
+    query = []
+    condition_num = 0
+    rank_order = request.args.get('order', '1')
+    if rank_order == "0":
+        order = [{'statusnum':{'order':'desc'}}]
+    elif rank_order == "1":
+        order = [{'fansnum':{'order':'desc'}}]
+    elif rank_order == "2":
+        order = [{'friendsnum':{'order':'desc'}}]
+    size = request.args.get('size', 100)
+
+    if stype:
+        fuzz_item = ['uid', 'uname']
+        item_data = request.args.get('term', '')
+        for item in fuzz_item:
+            if item_data:
+                query_list.append({'wildcard':{item:'*'+item_data+'*'}})
+                condition_num += 1
+        query.append({'bool':{'should':query_list}})
+    else:
+        fuzz_item = ['uid', 'nick_name', 'real_name', 'user_location', 'user_email', 'user_birth']
+        range_item = ['statusnum','fansnum', 'friendsnum']
+        range_item_from = ['statusnum_from', 'fansnum_from', 'friendsnum_from']
+        range_item_to = ['statusnum_to', 'fansnum_to', 'friendsnum_to']
+        select_item = ['sex', 'tn', 'sp_type']
+        for item in fuzz_item:
+            item_data = request.args.get(item, '')
+            if item_data:
+                query.append({'wildcard':{item:'*'+item_data+'*'}})
+                condition_num += 1
+        for i in range(3):
+            from_item = request.args.get(range_item_from[i], 0)
+            to_item = request.args.get(range_item_to[i], 1000000000)
+            query.append({"range":{range_item[i]:{"from":from_item,"to":to_item}}})
+            condition_num += 1
+        for item in select_item:
+            item_data = request.args.get(item, '')
+            if item_data:
+                query.append({'match':{item:item_data}})
+                condition_num += 1
+
+    if condition_num:
+        source = es_user_profile.search(\
+                index = "weibo_user", doc_type="user", \
+                body = {
+                    "query":{
+                        "bool":{
+                            "must":query
+                        }
+                    },
+                    "sort":order,
+                    "size":size
+                }
+        )['hits']['hits']
+    else:
+        source = es_user_profile.search(\
+                index = "weibo_user", doc_type="user", \
+                body = {"query":{"match_all":{}}, "sort":sort, "size":size})['hits']['hits']
+    results = []
+    for item in source:
+        results.append(item['_source'])
+
+    return json.dumps(results)

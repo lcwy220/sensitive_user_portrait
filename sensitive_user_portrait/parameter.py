@@ -16,6 +16,9 @@ POLICY_ABS_PATH = '/home/ubuntu8/yuankun/sensitive_user_portrait/sensitive_user_
 #cron/text_attribute/topic
 TOPIC_ABS_PATH = '/home/ubuntu8/yuankun/sensitive_user_portrait/sensitive_user_portrait/cron/model_file/topic'
 
+#cron/cron/social_sensing
+SOCIAL_SENSING_TOPIC_ABS_PATH = '//home/ubuntu8/yuankun/sensitive_user_portrait/sensitive_user_portrait/cron/social_sensing/topic'
+
 #for all
 DAY = 24*3600
 Fifteen = 60 * 15
