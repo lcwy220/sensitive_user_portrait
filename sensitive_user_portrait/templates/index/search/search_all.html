@@ -37,7 +37,7 @@
             <td><input style="width:330px;"name="words_list" type="text" value="" placeholder="请输入要搜索的微博内容"/></td>
         </tr>
         <tr>
-            <td class='search_name'>用户id</td>
+            <td class='search_name'>用户ID</td>
             <td><input style="width:330px;"name="user_list" type="text" value="" placeholder="多个id用空格隔开"/></td>
         </tr>
         <tr>
@@ -57,21 +57,38 @@
                 <input name="sort_num_range" type="radio" value="300" style="margin-left:20px;">300                
                 <input name="sort_num_range" type="radio" value="400" style="margin-left:20px;">400                
                 <input name="sort_num_range" type="radio" value="500" style="margin-left:20px;">500                
-                <span id="search_all_btn" onclick="search_all()" class="portrait_button" style='float:right;cursor:pointer;margin-right:20px;width: 45px;height: 25px;text-align: center;line-height: 25px;'>提交</span>    
+                <span id="search_all_btn"  class="portrait_button" style='float:right;cursor:pointer;margin-right:20px;width: 45px;height: 25px;text-align: center;line-height: 25px;'>提交</span>    
             </td>
         </tr>
 
     </table>
 </div>
-<div>
-    <div id="search_result" style="margin-top:0px;"></div>
-</div>
+        <div id="result_analysis" style="margin-top:20px;margin-left: 80px;padding:10px;background-color:#E1E6FF;width: 900px;font-size:14px;border:1px solid #B0CEFB">
+        <b>
+            <span>关键词：<span id="rec_key"></span></span>
+            <span>用户ID：<span id="rec_user"></span></span>
+            <span id="rec_type"></span><span id='rec_detail'></span>
+            <span style="margin-left: 20px;">时间范围：<span id="rec_time_range"></span></span>
+            <span   style="margin-left: 20px;">排序指标：<span id="rec_rank_by"></span></span>
+        </b>
+        </div>
+<!--         <div style="text-align:right">
+            <input type="radio" name="instant"  style="opacity:1; position:static;" checked value="0" /> 预约计算
+            <input type="radio" name="instant" value="1" style="opacity:1; position:static;margin-left:5px" /> 立即计算
+            <button class="btn btn-primary btn-sm" style="width:80px;height:40px;margin-left:10px" name="recommend_button" id="recommend_button">选择入库</button>
+        </div> -->
+<!--         <p><span onclick="user_recom_in_modal()" class="portrait_button" style="float:right;cursor:pointer;margin-right:68px;width: 60px;height: 25px;text-align: center;line-height: 25px;margin-top: -60px;" id="recom_in">推荐入库</span></p> -->
+        <div id="result_rank_table" style="margin-top:20px;">
+        </div>
+        <div id="rank_weibo" style="width: 900px;margin-left: 30px;margin-top:20px;margin-bottom:50px;">
+        </div>
 <script src= '/static/custom/js/tbase.js'></script>
 
 
 {% endblock %}
 {% block end_js %}
 <script src="/static/custom/js/search_base.js"></script>
+<script src='/static/custom/js/search_portrait.js'></script>
 
 <script type="text/javascript">
     function date_init(){
@@ -113,11 +130,341 @@
             alert('关键词不能为空');
             return false;
         }
-            var words_list = words.split(" ");
+            var words0 = words.replace(/(^\s*)|(\s*$)/g, "");  
+            var words_list = words0.split(/\s+/g);
+            //var words_list = words.split(' ').join(',');
+            var user0 = users.replace(/(^\s*)|(\s*$)/g, "");  
+            var users_list = user0.split(/\s+/g);
             //console.log(words_list);
-            simple_url += words_list.join(',');
-            window.location.href = simple_url;
+            //simple_url += words_list.join(',');
+            //window.location.href = simple_url;
+        var url='/search/full_text_search/?start_time='+time_from+'&end_time='+time_to+'&uid='+users_list+'&keywords='+words_list+'&number='+number_sort;
+        console.log(url);
+            $.ajax({
+                url:url,
+                type:"GET",
+                dataType:'json',
+                success:draw_key_rank,
+            });
     });
+
+function draw_key_rank(data){
+    var num = data.number;
+    $('#rec_num_range').empty();
+    $('#rec_num_range').append(num);
+    draw_key_rank_table(data);
+    Draw_get_top_weibo(data.text_results, 'rank_weibo');
+}
+
+//选择条件，调用画表函数
+function draw_key_rank_table(data){
+    //console.log(data);
+    if(data.length == 0){
+        $('#result_rank_table').empty();
+        var html = '<div style="width: 900px;margin-left: 30px;text-align: center;font-size: 16px;background-color: #cccccc;margin-bottom: 30px;">暂无数据</div>';
+        $('#result_rank_table').append(html);
+    }else{
+        
+        //结果分析默认值
+        var sort_norm = data.sort_norm;
+        var sort_scope = data.sort_scope;
+        var key = data.keyword;
+        var time_range = data.start_time + '至' +data.end_time;
+        $('#rec_key').empty();
+        $('#rec_rank_by').empty();
+        $('#rec_time_range').empty();
+        $('#rec_key').append(scope_dict[sort_scope]);
+        $('#rec_key').append('-'+key);
+
+        $('#rec_rank_by').append(norm_dict[sort_norm]);
+        $('#rec_time_range').append(time_range);
+        
+        var data = data.result;
+        draw_all_rank_table(data);
+    }
+}
+
+function draw_all_rank_table(data){
+    //console.log(data);
+    var data = data;
+        if(data == 0){
+            $('#result_rank_table').empty();
+            var html = '<div style="width: 900px;margin-left: 30px;text-align: center;font-size: 16px;background-color: #cccccc;margin-bottom: 30px;">暂无数据</div>';
+                $('#result_rank_table').append(html);
+        }else{
+                var html = '';
+                html += '<table id="rank_table" class="table table-bordered table-striped table-condensed datatable" style="margin-left:30px;width:900px;">';
+                //html += '<table id="rank_table" class="table table-striped table-bordered bootstrap-datatable datatable responsive" style="margin-left:30px;" width:100%>';
+                html += '<thead><th style="width:65px;text-align:center;">排名</th>';
+                html += '<th style="text-align:center;">用户ID</th>';
+                html += '<th style="text-align:center;">昵称</th>';
+                html += '<th style="text-align:center;">是否入库</th>';
+                html += '<th style="text-align:center;width:100px;">注册地</th>';
+                html += '<th style="text-align:center;">粉丝数</th>';
+                html += '<th style="text-align:center;">微博数</th>';
+                html += '<th style="text-align:center;">影响力</th>';
+                html += '<th style="text-align:center;">言论敏感度</th>';
+                html += '<th style="min-width:40px;text-align:center;">入库</th>';
+                html += '</thead>';
+                for(var i=0;i<data.length;i++){
+                    var uid = data[i].uid;
+                    var uname = data[i].uname;
+                    if(uname == 'unknown' || uname == null){
+                        uname = uid;
+                    }
+                    var is_warehousing = '';
+                    if(data[i].is_warehousing == true){
+                        var user_url = '/index/personal/?uid='+uid;
+                        is_warehousing = '是';
+                    }else{
+                        var user_url = '/index/personal_out/?uid='+uid;
+                        is_warehousing = '否'
+                    };
+                    var location = data[i].location;
+                    if(location == null){
+                        location = '未知'
+                    }
+                    var fans = data[i].fans;
+                    if(fans == null || fans == undefined){
+                        fans = ''
+                    }
+                    if(data[i].weibo_count == undefined || data[i].weibo_count == null ){
+                        var weibo_num = '';
+                    }else{
+                        var weibo_num = data[i].weibo_count;
+                    };
+                    var influcence = data[i].bci;
+                    if(influcence == null || influcence == undefined){
+                        influcence = '';
+                    }else{
+                        influcence = influcence.toFixed(2);
+                    };
+                    var sensitive = data[i].sen;
+                    if(sensitive == null || sensitive == undefined){
+                        sensitive = '';
+                    }else{
+                        sensitive = sensitive.toFixed(2);
+                    };
+                    html += '<tr>';
+                    html += '<td style="text-align:center;">'+(i+1)+'</td>';
+                    html += '<td style="text-align:center;"><a href='+user_url+ ' target="_blank">'+uid+'</a></td>';
+                    //html += '<td style="text-align:center;"><a href="/index/personal/?uid='+uid+'" target="_blank">'+uid+'</a></td>';
+                    html += '<td style="text-align:center;">'+uname+'</a></td>';
+                    html += '<td style="text-align:center;">'+is_warehousing+'</td>';
+                    html += '<td style="text-align:center;">'+location+'</td>';
+                    html += '<td style="text-align:center;">'+fans+'</td>';
+                    html += '<td style="text-align:center;">'+weibo_num+'</td>';
+                    html += '<td style="text-align:center;">'+influcence+'</td>';
+                    html += '<td style="text-align:center;">'+sensitive+'</td>';
+                    if(data[i].is_warehousing == false){
+                        html += '<td style="width:20px;text-align:center;"><input name="user_out_check" id="user_out_check" type="checkbox" value='+ uid +'></td>';
+                    }else{
+                        html += '<td style="text-align:center;">-</td>';
+                    }
+                    html += '</tr>';
+                }
+                html += '</table>';
+                $('#result_rank_table').empty();
+                $('#result_rank_table').append(html);
+                $('#recom_in').css('display','block')
+                $('#rank_table').dataTable({
+                    "aoColumnDefs": [ {"sWidth": "5em", "aTargets":[0]}, {"sWidth": "7em", "aTargets":[3]}, {"sWidth": "10em", "aTargets":[2]},{"bSortable": false, "aTargets":[9]}],
+                    "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
+                    "sPaginationType": "bootstrap",
+                    //"aoColumnDefs":[ {"bSortable": false, "aTargets":[1]}],
+                    "oLanguage": {
+                        "sLengthMenu": "每页 _MENU_ 条 ",
+                    }
+                });
+        }
+}
+
+
+
+
+//展示微博
+function Draw_get_top_weibo(data){
+    var div_name='weibo_text';
+    var html = '';
+    $('#' + div_name).css('height',350);
+    $('#' + div_name).css('overflow-y','auto');
+    document.getElementById(div_name).style.border = "1px solid #77ACF4";
+    $('#' + div_name).css('border-radius', 5);
+    $('#' + div_name).empty();
+    //console.log(div_name);
+    if(data.length == 0){
+        html += "<div style='margin-left:10px;width:100%;height:100px;'>用户未发布任何微博</div>";
+    }else{
+        html += '<div id="weibo_list" class="weibo_list weibo_list_height scrolls tang-scrollpanel" style="margin:0;">';
+        html += '<div id="content_control_height" class="tang-scrollpanel-wrapper" style="margin:0;">';
+        html += '<div class="tang-scrollpanel-content" style="margin:0;">';
+        html += '<ul>';
+        for(var i=0;i<data.length;i++){
+            s = (i+1).toString();
+            var weibo = data[i]
+            //var mid = weibo[0];
+            var uid = weibo[0];
+            var name = weibo[9];
+            if(name == 'unknown'){
+                name = uid;
+            }       
+            var date = weibo[5];
+            var text = weibo[2];
+            var geo = weibo[6];
+            var reposts_count = weibo[7];
+            var comments_count = weibo[8];
+            var sentiment_dict ={'0':'中性', '1':'积极', '2':'生气', '3':'焦虑', '4':'悲伤', '5':'厌恶', '6':'消极其他', '7':'消极'} 
+            var type_list = ['原创','评论','转发']
+            if (geo == null){
+                geo = '未知';
+            }else{
+                geo = geo.toString().split('&');
+                if(geo.length <3){
+                    var  geo_after = geo.join(' ');
+                };
+                if(geo.length >2){
+                    geo = geo.slice(0, 4);
+                    var geo_after = geo.join(' ');
+                }   
+            }
+            var weibo_link = weibo[10];
+            var user_link = 'http://weibo.com/u/' + uid;
+            html += '<li class="item">';
+            html += '<div class="weibo_detail" style="width:100%">';
+            html += '<p style="text-align:left;margin-bottom:0;margin-left:10px;">' +s +'、</span>昵称:<a class="undlin" target="_blank" href="' + user_link  + '">' + name + '</a>(' + geo_after + ')&nbsp;&nbsp;发布内容：&nbsp;&nbsp;' + text + '</p>';
+            html += '<div class="weibo_info" style="width:100%;margin-bottom:10px;">';
+            html += '<div class="weibo_pz" style="margin-left:10px;">';
+            //html += '<div id="topweibo_mid" class="hidden">'+mid+'</div>';
+            html += '<div style="float:right;margin-right:5px;">';
+            html += '<span class="retweet_count">转发数(' + reposts_count + ')</span>&nbsp;&nbsp;|&nbsp;&nbsp;';
+            html += '<span class="retweet_count">评论数(' + comments_count + ')</span>&nbsp;&nbsp;';
+            //html += '<span class="comment_count">敏感度(' + sensitive_score + ')</span></div>';
+            html += '</div>';
+            html += '<div class="m">';
+            html += '<u>' + date + '</u>&nbsp;-&nbsp;';
+            html += '<a target="_blank" href="' + weibo_link + '">微博</a>&nbsp;-&nbsp;';
+            html += '<a target="_blank" href="' + user_link + '">用户</a>';
+
+            //html += type_list[weibo[3]-1] + '微博&nbsp;-&nbsp;';
+            //html += sentiment_dict[weibo[4]];
+            // html += '<a target="_blank" href="' + repost_tree_link + '">&nbsp;-&nbsp;转发树</a>';
+            html += '</div>';
+            html += '</div>';
+            html += '</div>';
+            html += '</li>';
+        }
+                    
+        html += '<div id="TANGRAM_54__slider" class="tang-ui tang-slider tang-slider-vtl" style="height: 100%;">';
+        html += '<div id="TANGRAM_56__view" class="tang-view" style="width: 6px;">';
+        html += '<div class="tang-content"><div id="TANGRAM_56__inner" class="tang-inner"><div id="TANGRAM_56__process" class="tang-process tang-process-undefined" style="height: 0px;"></div></div></div>';
+        html += '<a id="TANGRAM_56__knob" href="javascript:;" class="tang-knob" style="top: 0%; left: 0px;"></a></div>';
+        html += '<div class="tang-corner tang-start" id="TANGRAM_54__arrowTop"></div><div class="tang-corner tang-last" id="TANGRAM_54__arrowBottom"></div></div>';
+
+        html += '</ul>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';   
+    }
+    $('#'+div_name).append(html);
+}
+
+//选择入库
+    $('[id$=recommend_button]').click(function(){
+          var cur_uids = [];
+          var sub = $(this)[0].id.substr(0,4);
+          $('input[name="in_status"]:checked').each(function(){
+            cur_uids.push($(this).attr('value'));
+          })
+          recommend_choose_uids[recommend_pre_page] = cur_uids;
+          var recommend_uids = [];
+          for (var key in recommend_choose_uids){
+              var temp_list = recommend_choose_uids[key];
+              for (var i = 0;i < temp_list.length;i++){
+                  recommend_uids.push(temp_list[i]);
+              }
+          }
+          var recommend_date = $("#"+sub+"recommend_date_select").val()
+          //console.log(recommend_date);
+          //console.log(recommend_uids);
+          var uids_trans = '';
+          for(var i in recommend_uids){
+              uids_trans += recommend_uids[i];
+              if(i<(recommend_uids.length-1))
+                uids_trans += ',';
+          }
+          if(recommend_uids.length == 0)
+            alert("请选择至少一个用户！");
+          else{
+            var compute_time;
+            var sure;
+            var source = 1;
+            if (global_index == 1){
+                source = 2;
+            }
+            if($('input[name="instant"]:checked').val()==1){
+              compute_time = '1';
+              sure = confirm('立即计算会消耗系统较多资源，您确定要立即计算吗？');
+            }
+            else{
+                compute_time = '2';
+                sure = confirm('您选择了预约计算，系统将在今日24:00自动启动计算！');
+            }
+            if (sure == true){
+                  //console.log(compute_time);
+                  $('#recommend').empty();
+                  var waiting_html = '<div style="text-align:center;vertical-align:middle;height:40px">数据正在加载中，请稍后...</div>';
+                  $('#recommend').append(waiting_html);
+
+                  var recommend_confirm_url = '/recommentation/identify_in/?date=' + recommend_date + '&uid_list=' + uids_trans + '&status=' + compute_time + '&source=' + source;
+                  call_ajax_request(recommend_confirm_url, confirm_ok);
+                  //console.log(recommend_confirm_url);
+
+
+                  var url_recommend_new = inf_recommend_url + $("#"+sub+"recommend_date_select").val();
+                  call_ajax_request(url_recommend_new, function(data){draw_recommend(data,sub)});
+
+                  var url_history_new = history_url + $("#history_date_select").val();
+                  call_ajax_request(url_history_new, draw_history);
+            }
+          }
+    });
+
+
+function user_recom_in_modal(){
+    var cur_uids = []
+    var noneflag = true;
+    $('input[name="user_out_check"]:checked').each(function(){
+    //console.log($(this).attr('value'))
+        cur_uids.push($(this).attr('value'));
+        if($(this).attr('value') == 'undefined'){
+            noneflag = false;
+        }
+    });
+    var recommend_date0 = choose_time_for_mode();    // choose_time_for_mode().format('yyyy-MM-dd');
+    recommend_date0.setDate(recommend_date0.getDate());
+    var recommend_date = recommend_date0.format('yyyy-MM-dd');
+    if(noneflag==false){
+        alert('ID未知用户不能推荐入库！');
+    }else{
+        if (cur_uids.length == 0){
+            alert("请选择至少一个用户！");
+        }
+        else{
+            var compute_url = '/recommentation/identify_in/?submit_user='+username+'&date='+recommend_date+'&uid_list='+cur_uids;
+            console.log(compute_url);
+            call_sync_ajax_request(compute_url, confirm_ok);
+        }
+    }
+}
+
+function confirm_ok(data){
+    if(data){
+        alert('操作成功！');
+        //window.location.reload();
+    }else{
+        alert('入库失败，请重试')
+    }
+}
 
 </script>
 {% endblock end_js %}
