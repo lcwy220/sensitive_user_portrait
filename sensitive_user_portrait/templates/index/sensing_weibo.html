@@ -1,7 +1,7 @@
-{% extends "index/tbase.html" %}
+{% extends "index/base.html" %}
 {% block title %}敏感微博监控{% endblock title %}
-	{% block css %}
-        {{ super() }}
+{% block subtitle %}敏感微博监控{% endblock subtitle %}
+	{% block custom_css %}
         <style type="text/css">
             .dataTables_filter{text-align:right;margin-bottom:5px;}
             .dataTables_paginate{margin-top:-10px;margin-bottom:-20px;}
@@ -12,17 +12,15 @@
             }
         </style>
         <link rel="stylesheet" type="text/css" href="/static/css/jquery.datetimepicker.css"/>
-    {% endblock css %}
-    {% block head_js %}
+    {% endblock custom_css %}
+    {% block custom_js %}
         {{ super() }}
         <script type="text/javascript" src="/static/js/jquery.datetimepicker.js"></script>
         <script type="text/javascript" src="/static/js/portrait/identify_table.js"></script>
-    {% endblock head_js %}
-    {% block head_title %}
-    敏感微博监控
-    {% endblock head_title %}
+    {% endblock custom_js %}
+
     {% block ex_link %}/index/nouns_explain/#social_sensing{% endblock %}
-    {% block main %}
+    {% block body %}
     <div style="width:1000px">
     <div id="so_useremail" hidden>test@qq.com</div>
     <table class="shadow" style="width:100%; height:150px;border: 2px solid #cccccc;">
@@ -57,7 +55,7 @@
 
     <div class="col-md-12" style='margin-top:10px;margin-bottom:30px;padding: 0px;'>
         <div class='col-md-12' style='text-align:right; padding-right: 0px;'>
-            <span id="so_user_commit" class="portrait_button bluebtn" style="padding-top:10px;text-align:center;cursor:pointer">新建任务</span>
+            <span id="so_user_commit" class="portrait_button bluebtn" style="/* padding-top:10px; */text-align:center;cursor:pointer;width: 80px;float: right;text-align: center;line-height: 25px;">新建任务</span>
         </div>
     </div>
     <br/>
@@ -164,8 +162,8 @@
       </div>
     </div>
     </div>
-    {% endblock main %}
-    {% block Own_js %}
+    {% endblock  %}
+    {% block end_js %}
         {{ super() }}
 
     <script type='text/javascript' src='/static/js/portrait/social_sensing.js'></script>
@@ -179,4 +177,4 @@
      });
     </script>
 
-    {% endblock Own_js %}
+    {% endblock end_js %}

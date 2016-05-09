@@ -326,7 +326,7 @@ Headers colors.
 .accent-color,
 header h1,
 header h2,
-table th {color: #24A0DA;}
+table th {/*color: #24A0DA;*/}
 .accent-bg {background:#24A0DA;}
 
 a#user-info h3,
