@@ -13,14 +13,14 @@ function bindAdvanced(){
         var current_user = $('#current_user').text();
         $('#al_choose').css('display','block');
         if ($('#supersearch').is(':hidden')){
-            var url = '/attribute/portrait_search/?stype=1';
+            var url = '/search/portrait_search/?stype=1';
             url += get_simple_par();
         }
         else{
-            var url = '/attribute/portrait_search/?stype=2';
+            var url = '/search/portrait_search/?stype=2';
             url += get_advanced_par();
         }
-        url += '&submit_user=' + current_user;
+        //url += '&submit_user=' + current_user;
         //console.log(url);
         draw_conditions(url);
         //var url = '/attribute/portrait_search/?stype=1';
