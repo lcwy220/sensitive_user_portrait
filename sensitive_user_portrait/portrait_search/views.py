@@ -111,6 +111,7 @@ def ajax_full_text_search():
 def ajax_profile_search():
     stype = request.args.get('stype', '')
     query = []
+    query_list = []
     condition_num = 0
     rank_order = request.args.get('order', '1')
     if rank_order == "0":
@@ -167,9 +168,10 @@ def ajax_profile_search():
     else:
         source = es_user_profile.search(\
                 index = "weibo_user", doc_type="user", \
-                body = {"query":{"match_all":{}}, "sort":sort, "size":size})['hits']['hits']
+                body = {"query":{"match_all":{}}, "sort":order, "size":size})['hits']['hits']
     results = []
     for item in source:
+        item['_source']['create_at'] = ts2datetime(item['_source']['create_at'])
         results.append(item['_source'])
 
     return json.dumps(results)

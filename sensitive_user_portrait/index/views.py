@@ -50,12 +50,16 @@ def word_recommend():
 @mod.route('/group_identify/')
 def group():
     return render_template('index/group_identify.html')
-
+'''
 @mod.route('/group_results/')
 def group_results():
     name = request.args.get('name', '')
     return render_template('index/group_results.html')
-
+'''
+@mod.route('/group_analysis/')
+def group_results():
+    name = request.args.get('name', '')
+    return render_template('index/group_analysis.html')
 @mod.route('/group_task/')
 def group_task():
     return render_template('index/group_task.html')
@@ -71,6 +75,10 @@ def search_portrait():
 @mod.route('/search_all/')
 def search_all():
     return render_template('index/search/search_all.html')
+
+@mod.route('/search_context/')
+def search_context():
+    return render_template('index/search/search_context.html')
 
 @mod.route('/search_results/')
 def search_results():
@@ -147,9 +155,9 @@ def contact():
     uid = request.args.get('uid', '1022866242')
     return render_template('index/contact.html', uid=uid)
 
-@mod.route('/social_sensing/')
-def social_sensing():
-    return render_template('index/social_sensing.html')
+@mod.route('/sensing_weibo/')
+def sensing_weibo():
+    return render_template('index/sensing_weibo.html')
 
 @mod.route('/sensing_analysis/')
 def sensing_analysis():

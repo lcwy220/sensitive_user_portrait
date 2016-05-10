@@ -1,23 +1,24 @@
 <div id="textsearch" style='margin-left:20%'>
-        <span style="float:left;line-height:30px;margin-right:15px;">全文检索</span>
-        <span class="searchborder fleft">
-            <input style="width:330px;"name="words_list" type="text" value="" placeholder="请输入要搜索的微博内容"/>
+        <span style="float:left;line-height:30px;margin-right:15px;">用户ID或昵称</span>
+        <span class="searchborder fleft" id="uiduname">
+            <input style="width:330px;"name="words_list" type="text" value="" id="uiduname" placeholder="请输入用户ID或昵称"/>
         </span>
         <span class="fleft" style="margin-left:20px;" id="show_advanced">
-            <a title=""  style="line-height:30px;"onclick="show()">高级搜索 </a>
+            <a title=""  style="line-height:30px;" onclick="show()">高级搜索 </a>
         </span>
         <span class="fleft" style="margin-left:20px;display:none" id="hidden_advanced">
             <a title=""  style="line-height:30px;" onclick="notshow()">收起高级搜索 </a>
         </span>
-        <span class="fleft" style="margin-left:20px;">
+        <span class="fleft" style="margin-left:20px;" id="words_list">
             <a title="">
-                <input type="submit" class="bluebtn" id="words_list" value="确定"/>
+                <input type="submit" class="" onclick="simple_search()" value="确定"/>
             </a>
         </span>
 </div>
 
 <div id="supersearch" style="display:none;">
-    
+    <span id="al_choose" style="float:left;margin-top:0px;display:none"></span>
+    <div id="conditions" style='float:left;margin-top:0px;'></div>
     <div class="search-content">
         <div class="cols">
             <span class="fleft lineh42" style="margin-right:15px;">用户ID</span>
@@ -32,6 +33,7 @@
             <input name="hashtag" class="inputbox fleft ad-search" type="text" value="" placeholder="请输入hashtag" />
             <span class="fleft lineh42 mright15 ">关键字</span>
             <input name="adkeyword" class="inputbox fleft ad-search" type="text" value="" placeholder="请输入关键字" />
+
             <span class="fleft lineh42 mright30">心理状态</span>
             <select name="psycho_status" class="fleft select-box ad-search">
                 <option value="">不限</option>
@@ -52,10 +54,10 @@
                 <label class="cols-label"><input name="domain" class=" fleft chosebox" type="checkbox" value="草根红人" />草根红人</label>
                 <label class="cols-label"><input name="domain" class=" fleft chosebox" type="checkbox" value="文体明星" />文体明星</label>
                 <label class="cols-label"><input name="domain" class=" fleft chosebox" type="checkbox" value="公知分子" />公知分子</label>
-                <label class="cols-label"><input name="domain" class=" fleft chosebox" type="checkbox" value="官方媒体" />官方媒体</label>
+                <label class="cols-label" style="margin-left:70px;"><input name="domain" class=" fleft chosebox" type="checkbox" value="官方媒体" />官方媒体</label>
                 <label class="cols-label"><input name="domain" class=" fleft chosebox" type="checkbox" value="宗教人士" />宗教人士</label>
-                <label class="cols-label"><input name="domain" class=" fleft chosebox" type="checkbox" value="作家写手" />作家写手</label>
-                <label class="cols-label"><input name="domain" class=" fleft chosebox" type="checkbox" value="公职人员" />公职人员</label>
+                <label class="cols-label" style="margin-left:33px;"><input name="domain" class=" fleft chosebox" type="checkbox" value="作家写手" />作家写手</label>
+                <label class="cols-label" style="margin-left:35px;"><input name="domain" class=" fleft chosebox" type="checkbox" value="公职人员" />公职人员</label>
                 <label class="cols-label"><input name="domain" class=" fleft chosebox" type="checkbox" value="专家学者" />专家学者</label>
             </form>
         </div>
@@ -92,7 +94,7 @@
         -->
     </div>
     <div class="clearfix lineh42">
-      <input name="submit" type="submit" class="bluebtn" id="bluebtn" value="确定" />
+      <input name="submit" type="submit" class="bluebtn" id="bluebtn" onclick="advanced_search()" value="确定" />
     </div>
 </div>
 <div id="search_result" style="margin-top:40px;"></div>
@@ -101,10 +103,195 @@ function show(){
     $('#supersearch').css('display','block');
     $('#show_advanced').css('display','none');
     $('#hidden_advanced').css('display','block');
+    $('#words_list').css('display','none');
 }
 function notshow(){
     $('#supersearch').css('display','none');
     $('#show_advanced').css('display','block');
     $('#hidden_advanced').css('display','none');
+	$('#words_list').css('display','block');
+}
+getAttributeName();
+bindAddFunction();
+function call_ajax_request(url, callback){
+    $.ajax({
+        url: url,
+        type: 'get',
+        dataType: 'json',
+        async: false,
+        success: callback
+    });
+}
+function simple_search(){
+	var simple_url = '/search/portrait_search/?stype=1';
+	get_simple = $('input#uiduname').val();
+	simple_url = simple_url + '&term='+ get_simple;
+	call_ajax_request(simple_url, draw_search_results);
+}
+function advanced_search(){
+	notshow();
+	var advanced_url = '/search/portrait_search/?stype=2';
+	advanced = more_words();
+	$('#al_choose').empty();
+	var html = '';
+	html += '已选条件：';
+	//console.log(advanced);
+	var condition = advanced.split('&');
+	console.log(condition);
+	for(var i=0;i<condition.leng;i++){
+		console.log(condition[i]);
+		var val = condition[i].split('=');
+		console.log(val[0]);
+		console.log(val[1]);
+		if(val[1]){
+			var chosen = new Array();
+			if(val[0]=='tag'){
+				html += '<span class="cdt" style="margin-right:40px;">'+ val[1];
+				html += '&nbsp;<a class="cross" href="#">X</a></span>';
+			}else{
+				html += '<span class="cdt" style="margin-right:40px;">'+ val[0] +':'+val[1];
+				html += '&nbsp;<a class="cross" href="#">X</a></span>';
+			}
+		}
+	}
+	console.log(html);
+	$('#al_choose').append(html);
+	$('#al_choose').css('display','block');
+	$('.cdt>a').click(function(){
+		var text = $(this).parent().html();
+        text = text.split(':')[0];
+        delete text;
+        $(this).parent().remove();
+     });
+	advanced_url = advanced_url + '&'+ advanced;
+	console.log(advanced_url);
+	call_ajax_request(advanced_url, draw_search_results);
+}
+//高级检索
+function more_words(){
+	var temp='';
+    var input_value;
+    var input_name;
+    $('.ad-search').each(function(){
+        input_name = $(this).attr('name')+'=';
+        input_value = $(this).val()+'&';
+        temp += input_name;
+        temp += input_value;;
+    });
+    temp = temp.substring(0, temp.length-1);
+    
+    var character_sentiment_url = '&character_sentiment=';
+    $("[name='character_sentiment']:checked").each(function(){
+        if($(this).val()=='未知'){
+            $(this).val() = '其他';
+        }
+        character_sentiment_url += $(this).val() + ',';
+    });
+    temp += character_sentiment_url;
+    temp = temp.substring(0, temp.length-1);
+
+    var character_text_url = '&character_text=';
+    $("[name='character_text']:checked").each(function(){
+        if($(this).val()=='未知'){
+            $(this).val() = '其他';
+        }
+        character_text_url += $(this).val() + ',';
+    });
+    temp += character_text_url;
+    temp = temp.substring(0, temp.length-1);
+    
+    var domain_url = '&domain=';
+    $("[name='domain']:checked").each(function(){
+        domain_url += $(this).val() + ',';
+    });
+    temp += domain_url;
+    temp = temp.substring(0, temp.length-1);
+
+    var topic_url = '&topic=';
+    $("[name='topic']:checked").each(function(){
+        topic_url += $(this).val() + ',';
+    });
+    temp += topic_url;
+    temp = temp.substring(0, temp.length-1);
+
+    var tag_url = '&tag=';
+    $('#tags').children("span").each(function(){
+        var text = $(this).html();
+        text = text.split('&')[0];
+        tag_url += text +',';
+    });
+    temp += tag_url;
+    temp = temp.substring(0, temp.length-1);
+    return temp;
+}
+
+
+
+
+//标签
+function getAttributeName(){
+    var attribute_name_url = '/tag/show_attribute_name/';
+    call_ajax_request(attribute_name_url, draw_name_option);
+    
+    function draw_name_option(data){
+        // console.log(data);
+        $('[name=tag_type]').empty();
+        var html = '';
+        for (var i=0;i<data.length;i++){
+            html += '<option value="' + data[i] + '">' + data[i] + '</option>';
+        }
+        $('[name=tag_type]').html(html);
+
+        var attribute_value_url = '/tag/show_attribute_value/?attribute_name=';
+        attribute_value_url += data[0];
+        call_ajax_request(attribute_value_url, draw_value_option);
+
+        $('[name=tag_type]').change(function(){
+            // console.log($(this).val());
+            var attribute_value_url = '/tag/show_attribute_value/?attribute_name=';
+            attribute_value_url += $(this).val();
+            call_ajax_request(attribute_value_url, draw_value_option);
+        });
+    }
+}
+
+function draw_value_option(data){
+    //console.log(data);
+    if (data == 'no attribute'){
+        data = [];
+    }
+    $('[name=tag_name]').empty();
+    var html = '';
+    for (var i=0;i<data.length;i++){
+        html += '<option value="' + data[i] + '">' + data[i] + '</option>';
+    }
+    $('[name=tag_name]').html(html);
+}
+
+//添加标签
+function bindAddFunction(){
+    var chosen = new Array();
+    $('#tag_add').click(function(){
+        var type = $('[name=tag_type]').val();
+        var name = $('[name=tag_name]').val();
+        var check_str = type + ':' + name;
+        if (chosen[check_str]){
+        }
+        else{
+            var html = '';
+            html += '<span class="mouse" style="margin-right:40px;">'+ check_str;
+            html += '&nbsp;<a class="cross" href="#">X</a></span>';
+            $('#tags').append(html);
+            chosen[check_str] = '1';
+
+            $('.mouse>a').click(function(){
+                var text = $(this).parent().html();
+                text = text.split('&')[0];
+                delete chosen[text];
+                $(this).parent().remove();
+            });
+        }
+
+    });
 }
 </script>

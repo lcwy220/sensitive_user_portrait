@@ -26,13 +26,13 @@
     <script src='/static/custom/js/search_portrait.js'></script>
     <script>
         //var user_name = "{{g.user}}";
-        var url = '/attribute/portrait_search/?stype=1';
+        var url = '/search/portrait_search/?stype=1';
         url += get_simple_par();
         $('#al_choose').css('display','none');
         //url += '&submit_user='+user_name;
         //console.log(url);
         //draw_conditions(url);
-        //base_call_ajax_request(url, draw_search_results);
+        base_call_ajax_request(url, draw_search_results);
 
     </script>
   {% endblock end_js %}

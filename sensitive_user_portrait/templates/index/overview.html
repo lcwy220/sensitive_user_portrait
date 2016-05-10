@@ -11,6 +11,8 @@
     #page {height:2175px;}
     #basic span {color:red;}
     /*h2 {font-family:'微软雅黑';}*/
+	li{list-style-type:none}
+	.pageList ul li{float:left;margin-left:20px;}
 	</style>
 {% endblock custom_css  %}
 
@@ -22,7 +24,7 @@
             <h2>基本信息</h2>
             <div id='basic'>
                 <p style="margin-top:30px;margin-left:10px;">系统总共有<span id="totalNumber"></span>人。其中敏感人物有<span id="sensitiveN"></span>人，高影响力有<span id="hinfluence"></span>人。</p>
-                <p style="margin-top:30px;margin-left:10px;">近一周内，系统推荐中总共有<a href='/index/recommend_in/' target='_blank'><span id="storeNumber"></span></a>人还未入库。正在监控<a href='/index/group_task/' target='_blank'><span id="groupN"></span></a>个群组，总计
+                <p style="margin-top:30px;margin-left:10px;">今日，系统推荐中总共有<a href='/index/recommend_in/' target='_blank'><span id="storeNumber"></span></a>人还未入库。正在监控<a href='/index/group_task/' target='_blank'><span id="groupN"></span></a>个群组，总计
                 <a href='/index/group_task' target='_blank'><span id="gtotal"></span></a>人。今日新增敏感词<a href='/index/words_recommend' target='_blank'><span id="wordsN"></span></a>个。</p>
             </div>
             <hr>
@@ -39,7 +41,9 @@
             <div class="important" id="domain_portrait"></div>
 			<hr>
             <h2>话题重点人物</h2>
+			<!--
             <div style="float:right;cursor:pointer;margin-top:-30px;margin-right:50px;" type="button" data-toggle="modal" data-target="#more_topic"><u>查看更多</u></div>
+			-->
 			<div class="important" id="topic_portrait"></div>
             <div class="clear"></div>
 			
@@ -72,9 +76,9 @@
 			</div>
 			<div class="table-responsive" id='top_sensitive' style='overflow-x:hidden;width:300px;height:250px;float:left;'>
 			</div>
-			<div class="table-responsive" id='retweeted_user' style='overflow-x:hidden;width:300px;height:250px;float:left;margin-left:25px;'>             
+			<div class="table-responsive" id='sensitive_hot_retweet' style='overflow-x:hidden;width:300px;height:250px;float:left;margin-left:25px;'>             
 			</div>
-			<div class="table-responsive" id='top_comment_user' style='overflow-x:hidden;width:300px;height:250px;margin-right:20px;float:left;margin-left:25px;'>              
+			<div class="table-responsive" id='sensitive_hot_comment' style='overflow-x:hidden;width:300px;height:250px;margin-right:20px;float:left;margin-left:25px;'>              
 			</div>
 			<div style="padding:10px;">
 				<span style='color:#777;font-size:16px'>发布敏感微博人排名</span>
@@ -86,8 +90,31 @@
 			</div>
 			<div class="table-responsive" id='top_geo_sensitive' style='overflow-x:hidden;width:300px;height:250px;float:left; margin-left:25px;'>
 			</div>
-            
-        </div>
+
+	        <div class="clear"></div>
+			<hr>
+            <h2>热门微博</h2>
+            <div class="count" style="height:300px;margin-top:10px;width:100%;">
+				<div class="tang-scrollpanel-content" style="margintop:10px;">
+					<div id='sensitive_hot_weibo' style='overflow-x:hidden;float:left;'>
+						<div id="sensitive_hot_weibo_result" style="float:left;width:100%;"></div>
+						<div id="pageGro" class="cb" style="display:none;float:left;width:600px;height:60px;margin-left:200px;margin-top:40px;line-height:23px;">
+							<span class="pageUp" style="float:left;">上一页</span>
+							<span class="pageList" style="float:left;">
+								<ul>
+									<li>1</li>
+									<li>2</li>
+									<li>3</li>
+									<li>4</li>
+									<li>5</li>
+								</ul>
+							</span>
+							<span class="pageDown" style="margin-left:20px;cursor:pointer;">下一页</span>
+						</div>	       
+					</div>
+				</div>
+			</div>
+		</div>
     </div>
 	
 <!--模态框-->
