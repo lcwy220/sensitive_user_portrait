@@ -72,6 +72,10 @@ def search_portrait():
 def search_all():
     return render_template('index/search/search_all.html')
 
+@mod.route('/search_context/')
+def search_context():
+    return render_template('index/search/search_context.html')
+
 @mod.route('/search_results/')
 def search_results():
     stype = request.args.get('stype','')

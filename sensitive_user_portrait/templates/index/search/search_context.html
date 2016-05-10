@@ -1,0 +1,288 @@
+{% extends "index/base.html" %}
+{% block title %}背景信息检索{% endblock title %}
+{% block head_title %}背景信息检索{% endblock head_title %}
+   {% block custom_css %}
+<style>
+    .dataTables_filter{text-align:right;margin-bottom:5px;}
+    .dataTables_paginate{margin-top:-10px;margin-bottom:-20px;}
+    .mouse {border:#d0d0d0 solid 1px;}
+    .mright5{margin-left: 70px}
+</style>
+<link  type="text/css" href="/static/personal/css/style.css" rel="stylesheet"/>
+   
+   {% endblock custom_css %}
+
+   {% block custom_js %}
+<script src='/static/custom/js/identify_table.js'></script>
+   {% endblock custom_js %}
+
+
+{% block body %}
+<div style='margin-left:190px;' class="cols">
+    <span class="fleft lineh42 mright13">用户ID或昵称</span>
+    <input id='term' name="term" style='width:260px;'class="inputbox fleft " type="text" value="" placeholder="请输入用户ID或昵称" />
+    <a class='portrait_href' style='line-height:50px;margin-left:100px;' id='show_advanced'>高级搜索</a>
+    <span class=" lineh42">
+      <input name="submit" type="submit" style='float:right;margin-right:200px;margin-top:10px;' class="portrait_button bluebtn" id="commit_search" value="确定" />
+    </span>
+</div>
+<div id="supersearch" style='display:none;'>
+    <table class='table table-border bootstrap-datatable'>
+        <tr>
+            <td class='search_name'>属性信息</td>
+            <td>
+                <span style='margin-left:20px;margin-right:12px;' class="fleft lineh42  ">用户ID</span>
+                <input name="uid" class="inputbox fleft ad-search" type="text" value="" placeholder="请输入用户ID" />
+                <span  class="fleft lineh42 mright5 ">昵称</span>
+                <input name="nick_name" class="inputbox fleft ad-search" type="text" value="" placeholder="请输入昵称" />
+                <span  class="fleft lineh42 mright5 ">真实姓名</span>
+                <input name="real_name" class="inputbox fleft ad-search" type="text" value="" placeholder="请输入真实姓名" /><br>
+                <span  style='margin-left:20px;margin-right:12px;' class="fleft lineh42 ">注册地</span>
+                <input name="user_location" class="inputbox fleft ad-search" type="text" value="" placeholder="请输入注册地" />
+                <span class="fleft lineh42 mright5 ">邮箱</span>
+                <input name="user_email" class="inputbox fleft ad-search" type="text" value="" placeholder="请输入邮箱" />
+                <span  class="fleft lineh42 mright5 " style='margin-left:77px'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;生日</span>
+                <input name="user_birth" class="inputbox fleft ad-search" type="text" value="" placeholder="请输入生日" /> <br>    
+                <span  style='margin-left:20px;margin-right:12px;' class="fleft lineh42 ">粉丝数</span>
+                <input name="fansnum_from" style="width:70px;min-width:0px" class="inputbox fleft ad-search" type="text" value="" placeholder="" />----      
+                <input name="fansnum_to" style="width:70px;min-width:0px" class="inputbox fleft ad-search" type="text" value="" placeholder="" />  
+                <span  class="fleft lineh42 mright5" style="margin-left:92px">关注数</span>
+                <input name="friendsnum_to" style="width:70px;min-width:0px" class="inputbox fleft ad-search" type="text" value="" placeholder="" />----     
+                <input name="friendsnum_to" style="width:70px;min-width:0px" class="inputbox fleft ad-search" type="text" value="" placeholder="" />   
+                <span   class="fleft lineh42 mright5" style="margin-left:120px">微博数</span>
+                <input name="statusnum_from" style="width:70px;min-width:0px" class="inputbox fleft ad-search" type="text" value="" placeholder="" />----     
+                <input name="statusnum_to" style="width:70px;min-width:0px" class="inputbox fleft ad-search" type="text" value="" placeholder="" />              
+            </td>
+        </tr>
+        <tr>
+            <td class='search_name'>排序指标</td>
+            <td>
+                <input style='margin-left:20px;' name="sort_type" type="radio" value="fansnum"  checked='checked'>粉丝数
+                <input name="sort_type" type="radio" value="friendsnum" style="margin-left:20px;">关注数
+                <input name="sort_type" type="radio" value="statusnum" style="margin-left:20px;">微博数                             
+                 
+            </td>
+        </tr>    
+<!--         <tr>
+            <td class='search_name'>排序范围</td>
+            <td>
+                <input style='margin-left:20px;' name="hashtag" class="inputbox fleft ad-search" type="text" value="" placeholder="" />
+                <span style='margin-left:10px;' class="fleft lineh42 mright5 ">——</span>
+                <input name="keywords_string" class="inputbox fleft ad-search" type="text" value="" placeholder="" />        
+            </td>
+        </tr>  -->
+    </table>
+</div>
+<div>
+    
+    <span id="al_choose" style="float:left;margin-top:0px;display:none">已选条件:</span>
+    <div id="conditions" style='float:left;margin-top:0px;'></div>
+    <br>
+    <div id='contrast_block' style="margin-top:10px;display:none;">
+        <span style="float:left;margin-top:0px">已选对比用户:</span>
+        <div id="contrast_chosen" style='float:left;margin-top:0px;'></div>
+    </div>
+    <div id="search_result" style="margin-top:0px;"></div>
+</div>
+
+
+{% endblock body %}
+
+  {% block end_js %}
+    <script type="text/javascript">
+        function bindAdvanced(){
+            $("#show_advanced").off("click").click(function(){
+                if (($('#supersearch')).is(':hidden')){
+                    $(this).html('收起高级搜索');
+                    $("#supersearch").css('display', 'block');
+                }
+                else{
+                    $(this).html('高级搜索');
+                    $("#supersearch").css('display', 'none');
+                }
+            });
+            $('#commit_search').click(function(){
+                //var current_user = $('#current_user').text();
+                $('#al_choose').css('display','block');
+                if ($('#supersearch').is(':hidden')){
+                    var url = '/search/profile_search/?stype=1';
+                    url += get_simple_par();
+                }
+                else{
+                    var url = '/search/profile_search/?stype=2';
+                    url += get_advanced_par();
+                    console.log(url);
+                }
+                //url += '&submit_user=' + current_user;
+                //console.log(url);
+                draw_conditions(url);
+                //var url = '/attribute/profile_search/?stype=1';
+                base_call_ajax_request(url, draw_search_results);
+                window.location.href = '#search_result';
+            });
+        }
+
+        function replace_space(data){
+          for(var i in data){
+            if(data[i]===""||data[i]==="unknown"){
+              data[i] = "未知";
+            }
+          }
+          return data;
+        }
+        function draw_conditions(url){
+            $("#search_result").css("margin-top", "40px");
+            $('#conditions').empty();
+            var html = '';
+            var par_url = url.split('?')[1];
+            var par_list = par_url.split('&');
+            for (var i = 0;i < par_list.length;i++){
+                var pair = par_list[i].split('=');
+                var pre_name = pair[0];
+                var pre_value;
+                if (pair[1]){
+                    pre_value = pair[1];
+                }
+                else{
+                    pre_value = '';
+                }
+                var fix_result = process_par(pre_name, pre_value);
+                //console.log(fix_result);
+                var fix_name = fix_result[0];
+                var fix_value = fix_result[1];
+
+                if (fix_value){
+                    if (fix_value.indexOf(',') >= 0){
+                        var term_list = fix_value.split(',');
+                        for (var j = 0; j < term_list.length;j++){
+                            html += '<span  style="margin-left:10px;border:#d0d0d0 solid 1px;">'+ fix_name + '：'+ term_list[j] + '</span>';
+                        }
+                    }
+                    else{
+                        html += '<span  style="margin-left:10px;border:#d0d0d0 solid 1px;">'+ fix_name + '：'+ fix_value + '</span>';
+                    }
+                }
+            }
+
+            $('#conditions').html(html);
+            return;
+        }
+        function process_par(name, value){
+            var result = new Array();
+            if(name=='term'){
+                result[0] = '用户ID或昵称';
+                result[1] = value;
+            }
+            else if(name=='uid'){
+                result[0] = '用户ID';
+                result[1] = value;
+            }
+            else if(name=='nick_name'){
+                result[0] = '昵称';
+                result[1] = value;
+            }
+            else if(name=='real_name'){
+                result[0] = '真实姓名';
+                result[1] = value;
+            }
+            else if(name=='user_location'){
+                result[0] = '注册地';
+                result[1] = value;
+            }
+            else if(name=='user_email'){
+                result[0] = '邮箱';
+                result[1] = value;
+            }
+            else if(name=='user_birth'){
+                result[0] = '生日';
+                result[1] = value;
+            }
+            else if(name=='topic_string'){
+                result[0] = '领域';
+                result[1] = value;
+            }
+            else if(name=='fansnum_from'){
+                result[0] = '粉丝数从';
+                result[1] = value;
+            }
+            else if(name=='fansnum_to'){
+                result[0] = '粉丝数到';
+                result[1] = value;
+            }
+            else if(name=='friendsnum_from'){
+                result[0] = '关注数从';
+                result[1] = value;
+            }
+            else if(name=='friendsnum_to'){
+                result[0] = '关注数到';
+                result[1] = value;
+            }
+            else if(name=='statusnum_from'){
+                result[0] = '微博数从';
+                result[1] = value;
+            }
+            else if(name=='statusnum_to'){
+                result[0] = '微博数到';
+                result[1] = value;
+            }
+            else if (name=='statusnum'||name=='fansnum'||name=="friendsnum"){
+            	result[0] = '排序指标';
+            	if(name=='statusnum'){
+            		result[1] = '微博数';
+            	}else if(name=='fansnum'){
+            		result[1] = '粉丝数';
+            	}else if(name=="friendsnum"){
+            		result[1] = '关注数';
+            	}
+                
+            }
+            return result;
+        }
+        function get_simple_par(){
+            var str = '&term=' + $('#term').val();
+            return str
+        }
+        function get_advanced_par(){
+            var temp='';
+            var input_value;
+            var input_name;
+            $('.ad-search').each(function(){
+                input_name = '&' + $(this).attr('name');
+                temp += input_name;
+                input_value = '=' + $(this).val();
+                temp += input_value;
+            });
+            var sort = $("[name='sort_type']:checked").attr('value');
+            temp += '&'+sort+'=1';
+            return temp;
+        }
+        function base_call_ajax_request(url, callback){
+            $.ajax({
+                url:url,
+                type:"get",
+                dataType: "json",
+                async: false,
+                success: callback
+            })
+        }
+
+
+
+        bindAdvanced();
+
+    </script>
+
+
+    <script src='/static/custom/js/search_portrait.js'></script>
+    <script>
+        //var user_name = "{{g.user}}";
+        var url = '/search/profile_search/?stype=1';
+        url += get_simple_par();
+        $('#al_choose').css('display','none');
+        //url += '&submit_user='+user_name;
+        //console.log(url);
+        //draw_conditions(url);
+        //base_call_ajax_request(url, draw_search_results);
+
+    </script>
+  {% endblock end_js %}
