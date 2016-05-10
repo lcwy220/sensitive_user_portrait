@@ -24,10 +24,35 @@ index_info = {
                     'type':'long'
                     },
                 'submit_date':{
-                    'type':'string',
+                    'type': 'long'
+                    },
+                'submit_user':{
+                    'type': 'string',
                     'index': 'not_analyzed'
                     },
-                'end_date':{
+                'task_type':{
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                    },
+                'detect_type':{
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                    },
+                'detect_process':{
+                    'type': 'long'
+                    },
+                'query_condition':{
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                    },
+                'uid_list':{
+                    'type': 'string',
+                    'index': 'not_analyzed'
+                    },
+                'count':{
+                    'type': 'long'
+                    },
+                'task_id':{
                     'type': 'string',
                     'index': 'not_analyzed'
                     }
@@ -36,6 +61,8 @@ index_info = {
         }
     }
 
+es.indices.create(index='group_manage', body=index_info, ignore=400)
 
-es.indices.create(index='group_result', body=index_info, ignore=400)
+#es.indices.put_mapping(index='group_result', doc_type='group', \
+#        body={'properties':{'test_field':{'type':'string', 'index':'not_analyzed'}}}, ignore=400)
 

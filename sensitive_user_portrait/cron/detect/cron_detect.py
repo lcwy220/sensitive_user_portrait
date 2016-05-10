@@ -211,45 +211,59 @@ def get_structure_user(seed_uid_list, structure_dict, filter_dict):
 #input:structure result [uid1, uid2,....] ranked by interaction count
 def union_attribute_structure(attribute_user_result, structure_result, attribute_weight, structure_weight):
     union_result = dict()
+
+    """
     #step1:trans structure result list to dict {uid1:rank1, uid2:rank2....}
     structure_user_result = dict()
     for item_rank in range(0, len(structure_result)):
         uid = structure_result[item_rank]
         structure_user_result[uid] = item_rank
+    """
+
     #step2:trans attribute result list to dict{uid1:rank1, uid2:rank2, ...}
     attribute_user_dict = dict()
     for attribute_rank in range(0, len(attribute_user_result)):
         uid = attribute_user_result[attribute_rank]['_id']
         attribute_user_dict[uid] = attribute_rank
+
     #step3: get union user list
-    union_user_set = set(structure_user_result.keys()) | set(attribute_user_dict.keys())
+    union_user_set = set(attribute_user_dict.keys())
     union_user_list = list(union_user_set)
+
     #step2:use attribute weight and structure weight to score for user
     attribute_rank = 0
     try:
         attribute_normal_index = float(1) / len(attribute_user_result)
     except:
         attribute_normal_index = 0
+
+    """
     try:
         structure_normal_index = float(1) / len(structure_user_result)
     except:
         structure_normal_index = 0
+    """
+
     attribute_count = len(attribute_user_result)
-    structure_count = len(structure_user_result)
+    #structure_count = len(structure_user_result)
+
     for user_item in union_user_list:
         try:
             attribute_rank = attribute_user_dict[user_item]
         except KeyError:
             attribtue_rank = attribute_count
+        """
         try:
             structure_rank = structure_user_result[user_item]
         except KeyError:
             structure_rank = structure_count
+        """
 
-        new_score = attribute_weight*((attribute_count - attribute_rank)*attribute_normal_index) + \
-                    structure_weight*((structure_count - structure_rank)*structure_normal_index)
+        new_score = attribute_weight*((attribute_count - attribute_rank)*attribute_normal_index) #+ \
+        #            structure_weight*((structure_count - structure_rank)*structure_normal_index)
         
         union_result[user_item] = new_score
+
     #step3:sort user by new score
     sort_union_result = sorted(union_result.items(), key=lambda x:x[1], reverse=True)
     return sort_union_result
@@ -365,7 +379,8 @@ def single_detect(input_dict):
     query_condition_dict = input_dict['query_condition']
     seed_user_dict = query_condition_dict['seed_user']
     filter_dict = query_condition_dict['filter']
-    structure_dict = query_condition_dict['structure']
+    #structure_dict = query_condition_dict['structure']
+
     #step1: get seed user portrait result
     user_portrait = get_single_user_portrait(seed_user_dict)
     #step1.1: deal condition---seed user is not in user_portrait
@@ -423,6 +438,7 @@ def single_detect(input_dict):
 
     #step3: search structure user set
     #step3.1: search structure user result
+    """
     structure_user_result = get_structure_user([seed_uid], structure_dict, filter_dict)
     #step3.2: change process proportion
     process_mark = change_process_proportion(task_name, 50)
@@ -430,11 +446,14 @@ def single_detect(input_dict):
         return 'task is not exist'
     elif process_mark == False:
         return process_mark
+    """
 
     #step4: union attribtue and structure user set
     attribute_weight = query_condition_dict['attribute_weight']
-    structure_weight = query_condition_dict['structure_weight']
-    all_union_user = union_attribute_structure(attribute_user_result, structure_user_result, attribute_weight, structure_weight)
+    structure_weight = 0 # query_condition_dict['structure_weight']
+    all_union_user = union_attribute_structure(attribute_user_result, {}, attribute_weight, structure_weight)
+
+    """
     #step5: filter user by event
     event_condition_list = query_condition_dict['text']
     #step5.1: filter user list
@@ -448,7 +467,9 @@ def single_detect(input_dict):
         return 'task is not exist'
     elif process_mark == False:
         return process_mark
+    """
 
+    filter_user_list = [item[0] for item in all_union_user]
     #step6: filter by count
     count = filter_dict['count']
     result = filter_user_list[:count]
@@ -988,10 +1009,12 @@ def compute_group_detect():
     while True:
         #step1:read detect task information from redis queue
         detect_task_information = get_detect_information()
+
         if detect_task_information != {}:
             start_ts = time.time()
             task_information_dict = detect_task_information['task_information']
             task_name = task_information_dict['task_name']
+
             #step1: modify filter dict evalute index to abnormal
             filter_dict = detect_task_information['query_condition']['filter']
             importance_from = filter_dict['importance']['gte']
@@ -1005,6 +1028,7 @@ def compute_group_detect():
             filter_dict['influence']['gte'] = new_influence_from
             filter_dict['influence']['lt'] = new_influence_to
             detect_task_information['query_condition']['filter'] = filter_dict
+
             #step2:according task type to do group detect
             detect_task_type = task_information_dict['detect_type']
             if detect_task_type == 'single':
@@ -1015,10 +1039,13 @@ def compute_group_detect():
                 detect_results =  attribute_pattern_detect(detect_task_information)
             elif detect_task_type == 'event':
                 detect_results = event_detect(detect_task_information)
+
             #step3:identify the return---'task is not exist'/'false'/normal_results
             if detect_results != 'task is not exist':
+
                 #step4:save detect results to es (status=1 and process=100 and add uid_list)
                 mark = save_detect_results(detect_results, task_name)
+
                 #step5:add task_information_dict to redis queue when detect process fail
                 if mark == False:
                     status = add_task2queue(detect_task_information)
@@ -1032,7 +1059,7 @@ if __name__=='__main__':
     print 'cron/detect/cron_detect.py&start&' + log_time_date
 
     compute_group_detect()
-    
+
     log_time_ts = time.time()
     log_time_date = ts2datetime(log_time_ts)
     print 'cron/detect/cron_detect.py&end&' + log_time_date

@@ -14,6 +14,7 @@ from utils import get_group_member_name, get_activity_weibo
 from sensitive_user_portrait.global_config import UPLOAD_FOLDER, ALLOWED_EXTENSIONS
 from sensitive_user_portrait.search_user_profile import es_get_source
 from sensitive_user_portrait.time_utils import ts2datetime
+from sensitive_user_portrait.get_user_info import get_user_portrait_byidname
 
 mod = Blueprint('group', __name__, url_prefix='/group')
 
@@ -182,4 +183,12 @@ def ajax_delete_group_task():
     results = delete_group_results(task_name)
     return json.dumps(results)
 
+@mod.route('/get_user_pinfo/')
+def get_user_pinfo():
+    result = dict()
+    uid_uname = request.args.get('uid_uname', '')
+    temp = get_user_portrait_byidname(uid_uname, isuid=True, specify_field=['uname', 'domain', 'topic_string', 'location', 'hashtag_string', 'activity_geo', 'keywords_string'])[0]
+    if not temp:
+        temp = get_user_portrait_byidname(uid_uname, isuid=False, specify_field=['uname', 'domain', 'topic_string', 'location', 'hashtag_string', 'activity_geo', 'keywords_string'])[0]
 
+    return json.dumps(temp)

@@ -3,10 +3,12 @@
         <div class="box-inner" id = 'box-height'>
             <div class='col-md-12' style="margin-bottom:4px">
                 <div class='col-lg-6' style='margin-left:195px;font-size:32px;'>
-                    <input type='checkbox' name="mode_choose" value='single_user' checked='checked'>
-                    <span class="input-group-addon" style="width:140px;border:1px solid white;font-weight:bold; background-color:white;display:inline-block" >单个种子用户</span>
+                    <input type='checkbox' name="mode_choose" value='single_user' checked='checked' hidden>
+                    <span class="input-group-addon" style="width:140px;border:1px solid white;font-weight:bold; background-color:white;display:inline-block" >种子用户</span>
+                    <!--
                     <input type='checkbox' name="mode_choose" value='multi_user'>
                     <span class="input-group-addon" style="width:140px;border:1px solid white;font-weight:bold; background-color:white;display:inline-block" >多个种子用户</span>
+                    -->
                 </div>
             </div>
             <hr style='width:800px;margin-bottom:0px;margin-left:10px;'>
@@ -14,7 +16,7 @@
                 <div class='col-lg-8' style='padding:0px;'>
                     <span style='float:left;color:#c00;font-size:15px;margin-left:15px;margin-top:15px;'>*</span>
                      <span class="input-group-addon" style="margin-top:10px;width:110px;border:1px solid white;float:left;background-color:white;display:inline-block">用户ID或昵称</span>
-                    <input id="uid_uname" type='text' class="form-control" style='width:255px;margin:10px 15px;margin-left:15px;display:inline-block;height:25px'  placeholder='（必填）请输入相关用户的ID或昵称'>
+                    <input id="uid_uname" type='text' class="form-control" style='width:255px;margin:10px 15px;margin-left:15px;display:inline-block;height:25px'  placeholder='（必填）请输入相关用户的ID或昵称'><button id="search_user_info">查询</button>
                 </div>
                 <div id='single_user'></div>
             </div>
@@ -61,34 +63,34 @@
     <div id='seed_user_ext' class="box-content" style="height:420px;display:none">
         <hr style='width:800px;margin:0px;'>
         <div id="attribute" class="col-md-12">
-            <label class='control-label' style='padding-top:5px;'>属性（权重从0到1）：
-                 <input id="attr_weight" type='text' class="form-control" style='width:15%; display:inline-block;height:25px'  value='0.5'>
+            <label class='control-label' style='padding-top:5px;'>属性：
+                 <input id="attr_weight" type='hidden' class="form-control" style='width:15%; display:inline-block;height:25px' value='1'>
             </label>
             <div class='controls'>
                 <div class='col-md-12' style="margin-bottom:4px">
                     <div class='col-lg-2'>
                         <input type='checkbox' class='inline-checkbox' value='option1' checked='checked'>
-                        <span class="input-group-addon" style="width:75px;border:1px solid white;background-color:white; display:inline-block" id="location">注册地</span>                             
+                        <span class="input-group-addon" style="width:75px;border:1px solid white;background-color:white; display:inline-block" id="location">注册地 </span><span id="location_val"></span>                             
                     </div>
                      <div class='col-lg-2'>
                         <input type='checkbox' class='inline-checkbox' value='option1'>
-                        <span class="input-group-addon" style="width:75px;border:1px solid white;background-color:white; display:inline-block" id="domain">领域</span>
+                        <span class="input-group-addon" style="width:75px;border:1px solid white;background-color:white; display:inline-block" id="domain">领域 </span></span><span id="domain_val"></span>
                     </div>
                      <div class='col-lg-2'>
                         <input type='checkbox' class='inline-checkbox' value='option1'>
-                        <span class="input-group-addon" style="width:75px;border:1px solid white;background-color:white; display:inline-block" id="topic_string">话题</span>
+                        <span class="input-group-addon" style="width:75px;border:1px solid white;background-color:white; display:inline-block" id="topic_string">话题 </span></span><span id="topic_string_val"></span>
                     </div>
                     <div class='col-lg-2'>
                         <input type='checkbox' class='inline-checkbox' value='option1'>
-                        <span class="input-group-addon" style="width:75px;border:1px solid white; background-color:white;display:inline-block" id="activity_geo">活跃地</span>
+                        <span class="input-group-addon" style="width:75px;border:1px solid white; background-color:white;display:inline-block" id="activity_geo">活跃地 </span></span><span id="activity_geo_val"></span>
                     </div>
                     <div class='col-lg-2'>
                         <input type='checkbox' class='inline-checkbox' value='option1'>
-                        <span class="input-group-addon" style="width:75px;border:1px solid white; background-color:white;display:inline-block" id="hashtag">hashtag</span>
+                        <span class="input-group-addon" style="width:75px;border:1px solid white; background-color:white;display:inline-block" id="hashtag">hashtag </span><span id="hashtag_val"></span>
                     </div>
                     <div class='col-lg-2' >
                         <input type='checkbox' class='inline-checkbox' value='option1'>
-                        <span class="input-group-addon" style="width:75px;border:1px solid white; background-color:white;display:inline-block" id="keywords_string">关键词</span>
+                        <span class="input-group-addon" style="width:75px;border:1px solid white; background-color:white;display:inline-block" id="keywords_string">关键词 </span><span id="keywords_string_val"></span>
                     </div>
                     <!--
                     <div class='col-lg-2' >
@@ -111,6 +113,7 @@
                 </div>
             </div>
         </div>
+        <!--
         <div id="structure" class="col-md-12" style="padding-top:5px">
             <label class='control-label'>结构（权重从0到1）：
                  <input id="stru_weight" type='text' class="form-control" style='width:15%; display:inline-block;height:25px'  value='0.5'>
@@ -156,8 +159,9 @@
                 </div>
             </div>
         </div>
+        -->
         <div id="extension" class="col-md-12" style="padding-top:5px">
-            <label class='control-label'>扩展规则（影响力和重要度从1到100）
+            <label class='control-label'>过滤条件（影响力和重要度从1到100）
             </label>
             <div class='controls'>
                 <div class='col-md-12' style='padding:0px;'>
@@ -207,3 +211,26 @@
     </div>
 </div>
 <script type='text/javascript' src='/static/js/portrait/group_seed_user.js'></script>
+<script>
+$("#search_user_info").click(function(){
+    $.ajax({
+      url: "/group/get_user_pinfo?uid_uname=" + $("#uid_uname").val(),
+      type: 'GET',
+      dataType: 'json',
+      async: true,
+      success: function(data){
+          console.log(data);
+          if (data == null){
+              alert("未查询到该用户");
+          }else{
+              $('#location_val').html(data[4]);
+              $('#domain_val').html(data[2]);
+              $('#topic_string_val').html(data[3]);
+              $('#activity_geo_val').html(data[6]);
+              $('#hashtag_val').html(data[5]);
+              $('#keywords_string_val').html(data[7]);
+          }
+      }
+    });
+});
+</script>
