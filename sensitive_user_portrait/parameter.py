@@ -288,7 +288,7 @@ MAX_PROCESS = 100
 #group detect: attribute detect
 DETECT_ATTRIBUTE_FUZZ_ITEM = ['location', 'activity_geo', 'keywords_string','hashtag', 'remark']
 DETECT_ATTRIBUTE_MULTI_ITEM = ['topic_string', 'domain']
-DETECT_ATTRIBUTE_SELECT_ITEM = ['tendency', 'tag']
+DETECT_ATTRIBUTE_SELECT_ITEM = ['politics', 'tag']
 DETECT_PATTERN_FUZZ_ITEM = ['geo', 'ip']
 DETECT_PATTERN_SELECT_ITEM = ['message_type', 'sentiment']
 DETECT_PATTERN_RANGE_ITEM = ['timestamp']
