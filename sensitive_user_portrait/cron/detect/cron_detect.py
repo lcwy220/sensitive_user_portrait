@@ -817,7 +817,7 @@ def attribute_pattern_detect(input_dict):
     query_condition_dict = input_dict['query_condition']
     filter_dict = query_condition_dict['filter']
     attribute_list = query_condition_dict['attribute']
-    pattern_list = query_condition_dict['pattern']
+    #pattern_list = query_condition_dict['pattern']
     if len(attribute_list) != 0:
         #type1:have attribute condition and filter by pattern
         #step1: search user_portrait by attribute condition and filter condition
@@ -829,23 +829,27 @@ def attribute_pattern_detect(input_dict):
                 filter_value_from = filter_dict[filter_item]['gte']
                 filter_value_to = filter_dict[filter_item]['lt']
                 attribute_list.append({'range':{filter_item: {'gte': filter_value_from, 'lt': filter_value_to}}})
-        try:
-            user_portrait_result = es_user_portrait.search(index=portrait_index_name, doc_type=portrait_index_type ,\
-                    body={'query':{'bool':{'should': attribute_list}}, 'size':count}, _source=False)['hits']['hits']
-        except:
-            user_portrait_result = []
+
+        query_body = {'query':{'bool':{'must': attribute_list}}, 'size':count}
+        print query_body
+        user_portrait_result = es_user_portrait.search(index=portrait_index_name, doc_type=portrait_index_type ,\
+                body=query_body, _source=False)['hits']['hits']
+
         #step1.2:change process proportion
         process_mark = change_process_proportion(task_name, 30)
         if process_mark == 'task is not exist':
             return 'task is not exist'
         elif process_mark == False:
             return process_mark
+        """
         if len(pattern_list) != 0:
             #step2: filter user by pattern condition
             filter_user_result = attribute_filter_pattern(user_portrait_result, pattern_list)
         else:
-            #step2: get user_list from user_portrait_result
-            filter_user_result = [item['_id'] for item in user_portrait_result]
+        """
+
+        #step2: get user_list from user_portrait_result
+        filter_user_result = [item['_id'] for item in user_portrait_result]
         #change process mrak
         process_mark = change_process_proportion(task_name, 60)
         if process_mark == 'task is not exist':
@@ -896,11 +900,10 @@ def event_detect(input_dict):
                 filter_value_from = filter_dict[filter_item]['gte']
                 filter_value_to = filter_dict[filter_item]['lt']
                 attribute_list.append({'range':{filter_item: {'gte': filter_value_from, 'lt': filter_value_to}}})
-        try:
-            user_portrait_result = es_user_portrait.search(index=portrait_index_name, doc_type=portrait_index_type, \
-                    body={'query':{'bool': {'should':attribute_list}}, 'sort':[{'influence': {'order': 'desc'}}],'size':count})['hits']['hits']
-        except:
-            user_portrait_result = []
+
+        user_portrait_result = es_user_portrait.search(index=portrait_index_name, doc_type=portrait_index_type, \
+                body={'query':{'bool': {'must': attribute_list}}, 'sort':[{'influence': {'order': 'desc'}}],'size':count})['hits']['hits']
+
         #change process proportion
         process_mark = change_process_proportion(task_name, 30)
         if process_mark == 'task is not exist':
@@ -1009,6 +1012,7 @@ def compute_group_detect():
     while True:
         #step1:read detect task information from redis queue
         detect_task_information = get_detect_information()
+        print detect_task_information
 
         if detect_task_information != {}:
             start_ts = time.time()

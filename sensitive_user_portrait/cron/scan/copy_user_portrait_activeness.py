@@ -153,7 +153,7 @@ def main():
             uid = scan_re['uid']
             influence_value = scan_re['activeness']
             normal_influence = normal_index(influence_value, max_influence)
-            add_info[uid] = {update_bci_key: normal_influence, "domain": scan_re['domain'], "activity_geo": scan_re["activity_geo"], "hashtag": scan_re['hashtag'], "topic_string": scan_re["topic_string"]}
+            add_info[uid] = {update_bci_key: normal_influence,"politics":scan_re['politics'], "domain": scan_re['domain'], "activity_geo": scan_re["activity_geo"], "hashtag": scan_re['hashtag_string'],"sensitive_words_string":scan_re['sensitive_words_string'], "topic_string": scan_re["topic_string"]}
 
             if count % 1000 == 0:
                 co_search(add_info, update_bci_key, former_bci_key, now_ts)
