@@ -55,16 +55,14 @@ def get_max_index(es, index_name, index_type, sort_list):
             "sort":{item:{"order":"desc"}},
             "size":1
         }
-        try:
-            tmp_result = es.search(index=index_name, doc_type=index_type, body=query_body, _source=False, fields=[item])['hits']['hits']
-            max_value = tmp_result[0]['fields'][item]
-        except:
-            max_value = 999999
+        tmp_result = es.search(index=index_name, doc_type=index_type, body=query_body, _source=False, fields=[item])['hits']['hits']
+        print tmp_result
+        max_value = tmp_result[0]['fields'][item][0]
         results[item] = max_value
     return results
 
 
-def overall_attribute(uid):
+def get_total_evaluation(uid):
     results = dict()
     max_result = get_evaluate_max()
     bci_max = get_max_index(es_copy_portrait, "copy_user_portrait_influence", "influence", ["bci_week_ave", "bci_month_ave"])
@@ -72,29 +70,30 @@ def overall_attribute(uid):
     sen_max = get_max_index(es_copy_portrait, "copy_user_portrait_sensitive", "sensitive", ["sensitive_week_ave", "sensitive_month_ave"])
     act_max = get_max_index(es_copy_portrait, "copy_user_portrait_activeness", "activeness", ["activeness_week_ave", "activeness_month_ave"])
     user_info = es_user_portrait.get(index=portrait_index_name, doc_type=portrait_index_type, id=uid)['_source']
-    try:
-        bci_user_info = es_copy_portrait.get(index="copy_user_portrait_influence", doc_type="influence",id=uid, _source=False, fields=["bci_week_ave", "bci_month_ave"])['_source']
+    print imp_max, sen_max,act_max,bci_max
+    if 1:
+        bci_user_info = es_copy_portrait.get(index="copy_user_portrait_influence", doc_type="influence",id=uid, _source=False, fields=["bci_week_ave", "bci_month_ave"])
         bci_week_ave = bci_user_info['fields']["bci_week_ave"][0]
         bci_month_ave = bci_user_info['fields']["bci_month_ave"][0]
-    except:
+    else:
         bci_week_ave = 0
         bci_month_ave = 0
     try:
-        bci_user_info = es_copy_portrait.get(index="copy_user_portrait_importance", doc_type="importance",id=uid, _source=False, fields=["importance_week_ave", "importance_month_ave"])['_source']
+        bci_user_info = es_copy_portrait.get(index="copy_user_portrait_importance", doc_type="importance",id=uid, _source=False, fields=["importance_week_ave", "importance_month_ave"])
         imp_week_ave = bci_user_info['fields']["importance_week_ave"][0]
-        imp_mont_ave = bci_user_info['fields']["importance_month_ave"][0]
+        imp_month_ave = bci_user_info['fields']["importance_month_ave"][0]
     except:
         imp_week_ave = 0
         imp_month_ave = 0
     try:
-        bci_user_info = es_copy_portrait.get(index="copy_user_portrait_activeness", doc_type="activeness",id=uid, _source=False, fields=["activeness_week_ave", "activeness_month_ave"])['_source']
+        bci_user_info = es_copy_portrait.get(index="copy_user_portrait_activeness", doc_type="activeness",id=uid, _source=False, fields=["activeness_week_ave", "activeness_month_ave"])
         act_week_ave = bci_user_info['fields']["activeness_week_ave"][0]
         act_month_ave = bci_user_info['fields']["activeness_month_ave"][0]
     except:
         act_week_ave = 0
         act_month_ave = 0
     try:
-        bci_user_info = es_copy_portrait.get(index="copy_user_portrait_sensitive", doc_type="sensitive",id=uid, _source=False, fields=["sensitive_week_ave", "sensitive_month_ave"])['_source']
+        bci_user_info = es_copy_portrait.get(index="copy_user_portrait_sensitive", doc_type="sensitive",id=uid, _source=False, fields=["sensitive_week_ave", "sensitive_month_ave"])
         sen_week_ave = bci_user_info['fields']["sensitive_week_ave"][0]
         sen_month_ave = bci_user_info['fields']["sensitive_month_ave"][0]
     except:
@@ -105,19 +104,70 @@ def overall_attribute(uid):
     results['bci_month'] = normalize_index(bci_month_ave, bci_max['bci_month_ave'])
     results['act_day'] = normalize_index(user_info['activeness'], max_result['activeness'])
     results['act_week'] = normalize_index(act_week_ave, act_max['activeness_week_ave'])
-    results['act_month'] = normalize_index(act_month_ave, bci_max['activeness_month_ave'])
+    results['act_month'] = normalize_index(act_month_ave, act_max['activeness_month_ave'])
     results['imp_day'] = normalize_index(user_info['importance'], max_result['importance'])
     results['imp_week'] = normalize_index(imp_week_ave, imp_max['importance_week_ave'])
     results['imp_month'] = normalize_index(imp_month_ave, imp_max['importance_month_ave'])
     results['sen_day'] = normalize_index(user_info['sensitive'], max_result['sensitive'])
     results['sen_week'] = normalize_index(sen_week_ave, sen_max['sensitive_week_ave'])
-    results['sen_month'] = normalize_index(sen_month_ave, sen_max['sen_month_ave'])
-    results['topic'] = user_info["topic_string"].split('&')
-    results['domain'] = user_info['domain']
-    results['politics'] = user_info['politics']
-    
+    results['sen_month'] = normalize_index(sen_month_ave, sen_max['sensitive_month_ave'])
+    print results
+
+    return results
 
 
+def search_user_weibo(uid):
+    sensitive_results = []
+    results = []
+    if RUN_TYPE:
+        ts = time.time()
+        date = ts2datetime(ts)
+    else:
+        ts = datetime2ts('2013-09-03')
+        date = "2013-09-02"
+    start_ts = datetime2ts(date)
+    index_name = "flow_text_" + date
+    exist_bool = es_flow_text.indices.exists(index=index_name)
+    query_body = {
+        "query":{
+            "bool":{
+                "must":[
+                    {"term":{"uid":uid}},
+                    {"range":{
+                        "timestamp":{
+                            "gte":start_ts,
+                            "lt":ts
+                        }
+                    }},
+                    {"term":{"sensitive":0}}
+                ]
+            }
+        },
+        "sort":{"timestamp":{"order":"desc"}},
+        "size":1000
+    }
+    if exist_bool:
+        flow_results = es_flow_text.search(index=index_name, doc_type="text", body=query_body, _source=False, fields=["text", "geo", "message_type","timestamp"])['hits']['hits']
+        for item in flow_results:
+            temp = []
+            temp.append(item['fields']['text'][0])
+            temp.append(item['fields']['geo'][0])
+            temp.append(item['fields']['message_type'][0])
+            temp.append(ts2date(item['fields']['timestamp'][0]))
+            results.append(temp)
+
+        query_body['query']['bool']['must'].append({"range":{"sensitive":{"gt":0}}})
+        sensitive_flow_results = es_flow_text.search(index=index_name, doc_type="text", body=query_body, _source=False, fields=["text", "geo", "message_type", "sensitive_words_string", "timestamp"])['hits']['hits']
+        for item in sensitive_flow_results:
+            temp = []
+            temp.append(item['fields']['text'][0])
+            temp.append(item['fields']['geo'][0])
+            temp.append(item['fields']['message_type'][0])
+            temp.append(ts2date(item['fields']['timestamp'][0]))
+            temp.append(" ".join(item['fields']['sensitive_words_string'][0].split('&')))
+            sensitive_results.append(temp)
+
+    return sensitive_results, results
 
 def search_identify_uid(uid):
     result = 0
@@ -276,7 +326,7 @@ def search_attention(uid, top_count):
         if out_user_item['found'] == True:
             source = out_user_item['_source']
             uname = source['nick_name']
-            if uname == '' or uname = u'未知':
+            if uname == '' or uname == u'未知':
                 uname = uid
             fansnum = source['fansnum']
         else:
@@ -383,7 +433,7 @@ def sensitive_search_attention(uid, top_count):
         if out_user_item['found'] == True:
             source = out_user_item['_source']
             uname = source['nick_name']
-            if uname == '' or uname = u'未知':
+            if uname == '' or uname == u'未知':
                 uname = uid
             fansnum = source['fansnum']
         else:
@@ -485,7 +535,7 @@ def search_follower(uid, top_count):
         if out_user_item['found'] == True:
             source = out_user_item['_source']
             uname = source['nick_name']
-            if uname == '' or uname = u'未知':
+            if uname == '' or uname == u'未知':
                 uname = uid
             fansnum = source['fansnum']
         else:
@@ -587,7 +637,7 @@ def sensitive_search_follower(uid, top_count):
         if out_user_item['found'] == True:
             source = out_user_item['_source']
             uname = source['nick_name']
-            if uname == '' or uname = u'未知':
+            if uname == '' or uname == u'未知':
                 uname = uid
             fansnum = source['fansnum']
         else:
@@ -900,7 +950,7 @@ def search_be_comment(uid, top_count):
         if out_user_item['found'] == True:
             source = out_user_item['_source']
             uname = source['nick_name']
-            if uname == ''or uname = u'未知':
+            if uname == ''or uname == u'未知':
                 uname = uid
             fansnum = source['fansnum']
         else:
@@ -1006,7 +1056,7 @@ def search_be_comment(uid, top_count):
         if out_user_item['found'] == True:
             source = out_user_item['_source']
             uname = source['nick_name']
-            if uname == ''or uname = u'未知':
+            if uname == ''or uname == u'未知':
                 uname = uid
             fansnum = source['fansnum']
         else:
@@ -1157,7 +1207,7 @@ def search_bidirect_interaction(uid, top_count):
         if out_user_item['found'] == True:
             source = out_user_item['_source']
             uname = source['nick_name']
-            if uname == '' or uname=u'未知':
+            if uname == '' or uname==u'未知':
                 uname =  uid
             fansnum = source['fansnum']
         else:
@@ -1565,15 +1615,20 @@ def search_location_day(uid, now_date_ts, sensitive=0):
         else:
             index_name = "ip_" + str(date)
         exist_bool = es_cluster2.indices.exists(index=index_name)
+        print exist_bool
         if exist_bool:
             if sensitive == 0:
                 ip_info = es_cluster2.get(index=index_name, doc_type="ip", id=uid)['_source']
                 day_ip_string = ip_info['ip_dict']
             else:
-                ip_info = es_cluster2.get(index=index_name, doc_type="sensitive_ip", id=uid)['_source']
-                day_ip_string = ip_info['sensitive_ip_dict']
+                try:
+                    ip_info = es_cluster2.get(index=index_name, doc_type="sensitive_ip", id=uid)['_source']
+                    day_ip_string = ip_info['sensitive_ip_dict']
+                except:
+                    day_ip_string = ""
         else:
             day_ip_string = ""
+        print day_ip_string
     else:
         if sensitive == 0:
             day_ip_string = redis_ip.hget('ip_'+str(now_date_ts), uid)
@@ -1585,7 +1640,8 @@ def search_location_day(uid, now_date_ts, sensitive=0):
         day_ip_dict = {}
 
     for ip in day_ip_dict:
-        ip_weibo_count = len(day_ip_dict[ip].split('&'))
+        ip_weibo_count = day_ip_dict[ip]
+        print ip_weibo_count
         city = ip2city(ip)
         try:
             results[city] += ip_weibo_count
@@ -1593,11 +1649,20 @@ def search_location_day(uid, now_date_ts, sensitive=0):
             results[city] = ip_weibo_count
 
     sort_results = sorted(results.items(), key=lambda x:x[1], reverse=True)
-    all_results['sort_results'] = sort_results
-    try:
-        all_results['tag_vector'] = [u'活动城市', sort_results[0][0]]
-    except:
-        all_results['tag_vector'] = [u'活动城市', ""]
+    if sensitive == 1:
+        all_results['sensitive_sort_results'] = sort_results
+        try:
+            all_results['tag_vector'] = [u'活动城市', sort_results[0][0]]
+        except:
+            all_results['tag_vector'] = [u'活动城市', ""]
+        else:
+            all_results['sort_results'] = sort_results
+    else:
+        all_results['sort_results'] = sort_results
+        try:
+            all_results['tag_vector'] = [u'活动城市', sort_results[0][0]]
+        except:
+            all_results['tag_vector'] = [u'活动城市', ""]
 
 
     return all_results
@@ -1611,10 +1676,7 @@ def search_location_week(uid, now_date_ts, sensitive=0):
     #run_type:
     if RUN_TYPE == 0:
         now_date_ts += DAY
-    try:
-        user_portrait_result = es_user_portrait.get(index=portrait_index_name, doc_type=portrait_index_type, id=uid)['_source']
-    except:
-        return {}
+    user_portrait_result = es_user_portrait.get(index=portrait_index_name, doc_type=portrait_index_type, id=uid)['_source']
 
     if sensitive == 0:
         activity_geo_string = user_portrait_result['activity_geo_dict']
@@ -1662,6 +1724,7 @@ def search_location_month(uid, now_date_ts, sensitive=0):
     day_count = len(activity_geo_week)
     for i in range(day_count, 0, -1):
         iter_day_ts = ts2datetime(now_date_ts - DAY*i)
+        print iter_day_ts
         iter_day_date = datetime2ts(iter_day_ts)
         day_geo_dict = activity_geo_week[day_count - i]
         sort_day_geo = sorted(day_geo_dict.items(), key=lambda x:x[1], reverse=True)
@@ -1679,7 +1742,7 @@ def search_location_month(uid, now_date_ts, sensitive=0):
         description_text = u'为该用户的主要活动地,且经常出差到不同的城市'
     else:
         description_text = u'为该用户的主要活动地，且偶尔会出差到不同的城市'
-    description = [all_top_geo[0][0], description_text]
+    #description = [all_top_geo[0][0], description_text]
     month_track_result = []
     end_ts = now_date_ts - DAY
     start_ts = end_ts - DAY*len(activity_geo_week)
@@ -1692,7 +1755,7 @@ def search_location_month(uid, now_date_ts, sensitive=0):
             month_track_result.append([iter_date, sort_day[0][0]])
         else:
             month_track_result.append([iter_date, ''])
-    return {'month_track':month_track_result, 'all_top':all_top_geo, 'description': description}
+    return {'month_track':month_track_result, 'all_top':all_top_geo}
 
 
 #make ip to city
@@ -2016,7 +2079,7 @@ def search_activity(now_ts, uid):
                 week_result = ""
         else:
             try:
-                week_result = r_cluster.hget('activity_'+str(ts), str(uid))
+                week_result = redis_activity.hget('activity_'+str(ts), str(uid))
             except:
                 week_result = ''
         if not week_result:
@@ -2024,14 +2087,14 @@ def search_activity(now_ts, uid):
         week_dict = json.loads(week_result)
         for time_segment in week_dict:
             try:
-                week_weibo[int(time_segment)/16*15*60*16+ts] += week_dict[time_segment]
+                week_weibo[int(time_segment)*15*60+ts] += week_dict[time_segment]
             except:
-                week_weibo[int(time_segment)/16*15*60*16+ts] = week_dict[time_segment]
+                week_weibo[int(time_segment)*15*60+ts] = week_dict[time_segment]
 
             try:
-                segment_result[int(time_segment)/16*15*60*16] += week_dict[time_segment]
+                segment_result[int(time_segment)] += week_dict[time_segment]
             except:
-                segment_result[int(time_segment)/16*15*60*16] = week_dict[time_segment]
+                segment_result[int(time_segment)] = week_dict[time_segment]
 
     for i in range(0,7):
         ts = now_day_ts - i*DAY
@@ -2052,7 +2115,7 @@ def search_activity(now_ts, uid):
                 week_result = ""
         else:
             try:
-                week_result = r_cluster.hget('sensitive_activity_'+str(ts), str(uid))
+                week_result = redis_activity.hget('sensitive_activity_'+str(ts), str(uid))
             except:
                 week_result = ''
         if not week_result:
@@ -2060,14 +2123,14 @@ def search_activity(now_ts, uid):
         sensitive_week_dict = json.loads(week_result)
         for time_segment in sensitive_week_dict:
             try:
-                sensitive_week_weibo[int(time_segment)/16*15*60*16+ts] += sensitive_week_dict[time_segment]
+                sensitive_week_weibo[int(time_segment)*15*60+ts] += sensitive_week_dict[time_segment]
             except:
-                sensitive_week_weibo[int(time_segment)/16*15*60*16+ts] = sensitive_week_dict[time_segment]
+                sensitive_week_weibo[int(time_segment)*15*60+ts] = sensitive_week_dict[time_segment]
 
             try:
-                sensitive_segment_result[int(time_segment)/16*15*60*16] += sensitive_week_dict[time_segment]
+                sensitive_segment_result[int(time_segment)] += sensitive_week_dict[time_segment]
             except:
-                sensitive_segment_result[int(time_segment)/16*15*60*16] = sensitive_week_dict[time_segment]
+                sensitive_segment_result[int(time_segment)] = sensitive_week_dict[time_segment]
 
     for i in range(0,7):
         ts = now_day_ts - i*DAY
@@ -2081,16 +2144,17 @@ def search_activity(now_ts, uid):
     sensitive_sort_week_weibo_count = sorted(sensitive_week_weibo_count, key=lambda x:x[0])
     sort_segment_list = sorted(segment_result.items(), key=lambda x:x[1], reverse=True)
     sensitive_sort_segment_list = sorted(sensitive_segment_result.items(), key=lambda x:x[1], reverse=True)
-    description, active_type = active_time_description(segment_result)
+    #description, active_type = active_time_description(segment_result)
+    active_time_string = {'0':'0-4', '1':'4-8','2':'8-12','3':'12-16','4':'16-20','5':'20-24'}
 
     activity_result['day_trend'] = day_time_count
     activity_result['sensitive_day_trend'] = sensitive_day_time_count
     activity_result['week_trend'] = sort_week_weibo_count
     activity_result['sensitive_week_trend'] = sensitive_sort_week_weibo_count
-    activity_result['activity_time'] = sort_segment_list[:2]
-    activity_result['sensitive_activity_time'] = sensitive_sort_segment_list[:2]
-    activity_result['description'] = description
-    activity_result['tag_vector'] = [[u'活跃时间', sort_segment_list[:1]], [u'活动类型', active_type]]
+    activity_result['activity_time'] = active_time_string[str(sort_segment_list[0][0])]
+    activity_result['sensitive_activity_time'] = active_time_string[str(sensitive_sort_segment_list[0][0])]
+    #activity_result['description'] = description
+    #activity_result['tag_vector'] = [[u'活跃时间', sort_segment_list[:1]], [u'活动类型', active_type]]
     return activity_result
 
 
@@ -2500,11 +2564,11 @@ def search_preference_attribute(uid):
         sensitive_hashtag_dict = json.loads(portrait_result['sensitive_hashtag_dict'])
     else:
         sensitive_hashtag_dict = {}
-    sort_hashtag = sorted(sensitive_hashtag_dict.items(), key=lambda x:x[1], reverse=True)[:50]
-    results['sensitive_hashtag'] = sort_hashtag
+    sensitive_sort_hashtag = sorted(sensitive_hashtag_dict.items(), key=lambda x:x[1], reverse=True)[:50]
+    results['sensitive_hashtag'] = sensitive_sort_hashtag
     #sensitive_words
-    sensitive_words_dict = json.loads(portrait_result['sensitive_keywords_dict'])
-    sort_sensitive_keywords = sorted(sensitive_keywords_dict, key=lambda x:x[1], reverse=True)[:50]
+    sensitive_words_dict = json.loads(portrait_result['sensitive_words_dict'])
+    sort_sensitive_keywords = sorted(sensitive_words_dict, key=lambda x:x[1], reverse=True)[:50]
     results['sensitive_words'] = sort_sensitive_keywords
     #domain
     domain_v3 = json.loads(portrait_result['domain_list'])
@@ -2524,20 +2588,29 @@ def search_preference_attribute(uid):
     results['topic'] = sort_topic_ch_dict
     """
     results['topic'] = portrait_result["topic_string"].split("&")
+    politics = portrait_result["politics"]
     results["politics"] =  portrait_result["politics"]
 
     description_text1 = u'该用户所属领域为'
     description_text2 = u'偏好参与的话题为'
-    description = [description_text1, domain, description_text2, sort_topic_ch_dict[0][0]]
+    description = [description_text1, domain, description_text2, results["topic"][0]]
     try:
         top_hashtag = sort_hashtag[0][0]
     except:
         top_hashtag = ''
     try:
-        top_topic = sort_topic_ch_dict[0][0]
+        sensitive_top_hashtag = sensitive_sort_hashtag[0][0]
+    except:
+        sensitive_top_hashtag = ''
+    try:
+        top_sensitive_words = sort_sensitive_keywords[0][0]
+    except:
+        top_sensitive_words = ''
+    try:
+        top_topic = results['topic'][0]
     except:
         top_topic = ''
-    tag_vector_list = [[u'hashtag',top_hashtag], [u'领域',domain], [u'话题', top_topic]]
+    tag_vector_list = [[u'hashtag',top_hashtag], [u'领域',domain], [u'话题', top_topic], [u'敏感hashtag',sensitive_top_hashtag], [u'政治倾向性', politics], [u'敏感词',top_sensitive_words]]
     return {'results': results, 'description':description, 'tag_vector': tag_vector_list}
 
 
@@ -2635,6 +2708,7 @@ def search_sentiment_trend(uid, time_type, now_ts):
 #use to get character and psycho_status
 #input: uid
 #output: character, psycho_status
+"""
 def search_character_psy(uid):
     results = {}
     #get user_portrait_result
@@ -2771,6 +2845,7 @@ def search_tendency_psy(uid):
     results['description'] = description
     return results
 
+"""
 #use to search user_portrait to show the attribute saved in es_user_portrait
 def search_attribute_portrait(uid):
     results = dict()
@@ -2779,8 +2854,9 @@ def search_attribute_portrait(uid):
     except:
         results = None
         return None
+    results['topic'] = results['topic_string'].split('&')
     keyword_list = []
-    
+
     #state
     if results['uid']:
         uid = results['uid']
@@ -2851,6 +2927,23 @@ def search_attribute_portrait(uid):
         else:
             print 'es_influence_rank error'
             results['influence_rank'] = 0
+    if results['sensitive'] or results['sensitive'] == 0:
+        query_body = {
+                'query':{
+                    'range':{
+                        'sensitive':{
+                            'gte':results['sensitive'],
+                            'lt': 1000000
+                            }
+                        }
+                    }
+                }
+        influence_rank = es_user_portrait.count(index=portrait_index_name, doc_type=portrait_index_type, body=query_body)
+        if influence_rank['_shards']['successful'] != 0:
+            results['sensitive_rank'] = influence_rank['count']
+        else:
+            print 'es_sensitive_rank error'
+            results['sensitive_rank'] = 0
     #total count in user_portrait
     query_body ={
             'query':{
@@ -2864,13 +2957,20 @@ def search_attribute_portrait(uid):
         print 'es_user_portrait error'
         results['all_count'] = 0
     # activeness normalized to 0-100
+    total_index = get_total_evaluation(uid)
+    sensitive_text, weibo_text = search_user_weibo(uid)
+    results['sensitive_weibo_text'] = sensitive_text
+    results['weibo_text'] = weibo_text
     evaluate_max = get_evaluate_max()
-    normal_activeness = math.log(results['activeness'] / evaluate_max['activeness'] * 9 + 1, 10)
+    normal_activeness = math.log(results['activeness'] / float(evaluate_max['activeness']) * 9 + 1, 10)
     results['activeness'] = int(normal_activeness * 100)
-    normal_importance = math.log(results['importance'] / evaluate_max['importance'] * 9 + 1, 10)
+    normal_importance = math.log(results['importance'] / float(evaluate_max['importance']) * 9 + 1, 10)
     results['importance'] = int(normal_importance * 100)
-    normal_influence = math.log(results['influence'] / evaluate_max['influence'] * 9 + 1, 10)
+    normal_influence = math.log(results['influence'] / float(evaluate_max['influence']) * 9 + 1, 10)
     results['influence'] = int(normal_influence * 100)
+    normal_sensitive = math.log(results['sensitive'] / float(evaluate_max['sensitive']) * 9 + 1, 10)
+    results['sensitive'] = int(normal_sensitive * 100)
+    results.update(total_index)
     return results
 
 #get emotion conclusion
@@ -2926,12 +3026,13 @@ def search_portrait(condition_num, query, sort, size):
     if result:
         search_result_max = get_evaluate_max()
         
-        filter_set = all_delete_uid() # filter_uids_set
+        #filter_set = all_delete_uid() # filter_uids_set
         for item in result:
             user_dict = item['_source']
             score = item['_score']
 
-            if not user_dict['uid'] in filter_set:
+            #if not user_dict['uid'] in filter_set:
+            if 1:
                 result_normal_activeness = math.log(user_dict['activeness'] / search_result_max['activeness'] * 9 + 1, 10)
                 result_normal_importance = math.log(user_dict['importance'] / search_result_max['importance'] * 9 + 1, 10)
                 result_normal_influence = math.log(user_dict['influence'] / search_result_max['influence'] * 9 + 1, 10)

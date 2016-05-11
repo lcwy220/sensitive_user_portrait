@@ -49,9 +49,17 @@ index_info = {
                 "importance_week_change": {
                     "type": "double"
                 },
+                "politics": {
+                    "type": "string",
+                    "index": "not_analyzed"
+                },
                 "domain": {
                     "type": "string",
                     "index": "not_analyzed"
+                },
+                "sensitive_words_string":{
+                    "type": "string",
+                    "analyzer": "my_analyzer"
                 },
                 "hashtag":{
                     "type": "string",
@@ -75,5 +83,5 @@ if __name__ == "__main__":
     exist_bool = es.indices.exists(index="copy_user_portrait_importance")
     print exist_bool
     if not exist_bool:
-        es.indices.create(index="copy_user_portrait_importance", body=index_info, ignore=400)
+        print es.indices.create(index="copy_user_portrait_importance", body=index_info, ignore=400)
 

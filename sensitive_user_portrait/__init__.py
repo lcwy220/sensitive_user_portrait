@@ -10,10 +10,9 @@ from sensitive_user_portrait.index.views import mod as indexModule
 from sensitive_user_portrait.recommentation.views import mod as recommentationModule
 from sensitive_user_portrait.group.views import mod as groupModule
 from sensitive_user_portrait.tag.views import mod as tagModule
-#from sensitive_user_portrait.attribute.views import mod as attributeModule
+from sensitive_user_portrait.attribute.views import mod as attributeModule
 from sensitive_user_portrait.overview.views import mod as overviewModule
 from sensitive_user_portrait.imagine.views import mod as imagineModule
-#from sensitive_user_portrait.search.views import mod as searchModule
 from sensitive_user_portrait.manage_sensitive_words.views import mod as wordsmanagementModule
 from sensitive_user_portrait.delete_user.views import mod as deleteModule
 from sensitive_user_portrait.influence_application.views import mod as influenceModule
@@ -77,7 +76,7 @@ def register_blueprints(app):
     app.register_blueprint(recommentationModule)
     app.register_blueprint(groupModule)
     app.register_blueprint(tagModule)
-    #app.register_blueprint(attributeModule)
+    app.register_blueprint(attributeModule)
     app.register_blueprint(overviewModule)
     app.register_blueprint(imagineModule)
     app.register_blueprint(searchModule)
