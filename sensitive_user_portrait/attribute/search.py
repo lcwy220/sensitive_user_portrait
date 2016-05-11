@@ -2570,6 +2570,7 @@ def search_preference_attribute(uid):
     sensitive_words_dict = json.loads(portrait_result['sensitive_words_dict'])
     sort_sensitive_keywords = sorted(sensitive_words_dict, key=lambda x:x[1], reverse=True)[:50]
     results['sensitive_words'] = sort_sensitive_keywords
+    print sort_sensitive_keywords
     #domain
     domain_v3 = json.loads(portrait_result['domain_list'])
     #domain_v3_list = [domain_en2ch_dict[item] for item in domain_v3]
@@ -2854,6 +2855,7 @@ def search_attribute_portrait(uid):
     except:
         results = None
         return None
+
     results['topic'] = results['topic_string'].split('&')
     keyword_list = []
 
@@ -2862,8 +2864,12 @@ def search_attribute_portrait(uid):
         uid = results['uid']
         try:
             profile_result = es_user_profile.get(index='weibo_user', doc_type='user', id=uid)
+            results['verified_type'] = profile_result['verified_type']
+            results['create_at'] = ts2datetime(profile_result['create_at'])
         except:
             profile_result = None
+            results['verified_type'] = ""
+            results['create_at'] = ""
         try:
             user_state = profile_result['_source']['description']
             results['description'] = user_state
@@ -2872,7 +2878,85 @@ def search_attribute_portrait(uid):
     else:
         results['uid'] = ''
         results['description'] = ''
-    
+    user_geo_list = results["activity_geo_dict"]
+    geo_dict = {}
+    for item in user_geo_list:
+        for k,v in item.iteritems():
+            try:
+                geo_dict[k] += v
+            except:
+                geo_dict[k] = v
+    if geo_dict:
+        sorted_geo_list = sorted(geo_dict.items(), key=lambda x:x[1], reverse=True)
+        results[u"活跃城市"] = sorted_geo_list[0][0]
+    else:
+        results[u"活跃城市"] = ""
+    # 活跃时间
+    activity_dict = dict()
+    if RUN_TYPE == 0:
+        ts = datetime2ts("2013-09-03")
+        date = ts2datetime(ts)
+        date_ts = datetime2ts(date)
+    else:
+        ts = time.time()
+        date  = ts2datetime(ts)
+        date_ts = datetime2ts(date)
+    for i in range(1,8):
+        ts = ts - 3600*24
+        date = ts2datetime(ts)
+        if WORK_TYPE == 0:
+            exist_bool = es_cluster.indices.exists(index="activity_"+str(date))
+            if exist_bool:
+                try:
+                    activity_result = es_cluster.get(index="activity_"+str(date), doc_type="activity", id=uid)["_source"]
+                    tmp_activity = json.loads(activity_result['activity_dict'])
+                except:
+                    tmp_activity = dict()
+        else:
+            tmp = redis_activity.hget("activity_"+str(date_ts), uid)
+            if tmp:
+                tmp_activity = json.loads(tmp)
+            else:
+                tmp_activity = dict()
+        for k,v in tmp_activity.iteritems():
+            if int(k) in range(0, 16):
+                try:
+                    activity_dict["1"] += v
+                except:
+                    activity_dict["1"] = v
+            elif int(k) in range(16, 32):
+                try:
+                    activity_dict["2"] += v
+                except:
+                    activity_dict["2"] = v
+            if int(k) in range(32, 48):
+                try:
+                    activity_dict["3"] += v
+                except:
+                    activity_dict["3"] = v
+            if int(k) in range(48, 64):
+                try:
+                    activity_dict["4"] += v
+                except:
+                    activity_dict["4"] = v
+            if int(k) in range(64, 80):
+                try:
+                    activity_dict["5"] += v
+                except:
+                    activity_dict["5"] = v
+            else:
+                try:
+                    activity_dict["6"] += v
+                except:
+                    activity_dict["6"] = v
+    sorted_activity_list = sorted(activity_dict.items(), key=lambda x:x[1], reverse=True)
+    segment2time_dict = {"1":"0:00-4:00", "2":"4:00-8:00", "3":"8:00-12:00", "4":"12:00-16:00", "5":"16:00-20:00", "6":"20:00-24:00"}
+    if sorted_activity_list:
+        activity_time = segment2time_dict[sorted_activity_list[0][0]]
+    else:
+        activity_time = ""
+    results[u"活跃时间"] = activity_time
+
     # get importance value
     if results['importance']:
         query_body = {
