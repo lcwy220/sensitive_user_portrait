@@ -127,6 +127,88 @@ function Draw_keyword(data, div_name, more_div, more){
     myChart.setOption(option);	
   }
 }
+function Draw_hashtag(data_sensitive,data_hash, div_name, more_div, more){
+	var keyword = [];
+    var html = '';
+	$('#'+ more_div).empty();
+  if(data_sensitive.length == 0 && data_hash.length == 0){
+     //console.log(div_name);
+      html = '<h4 style="text-align:center;margin-top:50%;">暂无数据</h4>';
+      //$('#'+ more_div).append(html);
+      $('#'+ div_name).append(html);
+      $('#'+ more).empty();
+  }else{
+      html = '';
+      html += '<table class="table table-striped table-bordered" style="width:450px;">';
+      html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">关键词</th><th style="text-align:center">频数</th></tr>';
+	  var m = 1;
+	  for (var i = 0; i < data_sensitive.length; i++) {
+         var s = i.toString();
+		 m = m + i;
+         html += '<tr style=""><th style="text-align:center">' + m + '</th><th style="text-align:center"><a href="/index/search_result/?stype=2&uid=&uname=&location=&hashtag=&adkeyword=' + data_sensitive[i][0] +  '&psycho_status=&domain&topic" target="_blank">' + data_sensitive[i][0] +  '</a></th><th style="text-align:center">' + data_sensitive[i][1] + '</th></tr>';
+      };
+      for (var i = 0; i < data_hash.length; i++) {
+         var s = i.toString();
+		 m = m + i ;
+         html += '<tr style=""><th style="text-align:center">' + m + '</th><th style="text-align:center"><a href="/index/search_result/?stype=2&uid=&uname=&location=&hashtag=&adkeyword=' + data_hash[i][0] +  '&psycho_status=&domain&topic" target="_blank">' + data_hash[i][0] +  '</a></th><th style="text-align:center">' + data_hash[i][1] + '</th></tr>';
+      };
+      html += '</table>'; 
+      $('#'+ more_div).append(html);
+
+    var key_value = [];
+    var key_name = [];
+    for(var i=0;i<data_sensitive.length;i++){
+      key_value.push(data_sensitive[i][1]+Math.random()*10);
+      key_name.push(data_sensitive[i][0]);
+    };
+	for(var i=0;i<data_hash.length;i++){
+      key_value.push(data_hash[i][1]+Math.random());
+      key_name.push(data_hash[i][0]);
+    };
+    d_length = data_hash.length + data_sensitive.length;
+    var word_num = Math.min(50,d_length);
+    var key_value2 = [];
+    var key_name2 = [];
+    for(var i=0; i<word_num; i++){ //最多取前50个最大值
+      a=key_value.indexOf(Math.max.apply(Math, key_value));
+      key_value2.push(key_value[a]);
+      key_name2.push(key_name[a]);
+      key_value[a]=0;
+    }
+    
+  	for (var i=0;i<word_num;i++){
+  		var word = {};
+  		word['name'] = key_name2[i];
+  		word['value'] = key_value2[i]*100;
+  		word['itemStyle'] = createRandomItemStyle();
+  		keyword.push(word);
+  	}
+  	var myChart = echarts.init(document.getElementById(div_name)); 
+  	var option = {
+      tooltip: {
+          show: true,
+          formatter:  function (params){
+            var res  = '';
+            var value_after = parseInt(params.value/100);
+            res += params.name+' : '+value_after;
+            return res;
+          }
+      },
+      series: [{
+          type: 'wordCloud',
+          size: ['100%', '100%'],
+          textRotation : [0, 45, 90, -45],
+          textPadding: 0,
+          autoSize: {
+              enable: true,
+              minSize: 14
+          },
+          data: keyword
+      }]
+    };
+    myChart.setOption(option);	
+  }
+}
 
 function get_radar_data (data) {
   var topic = data;
@@ -418,18 +500,25 @@ function show_results(data){
   var keywordsCloud = data.results.keywords;
   //console.log(keywordsCloud);
   var hashtag = data.results.hashtag;
+  console.log(hashtag);
+  var sensiti_hash = data.results.sensitive_hashtag;
   var topic = data.results.topic;
   var conclusion = data.description;
   var domain = data.results.domain;
+  var sensitive = data.results.sensitive_words;
   var keywords_name = 'Language';
   var hashtag_name = 'hashtag_words';
+  var sensitiv_name = 'sensitive_words';
   var keywords_more = 'key_WordList';
   var hashtag_more = 'hashtag_WordList';
+  var sensitive_more = 'sensitive_WordList';
   var key_more = 'key_more';
-  var hash_more = 'hash_more';
+  var hash_more = 'hashtag_more';
+  var sensiti_more = 'sensitive_more';
   Draw_keyword(keywordsCloud, keywords_name, keywords_more, key_more);
-  Draw_keyword(hashtag, hashtag_name, hashtag_more, hash_more);
-  Draw_topic(topic);
+  Draw_hashtag(sensiti_hash,hashtag, hashtag_name, hashtag_more, hash_more);
+  Draw_keyword(sensitive, sensitiv_name, sensitive_more, sensiti_more);
+  //Draw_topic(topic);
   show_conclusion(conclusion);
   show_domain(domain);
 
@@ -446,4 +535,9 @@ function show_results(data){
 var prefrence_url = '/attribute/preference/?uid=' + parent.personalData.uid;
 //console.log(prefrence_url);
 call_sync_ajax_request(prefrence_url, ajax_method, show_results);
-
+var politic = document.getElementById('politics');
+if( parent.personalData.politics){
+    politic.innerHTML = parent.personalData.politics;
+}else{
+    politic.innerHTML = "未知";
+}
