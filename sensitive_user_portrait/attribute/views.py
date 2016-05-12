@@ -169,21 +169,6 @@ def ajax_activity_weibo():
         results = []
     return json.dumps(results)
 
-#abandon in version-15-12-08
-'''
-@mod.route('/activity/')
-def ajax_activity():
-    uid = request.args.get('uid', '')
-    uid = str(uid)
-    now_ts = time.time()
-    # test
-    now_ts = test_time
-    results = search_activity(now_ts, uid)
-    if results:
-        return json.dumps(results)
-    else:
-        return None
-'''
 
 #use to get user retweet from es:retweet_1 or be_retweet_2
 #write in version:15-12-08
@@ -300,69 +285,6 @@ def ajax_sentiment_weibo():
     return json.dumps(results)
 
 
-#use to get user tendency and psy
-#write in version: 15-12-08
-#input: uid
-#output: tendency, psy(first level and second level)
-@mod.route('/tendency_psy/')
-def ajax_tendency_psy():
-    uid = request.args.get('uid', '')
-    uid = str(uid)
-    results = search_tendency_psy(uid)
-    if not results:
-        results = {}
-    return json.dumps(results)
-
-#use to get user character and psy
-#write in version: 16-02-25
-#input: uid
-#ouput: character, psy(first level and second level)
-@mod.route('/character_psy/')
-def ajax_chracter_psy():
-    uid = request.args.get('uid', '')
-    uid = str(uid)
-    results = search_character_psy(uid)
-    if not results:
-        results = {}
-    return json.dumps(results)
-
-
-#abandon in version: 15-12-08
-'''
-# get user geo track
-@mod.route('/geo_track/')
-def ajax_geo_track():
-    uid = request.args.get('uid', '')
-    uid = str(uid)
-    results = get_geo_track(uid)
-    #geo track by ip-timestamp
-    #results = get_geo_track_ip(uid)
-    if results:
-        return json.dumps(results)
-    else:
-        return None
-'''
-
-
-#get user online pattern by week
-#write in version: 15-12-08
-#input: uid
-#output: [(pattern1:count1), (pattern2:count2),...]
-@mod.route('/online_pattern/')
-def ajax_online_pattern():
-    uid = request.args.get('uid', '')
-    uid = str(uid)
-    #run_type
-    if RUN_TYPE == 1:
-        now_ts = time.time()
-    else:
-        now_ts = test_time
-    results = get_online_pattern(now_ts, uid)
-    if not results:
-        results = {}
-    return json.dumps(results)
-
-
 #get user evaluate_index: activeness trend
 #write in version: 15-12-08
 #input: uid
@@ -417,24 +339,23 @@ def ajax_basic_info():
 
     return json.dumps(results)
 
+"""
 @mod.route('/user_index/')
 def ajax_user_index():
     uid = request.args.get('uid', '')
     date = request.args.get('date', '')
     uid = str(uid)
-    date = str(date).replace('/', '')
 
     results = search_user_index(date, uid)
 
     return json.dumps(results)
-
+"""
 
 @mod.route('/user_influence_detail/')
 def ajax_user_influence_detail():
     uid = request.args.get('uid', '')
     date = request.args.get('date', '')
     uid = str(uid)
-    date = str(date).replace('/', '')
 
     results = get_user_influence(uid, date)
 
@@ -465,7 +386,6 @@ def ajax_influenced_users():
     style = request.args.get('style', '')
     number = request.args.get("number", 20)
     uid = str(uid)
-    date = str(date).replace('/', '-')
     mid = str(mid)
     style = int(style)
     number = int(number)

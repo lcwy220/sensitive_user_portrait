@@ -99,6 +99,14 @@ def bci_detail(date, uid, sensitive=0):
             origin_retweet_top_number = item['_source'].get('retweeted', 0)
         if origin_comment_top_number < item['_source'].get('comment', 0):
             origin_comment_top_number = item['_source'].get('comment', 0)
+        if sensitive:
+            sensitive_words_dict = json.loads(item['_source']['sensitive_words_dict'])
+            if sensitive_words_dict:
+                for k,v in sensitive_words_dict.iteritems():
+                    try:
+                        origin_sensitive_words_dict[k] += v
+                    except:
+                        origin_sensitive_words_dict[k] = v
     for item in retweeted_text:
         retweet_total_number += item['_source'].get('retweeted', 0)
         comment_total_number += item['_source'].get('comment', 0)
@@ -108,6 +116,14 @@ def bci_detail(date, uid, sensitive=0):
             retweeet_retweet_top_number = item['_source'].get('retweeted', 0)
         if retweet_comment_top_number < item['_source'].get('comment', 0):
             retweet_comment_top_number = item['_source'].get('comment', 0)
+        if sensitive:
+            sensitive_words_dict = json.loads(item['_source']['sensitive_words_dict'])
+            if sensitive_words_dict:
+                for k,v in sensitive_words_dict.iteritems():
+                    try:
+                        retweeted_sensitive_words_dict[k] += v
+                    except:
+                        retweeted_sensitive_words_dict[k] = v
     try:
         average_retweet_number = retweet_total_number/(origin_weibo_number+retweeted_weibo_number) # 平均转发数
     except:
@@ -155,6 +171,11 @@ def bci_detail(date, uid, sensitive=0):
         result["retweeted_weibo_comment_brust_average"] = retweeted_weibo_comment_brust_average
         result["retweeted_weibo_retweeted_brust_average"] = retweeted_weibo_retweeted_brust_average
         result['user_index'] = bci_result.get('user_index', 0)
+    else:
+        result["retweeted_sensitive_words_list"] = sorted(retweeted_sensitive_words_dict.items(), key=lambda x:x[1], reverse=True)
+        result["origin_sensitive_words_list"] = sorted(origin_sensitive_words_dict.items(), key=lambda x:x[1], reverse=True)
+        result["retweeted_sensitive_words_number"] = len(retweeted_sensitive_words_dict)
+        result["origin_sensitive_words_number"] = len(origin_sensitive_words_dict)
 
     return result
 
