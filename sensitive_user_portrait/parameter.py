@@ -294,6 +294,7 @@ DETECT_PATTERN_SELECT_ITEM = ['message_type', 'sentiment']
 DETECT_PATTERN_RANGE_ITEM = ['timestamp']
 #group detect: event detect
 DETECT_EVENT_ATTRIBUTE = ['topic_string', 'domain']
+DETECT_EVENT_SELECT_ATTRIBUTE = ['politics']
 DETECT_EVENT_TEXT_FUZZ_ITEM = ['text']
 DETECT_EVENT_TEXT_RANGE_ITEM = ['timestamp']
 #identify user attribute list
@@ -304,6 +305,8 @@ IDENTIFY_ATTRIBUTE_LIST = ['domain', 'uid', 'hashtag_dict', 'importance', 'influ
         'character_sentiment', 'activity_geo_aggs', 'online_pattern_aggs']
 
 #cron_group
+TOPIC_MODEL_COUNT = 5
+TOPIC_MODEL_WORD_COUNT = 10
 ACTIVITY_GEO_TOP = 3
 HIS_BINS_COUNT = 5
 GROUP_ACTIVITY_TIME_THRESHOLD = [0.3, 0.5]
@@ -312,6 +315,13 @@ GROUP_ACTIVITY_TIME_DESCRIPTION_DICT = {
         '1': u'群体用户活跃时间较集中',
         '2': u'群体用户活跃时间非常集中'
         }
+GROUP_INDEX_RANK_RATIO_DICT = {
+    1 : 0.2,
+    2 : 0.4,
+    3 : 0.6,
+    4 : 0.8,
+    5 : 1
+}
 GROUP_ITER_COUNT = 100
 GROUP_INFLUENCE_FILTER_LOW_THRESHOLD = 500
 GROUP_INFLUENCE_FILTER_RANK_RATIO = 0.05
