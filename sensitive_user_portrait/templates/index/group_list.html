@@ -12,11 +12,11 @@
 {% endblock custom_css %}
 {% block head_js %}
         {{ super() }}
-        <script type="text/javascript" src="/static/js/jquery.datetimepicker.js"></script>
-        <script type="text/javascript" src="/static/js/portrait/identify_table.js"></script>
+
 {% endblock head_js %}
 {% block body %}
-	
+	       <script type="text/javascript" src="/static/js/jquery.datetimepicker.js"></script>
+        <script type="text/javascript" src="/static/js/portrait/identify_table.js"></script>
     <div class="box-content">
 
         <div id="content_manage" style="margin-left:40px;width:1000px;margin-top:10px">
@@ -94,7 +94,10 @@
         {{ super() }}
         <script type="text/javascript" src="/static/js/portrait/group_list.js"></script>
         <script>
+        /*
 		data = [['生气情绪用户群体','2016/04/26 16:41',90,'24日于北京发布生气情绪的群体',1],['sdfghjk','2016/04/26 16:41',90,' ',0]]
         Draw_resultTable(data)
+        */
+
 		</script>
     {% endblock end_js %}

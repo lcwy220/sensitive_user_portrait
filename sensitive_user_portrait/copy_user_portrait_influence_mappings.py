@@ -16,7 +16,7 @@ index_info = {
     },
 
     "mappings":{
-        "bci":{
+        "influence":{
             "properties":{
                 "uid":{
                     "type": "string",
@@ -49,11 +49,19 @@ index_info = {
                 "bci_week_change": {
                     "type": "double"
                 },
+                "politics": {
+                    "type": "string",
+                    "index": "not_analyzed"
+                },
                 "domain": {
                     "type": "string",
                     "index": "not_analyzed"
                 },
                 "hashtag":{
+                    "type": "string",
+                    "analyzer": "my_analyzer"
+                },
+                "sensitive_words_string":{
                     "type": "string",
                     "analyzer": "my_analyzer"
                 },

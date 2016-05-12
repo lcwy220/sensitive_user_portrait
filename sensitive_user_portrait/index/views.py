@@ -12,7 +12,6 @@ mod = Blueprint('sensitive', __name__, url_prefix='/index')
 
 @mod.route('/')
 def loading():
-
     return render_template('index.html')
 
 @mod.route('/overview/')
@@ -50,12 +49,16 @@ def word_recommend():
 @mod.route('/group_identify/')
 def group():
     return render_template('index/group_identify.html')
-
+'''
 @mod.route('/group_results/')
 def group_results():
     name = request.args.get('name', '')
     return render_template('index/group_results.html')
-
+'''
+@mod.route('/group_analysis/')
+def group_results():
+    name = request.args.get('name', '')
+    return render_template('index/group_analysis.html')
 @mod.route('/group_task/')
 def group_task():
     return render_template('index/group_task.html')

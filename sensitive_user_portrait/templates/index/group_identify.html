@@ -16,13 +16,15 @@
             #tab_left li a:hover{background: #dde4f2;text-decoration: none;border-left: 1px solid #f00;text-shadow:1px 1px 2px #ccc;}
             #tab_con{width: 820px;overflow: hidden;margin-bottom:65px;}
         </style>
-        <link rel="stylesheet" type="text/css" href="/static/css/jquery.datetimepicker.css"/>
+
     {% endblock custom_css %}
     {% block head_js %}
         {{ super() }}
         
     {% endblock head_js %}
     {% block body %}
+    <link rel="stylesheet" type="text/css" href="/static/css/jquery.datetimepicker.css"/>
+    <script type="text/javascript" src="/static/js/jquery.datetimepicker.js"></script>
     <h4 class="page-header">群体发现任务</h4>
     <div class="box-content">
         <!--
@@ -59,7 +61,7 @@
                     </div>
                 </div>
                 <div >
-                    <div id="dis_table">
+                    <div id="dis_table" style="width:950px;margin-left:40px;">
                     </div>
                 </div>
             </div>
@@ -202,7 +204,7 @@
     {% endblock body %}
     {% block end_js %}
         {{ super() }}
-		<script type="text/javascript" src="/static/js/jquery.datetimepicker.js"></script>
+
         <script type="text/javascript" src="/static/js/portrait/identify_table.js"></script>
         <script type="text/javascript" src="/static/js/portrait/group_identify_task.js"></script>
         <script type="text/javascript" src="/static/js/portrait/group_pattern.js"></script>
@@ -244,6 +246,7 @@
                     $("#tab_con_3").hide();
                     $("#tab_con_4").fadeIn(600);
                 });
+                /*
                 $("#tab_discovery").click(function(){
                     if ($(this).parent('li').hasClass('active')) return;
                     $(this).parent('li').siblings().removeClass('active');
@@ -251,6 +254,8 @@
                     $('#content_discovery').css('display','block');
                     $('#content_manage').css('display','none');
                 });
+                */
+                /*
                 $("#tab_manage").click(function(){
                     if ($(this).parent('li').hasClass('active')) return;
                     $(this).parent('li').siblings().removeClass('active');
@@ -258,7 +263,7 @@
                     $('#content_discovery').css('display','none');
                     redraw_result();
                     $('#content_manage').css('display','block');
-                });
+                });*/
             });
         </script>
     {% endblock end_js %}

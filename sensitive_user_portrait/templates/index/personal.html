@@ -32,11 +32,13 @@
                   <div style="width:640px; float:left;">
                       <span class="nickname" id="nickname"></span>
                     <a style="font-size:15px;margin-left:15px;cursor:pointer;" onclick="detail_load();">查看详细属性</a>
+					<a id="contact" target="_blank" style="font-size:15px;margin-left:15px;cursor:pointer;">与ta相关的人</a>
                     <div class="PersonPre" style="margin-bottom:5px;">
                         <!--<span class="lightw">个人描述：</span>-->
                         <span class="" style="font-family: "宋体";" id="portraitDetail"></span>
                     </div>
                   </div>
+				<!--
                   <div style="width:100px; font-size:15px;float:right; text-align: right;">
                       <br />
                       <a id="homepage" target="_blank" style="cursor:pointer;">ta的微博主页</a>
@@ -44,6 +46,7 @@
                       <a id="contact" target="_blank" style="cursor:pointer;">与ta相关的人</a>
                       <br/>
                   </div>
+				-->
                 </div>
               </div>
               <div style="width:750px; float:left;margin-left:10px;">
@@ -53,13 +56,17 @@
                             <span class="lightw fleft lineh42 mright38">用户ID:</span>
                             <span class="fleft lineh42 mright38" id="userId" ></span>
                         </div>
-                        <div style="width:245px;height:40px;float:left;">
+                        <div style="width:145px;height:40px;float:left;">
                             <span class="lightw fleft lineh42 mright38">注册地:</span>
                             <span class="fleft lineh42 mright38" id="userLocation" ></span>
                         </div>
-                        <div style="width:215px;height:40px;float:left;">
+                        <div style="width:145px;height:40px;float:left;">
                             <span class="lightw fleft lineh42 mright38">性&nbsp;&nbsp;&nbsp;别:</span>
                             <span class="fleft lineh42 mright38" id="userGender" ></span>
+                        </div>
+			            <div style="width:150px;height:40px;float:left;">
+                            <span class="lightw fleft lineh42 ">创建时间:</span>
+                            <span class="fleft lineh42 " id="created" ></span>
                         </div>
                     </div>
                     <div class="cols" style="width:700px;margin-top:0px;">
@@ -67,13 +74,17 @@
                             <span class="lightw fleft lineh42 mright38">粉丝数:</span>
                             <span class="fleft lineh42 mright38" id="userFans" ></span>
                         </div>
-                        <div style="width:245px;height:40px;float:left;">
+                        <div style="width:145px;height:40px;float:left;">
                             <span class="lightw fleft lineh42 mright38">关注数:</span>
                             <span class="fleft lineh42 mright38" id="userFriend" ></span>
                         </div>
-                        <div style="width:215px;height:40px;float:left;">
+                        <div style="width:145px;height:40px;float:left;">
                             <span class="lightw fleft lineh42 mright38">微博数:</span>
                             <span class="fleft lineh42 mright38" id="userWeibo" ></span>
+                        </div>
+						<div style="width:100px;height:40px;float:left;">
+                            <span class="lightw fleft lineh42 ">认证类型:</span>
+                            <span class="fleft lineh42 " id="verify_type" ></span>
                         </div>
                     </div>
                 </div>
@@ -150,7 +161,7 @@
                                 <td style="padding:0px;font-size:14px;text-align:center;vertical-align:middle"><b>活跃度<i id="" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="（日更新）衡量该用户线上线下的活跃程度，通过发布微博综述、活跃地区数、发布微博的时间走势计算得到"></i>&nbsp;&nbsp;</b></td>
                                 <td style="padding:0px;font-size:14px;text-align:center;vertical-align:middle"><b>重要度<i id="" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="（月更新）衡量该用户对社会网络安全业务的重要程度，通过所属领域和偏好话题计算得到"></i>&nbsp;&nbsp;</b></td>
                                 <td style="padding:0px;font-size:14px;text-align:center;vertical-align:middle"><b>影响力<i id="" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="（日更新）衡量该用户整体的影响力，通过原创微博、转发微博的评论和转发的最高值、均值、总量计算得到"></i>&nbsp;&nbsp;</b></td>
-								<td style="padding:0px;font-size:14px;text-align:center;vertical-align:middle"><b>敏感度<i id="" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="（日更新）衡量该用户整体的影响力，通过原创微博、转发微博的评论和转发的最高值、均值、总量计算得到"></i>&nbsp;&nbsp;</b></td></tr>
+								<td style="padding:0px;font-size:14px;text-align:center;vertical-align:middle"><b>敏感度<i id="" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="（日更新）根据用户微博中出现的敏感词的次数和等级综合计算得到"></i>&nbsp;&nbsp;</b></td></tr>
                         </table>
                     </div>
                     <div class="m-wrap" style="margin-top;0px;">
@@ -191,7 +202,7 @@ Personal.prototype = {   //群组搜索
 	},
 	personData:function(data){
 		personalData = data ;
-        //console.log(data);
+        console.log(data);
         var contact_url = '/index/contact/?uid=' + uid;
         $('#contact').attr('href', contact_url)
         var homepage_url = 'http://weibo.com/u/' + uid;
@@ -202,6 +213,8 @@ Personal.prototype = {   //群组搜索
         IPsum.innerHTML = personalData.all_count;
         var FPsum = document.getElementById('FPsum');
         FPsum.innerHTML = personalData.all_count;
+		var SPsum = document.getElementById('SPsum');
+        SPsum.innerHTML = personalData.all_count;
         var img = document.getElementById('portraitImg');
         //console.log(personalData.photo_url);
         if(personalData.photo_url == "unknown" || personalData.photo_url == "undefined"){
@@ -226,6 +239,12 @@ Personal.prototype = {   //群组搜索
             activePower.innerHTML = personalData.activeness.toFixed(2);
         }else{
             activePower.innerHTML = "0";
+        }
+		var sensitivePower = document.getElementById('SPnum');
+        if(personalData.activeness){
+            sensitivePower.innerHTML = personalData.sensitive.toFixed(2);
+        }else{
+            sensitivePower.innerHTML = "0";
         }
         var nickName = document.getElementById('nickname');
         if(personalData.uname){
@@ -262,6 +281,12 @@ Personal.prototype = {   //群组搜索
         }else{
             F_rank.innerHTML = personalData.all_count;
         }
+		var S_rank = document.getElementById('SPrank');
+        if(personalData.sensitive_rank){
+            S_rank.innerHTML = personalData.sensitive_rank;
+        }else{
+            S_rank.innerHTML = personalData.all_count;
+        }
         var uid_div = document.getElementById('userId');
         if(personalData.uid){
             uid_div.innerHTML = personalData.uid;
@@ -296,7 +321,56 @@ Personal.prototype = {   //群组搜索
         }else{
             fans.innerHTML = "无此数据";
         }
-            
+        var created = document.getElementById('created');
+        if(personalData.create_at){
+            created.innerHTML = personalData.create_at;
+        }else{
+            created.innerHTML = "未知";
+        }  
+		var verify_type = document.getElementById('verify_type');
+
+        if(personalData.verified==-1){
+            verify_type.innerHTML = "普通用户";
+        }
+		else if(personalData.verified==0){
+            verify_type.innerHTML = "名人";
+        }
+		else if(personalData.verified==1){
+            verify_type.innerHTML = "政府";
+        }    
+		else if(personalData.verified==2){
+            verify_type.innerHTML = "企业";
+        }  
+		else if(personalData.verified==3){
+            verify_type.innerHTML = "媒体";
+        }  
+		else if(personalData.verified==4){
+            verify_type.innerHTML = "校园";
+        }  
+		else if(personalData.verified==5){
+            verify_type.innerHTML = "网站";
+        }  
+		else if(personalData.verified==6){
+            verify_type.innerHTML = "应用";
+        }  
+		else if(personalData.verified==7){
+            verify_type.innerHTML = "团体";
+        }  
+		else if(personalData.verified==8){
+            verify_type.innerHTML = "待审企业";
+        }  
+		else if(personalData.verified==200){
+            verify_type.innerHTML = "初级达人";
+        }  
+		else if(personalData.verified==220){
+            verify_type.innerHTML = "中高级达人";
+        }  
+		else if(personalData.verified==400){
+            verify_type.innerHTML = "已故V用户";
+        }  
+		else{
+            verify_type.innerHTML = "未知";
+        }  
         var friends = document.getElementById('userFriend');
         if( personalData.friendsnum){
             friends.innerHTML = personalData.friendsnum;
@@ -355,6 +429,8 @@ function bind_status_option(){
             IPsum.innerHTML = personalData.all_count;
             var FPsum = document.getElementById('FPsum');
             FPsum.innerHTML = personalData.all_count;
+            var SPsum = document.getElementById('SPsum');
+            SPsum.innerHTML = personalData.all_count;
             var influencePower = document.getElementById('FPnum');
             if(personalData.influence){
                 influencePower.innerHTML = personalData.influence.toFixed(2);
@@ -373,6 +449,12 @@ function bind_status_option(){
             }else{
                 activePower.innerHTML = "0";
             }
+			var sensitivePower = document.getElementById('SPnum');
+            if(personalData.activeness){
+                sensitivePower.innerHTML = personalData.sensitive.toFixed(2);
+            }else{
+                sensitivePower.innerHTML = "0";
+            }
             var I_rank = document.getElementById('IPrank');
             if(personalData.importance_rank){
                 I_rank.innerHTML = personalData.importance_rank;
@@ -390,6 +472,12 @@ function bind_status_option(){
                 F_rank.innerHTML = personalData.influence_rank;
             }else{
                 F_rank.innerHTML = personalData.all_count;
+            }
+            var S_rank = document.getElementById('SPrank');
+            if(personalData.sensitive_rank){
+                S_rank.innerHTML = personalData.sensitive_rank;
+            }else{
+                S_rank.innerHTML = personalData.all_count;
             }
         }
         else{
@@ -486,12 +574,14 @@ function tag_call_ajax_request(url, callback){
         type:"GET",
         dataType:'json',
         async:true,
+		/*
         beforeSend:function(){
             $('.loading_mask').showLoading();
         },
         complete:function(){
             $('.loading_mask').hideLoading();
         },
+		*/
         success:callback,
     });
 }
@@ -502,12 +592,14 @@ function person_call_ajax_request(url, callback){
         type:"GET",
         dataType:'json',
         async:true,
+		/*
         beforeSend:function(){
             $('.soft_con_icon').showLoading();
         },
         complete:function(){
             $('.soft_con_icon').hideLoading();
         },
+		*/
         success:callback,
     });
 }
@@ -590,14 +682,14 @@ $(function(){
 <script>
     $('#vector_table').empty();
     var html = '';
-	/*
+	
     for (var i = 0;i < global_tag_vector.length; i++){
         var unit = global_tag_vector[i];
         html += '<li class="li_1"><span class="pt_title">';
         html += unit[0] + '</span><span class="pt_detail">';
         html += unit[1] + '</span></li>';
     }
-	*/
+	/*
     //console.log('tagvector');
     //console.log(global_tag_vector);
 	for (var i = 0;i < 8; i++){
@@ -606,6 +698,7 @@ $(function(){
         html += '地点' + '</span><span class="pt_detail">';
         html += '北京' + '</span></li>';
     }
+	*/
     $('#vector_table').html(html);
 </script>
 {% endblock end_js %}

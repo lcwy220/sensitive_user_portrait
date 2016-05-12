@@ -1,8 +1,8 @@
-function Group_identify_task(){
+function Group_analysis_task(){
   this.ajax_method = 'GET';
 }
-/*
-Group_identify_task.prototype = {   //获取数据，重新画表
+
+Group_analysis_task.prototype = {   //获取数据，重新画表
   call_sync_ajax_request:function(url, method, callback){
     $.ajax({
       url: url,
@@ -37,7 +37,7 @@ Draw_resultTable: function(data){
 		}else{
 			html += '<td>正在计算</td>';
 		}
-		html +='<td><a href="javascript:void(0)" id="commit_control">提交监控</a>&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" id="analyze_del">删除</a></td>';
+		html +='<td><a href="javascript:void(0)" id="detail_analysis">查看详情</a>&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" id="analyze_del">删除</a></td>';
 		html += '</tr>';
 	}
 	html += '</tbody>';
@@ -56,24 +56,27 @@ Draw_resultTable: function(data){
     });
   },
 }
+
 function redraw_result(){
-    //console.log('iiiii');
 	var url = '/group/show_task/';
-    url += '?submit_user=' + $('#useremail').text();
-	Group_identify_task.call_sync_ajax_request(url, Group_identify_task.ajax_method, Group_identify_task.Draw_resultTable);
+    //url += '?submit_user=' + $('#useremail').text();
+	Group_analysis_task.call_sync_ajax_request(url, Group_analysis_task.ajax_method, Group_analysis_task.Draw_resultTable);
 }
-/*
+
+window.setInterval(redraw_result, 10000);
+
 var current_date = new Date().format('yyyy/MM/dd hh:mm');
 var max_date = '+1970/01/30';
 var min_date = '-1970/01/30';
 $('input[name="con_end_time"]').datetimepicker({value:current_date,minDate:current_date,step:10});
-var Group_identify_task = new Group_identify_task();
+var Group_analysis_task = new Group_analysis_task();
 redraw_result();
 
 
 $('#group_control_confirm_button').click(function(){
 	group_control_data();
 });
+
 function group_control_check(){             // check validation 
     //group_information check starts  
     var group_name = $('input[name="con_group_name"]').val();
@@ -158,12 +161,12 @@ function del(data){
 }
 
 function control_click(){
-	$('a[id^="commit_control"]').click(function(){
+	$('a[id^="detail_analysis"]').click(function(){
 		var temp = $(this).parent().prev().prev().prev().prev().prev().html();
 		var remark0 =  $(this).parent().prev().prev().html();
-		url = '/social_sensing/get_group_detail/?task_name='+temp;
+		url = '/group/get_group_detail/?task_name='+temp;
         url += '&user='+$('#useremail').text();
-		Group_identify_task.call_sync_ajax_request(url,Group_identify_task.ajax_method,draw_control_table);
+		Group_analysis_task.call_sync_ajax_request(url,Group_analysis_task.ajax_method,draw_control_table);
 		$('input[name="con_group_name"]').val(temp);
 		$('input[name="con_remark"]').val(remark0);
 		$('#group_control').modal();
@@ -175,7 +178,7 @@ function control_click(){
 			var temp = $(this).parent().prev().prev().prev().prev().prev().html();
 			url = url + 'task_name=' + temp;
             url += '&submit_user=' + $('#useremail').text();
-			Group_identify_task.call_sync_ajax_request(url,Group_identify_task.ajax_method,del);
+			Group_analysis_task.call_sync_ajax_request(url,Group_analysis_task.ajax_method,del);
 		}
 	});	
 }
@@ -265,11 +268,11 @@ function task_search_button(){ //表单搜索
   	    url: search_url,
   	    contentType:"application/json",
   	    dataType: "json",
-  	    success: Group_identify_task.Draw_resultTable
+  	    success: Group_analysis_task.Draw_resultTable
   	});
 }
-*/
 
+/*
 function Draw_resultTable(data){
     //console.log(data);
     $('#content_manage').empty();
@@ -294,10 +297,11 @@ function Draw_resultTable(data){
 		}else{
 			html += '<td>正在计算</td>';
 		}
-		html +='<td><a href="javascript:void(0)" id="commit_control">提交监控</a>&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" id="analyze_del">删除</a></td>';
+		html +='<td><a href="javascript:void(0)" id="detail_analysis">提交监控</a>&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" id="analyze_del">删除</a></td>';
 		html += '</tr>';
 	}
 	html += '</tbody>';
     html += '</table>';
 	$('#content_manage').append(html);
 }
+*/

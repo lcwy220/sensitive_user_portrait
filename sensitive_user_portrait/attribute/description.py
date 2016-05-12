@@ -54,16 +54,17 @@ def active_geo_description(ip_result, geo_result):
 def active_time_description(time_trend_list):
     # active category based on time
     count = 0
+    print time_trend_list
     for v in time_trend_list:
-        count += v[1]
+        count += time_trend_list[v]
     average = count / 6.0
     time_result = {}
     for i in range(6):
         for j in range(7):
             try:
-                time_result[i] += time_trend_list[i+j*6][1]
+                time_result[str(i)] += time_trend_list[i+j*6]
             except:
-                time_result[i] = time_trend_list[i+j*6][1]
+                time_result[str(i)] = time_trend_list[i+j*6]
     active_time_order = sorted(time_result.items(), key=lambda asd:asd[1], reverse=True)
     active_time = {'0':'0-4', '1':'4-8','2':'8-12','3':'12-16','4':'16-20','5':'20-24'}
     v_list = []

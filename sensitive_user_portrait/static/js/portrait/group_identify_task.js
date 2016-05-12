@@ -18,6 +18,7 @@ Group_identify_task.prototype = {   //获取数据，重新画表
     });
   },
 
+/*
 Draw_resultTable: function(data){
     $('#content_manage').empty();
     var item = data;
@@ -30,6 +31,7 @@ Draw_resultTable: function(data){
     html += '<th style="width:200px;">备注</th><th>计算状态</th><th>操作</th></tr></thead>';
 	html += '<tbody>';
 	for (i=0;i<item.length;i++){
+		console.log(data[i]);
 		html += '<tr>';
 		var time0 = new Date(item[i][1]*1000).format('yyyy/MM/dd hh:mm')
 		html += '<td name="task_name">'+item[i][0]+'</td>';
@@ -41,7 +43,7 @@ Draw_resultTable: function(data){
 		}else{
 			html += '<td>正在计算</td>';
 		}
-		html +='<td><a href="javascript:void(0)" style="background:white" id="commit_control">提交监控</a>&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" id="analyze_del">删除</a></td>';
+		//html +='<td><a href="javascript:void(0)" style="background:white" id="commit_control">提交监控</a>&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" id="analyze_del">删除</a></td>';
 		html += '</tr>';
 	}
 	html += '</tbody>';
@@ -62,12 +64,12 @@ Draw_resultTable: function(data){
        "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
        "sPaginationType": "bootstrap",
        "aaSorting": [[ 1, "desc" ]],
-        "aoColumnDefs":[ {"bSortable": false, "aTargets":[5]}],
+       "aoColumnDefs":[ {"bSortable": false, "aTargets":[5]}],
        "oLanguage": {
            "sLengthMenu": "_MENU_ 每页"
        }
     });
-	},
+	},*/
 
 Draw_dis_Table:function(data){
 	$('#dis_table').empty();
@@ -89,7 +91,7 @@ Draw_dis_Table:function(data){
 		}else{
 			dis_type='社会感知自动群体发现';
 		}
-		html += '<tr><td>'+data[i][0]+'</td><td>'+data[i][1]+'</td><td>'+data[i][2]+'</td><td>'+dis_type+'</td><td>'+data[i][4]+'</td><td><progress value="'+data[i][5]+'" max="100"></progress>&nbsp;&nbsp;'+data[i][5]+'%</td><td><a href="javascript:void(0)" id="group_commit_analyze">提交分析</a>&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" id="group_commit_control" >提交监控</a>&nbsp;&nbsp;<a href="javascript:void(0)" id="task_del">删除</a></td></tr>';
+		html += '<tr><td>'+data[i][0]+'</td><td>'+data[i][1]+'</td><td>'+data[i][2]+'</td><td>'+dis_type+'</td><td>'+data[i][4]+'</td><td><progress value="'+data[i][5]+'" max="100"></progress>&nbsp;&nbsp;'+data[i][5]+'%</td><td><a href="javascript:void(0)" id="group_commit_analyze">提交分析</a>&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" id="task_del">删除</a></td></tr>';
 		//j += 10;
 	}
 	html += '</tbody>';
@@ -122,19 +124,21 @@ Draw_dis_Table:function(data){
 
 }
 var Group_identify_task = new Group_identify_task();
+/*
 function redraw_result(){
 	url = '/group/show_task/';
 	Group_identify_task.call_sync_ajax_request(url, Group_identify_task.ajax_method, Group_identify_task.Draw_resultTable);
 	//deleteGroup();
 	control_click();
 }
+*/
 window.setInterval(redraw,10000);
 function redraw(){
 	deurl= '/detect/show_detect_task/';
 	Group_identify_task.call_sync_ajax_request(deurl, Group_identify_task.ajax_method, Group_identify_task.Draw_dis_Table);
 }
 redraw();
-redraw_result();
+//redraw_result();
 
 
 function del(data){
@@ -386,7 +390,7 @@ function group_analyze_confirm_button(){
 function callback(data){
     //console.log(data);
     if (data == '1'){
-        redraw_result();
+        //redraw_result();
         alert('提交成功！');
     }
     else{

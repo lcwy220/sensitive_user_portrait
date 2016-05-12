@@ -59,6 +59,7 @@ def ajax_single_person():
         attribute_weight = 0
     query_dict['attribute'] = attribute_list
     query_dict['attribute_weight'] = attribute_weight
+    """
     #get query_dict: strucure
     structure_list = {}
     for structure_item in DETECT_QUERY_STRUCTURE:
@@ -75,6 +76,7 @@ def ajax_single_person():
     query_dict['structure_weight'] = structure_weight
     #get query_dict: text
     text_query_list = []
+
     for text_item in DETECT_TEXT_FUZZ_ITEM:
         item_value_string = request.args.get(text_item, '') # a string joint by ' '
         item_value_list = item_value_string.split(' ')
@@ -83,6 +85,7 @@ def ajax_single_person():
             for item_value in item_value_list:
                 nest_body_list.append({'wildcard':{text_item: '*'+item_value+'*'}})
             text_query_list.append({'bool':{'should':nest_body_list}})
+
     for text_item in DETECT_TEXT_RANGE_ITEM:
         item_value_from = request.args.get(text_item+'_from', '')
         item_value_to = request.args.get(text_item+'_to', '')
@@ -93,6 +96,8 @@ def ajax_single_person():
                 text_query_list.append({'range':{text_item:{'gte':int(item_value_from), 'lt':int(item_value_to)}}})
 
     query_dict['text'] = text_query_list
+    """
+
     #identify the query condition num at least one
     if attribute_condition_num + structure_condition_num == 0:
         return 'no query condition'
@@ -272,16 +277,17 @@ def ajax_attribute_pattern():
         if item_value:
             attribute_condition_num += 1
             attribute_query_list.append({'wildcard':{item: '*'+item_value+'*'}})
+
     #step1.2: multi select item
     for item in DETECT_ATTRIBUTE_MULTI_ITEM:
         nest_body_list = []
         item_value_string = request.args.get(item, '')
         if item_value_string != '':
             item_value_list = item_value_string.split(',')
-            for item_value in item_value_list:
-                nest_body_list.append({'wildcard':{item: '*'+item_value+'*'}})
-            attribute_query_list.append({'bool':{'should': nest_body_list}})
+            nest_body_list.append({'terms': {item: item_value_list}})
+            attribute_query_list.extend(nest_body_list)
             attribute_condition_num += 1
+
     #step1.3: select item
     for item in DETECT_ATTRIBUTE_SELECT_ITEM:
         if item=='tag':
@@ -294,13 +300,15 @@ def ajax_attribute_pattern():
                     item_value = tag_item_list[1]
                 if item_name and item_value:
                     attribute_condition_num += 1
-                    attribute_query_list.append({'match':{item_name: item_value}})
+                    attribute_query_list.append({'term':{item_name: item_value}})
         else:
             item_value = request.args.get(item, '')
             if item_value:
                 attribute_condition_num += 1
-                attribute_query_list.append({'match':{item: item_value}})
+                attribute_query_list.append({'term':{item: item_value}})
     query_dict['attribute'] = attribute_query_list
+
+    """
     #step2:get pattern query list
     #step2.1: fuzz item
     for item in DETECT_PATTERN_FUZZ_ITEM:
@@ -328,11 +336,14 @@ def ajax_attribute_pattern():
                 return 'invalid input for condition'
             else:
                 pattern_query_list.append({'range':{item:{'gte': int(item_value_from), 'lt':int(item_value_to)}}})
+    """
         
     #identify attribute and pattern condition num >= 1
     if attribute_condition_num + pattern_condition_num < 1:
         return 'invalid input for condition'
-    query_dict['pattern'] = pattern_query_list
+    # query_dict['pattern'] = pattern_query_list
+    query_dict['pattern'] = []
+
     #step3:get filter query dict
     filter_dict = {}
     for filter_item in DETECT_QUERY_FILTER:

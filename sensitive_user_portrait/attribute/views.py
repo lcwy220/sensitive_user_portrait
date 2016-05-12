@@ -8,15 +8,13 @@ from search import search_attribute_portrait, search_location, search_ip, search
                    search_attention, search_follower, search_portrait, get_geo_track, get_geo_track_ip, get_online_pattern
 from search import delete_action, search_identify_uid, get_activeness_trend
 from search import get_activity_weibo, search_comment, search_be_comment
-from search import search_bidirect_interaction, search_preference_attribute, search_sentiment_trend, search_tendency_psy
+from search import search_bidirect_interaction, search_preference_attribute, search_sentiment_trend
 from search import search_sentiment_weibo, get_influence_trend, search_remark, edit_remark
-from search import search_character_psy
-#from search_mid import index_mid
 from sensitive_user_portrait.search_user_profile import es_get_source
 from sensitive_user_portrait.global_utils import es_user_portrait as es
 from sensitive_user_portrait.parameter import SOCIAL_DEFAULT_COUNT, SENTIMENT_TREND_DEFAULT_TYPE
 from sensitive_user_portrait.parameter import DEFAULT_SENTIMENT, DAY
-from sensitive_user_portrait.parameter import RUN_TYPE, RUN_TEST_TIME
+from sensitive_user_portrait.parameter import RUN_TYPE, RUN_TEST_TIME, WORK_TYPE
 from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts
 #from personal_influence import get_user_influence, influenced_detail, influenced_people, influenced_user_detail, statistics_influence_people, tag_vector, comment_on_influence, detail_weibo_influence, influence_summary
 #from description import conclusion_on_influence
@@ -95,12 +93,12 @@ def ajax_location():
     if RUN_TYPE == 1:
         now_ts = time.time()
     else:
-        now_ts = test_time - DAY
+        now_ts = datetime2ts("2013-09-01")
     results = search_location(now_ts, uid, time_type)
     
     return json.dumps(results)
 
-
+# 不写
 #use to get ip information for day and week
 #write in version-15-12-08
 #input: now_ts, uid
@@ -112,7 +110,7 @@ def ajax_ip():
     if RUN_TYPE == 1:
         now_ts = time.time()
     else:
-        now_ts = test_time - DAY
+        now_ts = datetime2ts('2013-09-01')
     result = search_ip(now_ts, uid)
     if not result:
         result = {}
@@ -122,7 +120,8 @@ def ajax_ip():
 #use to get user mention @ user
 #write in version:15-12-08
 #input: uid, top_count
-#output: result
+#output: ['out_portrait_list':["uid", "uname", count, fansnum], 'in_portrait_list':\
+        #        uid, uname, influence, importance], {'topic':[[topic,count]], "domain":[]}
 @mod.route('/mention/')
 def ajax_mention():
     uid = request.args.get('uid', '')
@@ -149,7 +148,7 @@ def ajax_activity_day():
     if RUN_TYPE == 1:
         now_ts = time.time()
     else:
-        now_ts = test_time
+        now_ts = datetime2ts("2013-09-01")
     results = search_activity(now_ts, uid)
     if not results:
         results = {}

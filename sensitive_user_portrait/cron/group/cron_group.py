@@ -1264,7 +1264,7 @@ def get_attr_sentiment_word(uid_list):
             #filter null item in sentiment word result
             new_sentiment_word_result = [item for item in sentiment_word_result if item != None]
             if new_sentiment_word_result != []:
-                date_sentiment_word_result = union_dict_list(new_sentiment_word_result)
+                date_sentiment_word_result = union_dict_list(sentiment_word_result)
                 week_result_list.append(date_sentiment_word_result)
         if week_result_list != []:
             week_sentiment_word_result = union_dict_list(week_result_list)
@@ -1690,6 +1690,38 @@ def ip2geo(ip_dict):
                 geo_dict[city] = ip_dict[ip]
     return geo_dict
 
+#use to get group tag to uid_list
+#write in version: 16-03-18
+def add_group_tag(submit_user, task_name, uid_list):
+    bulk_action = []
+    #step1: get uid_list user_portrait old group field value
+    try:
+        user_portrait_result = es_user_portrait.mget(index=portrait_index_name, doc_type=portrait_index_type,\
+                body={'ids': uid_list})['docs']
+    except:
+        user_portrait_result = []
+    #step2: update group field value
+    for user_portrait_item in user_portrait_result:
+        uid = user_portrait_item['_id']
+        try:
+            source = user_portrait_item['_source']
+        except:
+            source = {}
+        try:
+            group_tag = user_portrait_item['group']
+        except:
+            group_tag = ''
+        if group_tag != '':
+            new_group_tag = group_tag + '&' + submit_user + '-' + task_name
+        else:
+            new_group_tag = submit_user + '-' + task_name
+        update_dict = {'group': new_group_tag}
+        action = {'update': {'_id': uid}}
+        bulk_action.extend([action, {'doc': update_dict}])
+    #step3: save bulk action to update
+    if bulk_action:
+        es_user_portrait.bulk(bulk_action, index=portrait_index_name, doc_type=portrait_index_type)
+
 
 #use to compute group task for multi-process
 #version: 16-02-27
@@ -1754,6 +1786,8 @@ def compute_group_task_v2():
             results['status'] = 1
             #step9: save results
             save_group_results(results)
+            #step10: add group tag
+            add_group_tag(results['submit_user'], task_name, uid_list)
             #test
             break
 
