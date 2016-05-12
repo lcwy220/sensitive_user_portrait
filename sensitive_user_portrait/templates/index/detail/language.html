@@ -92,7 +92,7 @@ overflow-y:scroll;
         <div style="float:right;cursor: pointer" type="button" data-toggle="modal" data-target="#language_info"><u>计算说明</u></div>
     </div>  
   <div style="margin-left:20px;width:30%;">
-    <div class="showmore" id="key_more" style="float:right;margin-top:30px;font-size:16px;"><a style="cursor:pointer; color:#555555;"  id="showmore_keyWords"><u>查看更多</u></a></div>
+    <div class="showmore" id="key_more" style="float:right;margin-top:30px;font-size:16px;"><a href="#" data-toggle="modal" data-target="#more_keywords"  id="morekeywords" style="margin-left:10px;">查看更多</a></div>
     <!-- <div style="margin-right:-50px;font-size:16px;"> -->
     <h3>关键词</h3>
     <!-- </div> -->
@@ -100,7 +100,7 @@ overflow-y:scroll;
     <div id="Language" style="width:300px;height:280px;margin:30px 40px;margin:-10px 50px 0px 20px;"></div>
   </div>
   <div style="margin-left:20px;width:30%;">
-    <div class="showmore" id="sensitive_more" style="float:right;margin-top:30px;font-size:16px;"><a style="cursor:pointer; color:#555555;"  id="showmore_keyWords"><u>查看更多</u></a></div>
+    <div class="showmore" id="sensitive_more" style="float:right;margin-top:30px;font-size:16px;"><a href="#" data-toggle="modal" data-target="#more_sensitive" id="moresensitive" style="margin-left:10px;">查看更多</a></div>
     <!-- <div style="margin-right:-50px;font-size:16px;"> -->
     <h3>敏感词</h3>
     <!-- </div> -->
@@ -108,7 +108,7 @@ overflow-y:scroll;
     <div id="sensitive_words" style="width:300px;height:280px;margin:30px 40px;margin:-10px 50px 0px 20px;"></div>
   </div>
   <div style="margin-left:20px;width:30%;">
-    <div class="showmore" id="hashtag_more" style="float:right;margin-top:30px;font-size:16px;"><a style="cursor:pointer; color:#555555;"  id="showmore_keyWords"><u>查看更多</u></a></div>
+    <div class="showmore" id="hashtag_more" style="float:right;margin-top:30px;font-size:16px;"><a href="#" data-toggle="modal" data-target="#more_hashtag" id="morehashtag" style="margin-left:10px;" >查看更多</a></div>
     <!-- <div style="margin-right:-50px;font-size:16px;"> -->
     <h3>微话题</h3>
     <!-- </div> -->
@@ -124,6 +124,7 @@ overflow-y:scroll;
   </div>
   -->
   <div id="float-wrap" class="hidden"></div>
+  <!--
   <div id="more_keyWords" class="hidden">
   	<h3 class="title">关键词排名<a href="javascript:void(0)" class="closeList" id="close"></a></h3>
   	<div id="key_WordList"></div>
@@ -136,6 +137,7 @@ overflow-y:scroll;
       <h3 class="title">敏感词排名<a href="javascript:void(0)" class="closeList" id="close"></a></h3>
       <div id="sensitive_WordList"></div>
   </div>
+  -->
   <div id="" style="width:1000px;">
   	<div id="" style="width:490px;margin-left:20px;">
       <span id="preference_domain_title" ><h3>用户领域分析</h3></span>
@@ -156,6 +158,46 @@ overflow-y:scroll;
   <!--
   <div id="preference_conclusion" style="width:100%;"></div>
   -->
+</div>
+
+
+<!-- 模态框 -->
+<div class="modal fade" id="more_hashtag" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="width: 500px;left:80%;">
+      <div class="modal-header" style="width:100%;">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        <h4 class="modal-title" style="font-size:18px" id="myModalLabel">微话题排名</h4>
+      </div>
+      <div class="modal-body" id='hashtag_WordList'>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="more_sensitive" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="width: 500px;left:80%;">
+      <div class="modal-header" style="width:100%;">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        <h4 class="modal-title" style="font-size:18px" id="myModalLabel">敏感词排名</h4>
+      </div>
+      <div class="modal-body" id='sensitive_WordList'>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="more_keywords" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="width: 500px;left:80%;">
+      <div class="modal-header" style="width:100%;">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        <h4 class="modal-title" style="font-size:18px" id="myModalLabel">关键词排名</h4>
+      </div>
+      <div class="modal-body" id='key_WordList'>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="/static/js/portrait/language.js"></script>
