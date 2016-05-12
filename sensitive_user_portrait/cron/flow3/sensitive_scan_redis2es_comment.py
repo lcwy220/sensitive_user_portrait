@@ -54,7 +54,6 @@ def scan_comment():
     #get redis db
     comment_redis = sensitive_comment_redis_dict[str(db_number)]
 
-    """
     # 1. 判断即将切换的db中是否有数据
     sensitive_redis_host_list.remove(str(db_number))
     while 1:
@@ -64,7 +63,7 @@ def scan_comment():
             break # 已经开始写入新的db，说明前一天的数据已经写完
         else:
             time.sleep(60)
-    """
+
 
     # 2. 删除之前的es
     comment_es_mappings(str(db_number))
@@ -126,7 +125,7 @@ def scan_comment():
             break
 
     # 4. flush redis
-    #comment_redis.flushdb()
+    comment_redis.flushdb()
 
 
 def split_bulk_action(bulk_action, index_name):
