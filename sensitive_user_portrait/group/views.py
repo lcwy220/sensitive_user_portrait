@@ -75,8 +75,9 @@ def ajax_show_task():
 def ajax_show_group_result_basic():
     results = {}
     task_name = request.args.get('task_name', '')
+    submit_user = request.args.get('submit_user', 'admin')
     module = request.args.get('module', 'basic')
-    results = search_group_results(task_name, module)
+    results = search_group_results(task_name, submit_user, module)
     return json.dumps(results)
 
 
@@ -172,7 +173,8 @@ def ajax_group_sentiment_weibo():
 def sjax_show_group_list():
     results = []
     task_name = request.args.get('task_name', '')
-    results = get_group_list(task_name)
+    submit_user = request.args.get('submit_user', '')
+    results = get_group_list(task_name, submit_user)
     return json.dumps(results)
 
 # delete the group task

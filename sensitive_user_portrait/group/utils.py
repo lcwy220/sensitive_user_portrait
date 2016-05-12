@@ -170,14 +170,26 @@ def search_task(task_name, submit_date, state, status):
 #search group analysis result
 #input: task_name, module
 #output: module_result
-def search_group_results(task_name, module):
+def search_group_results(task_name, submit_user, module):
     result = {}
     #step1:identify the task_name exist
-    try:
-        source = es_group_result.get(index=group_index_name, doc_type=group_index_type, \
-                id=task_name)['_source']
-    except:
-        return 'group task is not exist'
+    query_body = {
+        "query":
+            {"bool":
+                {"must": [
+                    {"term": {"task_name": task_name}},
+                    {"term": {"submit_user": submit_user}}
+                ]
+                }
+            }
+    }
+    #try:
+    source = es_group_result.search(index=group_index_name, doc_type=group_index_type, \
+        body=query_body)["hits"]["hits"][0]["_source"]
+
+    #except:
+    #    return 'group task is not exist'
+
     #step2: identify the task status=1(analysis completed)
     status = source['status']
     if status != 1:
@@ -416,12 +428,21 @@ def get_evaluate_max():
     return max_result
 
 # get grouop user list
-def get_group_list(task_name):
+def get_group_list(task_name, submit_user):
     results = []
-    try:
-        es_results = es_group_result.get(index=group_index_name, doc_type=group_index_type, id=task_name)['_source']
-    except:
-        return results
+    query_body = {
+        "query":
+            {"bool":
+                {"must": [
+                    {"term": {"task_name": task_name}},
+                    {"term": {"submit_user": submit_user}}
+                ]
+                }
+            }
+    }
+    es_results = es_group_result.search(index=group_index_name, doc_type=group_index_type, \
+        body=query_body)["hits"]["hits"][0]["_source"]
+
     uid_list = es_results['uid_list']
     user_portrait_attribute = es_user_portrait.mget(index=portrait_index_name, doc_type=portrait_index_type, body={'ids':uid_list})['docs']
     evaluate_max = get_evaluate_max()

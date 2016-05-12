@@ -13,6 +13,7 @@ g_basic.prototype = {   //获取数据，重新画表
   }
 }
 function draw_basic(data){
+	console.log(data);
 	draw_sex(data);
 	draw_verify(data);
 	Draw_totalnumber(data);
@@ -234,6 +235,6 @@ function draw_tag(data){
 //var basic_name=document.getElementById('').text();
 //var basic_name=$("#stickynote").text();
 var g_basic = new g_basic();
-var basic_url='/group/show_group_result/?task_name='+name;
+var basic_url='/group/show_group_result/?task_name='+name + '&submit_user=' + submit_user;
 g_basic.call_sync_ajax_request(basic_url,g_basic.ajax_method,draw_basic);
 
