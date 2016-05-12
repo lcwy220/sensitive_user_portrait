@@ -1789,115 +1789,155 @@ def search_ip(now_ts, uid):
         ip_time_dict = json.loads(ip_time_string)
     else:
         ip_time_dict = {}
-    for ip in ip_time_dict:
-        ip_time_list = ip_time_dict[ip].split('&')
-        for ip_timestamp in ip_time_list:
-            ip_timesegment = (int(ip_timestamp) - now_day_ts) / time_segment
-            try:
-                day_result[ip_timesegment][ip] += 1
-            except:
-                day_result[ip_timesegment] = {ip: 1}
-            try:
-                all_day_result[ip] += 1
-            except:
-                all_day_result[ip] = 1
 
-    for segment in day_result:
-        segment_dict = day_result[segment]
-        sort_segment_dict = sorted(segment_dict.items(), key=lambda x:x[1], reverse=True)
-        #add geo information for ip
-        new_sort_segment_dict = []
-        for item in sort_segment_dict[:IP_TOP]:
-            ip = item[0]
+    if ip_time_dict:
+        sorted_today_ip = sorted(ip_time_dict.iteritems(), key=lambda x:x[1], reverse=True)
+        results['today_top_ip'] = sorted_today_ip[0][0]
+        results['today_ip_list'] = sorted_today_ip
+        city_dict = dict()
+        for ip, count in ip_time_dict.iteritems():
             geo = ip2city(ip)
-            count = item[1]
-            new_sort_segment_dict.append([ip, count, geo])
-        sort_day_result[segment] = new_sort_segment_dict
+            if city_dict.has_key(geo):
+                city_dict[geo] += count
+            else:
+                city_dict[geo] = count
+        sorted_today_city = sorted(city_dict.iteritems(), key=lambda x:x[1], reverse=True)
+        results['today_top_city'] = sorted_today_city[0][0]
+        results['today_geo_list'] = sorted_today_city
+    else:
+        results['today_top_ip'] = ""
+        results['today_ip_list'] = []
+        results['today_top_city'] = ""
+        results['today_geo_list'] = []
 
-    all_day_top = sorted(all_day_result.items(), key=lambda x:x[1], reverse=True)
-    #add geo information for ip
-    new_all_day_top = []
-    for item in all_day_top:
-        ip = item[0]
-        count = item[1]
-        geo = ip2city(ip)
-        new_all_day_top.append([ip, count, geo])
 
-    results['day_ip'] = sort_day_result
-    results['all_day_top'] = new_all_day_top
+    try:
+        sensitive_ip_time_string = redis_ip.hget('sensitive_ip_'+str(now_day_ts), str(uid))
+    except Exception,e:
+        raise e
+    if sensitive_ip_time_string:
+        sensitive_ip_time_dict = json.loads(sensitive_ip_time_string)
+    else:
+        sensitive_ip_time_dict = {}
+
+    if sensitive_ip_time_dict:
+        sorted_today_sensitive_ip = sorted(sensitive_ip_time_dict.iteritems(), key=lambda x:x[1], reverse=True)
+        results['today_top_sensitive_ip'] = sorted_today_sensitive_ip[0][0]
+        results['today_sensitive_ip_list'] = sorted_today_ip
+        city_dict = dict()
+        for ip, count in sensitive_ip_time_dict.iteritems():
+            geo = ip2city(ip)
+            if city_dict.has_key(geo):
+                city_dict[geo] += count
+            else:
+                city_dict[geo] = count
+        sorted_today_sensitive_city = sorted(city_dict.iteritems(), key=lambda x:x[1], reverse=True)
+        results['today_top_sensitive_city'] = sorted_today_sensitive_city[0][0]
+        results['today_sensitive_geo_list'] = sorted_today_sensitive_city
+    else:
+        results['today_top_sensitive_ip'] = ""
+        results['today_sensitive_ip_list'] = []
+        results['today_sensitive_top_city'] = ""
+        results['today_sensitive_geo_list'] = []
+
+
+
+    #get week ip result
+    sensitive_week_time_ip_dict = dict()
+    sensitive_sort_week_result = dict()
+    sensitive_ip_week_result = dict()
+    sensitive_geo_week_result = dict()
+    sensitive_ip_week_list = dict()
+    sensitive_geo_week_list = dict()
 
     #get week ip result
     week_time_ip_dict = dict()
     sort_week_result = dict()
-    all_week_result = dict()
+    ip_week_result = dict()
+    geo_week_result = dict()
+    ip_week_list = dict()
+    geo_week_list = dict()
     for i in range(1, 8):
         timestamp = now_day_ts - i*DAY
-        try:
+        date = ts2datetime(timestamp)
+        index_name = "ip_" + str(date)
+        sensitive_index_name = "sensitive_ip_" + str(date)
+        if WORK_TYPE == 0:
+            try:
+                ip_time_string = es_cluster2.get(index=index_name, doc_type="ip", id=uid)['_source']['ip_dict']
+            except:
+                ip_time_string = ""
+            try:
+                sensitive_ip_time_string = es_cluster2.get(index=sensitive_index_name, doc_type="sensitive_ip", id=uid)['_source']["sensitive_ip_dict"]
+            except:
+                sensitive_ip_time_string = ""
+        else:
             ip_time_string = redis_ip.hget('ip_'+str(timestamp), str(uid))
-        except Exception, e:
-            ip_time_string = {}
+            sensitive_ip_time_string = redis_ip.hget('sensitive_ip_'+str(timestamp), str(uid))
+
         if ip_time_string:
             ip_time_dict = json.loads(ip_time_string)
         else:
             ip_time_dict = {}
-        for ip in ip_time_dict:
-            ip_time_list = ip_time_dict[ip].split('&')
-            for ip_timestamp in ip_time_list:
-                ip_timesegment = (int(ip_timestamp) - timestamp) / time_segment
-                try:
-                    week_time_ip_dict[ip_timesegment][ip] += 1
-                except:
-                    week_time_ip_dict[ip_timesegment] = {ip: 1}
+        if sensitive_ip_time_string:
+            sensitive_ip_time_dict = json.loads(sensitive_ip_time_string)
+        else:
+            sensitive_ip_time_dict = {}
 
-                try:
-                    all_week_result[ip] += 1
-                except:
-                    all_week_result[ip] = 1
-    
-    for i in range(0, 6): 
-        try:
-            segment_dict = week_time_ip_dict[i]
-        except:
-            week_time_ip_dict[i] = {}
-    
-    for segment in week_time_ip_dict:
-        segment_dict = week_time_ip_dict[segment]
-        sort_segment_dict = sorted(segment_dict.items(), key=lambda x:x[1], reverse=True)
-        #add geo information to ip
-        new_sort_segment_dict = []
-        for item in sort_segment_dict[:IP_TOP]:
-            ip = item[0]
+        day_geo_dict = dict()
+        sensitive_day_geo_dict = dict()
+        for ip, count in ip_time_dict:
             geo = ip2city(ip)
-            count = item[1]
-            new_sort_segment_dict.append([ip, count, geo])
-        sort_week_result[segment] = new_sort_segment_dict
-    
-    sort_all_week_top = sorted(all_week_result.items(), key=lambda x:x[1], reverse=True)
-    #add geo information to ip
-    new_sort_all_week_top = []
-    for item in sort_all_week_top:
-        ip = item[0]
-        geo = ip2city(ip)
-        count = item[1]
-        new_sort_all_week_top.append([ip, count, geo])
-    results['week_ip'] = sort_week_result
-    results['all_week_top'] = new_sort_all_week_top
+            #
+            if day_geo_dict.has_key(geo):
+                day_geo_dict[geo] += count
+            else:
+                day_geo_dict[geo] = count
+            if geo_week_result.has_key(geo):
+                geo_week_result[geo] += count
+            else:
+                geo_week_result[geo] = count
+            if ip_week_result.has_key(ip):
+                ip_week_result[ip] += count
+            else:
+                ip_week_result[ip] = count
 
-    #conclusion
-    description, home_ip, job_ip = get_ip_description(week_time_ip_dict, all_week_result, all_day_result)
-    results['description'] = description
-    #tag vector
-    if len(home_ip) != 0:
-        home_ip_city = ip2city(home_ip[0])
-    else:
-        home_ip = ['']
-        home_ip_city = ''
-    if len(job_ip) != 0:
-        job_ip_city = ip2city(job_ip[0])
-    else:
-        job_ip = ['']
-        job_ip_city = ''
-    results['tag_vector'] = [[u'家庭IP', home_ip[0], home_ip_city], [u'工作IP', job_ip[0], job_ip_city]]
+        for ip, count in sensitive_ip_time_dict:
+            geo = ip2city(ip)
+            #
+            if sensitive_day_geo_dict.has_key(geo):
+                sensitive_day_geo_dict[geo] += count
+            else:
+                sensitive_day_geo_dict[geo] = count
+            if sensitive_geo_week_result.has_key(geo):
+                sensitive_geo_week_result[geo] += count
+            else:
+                sensitive_geo_week_result[geo] = count
+            if sensitive_ip_week_result.has_key(ip):
+                sensitive_ip_week_result[ip] += count
+            else:
+                sensitive_ip_week_result[ip] = count
+
+        ip_week_list[i] = sorted(ip_time_dict.items(), key=lambda x:x[1], reverse=True)
+        sensitive_ip_week_list[i] = sorted(sensitive_ip_time_dict.items(), key=lambda x:x[1], reverse=True)
+        geo_week_list[i] = sorted(day_geo_dict.items(), key=lambda x:x[1], reverse=True)
+        sensitive_geo_week_list[i] = sorted(sensitive_day_geo_dict.items(), key=lambda x:x[1], reverse=True)
+
+    tmp_list  = sorted(ip_week_list.items(), key=lambda x:x[0], reverse=True)
+    results['ip_week_list'] = [item[1] for item in tmp_list]
+    tmp_list = sorted(sensitive_ip_week_list.items(), key=lambda x:x[0], reverse=True)
+    results['sensitive_ip_week_list'] = [item[1] for item in tmp_list]
+    tmp_list = sorted(geo_week_list.items(), key=lambda x:x[0], reverse=True)
+    results['geo_week_list'] = [item[1] for item in tmp_list]
+    tmp_list = sorted(sensitive_geo_week_list.items(), key=lambda x:x[0], reverse=True)
+    results['sensitive_geo_week_list'] = [item[1] for item in tmp_list]
+    results['week_top_ip_list'] = sorted(ip_week_result.items(), key=lambda x:x[1], reverse=True)
+    results['week_top_geo_list'] = sorted(geo_week_result.items(), key=lambda x:x[1], reverse=True)
+    results['sensitive_week_top_ip_list'] = sorted(sensitive_ip_week_result.items(), key=lambda x:x[1], reverse=True)
+    results['sensitive_week_top_geo_list'] = sorted(sensitive_geo_week_result.items(), key=lambda x:x[1], reverse=True)
+
+
+
     return results
 
 #get ip information conclusion
@@ -2568,9 +2608,8 @@ def search_preference_attribute(uid):
     results['sensitive_hashtag'] = sensitive_sort_hashtag
     #sensitive_words
     sensitive_words_dict = json.loads(portrait_result['sensitive_words_dict'])
-    sort_sensitive_keywords = sorted(sensitive_words_dict, key=lambda x:x[1], reverse=True)[:50]
+    sort_sensitive_keywords = sorted(sensitive_words_dict.items(), key=lambda x:x[1], reverse=True)[:50]
     results['sensitive_words'] = sort_sensitive_keywords
-    print sort_sensitive_keywords
     #domain
     domain_v3 = json.loads(portrait_result['domain_list'])
     #domain_v3_list = [domain_en2ch_dict[item] for item in domain_v3]
@@ -2589,6 +2628,7 @@ def search_preference_attribute(uid):
     results['topic'] = sort_topic_ch_dict
     """
     results['topic'] = portrait_result["topic_string"].split("&")
+    results["topic_list"] = json.loads(portrait_result["topic"])
     politics = portrait_result["politics"]
     results["politics"] =  portrait_result["politics"]
 
@@ -2878,9 +2918,10 @@ def search_attribute_portrait(uid):
     else:
         results['uid'] = ''
         results['description'] = ''
-    user_geo_list = results["activity_geo_dict"]
+    user_geo_list = json.loads(results["activity_geo_dict"])
     geo_dict = {}
     for item in user_geo_list:
+        print item
         for k,v in item.iteritems():
             try:
                 geo_dict[k] += v
@@ -2905,13 +2946,15 @@ def search_attribute_portrait(uid):
         ts = ts - 3600*24
         date = ts2datetime(ts)
         if WORK_TYPE == 0:
-            exist_bool = es_cluster.indices.exists(index="activity_"+str(date))
+            exist_bool = es_cluster2.indices.exists(index="activity_"+str(date))
             if exist_bool:
                 try:
-                    activity_result = es_cluster.get(index="activity_"+str(date), doc_type="activity", id=uid)["_source"]
+                    activity_result = es_cluster2.get(index="activity_"+str(date), doc_type="activity", id=uid)["_source"]
                     tmp_activity = json.loads(activity_result['activity_dict'])
                 except:
                     tmp_activity = dict()
+            else:
+                tmp_activity = dict()
         else:
             tmp = redis_activity.hget("activity_"+str(date_ts), uid)
             if tmp:

@@ -1,5 +1,3 @@
-//粉丝、朋友、微博
-console.log('tttttttt');
 
 //影响力分布
 function draw_influ_distribution(data,radar_div, title){
@@ -357,7 +355,7 @@ function show_more_influ_active_users(div_name){
 }
 
 //群体影响力走势图
-/*
+
 function group_influ(data){
    var mychart = echarts.init(document.getElementById('group_influ'));
    var mind = []
@@ -449,7 +447,7 @@ function group_influ(data){
 };
   mychart.setOption(option);
 }
-*/
+
 //显示成员微博信息
 function Draw_group_influ_weibo(data, div_name, sub_div_name){
     page_num = 5;
@@ -776,8 +774,7 @@ function Draw_topic_group_spread(data, radar_div, motal_div, show_more){
 
 
 var Show_influ = new Show_influ();
-var group_influ_url = '/group/show_group_result/?task_name=mytest030303&submit_user=admin&module=influence';
-console.log(group_influ_url);
+var group_influ_url = '/group/show_group_result/?task_name=' + task_name + '&submit_user=' + submit_user + '&module=influence';
 Show_influ.call_sync_ajax_request(group_influ_url, Show_influ.ajax_method, Show_influ.Draw_table);
 //日期选择
 

@@ -2,6 +2,16 @@
   this.ajax_method = 'GET';
 }
 
+function base_call_ajax_request(url, callback){
+    $.ajax({
+        url:url,
+        type:"get",
+        dataType: "json",
+        async: true,
+        success: callback
+    })
+}
+
 
 Search_weibo.prototype = {
   call_sync_ajax_request:function(url, method, callback){
@@ -26,7 +36,6 @@ Search_weibo.prototype = {
   },
 
   Draw_attribute_value: function(data){
-    // console.log(data);
     $('#attribute_value').empty();
     html = '';
     html += '<select id="select_attribute_value" style="min-width:75px;">';
@@ -269,11 +278,11 @@ function add_group_tag(){
         s=i.toString();
         select_uids_string += select_uids[s] + ',';
     };
-    //console.log(select_uids_string);
+
     add_tag_attribute_name = $("#select_attribute_name").val();
     add_tag_attribute_value = $("#select_attribute_value").val();
     add_group_tag_url = '/tag/add_group_tag/?uid_list=' + select_uids + "&attribute_name=" + add_tag_attribute_name + "&attribute_value=" + add_tag_attribute_value;
-    //console.log(add_group_tag_url);
+
     if(select_uids.length!=0){
         Search_weibo.call_sync_ajax_request(add_group_tag_url, Search_weibo.ajax_method, Search_weibo.Draw_add_group_tag);
     }else{
@@ -284,7 +293,7 @@ function add_group_tag(){
 
 
 function show_members(){
-    var model_url =   "/group/show_group_list/?task_name=" + name;
+    var model_url =   "/group/show_group_list/?task_name=" + name + "&submit_user=" + submit_user;
     base_call_ajax_request(model_url, Draw_model);
     $("#myModal_group").modal();
     function Draw_model(data){
@@ -340,7 +349,6 @@ function group_tag_vector(data){
         html += '<th style="font-weight:normal;">'+ data[key][0] + '</th>';
         if(data[key][0] == '主要消极情绪'){
             var value_emotion='';
-            // console.log('情绪',data[key][0])
             switch(data[key][1])
             {
             case '2': value_emotion = "生气";break;

@@ -79,16 +79,15 @@
 
  {% block head_js %}
   {{ super() }}
-	<script type="text/javascript" src="/static/js/highstock.js" charset="utf-8"></script>  
-	<script type="text/javascript" src="/static/js/exporting.js" charset="utf-8"></script>
-    <script type="text/javascript" src='/static/js/esl.js'></script>
-    <script type="text/javascript" src="/static/js/jquery.datetimepicker.js"></script>
-   	<script type="text/javascript" src="/static/js/portrait/group_table.js"></script>
-
   {% endblock head_js %}
 
 
     {% block body %}
+    	<!--<script type="text/javascript" src="/static/js/highstock.js" charset="utf-8"></script> --> 
+	<script type="text/javascript" src="/static/js/exporting.js" charset="utf-8"></script>
+    <script type="text/javascript" src='/static/js/esl.js'></script>
+    <script type="text/javascript" src="/static/js/jquery.datetimepicker.js"></script>
+   	<script type="text/javascript" src="/static/js/portrait/group_table.js"></script>
     <div id="page">
          <div id="mainBubble">
         </div>
@@ -232,7 +231,9 @@
     {{ super() }}
 
     <script>
-        var name = "{{ name }}";
+        var name = "{{ task_name }}";
+        var task_name = name;
+        var submit_user = "{{ user_name }}"
         //console.log('dddd', name);
         $(document).ready(function(){
             $("#closeness_tooltip").tooltip();
@@ -315,7 +316,7 @@ function pageDown(pageNum,pageCount){
 }
 
     </script>
-    <script type="text/javascript" src="/static/js/portrait/index/group_analysis.js"></script>
+    <script type="text/javascript" src="/static/js/portrait/group_analysis.js"></script>
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=aBrX8X2tEjcqiKwL78DLmanZ"></script>
 	<script type="text/javascript" src="/static/js/portrait/group_basic.js"></script>
     <script type="text/javascript" src="/static/js/portrait/group_activity.js"></script>
@@ -323,9 +324,5 @@ function pageDown(pageNum,pageCount){
 	<script type="text/javascript" src="/static/js/portrait/group_spread.js"></script>
 	<script type="text/javascript" src="/static/js/portrait/group_social.js"></script>
 	<script type="text/javascript" src="/static/js/portrait/group_psy.js"></script>
-    <!--
-	<script type="text/javascript" src="/static/js/portrait/group_basic.js"></script>
-	<script type="text/javascript" src="/static/js/portrait/group_preference.js"></script>
-    -->
     {% endblock end_js %}
 

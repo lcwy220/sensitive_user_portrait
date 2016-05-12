@@ -164,12 +164,15 @@ function control_click(){
 	$('a[id^="detail_analysis"]').click(function(){
 		var temp = $(this).parent().prev().prev().prev().prev().prev().html();
 		var remark0 =  $(this).parent().prev().prev().html();
-		url = '/group/get_group_detail/?task_name='+temp;
-        url += '&user='+$('#useremail').text();
+		url = '/index/group_analysis/?task_name='+temp;
+        url += '&user='+ 'admin'; //$('#useremail').text();
+        window.open(url);
+        /*
 		Group_analysis_task.call_sync_ajax_request(url,Group_analysis_task.ajax_method,draw_control_table);
 		$('input[name="con_group_name"]').val(temp);
 		$('input[name="con_remark"]').val(remark0);
 		$('#group_control').modal();
+		*/
 	});
     $('a[id="analyze_del"]').click(function(e){
 		var a = confirm('确定要删除吗？');

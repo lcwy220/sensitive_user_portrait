@@ -48,6 +48,7 @@ function th_draw_content(data){
     $('#thought_weibo_text').append(html);
 }
 function emotions(data){
+	console.log(data);
     var times = [];
     var time_name = [];
     var index = $('input[name="time-type"]:checked').val();

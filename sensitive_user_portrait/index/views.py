@@ -68,8 +68,9 @@ def group_results():
 @mod.route('/group_analysis/')
 @login_required
 def group_results():
-    name = request.args.get('name', '')
-    return render_template('index/group_analysis.html')
+    task_name = request.args.get('task_name', '')
+    user_name = request.args.get('user', '')
+    return render_template('index/group_analysis.html', task_name=task_name, user_name=user_name)
 
 @mod.route('/group_task/')
 @login_required
