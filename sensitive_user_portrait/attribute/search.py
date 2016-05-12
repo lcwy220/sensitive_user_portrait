@@ -2568,9 +2568,8 @@ def search_preference_attribute(uid):
     results['sensitive_hashtag'] = sensitive_sort_hashtag
     #sensitive_words
     sensitive_words_dict = json.loads(portrait_result['sensitive_words_dict'])
-    sort_sensitive_keywords = sorted(sensitive_words_dict, key=lambda x:x[1], reverse=True)[:50]
+    sort_sensitive_keywords = sorted(sensitive_words_dict.items(), key=lambda x:x[1], reverse=True)[:50]
     results['sensitive_words'] = sort_sensitive_keywords
-    print sort_sensitive_keywords
     #domain
     domain_v3 = json.loads(portrait_result['domain_list'])
     #domain_v3_list = [domain_en2ch_dict[item] for item in domain_v3]
@@ -2589,6 +2588,7 @@ def search_preference_attribute(uid):
     results['topic'] = sort_topic_ch_dict
     """
     results['topic'] = portrait_result["topic_string"].split("&")
+    results["topic_list"] = json.loads(portrait_result["topic"])
     politics = portrait_result["politics"]
     results["politics"] =  portrait_result["politics"]
 
@@ -2878,9 +2878,10 @@ def search_attribute_portrait(uid):
     else:
         results['uid'] = ''
         results['description'] = ''
-    user_geo_list = results["activity_geo_dict"]
+    user_geo_list = json.loads(results["activity_geo_dict"])
     geo_dict = {}
     for item in user_geo_list:
+        print item
         for k,v in item.iteritems():
             try:
                 geo_dict[k] += v
@@ -2905,13 +2906,15 @@ def search_attribute_portrait(uid):
         ts = ts - 3600*24
         date = ts2datetime(ts)
         if WORK_TYPE == 0:
-            exist_bool = es_cluster.indices.exists(index="activity_"+str(date))
+            exist_bool = es_cluster2.indices.exists(index="activity_"+str(date))
             if exist_bool:
                 try:
-                    activity_result = es_cluster.get(index="activity_"+str(date), doc_type="activity", id=uid)["_source"]
+                    activity_result = es_cluster2.get(index="activity_"+str(date), doc_type="activity", id=uid)["_source"]
                     tmp_activity = json.loads(activity_result['activity_dict'])
                 except:
                     tmp_activity = dict()
+            else:
+                tmp_activity = dict()
         else:
             tmp = redis_activity.hget("activity_"+str(date_ts), uid)
             if tmp:

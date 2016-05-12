@@ -554,7 +554,7 @@ def ajax_current_influence_comment():
     return json.dumps(results)
 
 
-
+"""
 # date: 2013-09-01
 @mod.route('/current_tag_vector/')
 def ajax_current_tag_vector():
@@ -566,7 +566,7 @@ def ajax_current_tag_vector():
     results = tag_vector(uid, date)
 
     return json.dumps(results)
-
+"""
 
 @mod.route('/history_activeness_influence/')
 def ajax_history_activeness_influence():
