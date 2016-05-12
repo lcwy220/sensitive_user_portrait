@@ -116,6 +116,8 @@ def register_blueprints(app):
     app.register_blueprint(weiborankModule)
     app.register_blueprint(socialsensingModule)
     app.register_blueprint(detectModule)
+    #新加的一行
+    app.register_blueprint(loginModule)
     """
     app.register_blueprint(attributeModule)
     app.register_blueprint(manageModule)
