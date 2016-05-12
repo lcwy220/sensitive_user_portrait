@@ -29,7 +29,7 @@ def scan_es2redis_day():
             count += 1
             uid = scan_re['uid']
             user_info[uid] = {'activity_geo_dict':scan_re['activity_geo_dict']}
-            user_info[uid] = {'sensitive_activity_geo_dict':scan_re['sensitive_activity_geo_dict']}
+            user_info[uid].update({'sensitive_activity_geo_dict':scan_re['sensitive_activity_geo_dict']})
             update_day_redis.lpush(UPDATE_DAY_REDIS_KEY, json.dumps(user_info))
             user_info = {}
             #log_should_delete
@@ -50,6 +50,7 @@ def scan_es2redis_day():
     if user_info:
         update_day_redis.lpush(UPDATE_DAY_REDIS_KEY, json.dumps(user_info))
 
+    print count
 
 if __name__=='__main__':
     log_time_ts = time.time()

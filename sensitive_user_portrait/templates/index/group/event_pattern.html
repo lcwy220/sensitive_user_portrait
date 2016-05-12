@@ -298,6 +298,13 @@ function submit_event(){
 		timestamp_to_url = 'timestamp_to=' + time_to;
 		event_all_url.push(timestamp_to_url);
 
+      var politics_id = $('#event_pattern #politics').attr("id");
+      var politics_content = $('#event_pattern #politics').val();
+      if(politics_content != ''){
+        politics_url = politics_id +'='+ politics_content;
+        event_all_url.push(politics_url);
+      }
+
       	var domain_url = '';
 		var domain = new Array();
 		$('#event_pattern #domain .inline-checkbox').each(function(){

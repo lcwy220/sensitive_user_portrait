@@ -9,6 +9,8 @@ from global_utils import es_flow_text as es
 def get_mappings(index_name):
     index_info = {
             'settings':{
+                'number_of_shards':5,
+                'number_of_replicas':0
                 'analysis':{
                     'analyzer':{
                         'my_analyzer':{
