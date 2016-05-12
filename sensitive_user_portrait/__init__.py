@@ -21,6 +21,12 @@ from sensitive_user_portrait.user_rank.views import mod as userrankModule
 from sensitive_user_portrait.weibo_rank.views import mod as weiborankModule
 from sensitive_user_portrait.portrait_search.views import mod as searchModule
 from sensitive_user_portrait.detect.views import mod as detectModule
+#新加的import
+from sensitive_user_portrait.login.views import mod as loginModule
+from flask.ext.security import SQLAlchemyUserDatastore
+from sensitive_user_portrait.extensions import db, security, user_datastore, admin, User, Role, mongo
+
+from flask_admin.contrib import sqla
 """
 from sensitive_user_portrait.attribute.views import mod as attributeModule
 from sensitive_user_portrait.manage.views import mod as manageModule
@@ -33,7 +39,8 @@ from sensitive_user_portrait.weibo.views import mod as weiboModule
 
 def create_app():
     app = Flask(__name__)
-
+    #下面这一句新加的
+    app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///flask-admin.db'
     register_blueprints(app)
     register_extensions(app)
     register_jinja_funcs(app)
@@ -68,7 +75,29 @@ def create_app():
     
     # debug toolbar
     # toolbar = DebugToolbarExtension(app)
-    
+#新加的app.config到return之前
+    app.config['MONGO_HOST'] = '219.224.134.211'    
+    app.config['MONGO_PORT'] = 27017    
+    app.config['MONGO_DBNAME'] = 'mrq'   
+     # init database
+    db.init_app(app)
+    with app.test_request_context():
+        db.create_all()
+
+    # init security
+    security.init_app(app, datastore=user_datastore)
+
+    # init admin
+    admin.init_app(app)
+    #admin.add_view(AdminAccessView(User, db.session))
+    #admin.add_view(AdminAccessView(Role, db.session))
+    #admin.add_view(sqla.ModelView(User, db.session))
+    #admin.add_view(sqla.ModelView(Role, db.session))
+    #admin.add_view(Roleadmin(db.session))
+
+    # init mongo
+    mongo.init_app(app)         
+
     return app
    
 

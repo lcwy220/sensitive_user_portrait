@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0" />
+		<title>用户登陆</title>
+		<link rel="stylesheet" type="text/css" href="/static/content/css/reset.css">
+		<link rel="stylesheet" type="text/css" href="/static/content/css/structure.css">
+		<style type="text/css">
+			div{
+				font-family: "Microsoft YaHei UI";
+			}
+			ul li {
+				list-style-type:none; 
+			}
+			body{
+			  background:rgb(235,235,235);
+			}
+			.shadow{
+				-webkit-box-shadow:5px 6px 3px #ABA8A8;
+				-moz-box-shadow:5px 6px 3px #ABA8A8;
+				box-shadow:5px 6px 3px #ABA8A8;
+				border: 2px solid #cccccc;
+
+			}
+			#email{
+				width: 200px;
+				height: 15px;
+				padding: 5px;
+				border-radius: 4px;
+			}
+			#password{
+				width: 200px;
+				height: 15px;
+				padding: 5px;
+				border-radius: 4px;
+			}
+			#submit{
+				display: inline-block;
+				color: #FFF;
+				border: 1px solid #334EE3;
+				border-radius: 2px;
+				background-color:#6699FF;
+				width:80px;
+				height:40px;
+			}
+
+		</style>
+		<!-- 引入js -->
+	    {% block head_js %}
+	   		<script src="/static/js/jquery-1.8.2.min.js"></script>
+	    	<script src="/static/js/jquery-ui.min.js"></script>
+			<script src='/static/js/jquery.dataTables.min.js'></script>
+			<script src='/static/js/jquery.showLoading.min.js'></script>
+			<script src='/static/js/portrait/time_for_test.js'></script>
+	    {% endblock %}		
+	</head>
+
+	<body >
+      <div style="height:60px;margin-top: 40px;color:white;font-size:32px;line-height: 50px;"><center><b style="color:black">敏感人物系统</b></center></div>
+      {% from "security/_macros.html" import render_field_with_errors, render_field %}
+        <form action="{{ url_for_security('login') }}" method="POST" name="login_user_form" class="box login" >
+		  <fieldset class="boxBody">
+		  	  {% include "security/_messages.html" %}
+			  {{ login_user_form.hidden_tag() }}
+			  {{ render_field_with_errors(login_user_form.email) }}
+			  {{ render_field_with_errors(login_user_form.password) }}
+		  </fieldset>
+		  <footer>
+			  {{ render_field_with_errors(login_user_form.remember) }}
+			  {{ render_field(login_user_form.next) }}
+		    {{ render_field(login_user_form.submit) }}
+		  </footer>
+		</form>
+		{% include "security/_menu.html" %}
+
+
+<!--         <div style="margin:40px auto 0 auto;width:400px;padding:20px;border-radius: 10px;height:270px;background-color: rgba(21, 21, 21, 0.32);">
+			{% from "security/_macros.html" import render_field_with_errors, render_field %}
+			{% include "security/_messages.html" %}
+			<h2>用户登陆 </h2>
+			<hr style="width:100%;">
+			<form action="{{ url_for_security('login') }}" method="POST" name="login_user_form">
+			  {{ login_user_form.hidden_tag() }}
+			  {{ render_field_with_errors(login_user_form.email) }}
+			  {{ render_field_with_errors(login_user_form.password) }}
+			  {{ render_field_with_errors(login_user_form.remember) }}
+			  {{ render_field(login_user_form.next) }}
+			  <div>
+			  	{{ render_field(login_user_form.submit) }}
+			  </div>
+			</form>
+			{% include "security/_menu.html" %}
+		</div> -->
+
+	</body>
+</html>
+
+
+
+  <script>
+  //$('#email').placeholder()
+  $('#email').prev().empty();
+  $('#email').prev().append('<div style="float: left;margin-top:5px;line-height:25px;width:60px;">用户名</div>');
+  $('#password').prev().empty();
+  $('#password').prev().append('<div style="float: left;line-height:25px;margin-top:5px;width:60px;">密码</div>');
+  $('#remember').prev().empty();
+  $('#remember').prev().append('<div style="float：left;color：#888888;float: left;margin-right:10px;margin-top:-2px;">记住密码</div>');
+  $('#remember').parent().css('float','left');
+  $('#email').parent().css('height','50px');
+  $('#password').parent().css('height','50px');
+  $('#submit').attr('value','登陆')
+  $('#submit').css('float','right')
+  $('#submit').css('font-weight','bold')
+  
+  </script>
