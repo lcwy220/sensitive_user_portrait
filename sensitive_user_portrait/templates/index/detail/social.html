@@ -20,13 +20,31 @@
     <div style="float:right;cursor: pointer" type="button" data-toggle="modal" data-target="#social_info"><u>计算说明</u></div>
 </div>
 <div style="width:100%;margin: 0px;margin-top: 10px;">
-  <div style="width:60%;padding-left:50px;">
+  <div style="width:30%;padding-left:50px;">
+  <!--
     <input type="radio" name="graph-type" value="1" title="转发" style="width:15px;height:15px;margin-left:30px;" checked >转发
     <input type="radio" name="graph-type" value="2" title="被转发" style="width:15px;height:15px;margin-left:30px;">被转发
     <input type="radio" name="graph-type" value="3" title="提及" style="width:15px;height:15px;margin-left:30px;">提及
     <input type="radio" name="graph-type" value="4" title="评论" style="width:15px;height:15px;margin-left:30px;">评论
     <input type="radio" name="graph-type" value="5" title="被评论" style="width:15px;height:15px;margin-left:30px;">被评论
     <input type="radio" name="graph-type" value="6" title="互动" style="width:15px;height:15px;margin-left:30px;">互动
+	-->
+	<span>选择微博类型：</span>
+	<select name="tag_type" class="fleft select-box">
+	<option value="1" checked="">所有微博</option>
+	<option value="2">敏感微博</option>
+	</select>
+	</div>
+	<div style="width:30%;padding-left:50px;">
+	<span>指标选择：</span>
+	<select name="tag_type" class="fleft select-box">
+	<option value="1" checked="">转发</option>
+	<option value="2">被转发</option>
+	<option value="3">提及</option>
+	<option value="4">评论</option>
+	<option value="5">被评论</option>
+	<option value="6">互动</option>
+	</select>
   </div>
   <div style="width:40%;">
     <div style="margin-top:3px;margin-left:20px;">显示人数&nbsp&nbsp</div>
