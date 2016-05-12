@@ -142,7 +142,7 @@ function drawTopic(div_name, more_div_name, rank_data){
         }
         var html = '';
         html += '<div ng-repeat="t in hotTopics" class="col-md-4 ng-scope"><div style="padding:20px; padding-left:15px; padding-right:15px; margin-bottom:15px" class="section-block">';
-        html += '<span class="no-margin"><small><a style="color:#777;font-size:18px" class="ng-binding">' + key + '</a></small></span>';
+        html += '<span class="no-margin"><small><a style="font-size:18px" class="ng-binding">' + key + '</a></small></span>';
         html += '<hr style="margin-top: 5px; margin-bottom: 15px">';
         html += '<ul style="margin-top:0px;margin-bottom:0;padding-left: 7px;height:50px; overflow-y:hidden" class="list-inline">';
         var topic_list = rank_data[key];
@@ -174,7 +174,7 @@ function drawTopic(div_name, more_div_name, rank_data){
    for (key in rank_data){ 
        var html = '';
        html += '<div ng-repeat="t in hotTopics" class="col-md-4 ng-scope"><div style="padding:5px; padding-left:15px; padding-right:15px; margin-bottom:15px" class="section-block">';
-       html += '<h1 class="no-margin"><small><a style="color:#777;font-size:18px" class="ng-binding">' + key + '</a></small></h1>';
+       html += '<h1 class="no-margin"><small><a style="font-size:18px" class="ng-binding">' + key + '</a></small></h1>';
        html += '<hr style="margin-top: 5px; margin-bottom: 15px">';
        html += '<ul style="margin-top:0px;margin-bottom:0;padding-left: 7px;height:50px; overflow-y:hidden" class="list-inline">';
         var topic_list = rank_data[key];
@@ -210,7 +210,7 @@ function drawTopicDomain(div_name, more_div_name, rank_data){
     for (var ddd=0;ddd<domains.length;ddd++){ 
         var html = '';
         html += '<div ng-repeat="t in hotTopics" class="col-md-4 ng-scope"><div style="padding:20px; padding-left:15px; padding-right:15px; margin-bottom:15px" class="section-block">';
-        html += '<span class="no-margin"><small><a style="color:#777;font-size:18px" class="ng-binding">' + domains[ddd] + '</a></small></span>';
+        html += '<span class="no-margin"><small><a style="font-size:18px" class="ng-binding">' + domains[ddd] + '</a></small></span>';
         html += '<hr style="margin-top: 5px; margin-bottom: 15px">';
         html += '<ul style="margin-top:0px;margin-bottom:0;padding-left: 7px;height:50px; overflow-y:hidden" class="list-inline">';
         var topic_list = rank_data[domains[ddd]];
@@ -243,7 +243,7 @@ function drawTopicDomain(div_name, more_div_name, rank_data){
    for (key in rank_data){ 
        var html = '';
        html += '<div ng-repeat="t in hotTopics" class="col-md-4 ng-scope"><div style="padding:5px; padding-left:15px; padding-right:15px; margin-bottom:15px" class="section-block">';
-       html += '<h1 class="no-margin"><small><a style="color:#777;font-size:18px" class="ng-binding">' + key + '</a></small></h1>';
+       html += '<h1 class="no-margin"><small><a style="font-size:18px" class="ng-binding">' + key + '</a></small></h1>';
        html += '<hr style="margin-top: 5px; margin-bottom: 15px">';
        html += '<ul style="margin-top:0px;margin-bottom:0;padding-left: 7px;height:50px; overflow-y:hidden" class="list-inline">';
         var topic_list = rank_data[key];
@@ -590,7 +590,7 @@ function page_group_influ_weibo(start_row,end_row,data, sub_div_name){
         var tweet_ulr = data[s][10];
         //date = new Date(parseInt(timestamp)*1000).format("yyyy-MM-dd hh:mm:ss");
         if (i%2 ==0){
-            html += '<div style="padding:5px;background:whitesmoke;">';
+            html += '<div style="padding:5px;background:rgba(238, 238, 238, 0.56);">';
             html += '<p style="margin-left:10px;"><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;'+date+'&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
             html += '<p style="margin-top:-5px;margin-left:10px;">敏感词：<span style="red">' + keyword + '</span></a>';
             html += '<span style="margin-left:600px;"><a>转发数（'+ retweet_count +'）</a><a>评论数（'+ comment_count +'）</a></span></p>';
