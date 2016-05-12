@@ -16,7 +16,7 @@ from sensitive_user_portrait.parameter import SOCIAL_DEFAULT_COUNT, SENTIMENT_TR
 from sensitive_user_portrait.parameter import DEFAULT_SENTIMENT, DAY
 from sensitive_user_portrait.parameter import RUN_TYPE, RUN_TEST_TIME, WORK_TYPE
 from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts
-#from personal_influence import get_user_influence, influenced_detail, influenced_people, influenced_user_detail, statistics_influence_people, tag_vector, comment_on_influence, detail_weibo_influence, influence_summary
+from personal_influence import get_user_influence, influenced_detail, influenced_people, influenced_user_detail, statistics_influence_people, tag_vector, comment_on_influence, detail_weibo_influence, influence_summary
 #from description import conclusion_on_influence
 
 
@@ -406,63 +406,13 @@ def ajax_delete():
         uid_list = json.loads(uid_list)
         status = delete_action(uid_list)
     return json.dumps(status)
-        
 
-"""
-attention: the format of date from request must be vertified
-format : '2015/07/04'
-
-"""
-
-@mod.route('/origin_weibo/')
-def ajax_origin_weibo():
-    uid = request.args.get('uid', '')
-    date = request.args.get('date', '') # which day you want to see
-    uid = str(uid)
-
-    # test
-    date = '2013/09/01'
-    uid = '1713926427'
-
-    date = str(date).replace('/', '')
-
-    results = search_origin_attribute(date, uid)
-
-    """
-    results['origin_weibo_top_retweeted_comtent'] = index_mid(results["origin_weibo_top_retweeted_id"])
-    results['origin_weibo_top_comment_content'] = index_mid(results["origin_weibo_top_comment_id"])
-    """
-
-    return json.dumps(results)
-
-@mod.route('/retweeted_weibo/')
-def ajax_retweetd_weibo():
-    uid = request.args.get('uid', '')
-    date = request.args.get('date', '')
-    uid = str(uid)
-
-    # test
-    #date = '2013/09/01'
-    #uid = '1713926427'
-
-    date = str(date).replace('/', '')
-
-    results = search_retweeted_attribute(date, uid)
-
-    """
-    returm mid content
-
-    results['retweeted_weibo_top_retweeted_content'] = index_mid(results['retweeted_weibo_top_retweeted_id'])
-    results['retweeted_weibo_top_comment_content'] = index_mid(results['retweeted_weibo_top_comment_id'])
-    """
-
-    return json.dumps(results)
 
 @mod.route('/basic_info/')
 def ajax_basic_info():
     uid = request.args.get('uid', '')
     uid = str(uid)
-    uid = '1713926427'
+    #uid = '1713926427'
     results = es_get_source(uid)
 
     return json.dumps(results)
@@ -497,11 +447,11 @@ def ajax_user_influence_detail():
 def ajax_get_top_weibo():
     uid = request.args.get('uid', '')
     date = request.args.get('date', '')
-    style = request.args.get("style", 0)
+    style = request.args.get("style", 0) # 1:origin, 2:retweet, 3:comment
+    order = request.args.get("order", 1) # 1:sensitive, 2:retweet, 3:comment, 4:ts
     uid = str(uid)
-    date = str(date).replace('/', '-')
 
-    results = influenced_detail(uid, date, style)
+    results = influenced_detail(uid, date, style, order)
 
     return json.dumps(results)
 
@@ -532,7 +482,6 @@ def ajax_all_influenced_users():
     date = request.args.get('date', '')
     style = request.args.get("style", 0)
     uid = str(uid)
-    date = str(date).replace('/', '-')
     style = int(style)
 
     results = statistics_influence_people(uid, date, style)
@@ -554,7 +503,7 @@ def ajax_current_influence_comment():
     return json.dumps(results)
 
 
-
+"""
 # date: 2013-09-01
 @mod.route('/current_tag_vector/')
 def ajax_current_tag_vector():
@@ -566,7 +515,7 @@ def ajax_current_tag_vector():
     results = tag_vector(uid, date)
 
     return json.dumps(results)
-
+"""
 
 @mod.route('/history_activeness_influence/')
 def ajax_history_activeness_influence():

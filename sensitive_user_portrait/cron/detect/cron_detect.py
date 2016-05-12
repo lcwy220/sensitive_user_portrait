@@ -831,7 +831,6 @@ def attribute_pattern_detect(input_dict):
                 attribute_list.append({'range':{filter_item: {'gte': filter_value_from, 'lt': filter_value_to}}})
 
         query_body = {'query':{'bool':{'must': attribute_list}}, 'size':count}
-        print query_body
         user_portrait_result = es_user_portrait.search(index=portrait_index_name, doc_type=portrait_index_type ,\
                 body=query_body, _source=False)['hits']['hits']
 
@@ -901,8 +900,9 @@ def event_detect(input_dict):
                 filter_value_to = filter_dict[filter_item]['lt']
                 attribute_list.append({'range':{filter_item: {'gte': filter_value_from, 'lt': filter_value_to}}})
 
+        query_body = {'query':{'bool': {'must': attribute_list}}, 'sort':[{'influence': {'order': 'desc'}}],'size':count}
         user_portrait_result = es_user_portrait.search(index=portrait_index_name, doc_type=portrait_index_type, \
-                body={'query':{'bool': {'must': attribute_list}}, 'sort':[{'influence': {'order': 'desc'}}],'size':count})['hits']['hits']
+                body=query_body)['hits']['hits']
 
         #change process proportion
         process_mark = change_process_proportion(task_name, 30)
@@ -1012,7 +1012,6 @@ def compute_group_detect():
     while True:
         #step1:read detect task information from redis queue
         detect_task_information = get_detect_information()
-        print detect_task_information
 
         if detect_task_information != {}:
             start_ts = time.time()

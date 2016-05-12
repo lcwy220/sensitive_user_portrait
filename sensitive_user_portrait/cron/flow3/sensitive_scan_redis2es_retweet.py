@@ -105,7 +105,7 @@ def scan_retweet():
             break
 
     # 4. flush redis
-    #retweet_redis.flushdb()
+    retweet_redis.flushdb()
 
 
 def split_bulk_action(bulk_action, index_name):

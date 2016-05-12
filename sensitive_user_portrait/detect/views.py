@@ -19,7 +19,8 @@ from sensitive_user_portrait.parameter import DETECT_ATTRIBUTE_FUZZ_ITEM, DETECT
                                     DETECT_ATTRIBUTE_SELECT_ITEM ,\
                                     DETECT_PATTERN_FUZZ_ITEM, DETECT_PATTERN_SELECT_ITEM ,\
                                     DETECT_PATTERN_RANGE_ITEM, DETECT_EVENT_ATTRIBUTE,\
-                                    DETECT_EVENT_TEXT_FUZZ_ITEM, DETECT_EVENT_TEXT_RANGE_ITEM
+                                    DETECT_EVENT_TEXT_FUZZ_ITEM, DETECT_EVENT_TEXT_RANGE_ITEM, \
+                                    DETECT_EVENT_SELECT_ATTRIBUTE
 from sensitive_user_portrait.parameter import DAY
 from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts
 from social_sensing_utils import show_social_sensing_task, show_important_users
@@ -392,10 +393,15 @@ def ajax_event_detect():
         if item_value_string != '':
             item_value_list = item_value_string.split(',')
             nest_body_list = []
-            for item_value in item_value_list:
-                nest_body_list.append({'wildcard':{item: '*'+item_value+'*'}})
+            nest_body_list.append({'terms': {item: item_value_list}})
             query_condition_num += 1
-            attribute_query_list.append({'bool':{'should': nest_body_list}})
+            attribute_query_list.extend(nest_body_list)
+
+    for item in DETECT_EVENT_SELECT_ATTRIBUTE:
+        item_value_string = request.args.get(item, '')
+        if item_value_string != '':
+            attribute_query_list.append({"term": {item: item_value_string}})
+            query_condition_num += 1
 
     query_dict['attribute']  = attribute_query_list
     #step2: get event query dict

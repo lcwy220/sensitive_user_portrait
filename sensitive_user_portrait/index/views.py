@@ -57,17 +57,20 @@ def word_recommend():
 @login_required
 def group():
     return render_template('index/group_identify.html')
+
 '''
 @mod.route('/group_results/')
 def group_results():
     name = request.args.get('name', '')
     return render_template('index/group_results.html')
 '''
+
 @mod.route('/group_analysis/')
 @login_required
 def group_results():
     name = request.args.get('name', '')
     return render_template('index/group_analysis.html')
+
 @mod.route('/group_task/')
 @login_required
 def group_task():
