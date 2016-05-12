@@ -2608,9 +2608,8 @@ def search_preference_attribute(uid):
     results['sensitive_hashtag'] = sensitive_sort_hashtag
     #sensitive_words
     sensitive_words_dict = json.loads(portrait_result['sensitive_words_dict'])
-    sort_sensitive_keywords = sorted(sensitive_words_dict, key=lambda x:x[1], reverse=True)[:50]
+    sort_sensitive_keywords = sorted(sensitive_words_dict.items(), key=lambda x:x[1], reverse=True)[:50]
     results['sensitive_words'] = sort_sensitive_keywords
-    print sort_sensitive_keywords
     #domain
     domain_v3 = json.loads(portrait_result['domain_list'])
     #domain_v3_list = [domain_en2ch_dict[item] for item in domain_v3]
@@ -2629,6 +2628,7 @@ def search_preference_attribute(uid):
     results['topic'] = sort_topic_ch_dict
     """
     results['topic'] = portrait_result["topic_string"].split("&")
+    results["topic_list"] = json.loads(portrait_result["topic"])
     politics = portrait_result["politics"]
     results["politics"] =  portrait_result["politics"]
 
@@ -2921,6 +2921,7 @@ def search_attribute_portrait(uid):
     user_geo_list = json.loads(results["activity_geo_dict"])
     geo_dict = {}
     for item in user_geo_list:
+        print item
         for k,v in item.iteritems():
             try:
                 geo_dict[k] += v
