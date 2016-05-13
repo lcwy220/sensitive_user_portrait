@@ -19,7 +19,7 @@
 /* 2. General Styles
 --------------------------------------- */
 * { font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif; }
-body { background-color:rgb(132, 132, 132); }
+body { background-color:rgb(169, 164, 164); }
 h1 { font-size: 24px; }
 .btn a {
     color: white;
@@ -107,7 +107,7 @@ h1 { font-size: 24px; }
     background-color: rgba(145,145,145,0.3);
 }
 .templatemo-sidebar .templatemo-sidebar-menu >li>ul>li.active, .templatemo-sidebar .templatemo-sidebar-menu>li>ul>li.a:hover {
-    background-color: rgb(191, 232, 167);
+    background-color: rgb(29, 144, 226) /*rgb(191, 232, 167)*/;
 }
 
 .templatemo-sidebar .templatemo-sidebar-menu >li.active, .templatemo-sidebar .templatemo-sidebar-menu>li>a:hover {

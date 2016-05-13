@@ -2,6 +2,7 @@
     width: 20px;
     height: 20px;
     margin-bottom: 0px;
+    border: 1px solid #dddddd;
 }
 .dataTable thead th{
     border-bottom:2px solid #ddd !important;

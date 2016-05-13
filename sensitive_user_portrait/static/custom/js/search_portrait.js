@@ -6,7 +6,7 @@ function draw_search_results(data){
     var html = '';
     //html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
     html += '<table class="table table-bordered table-striped table-condensed datatable">';
-    html += '<thead><th style="width:100px;background-color:#DDDDDD">用户ID</th>';
+    html += '<thead><th style="width:100px;">用户ID</th>';
     html += '<th style="width:135px;">昵称</th>';
     html += '<th style="width:140px;">注册地</th>';
     html += '<th style="">活跃度</th>';
