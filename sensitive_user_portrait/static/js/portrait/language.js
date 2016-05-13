@@ -59,7 +59,7 @@ function Draw_keyword(data, div_name, more_div, more){
   var html = '';
 	$('#'+ more_div).empty();
   if(data.length == 0){
-     //console.log(div_name);
+     ////console.log(div_name);
       html = '<h4 style="text-align:center;margin-top:50%;">暂无数据</h4>';
       //$('#'+ more_div).append(html);
       $('#'+ div_name).append(html);
@@ -132,7 +132,7 @@ function Draw_hashtag(data_sensitive,data_hash, div_name, more_div, more){
     var html = '';
 	$('#'+ more_div).empty();
   if(data_sensitive.length == 0 && data_hash.length == 0){
-     //console.log(div_name);
+     ////console.log(div_name);
       html = '<h4 style="text-align:center;margin-top:50%;">暂无数据</h4>';
       //$('#'+ more_div).append(html);
       $('#'+ div_name).append(html);
@@ -265,7 +265,7 @@ function Draw_topic_user(data){
       var html = '';
       $('#topic_WordList').empty();
       if(topic_sta.length == 0){
-         //console.log(div_name);
+         ////console.log(div_name);
           html = '<h3 style="font-size:20px;text-align:center;margin-top:50%;">暂无数据</h3>';
           //$('#'+ more_div).append(html);
           $('#more_topic').append(html);
@@ -288,9 +288,9 @@ function Draw_topic_user(data){
       var topic_result = [];
       topic_result = get_radar_data(topic_val);
       var topic_name = topic_result[0];
-      //console.log(topic_name);
+      ////console.log(topic_name);
       var topic_value = topic_result[1];
-     // console.log(topic_value)
+     // //console.log(topic_value)
       var myChart2 = echarts.init(document.getElementById('user_topic'));
       var option = {
         // title : {
@@ -303,7 +303,7 @@ function Draw_topic_user(data){
             formatter:  function (params){
               var res  = '';
               var indicator = params.indicator;
-              //console.log(params);
+              ////console.log(params);
               res += params['0'][3]+' : '+(params['0'][2]/10).toFixed(3);
               return res;
               }
@@ -355,7 +355,7 @@ function show_domain(data){
   }
   // var html = '';
   //html += '<h3>用户领域分析</h3>';
-  console.log(data);
+  //console.log(data);
   data1 = '根据注册信息分类：'+data[0][0];
   data2 = '根据转发结构分类：'+data[0][1];
   data3 = '根据发帖内容分类：'+data[0][2];
@@ -500,11 +500,11 @@ var option = {
 }
 
 function show_results(data){
-  //console.log(data.results.keywords);
+  ////console.log(data.results.keywords);
   var keywordsCloud = data.results.keywords;
-  //console.log(keywordsCloud);
+  ////console.log(keywordsCloud);
   var hashtag = data.results.hashtag;
-  console.log(hashtag);
+  //console.log(hashtag);
   var sensiti_hash = data.results.sensitive_hashtag;
   var topic = data.results.topic;
   var conclusion = data.description;
@@ -527,7 +527,7 @@ function show_results(data){
   show_domain(domain);
 
   var tag_vector = data.tag_vector;
-  //console.log(tag_vector);
+  ////console.log(tag_vector);
   for(var i=0; i<tag_vector.length;i++){
     if(tag_vector[i][1] == ''){
       tag_vector[i][1] = '暂无数据'
@@ -537,7 +537,7 @@ function show_results(data){
   }
 
 var prefrence_url = '/attribute/preference/?uid=' + parent.personalData.uid;
-//console.log(prefrence_url);
+////console.log(prefrence_url);
 call_sync_ajax_request(prefrence_url, ajax_method, show_results);
 var politic = document.getElementById('politics');
 if( parent.personalData.politics){
