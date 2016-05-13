@@ -592,15 +592,15 @@ function page_group_influ_weibo(start_row,end_row,data, sub_div_name){
         if (i%2 ==0){
             html += '<div style="padding:5px;background:rgba(238, 238, 238, 0.56);">';
             html += '<p style="margin-left:10px;"><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;'+date+'&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
-            html += '<p style="margin-top:-5px;margin-left:10px;">敏感词：<span style="red">' + keyword + '</span></a>';
-            html += '<span style="margin-left:600px;"><a>转发数（'+ retweet_count +'）</a><a>评论数（'+ comment_count +'）</a></span></p>';
+            html += '<p style="margin-top:-5px;margin-left:10px;"><span style="width: 700px;float: left;">敏感词：<span style="red">' + keyword + '</span></a></span>';
+            html += '<span style="width:40%;"><a>转发数（'+ retweet_count +'）</a><a>评论数（'+ comment_count +'）</a></span></p>';
 			html += '</div>'
     }
         else{
-            html += '<div style="padding;5px;">';
+            html += '<div style="padding:5px;">';
             html += '<p style="margin-left:10px;"><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;'+date+'&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';    
-            html += '<p style="margin-top:-5px;margin-left:10px;">敏感词：<span style="red">' + keyword + '</span></a>';
-            html += '<span style="margin-left:600px;"><a>转发数（'+ retweet_count +'）</a><a>评论数（'+ comment_count +'）</a></span></p>';
+            html += '<p style="margin-top:-5px;margin-left:10px;"><span style="width: 700px;float: left;">敏感词：<span style="red">' + keyword + '</span></a></span>';
+            html += '<span style="width:40%;"><a>转发数（'+ retweet_count +'）</a><a>评论数（'+ comment_count +'）</a></span></p>';
 			html += '</div>';
         }
     }

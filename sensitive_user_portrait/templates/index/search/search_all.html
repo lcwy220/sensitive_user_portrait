@@ -116,7 +116,6 @@
     date_init();
 
     $('#search_all_btn').click(function(){
-    	$('#search_all_load').css('display','block');
         var words = $('input[name="words_list"]').val();
         var users = $('input[name="user_list"]').val();
         var number_sort = $("input[name='sort_num_range']:checked").val();
@@ -142,7 +141,7 @@
             //simple_url += words_list.join(',');
             //window.location.href = simple_url;
         var url='/search/full_text_search/?start_time='+time_from+'&end_time='+time_to+'&uid='+users_list+'&keywords='+words_list+'&number='+number_sort;
-        console.log(url);
+            $('#search_all_load').css('display','block');
             $.ajax({
                 url:url,
                 type:"GET",

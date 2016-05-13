@@ -6,9 +6,10 @@
 }
 
 .city-picker-span {
-    position: relative;
+   /* position: relative;*/
+       margin-left: 0px;
     float:right;
-    margin-right:30px;
+    margin-right:50px;
     padding:3px;
     display: block;
     outline: 0;
