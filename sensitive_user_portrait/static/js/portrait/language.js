@@ -248,6 +248,7 @@ function get_radar_data (data) {
   return topic_result;
 }
 function Draw_topic_user(data){
+	//console.log(data);
   if(data[0][1].toFixed(3) == 0){
       $('#user_topic').append('<h4 style="text-align:center;margin-top:50%;">暂无数据</h4>');
       $('#showmore_topic').css('display', 'none');      
@@ -506,7 +507,7 @@ function show_results(data){
   var hashtag = data.results.hashtag;
   //console.log(hashtag);
   var sensiti_hash = data.results.sensitive_hashtag;
-  var topic = data.results.topic;
+  var topic = data.results.topic_list;
   var conclusion = data.description;
   var domain = data.results.domain;
   var sensitive = data.results.sensitive_words;
@@ -522,7 +523,7 @@ function show_results(data){
   Draw_keyword(keywordsCloud, keywords_name, keywords_more, key_more);
   Draw_hashtag(sensiti_hash,hashtag, hashtag_name, hashtag_more, hash_more);
   Draw_keyword(sensitive, sensitiv_name, sensitive_more, sensiti_more);
-  //Draw_topic_user(topic);
+  Draw_topic_user(topic);
   show_conclusion(conclusion);
   show_domain(domain);
 

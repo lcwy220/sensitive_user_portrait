@@ -84,7 +84,8 @@ domain_ch2en_dict = {u'作家写手': 'writer', u'专家学者': 'professor', u'
 
 
 #attribtue: topic
-topic_en2ch_dict = {"religion":u"宗教", "ideology":u"意识形态", "terrorist":u"民族及恐怖主义"}
+topic_en2ch_dict = {'fear-of-violence':u'暴恐', 'heresy':u'邪教', 'ideology':u'意识形态', \
+                   'livelihood':u'民生', 'religion':u'宗教', 'life':u'其他'}
 
 topic_ch2en_dict = {u'文体类_娱乐': 'art', u'科技类':'computer', u'经济类':'economic', \
                     u'教育类':'education', u'民生类_环保': 'environment', u'民生类_健康':'medicine',\

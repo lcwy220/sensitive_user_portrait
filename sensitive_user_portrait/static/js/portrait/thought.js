@@ -146,6 +146,59 @@ function emotions(data){
     )
 }
 function draw_character(data){
+	var myChart = echarts.init(document.getElementById('pie_emotion'));
+	var option = {
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        orient : 'vertical',
+        x : 'left',
+        data:['积极','消极','中性','焦虑','抑郁']
+    },
+    toolbox: {
+        show : true,
+        feature : {
+            mark : {show: true},
+            dataView : {show: true, readOnly: false},
+            magicType : {
+                show: true, 
+                type: ['pie', 'funnel'],
+                option: {
+                    funnel: {
+                        x: '25%',
+                        width: '50%',
+                        funnelAlign: 'left',
+                        max: 1548
+                    }
+                }
+            },
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    calculable : true,
+    series : [
+        {
+            //name:'访问来源',
+            type:'pie',
+            radius : '55%',
+            center: ['50%', '60%'],
+            data:[
+                {value:335, name:'积极'},
+                {value:310, name:'消极'},
+                {value:234, name:'中性'},
+                {value:135, name:'焦虑'},
+                {value:1548, name:'抑郁'}
+            ]
+        }
+    ]
+};
+ myChart.setOption(option);
+}
+/*
+function draw_character(data){
     //console.log(data);
     var sentiment_dict = ['冲动', '抑郁', '未知'];
     var text_dict = ['批判', '未知'];
@@ -264,11 +317,14 @@ function draw_character(data){
     };
     myChart.setOption(option);
 }
+*/
 function thought_load(){
     var url = '/attribute/sentiment_trend/?uid='+uid+'&time_type='+index;
     person_call_ajax_request(url, Thought.Draw_emotion);
     //var url_character = '/attribute/character_psy/?uid='+uid;
     //person_call_ajax_request(url_character,draw_character);
+	var data = [];
+	draw_character(data);
 }
 var Thought = new Thought();
 var index = $('input[name="time-type"]:checked').val();

@@ -126,6 +126,8 @@ Draw_pie_all0:function(data){
     
   },
   Draw_pie_all1:function(data){
+	  console.log(data);
+	  
     var div_name = ['cmt_user_domain_all','cmt_user_topic_all','cmt_user_geo_all'];
     $('#all_cmt_conclusion').empty();
     var html = '';
@@ -232,8 +234,8 @@ Draw_pie_all0:function(data){
     var html = '';
     html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive" style="font-size:14px;">';
     html += '<tr><th rowspan="2" style="text-align:center;vertical-align:middle;">&nbsp;类别</th>';
-    //html += '<th colspan="4" style="text-align:center;">转发情况<u id="retweet_distribution" style="font-size:12px;color:#555555;margin-left:20px;cursor: pointer">查看详情</u></th>';
-    //html += '<th colspan="4" style="text-align:center;">评论情况<u id="comment_distribution" style="font-size:12px;color:#555555;margin-left:20px;cursor: pointer">查看详情</u></th></tr>';
+    html += '<th colspan="4" style="text-align:center;">转发情况<u id="retweet_distribution" style="font-size:12px;color:#555555;margin-left:20px;cursor: pointer">查看详情</u></th>';
+    html += '<th colspan="4" style="text-align:center;">评论情况<u id="comment_distribution" style="font-size:12px;color:#555555;margin-left:20px;cursor: pointer">查看详情</u></th></tr>';
     html += '<th colspan="4" style="text-align:center;">转发情况</th>';
     html += '<th colspan="4" style="text-align:center;">评论情况</th></tr>';
 	html += '<tr><th style="text-align:center">总数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="所有发布微博被转发的总次数"></i></th>';
@@ -568,8 +570,8 @@ function Draw_get_top_weibo(data,div_name){
         html += '<div class="weibo_info"style="width:100%">';
         html += '<div class="weibo_pz">';
         //html += '<div id="topweibo_mid" class="hidden">'+mid+'</div>';
-        html += '<a class="retweet_count" href="javascript:;" target="_blank">转发数(' + reposts_count + ')</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
-        html += '<a class="comment_count" href="javascript:;" target="_blank">评论数(' + comments_count + ')</a></div>';
+        html += '<a class="retweet_count" >转发数(' + reposts_count + ')</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
+        html += '<a class="comment_count" >评论数(' + comments_count + ')</a></div>';
         html += '<div class="m">';
         html += '<u>' + date + '</u>&nbsp;-&nbsp;';
         //html += '<a target="_blank" href="' + weibo_link + '">微博</a>&nbsp;-&nbsp;';
@@ -606,6 +608,7 @@ function click_action(){
         $("#retweet_distribution_content").addClass("hidden");
         return false;
       });
+	  /*
       $(".comment_count").live("click",function(){       
         $("#float-wrap").removeClass("hidden");
         $("#cmt_influence").removeClass("hidden"); 
@@ -623,7 +626,8 @@ function click_action(){
         Influence.call_ajax_request(influenced_users_url_re, Influence.ajax_method, Influence.Single_users_influence_re);
         return false;
       });
-	  /*
+	  */
+	  
       $("#retweet_distribution").live("click",function(){
         $("#float-wrap").removeClass("hidden");
         $("#retweet_distribution_content").removeClass("hidden");
@@ -632,13 +636,13 @@ function click_action(){
         Influence.call_ajax_request(all_influenced_users_url_style0, Influence.ajax_method, Influence.Draw_pie_all0);
         return false;
       });
-	  */
+	  
       $("#comment_distribution").live("click",function(){
         $("#float-wrap").removeClass("hidden");
         $("#comment_distribution_content").removeClass("hidden");
-        //var all_influenced_users_url_style1 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid +'&date='+date_str+'&style=1';
-        //console.log(all_influenced_users_url_style1);
-        //Influence.call_ajax_request(all_influenced_users_url_style1, Influence.ajax_method, Influence.Draw_pie_all1);
+        var all_influenced_users_url_style1 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid +'&date='+date_str+'&style=1';
+        console.log(all_influenced_users_url_style1);
+        Influence.call_ajax_request(all_influenced_users_url_style1, Influence.ajax_method, Influence.Draw_pie_all1);
         return false;
       });
     $('input[name="choose_module"]').live('click', function(){             
@@ -666,12 +670,12 @@ function influence_load(){
 
     var basic_influence_url = '/attribute/current_influence_comment/?uid='+parent.personalData.uid+'&date='+date_str;
     Influence.call_async_ajax_request(basic_influence_url, Influence.ajax_method, Influence.Draw_basic_influence);
-	/*
+	
     var all_influenced_users_url_style0 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid+'&date='+date_str+'&style=0';
     Influence.call_async_ajax_request(all_influenced_users_url_style0, Influence.ajax_method, Influence.Draw_all_influenced_users_style0);
     var all_influenced_users_url_style1 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid+'&date='+date_str+'&style=1';
     Influence.call_async_ajax_request(all_influenced_users_url_style1, Influence.ajax_method, Influence.Draw_all_influenced_users_style1);
-	*/
+	
     //var get_top_weibo_url_style0 = '/attribute/get_top_weibo/?uid='+parent.personalData.uid+'&date='+date_str+'&style=0';
     //Influence.call_async_ajax_request(get_top_weibo_url_style0, Influence.ajax_method, Influence.Draw_get_top_weibo1);
 	//原创
@@ -686,6 +690,21 @@ function influence_load(){
     //var summary_influence_url = '/attribute/summary_influence/?uid='+parent.personalData.uid+'&date='+date_str;
     //Influence.call_async_ajax_request(summary_influence_url, Influence.ajax_method, Influence.Draw_conclusion);
 };
+
+$(function(){
+	$('#modechoose').click(function(){
+	var box = document.getElementsByName('mode_choose');
+	for(var i=0;i<box.length;i++){
+		if(box[i].checked){
+			sort_type = box[i].value;
+		}
+	}
+	console.log(sort_type);
+	//var url = "/attribute/new_user_weibo/?uid="+uid+"&sort_type="+sort_type;
+	//console.log(url);
+    //Personal.call_sync_ajax_request(url, Personal.ajax_method, Personal.weiboData);
+	});
+});
 
 var Influence = new Influence();
 var influence_date = choose_time_for_mode();
