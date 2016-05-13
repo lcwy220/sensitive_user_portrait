@@ -86,18 +86,14 @@
         </div>
       </div>
     </div>
-
-
+    
+    <input type="hidden" id="submituser" name="submituser" value="{{g.user}}"/>
 
     {% endblock body %}
     {% block end_js %}
         {{ super() }}
-        <script type="text/javascript" src="/static/js/portrait/group_list.js"></script>
         <script>
-        /*
-		data = [['生气情绪用户群体','2016/04/26 16:41',90,'24日于北京发布生气情绪的群体',1],['sdfghjk','2016/04/26 16:41',90,' ',0]]
-        Draw_resultTable(data)
-        */
-
-		</script>
+        var submit_user = $("#submituser").val();
+        </script>
+        <script type="text/javascript" src="/static/js/portrait/group_list.js"></script>
     {% endblock end_js %}

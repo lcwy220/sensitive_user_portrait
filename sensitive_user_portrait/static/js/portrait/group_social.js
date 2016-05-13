@@ -688,31 +688,6 @@ function social_click(){
       $(this).tab('show')
     })
 }
-   //  $('a[id^="group_change_weibo"]').click(function(){
-   //  var uid1 = $(this).parent().prev().prev().text();
-   //  var uid2 = $(this).parent().prev().prev().prev().prev().prev().text();
-   //  var url = '/group/social_inter_content/?uid1='+uid1+'&uid2='+uid2;
-   //  console.log(url);
-   //  g_social.call_sync_ajax_request(url, g_social.ajax_method, draw_group_weibo1);
-
-   // });
-    // $('a[id^="group_change_out_weibo"]').click(function(){
-    // var uid1 = $(this).parent().prev().prev().prev().text();
-    // var uid2 = $(this).parent().prev().prev().prev().prev().prev().text();
-    // var url = '/group/social_out_content/?uid1='+uid1+'&uid2='+uid2;
-    // g_social.call_sync_ajax_request(url, g_social.ajax_method, draw_group_weibo2);
-    // });
-    /*
-    var init_in_uid1 = $('#group_in_table tr:eq(1) td:eq(3)').text();
-    var init_in_uid2 = $('#group_in_table tr:eq(1) td:eq(0)').text();
-    g_social.call_sync_ajax_request('/group/social_inter_content/?uid1='+init_in_uid1+'&uid2='+init_in_uid2, g_social.ajax_method, draw_group_weibo1);
-
-    var init_out_uid1 = $('#group_out_table tr:eq(1) td:eq(2)').text();
-    var init_out_uid2 = $('#group_out_table tr:eq(1) td:eq(0)').text();
-    console.log('/group/social_out_content/?uid1='+init_out_uid1+'&uid2='+init_out_uid2);
-    g_social.call_sync_ajax_request('/group/social_out_content/?uid1='+init_out_uid1+'&uid2='+init_out_uid2, g_social.ajax_method, draw_group_weibo2);
-    */
-
 
 function draw_social(data){
     console.log(data);

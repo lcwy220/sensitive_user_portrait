@@ -463,6 +463,7 @@ function task_search_button(){ //表单搜索
 	a['state'] = $('input[name="state0"]').val();
 	var status =  $('input[name="status0"]').val();
 	a['status'] = $('select[name="task_type"] option:selected').val();
+	a['submit_user'] = submit_user;
 	for(var k in a){
 		if(a[k]){
 			url0.push(k +'='+a[k]);

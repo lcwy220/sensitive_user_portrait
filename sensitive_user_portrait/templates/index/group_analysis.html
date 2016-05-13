@@ -206,7 +206,8 @@
 				</div>
              
         </div>
-    </div>			
+    </div>
+    <input type="hidden" id="submituser" name="submituser" value="{{g.user}}"/>	
     {% endblock body %}
 
     {% block end_js %}
@@ -215,7 +216,7 @@
     <script>
         var name = "{{ task_name }}";
         var task_name = name;
-        var submit_user = "{{ user_name }}"
+        var submit_user = $("#submituser").val();
         //console.log('dddd', name);
         $(document).ready(function(){
             $("#closeness_tooltip").tooltip();

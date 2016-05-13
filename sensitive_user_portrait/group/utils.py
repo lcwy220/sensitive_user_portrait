@@ -69,8 +69,10 @@ def delete_uid_file(filename):
 def submit_task(input_data):
     status = 0 # mark it can not submit
     task_name = input_data['task_name']
+    submit_user = input_data['submit_user']
+    task_id = submit_user + task_name
     try:
-        result = es_group_result.get(index=group_index_name, doc_type=group_index_type, id=task_name)['_source']
+        result = es_group_result.get(index=group_index_name, doc_type=group_index_type, id=task_id)['_source']
     except:
         status = 1
     
@@ -83,7 +85,7 @@ def submit_task(input_data):
         input_data['detect_type'] = ''
         input_data['detect_process'] = ''
         add_es_dict = {'task_information': input_data, 'query_condition':''}
-        es_group_result.index(index=group_index_name, doc_type=group_index_type, id=task_name, body=input_data)
+        es_group_result.index(index=group_index_name, doc_type=group_index_type, id=task_id, body=input_data)
         r.lpush(group_analysis_queue_name, json.dumps(input_data))
     
     return status
@@ -91,9 +93,9 @@ def submit_task(input_data):
 
 
 #search task by some condition -whether add download
-def search_task(task_name, submit_date, state, status):
+def search_task(task_name, submit_user, submit_date, state, status):
     results = []
-    query = []
+    query = [{"term": {"submit_user": submit_user}}]
     condition_num = 0
     if task_name:
         task_name_list = task_name.split(' ')
@@ -463,13 +465,14 @@ def get_group_list(task_name, submit_user):
 
 #use to get group member uid_uname
 #version: write in 2016-02-26
-#input: task_name
+#input: task_name, submit_user
 #output: uid_uname dict
-def get_group_member_name(task_name):
+def get_group_member_name(task_name, submit_user):
     results = {}
+    task_id = submit_user + task_name
     try:
         group_result = es_group_result.get(index=group_index_name, doc_type=group_index_type,\
-                id=task_name)['_source']
+                id=task_id)['_source']
     except:
         return results
     uid_list = group_result['uid_list']
@@ -492,9 +495,10 @@ def get_group_member_name(task_name):
 
 
 # delete group results from es_user_portrait 'group_analysis'
-def delete_group_results(task_name):
+def delete_group_results(task_name, submit_user):
+    task_id = submit_user + task_name
     try:
-        result = es.delete(index=index_name, doc_type=index_type, id=task_name)
+        result = es.delete(index=index_name, doc_type=index_type, id=task_id)
     except:
         return False
     return True
@@ -533,12 +537,13 @@ def get_group_user_track(uid):
 # show group members weibo for activity ---week
 # input: task_name, start_ts
 # output: weibo_list
-def get_activity_weibo(task_name, start_ts):
+def get_activity_weibo(task_name, submit_user, start_ts):
     results = []
     #step1: get task_name uid
+    task_id = submit_user + task_name
     try:
         group_result = es_group_result.get(index=group_index_name, doc_type=group_index_type ,\
-                id=task_name, _source=False, fields=['uid_list'])
+                id=task_id, _source=False, fields=['uid_list'])
     except:
         group_result = {}
     if group_result == {}:
@@ -699,12 +704,13 @@ def get_social_inter_content(uid1, uid2, type_mark):
 #show group members sentiment weibo
 #input: task_name, start_ts ,sentiment_type
 #output: weibo_list
-def search_group_sentiment_weibo(task_name, start_ts, sentiment):
+def search_group_sentiment_weibo(task_name, submit_user, start_ts, sentiment):
     weibo_list = []
     #step1:get task_name uid
+    task_id = submit_user + task_name
     try:
         group_result = es_group_result.get(index=group_index_name, doc_type=group_index_type,\
-                        id=task_name, _source=False, fields=['uid_list'])
+                        id=task_id, _source=False, fields=['uid_list'])
     except:
         group_result = {}
     if group_result == {}:

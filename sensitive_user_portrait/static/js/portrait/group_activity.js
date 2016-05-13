@@ -96,7 +96,7 @@ function Draw_activity(data){
 function point2weibo(xnum, ts){
     //console.log(ts);
     var delta = '';
-    var activity_weibo_url = '/group/activity_weibo/?task_name='+ name +'&start_ts=' + ts;
+    var activity_weibo_url = '/group/activity_weibo/?task_name='+ name +'&start_ts=' + ts + '&submit_user=' + submit_user;
     call_sync_ajax_request(activity_weibo_url, ajax_method, draw_content);
         switch(xnum % 6)
         {

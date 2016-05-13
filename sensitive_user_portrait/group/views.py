@@ -60,10 +60,11 @@ def ajax_submit_task():
 def ajax_show_task():
     results = {}
     task_name = request.args.get('task_name', '')
+    submit_user = request.args.get('submit_user', '')
     submit_date = request.args.get('submit_date', '')
     state = request.args.get('state', '')
     status = request.args.get('status', '')
-    results = search_task(task_name, submit_date, state, status)
+    results = search_task(task_name, submit_user, submit_date, state, status)
     return json.dumps(results)
 
 
@@ -98,7 +99,8 @@ def ajax_show_group_menber_track():
 def ajax_group_member():
     results = {}
     task_name = request.args.get('task_name', '')
-    results = get_group_member_name(task_name)
+    submit_user = request.args.get('submit_user', '')
+    results = get_group_member_name(task_name, submit_user)
     return json.dumps(results)
 
 
@@ -109,8 +111,9 @@ def ajax_group_member():
 def ajax_activity_weibo():
     results = []
     task_name = request.args.get('task_name', '')
+    submit_user = request.args.get('submit_user', '')
     start_ts = int(request.args.get('start_ts', ''))
-    results = get_activity_weibo(task_name, start_ts)
+    results = get_activity_weibo(task_name, submit_user, start_ts)
     return json.dumps(results)
 
 
@@ -160,10 +163,11 @@ def ajax_get_social_out_content():
 @mod.route('/group_sentiment_weibo/')
 def ajax_group_sentiment_weibo():
     task_name = request.args.get('task_name', '')
+    submit_user = request.args.get('submit_user', '')
     start_ts = request.args.get('start_ts', '')
     start_ts = int(start_ts)
     sentiment_type = request.args.get('sentiment', '')
-    results = search_group_sentiment_weibo(task_name, start_ts, sentiment_type)
+    results = search_group_sentiment_weibo(task_name, submit_user, start_ts, sentiment_type)
     if not results:
         results = []
     return json.dumps(results)
@@ -182,7 +186,8 @@ def sjax_show_group_list():
 def ajax_delete_group_task():
     results = {}
     task_name = request.args.get('task_name', '')
-    results = delete_group_results(task_name)
+    submit_user = request.args.get('submit_user', '')
+    results = delete_group_results(task_name, submit_user)
     return json.dumps(results)
 
 @mod.route('/get_user_pinfo/')

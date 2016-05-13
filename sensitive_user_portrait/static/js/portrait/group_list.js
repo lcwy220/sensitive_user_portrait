@@ -58,8 +58,7 @@ Draw_resultTable: function(data){
 }
 
 function redraw_result(){
-	var url = '/group/show_task/';
-    //url += '?submit_user=' + $('#useremail').text();
+	var url = '/group/show_task/?submit_user=' + submit_user;
 	Group_analysis_task.call_sync_ajax_request(url, Group_analysis_task.ajax_method, Group_analysis_task.Draw_resultTable);
 }
 
@@ -165,7 +164,6 @@ function control_click(){
 		var temp = $(this).parent().prev().prev().prev().prev().prev().html();
 		var remark0 =  $(this).parent().prev().prev().html();
 		url = '/index/group_analysis/?task_name='+temp;
-        url += '&user='+ 'admin'; //$('#useremail').text();
         window.open(url);
         /*
 		Group_analysis_task.call_sync_ajax_request(url,Group_analysis_task.ajax_method,draw_control_table);
@@ -180,7 +178,7 @@ function control_click(){
     		var url = '/detect/delete_task/?';
 			var temp = $(this).parent().prev().prev().prev().prev().prev().html();
 			url = url + 'task_name=' + temp;
-            url += '&submit_user=' + $('#useremail').text();
+            url += '&submit_user=' + submit_user;
 			Group_analysis_task.call_sync_ajax_request(url,Group_analysis_task.ajax_method,del);
 		}
 	});	
@@ -264,7 +262,7 @@ function task_search_button(){ //表单搜索
 		url1 = url0;
 	}
 	var search_url = '/group/show_task/?'+url1;
-    search_url += '&submit_user=' + $('#useremail').text();
+    search_url += '&submit_user=' + submit_user;
 	//console.log(search_url);
 	$.ajax({
   	    type:'GET',
