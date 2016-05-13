@@ -500,7 +500,7 @@ var option = {
 }
 
 function show_results(data){
-  //console.log(data.results.keywords);
+  console.log(data);
   var keywordsCloud = data.results.keywords;
   //console.log(keywordsCloud);
   var hashtag = data.results.hashtag;
