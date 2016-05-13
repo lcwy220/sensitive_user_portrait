@@ -963,7 +963,7 @@ def search_be_comment(uid, top_count):
 #write in version: 15-12-08
 #input: uid, top_count
 #output: in_portrait_list, in_portrait_result, out_portrait_list
-def search_be_comment(uid, top_count):
+def sensitive_search_be_comment(uid, top_count):
     results = {}
     evaluate_max_dict = get_evaluate_max()
     if RUN_TYPE == 0:
