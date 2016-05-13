@@ -2627,7 +2627,6 @@ def search_preference_attribute(uid):
     domain = portrait_result['domain']
     results['domain'] = [domain_v3, domain]
     #topic
-    """
     topic_en_dict = json.loads(portrait_result['topic'])
     topic_ch_dict = {}
     for topic_en in topic_en_dict:
@@ -2636,10 +2635,9 @@ def search_preference_attribute(uid):
             topic_ch_dict[topic_ch] = topic_en_dict[topic_en]
     sort_topic_ch_dict = sorted(topic_ch_dict.items(), key=lambda x:x[1], reverse=True)
     #results['topic'] = topic_ch_dict
-    results['topic'] = sort_topic_ch_dict
-    """
+    results['topic_list'] = sort_topic_ch_dict
     results['topic'] = portrait_result["topic_string"].split("&")
-    results["topic_list"] = json.loads(portrait_result["topic"])
+    #results["topic_list"] = json.loads(portrait_result["topic"])
     politics = portrait_result["politics"]
     results["politics"] =  portrait_result["politics"]
 
