@@ -22,7 +22,7 @@ from sensitive_user_portrait.global_utils import retweet_index_name_pre, retweet
 from sensitive_user_portrait.global_utils import be_retweet_index_name_pre, be_retweet_index_type,sensitive_be_retweet_index_name_pre, sensitive_be_retweet_index_type
 from sensitive_user_portrait.global_utils import comment_index_name_pre, comment_index_type, sensitive_comment_index_name_pre, sensitive_comment_index_type
 from sensitive_user_portrait.global_utils import be_comment_index_name_pre, be_comment_index_type,sensitive_be_comment_index_name_pre, sensitive_be_comment_index_type
-from sensitive_user_portrait.global_utils import copy_portrait_index_name, copy_portrait_index_type
+from sensitive_user_portrait.global_utils import COPY_USER_PORTRAIT_INFLUENCE,COPY_USER_PORTRAIT_ACTIVENESS, copy_portrait_index_type
 from sensitive_user_portrait.global_utils import R_RECOMMENTATION as r_recomment
 from sensitive_user_portrait.global_utils import ES_CLUSTER_FLOW2 as es_cluster2
 from sensitive_user_portrait.global_config import R_BEGIN_TIME
@@ -56,7 +56,6 @@ def get_max_index(es, index_name, index_type, sort_list):
             "size":1
         }
         tmp_result = es.search(index=index_name, doc_type=index_type, body=query_body, _source=False, fields=[item])['hits']['hits']
-        print tmp_result
         max_value = tmp_result[0]['fields'][item][0]
         results[item] = max_value
     return results
@@ -70,7 +69,6 @@ def get_total_evaluation(uid):
     sen_max = get_max_index(es_copy_portrait, "copy_user_portrait_sensitive", "sensitive", ["sensitive_week_ave", "sensitive_month_ave"])
     act_max = get_max_index(es_copy_portrait, "copy_user_portrait_activeness", "activeness", ["activeness_week_ave", "activeness_month_ave"])
     user_info = es_user_portrait.get(index=portrait_index_name, doc_type=portrait_index_type, id=uid)['_source']
-    print imp_max, sen_max,act_max,bci_max
     if 1:
         bci_user_info = es_copy_portrait.get(index="copy_user_portrait_influence", doc_type="influence",id=uid, _source=False, fields=["bci_week_ave", "bci_month_ave"])
         bci_week_ave = bci_user_info['fields']["bci_week_ave"][0]
@@ -111,7 +109,6 @@ def get_total_evaluation(uid):
     results['sen_day'] = normalize_index(user_info['sensitive'], max_result['sensitive'])
     results['sen_week'] = normalize_index(sen_week_ave, sen_max['sensitive_week_ave'])
     results['sen_month'] = normalize_index(sen_month_ave, sen_max['sensitive_month_ave'])
-    print results
 
     return results
 
@@ -1615,7 +1612,6 @@ def search_location_day(uid, now_date_ts, sensitive=0):
         else:
             index_name = "ip_" + str(date)
         exist_bool = es_cluster2.indices.exists(index=index_name)
-        print exist_bool
         if exist_bool:
             if sensitive == 0:
                 ip_info = es_cluster2.get(index=index_name, doc_type="ip", id=uid)['_source']
@@ -1857,9 +1853,11 @@ def search_ip(now_ts, uid):
     geo_week_result = dict()
     ip_week_list = dict()
     geo_week_list = dict()
+    week_time_list = []
     for i in range(1, 8):
         timestamp = now_day_ts - i*DAY
         date = ts2datetime(timestamp)
+        week_time_list.append(date)
         index_name = "ip_" + str(date)
         sensitive_index_name = "sensitive_ip_" + str(date)
         if WORK_TYPE == 0:
@@ -1886,7 +1884,8 @@ def search_ip(now_ts, uid):
 
         day_geo_dict = dict()
         sensitive_day_geo_dict = dict()
-        for ip, count in ip_time_dict:
+        print ip_time_dict
+        for ip, count in ip_time_dict.items():
             geo = ip2city(ip)
             #
             if day_geo_dict.has_key(geo):
@@ -1902,7 +1901,7 @@ def search_ip(now_ts, uid):
             else:
                 ip_week_result[ip] = count
 
-        for ip, count in sensitive_ip_time_dict:
+        for ip, count in sensitive_ip_time_dict.items():
             geo = ip2city(ip)
             #
             if sensitive_day_geo_dict.has_key(geo):
@@ -1935,7 +1934,8 @@ def search_ip(now_ts, uid):
     results['week_top_geo_list'] = sorted(geo_week_result.items(), key=lambda x:x[1], reverse=True)
     results['sensitive_week_top_ip_list'] = sorted(sensitive_ip_week_result.items(), key=lambda x:x[1], reverse=True)
     results['sensitive_week_top_geo_list'] = sorted(sensitive_geo_week_result.items(), key=lambda x:x[1], reverse=True)
-
+    week_time_list.reverse()
+    results['week_time_list'] = week_time_list
 
 
     return results
@@ -2044,8 +2044,9 @@ def search_activity(now_ts, uid):
     sensitive_day_time_count = []
     sensitive_day_weibo = dict()
     now_day_ts = datetime2ts(now_date)
+    """
     if WORK_TYPE == 0:
-        #exist_bool = es_cluster2.indices.exists(index="activity_"+str(now_date))
+        exist_bool = es_cluster2.indices.exists(index="activity_"+str(now_date))
         try:
             day_result = es_cluster2.get(index="activity_"+str(now_date), doc_type="activity", id=uid)['_source']['activity_dict']
         except:
@@ -2055,14 +2056,16 @@ def search_activity(now_ts, uid):
         except:
             sensitive_day_result = ""
     else:
-        try:
-            day_result = redis_activity.hget('activity_'+str(now_day_ts), str(uid))
-        except:
-            day_result = ''
-        try:
-            sensitive_day_result = redis_activity.hget('sensitive_activity_'+str(now_day_ts), str(uid))
-        except:
-            sensitive_day_result = ''
+    """
+    try:
+        day_result = redis_activity.hget('activity_'+str(now_day_ts), str(uid))
+    except:
+        day_result = ''
+    try:
+        sensitive_day_result = redis_activity.hget('sensitive_activity_'+str(now_day_ts), str(uid))
+    except:
+        sensitive_day_result = ''
+    print day_result
     if day_result:
         day_dict = json.loads(day_result)
         for segment in day_dict:
@@ -2183,6 +2186,7 @@ def search_activity(now_ts, uid):
     sort_week_weibo_count = sorted(week_weibo_count, key=lambda x:x[0])
     sensitive_sort_week_weibo_count = sorted(sensitive_week_weibo_count, key=lambda x:x[0])
     sort_segment_list = sorted(segment_result.items(), key=lambda x:x[1], reverse=True)
+    print sort_segment_list
     sensitive_sort_segment_list = sorted(sensitive_segment_result.items(), key=lambda x:x[1], reverse=True)
     #description, active_type = active_time_description(segment_result)
     active_time_string = {'0':'0-4', '1':'4-8','2':'8-12','3':'12-16','4':'16-20','5':'20-24'}
@@ -2191,8 +2195,15 @@ def search_activity(now_ts, uid):
     activity_result['sensitive_day_trend'] = sensitive_day_time_count
     activity_result['week_trend'] = sort_week_weibo_count
     activity_result['sensitive_week_trend'] = sensitive_sort_week_weibo_count
-    activity_result['activity_time'] = active_time_string[str(sort_segment_list[0][0])]
-    activity_result['sensitive_activity_time'] = active_time_string[str(sensitive_sort_segment_list[0][0])]
+    if sort_segment_list:
+        activity_result['activity_time'] = active_time_string[str(sort_segment_list[0][0]/16)]
+    else:
+        activity_result['activity_time'] = ""
+    print sensitive_sort_segment_list
+    if sensitive_sort_segment_list:
+        activity_result['sensitive_activity_time'] = active_time_string[str(sensitive_sort_segment_list[0][0]/16)]
+    else:
+        activity_result['sensitive_activity_time'] = ""
     #activity_result['description'] = description
     #activity_result['tag_vector'] = [[u'活跃时间', sort_segment_list[:1]], [u'活动类型', active_type]]
     return activity_result
@@ -3246,11 +3257,12 @@ def get_activeness_trend(uid):
 def get_influence_trend(uid, day_count):
     results = {}
     try:
-        es_result = es_copy_portrait.get(index=copy_portrait_index_name, doc_type=copy_portrait_index_type, id=uid)['_source']
+        es_result = es_copy_portrait.get(index=COPY_USER_PORTRAIT_INFLUENCE, doc_type="influence", id=uid)['_source']
     except:
         return None
     influence_value_list = []
     for item in es_result:
+        print item
         item_list = item.split('_')
         if len(item_list)==1 and item_list[0] != 'uid':
             value = es_result[item]
@@ -3265,7 +3277,7 @@ def get_influence_trend(uid, day_count):
                     'sort': [{query_key: {'order': 'desc'}}]
                 }
             try:
-                iter_max_value = es_user_portrait.search(index=copy_portrait_index_name, doc_type=copy_portrait_index_type, body=query_body)['hits']['hits']
+                iter_max_value = es_user_portrait.search(index=COPY_USER_PORTRAIT_INFLUENCE, doc_type="influence", body=query_body)['hits']['hits']
             except Exception, e:
                 raise e
             iter_max = iter_max_value[0]['_source'][query_key]

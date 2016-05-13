@@ -2,15 +2,13 @@ function Thought(){
 }
 Thought.prototype = {   //获取数据，重新画表
     Draw_emotion:function(data){
+		console.log(data);
         var items = data;
-        if(items==null){
+        if(items['time_list'].length==0){
             var say = document.getElementById('emotion');
             say.innerHTML = '该用户暂无此数据';
         }else{
-            var con0 = document.getElementById('con_emotion0');
-            con0.innerHTML = items['description'][0];
-            var con = document.getElementById('con_emotion');
-            con.innerHTML = items['description'][1];
+			console.log('sadfghjkl;');
             emotions(items);
             var time_init = new Date(items['time_list'][0]);
             var times_init = time_init.getTime().toString().substr(0,10);
@@ -23,7 +21,7 @@ Thought.prototype = {   //获取数据，重新画表
             var index = $('input[name="time-type"]:checked').val();
             var url_content = '/attribute/sentiment_weibo/?uid='+uid+'&start_ts='+times_init+'&time_type='+index+'&sentiment=0';
             person_call_ajax_request(url_content,th_draw_content);
-        }   
+        }
     }
 }
 function choose_time(){            
@@ -31,7 +29,7 @@ function choose_time(){
     var url = '/attribute/sentiment_trend/?uid='+uid+'&time_type='+index;
     person_call_ajax_request(url, Thought.Draw_emotion);
     //$('#emotion').empty();
-  }
+}
 function th_draw_content(data){
     var html = '';
     $('#thought_weibo_text').empty();
@@ -270,3 +268,4 @@ function thought_load(){
 }
 var Thought = new Thought();
 var index = $('input[name="time-type"]:checked').val();
+console.log(index);

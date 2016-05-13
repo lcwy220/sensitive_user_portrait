@@ -228,7 +228,7 @@ function location_all(){
             html += '<th style="text-align:center">-</th>';
             i++;
         }
-        html += '<th style="text-align:center"><a id="daily_location_map" href="#map">查看地图</a></th>';
+        //html += '<th style="text-align:center"><a id="daily_location_map" href="#map">查看地图</a></th>';
         html += '</tr>';
     }
     var url = '/attribute/location/?uid='+uid+'&time_type=week';
@@ -246,7 +246,7 @@ function location_all(){
             html += '<th style="text-align:center">-</th>';
             i++;
         }
-        html += '<th style="text-align:center"><a id="weekly_location_map" href="#map">查看地图</a></th>';
+        //html += '<th style="text-align:center"><a id="weekly_location_map" href="#map">查看地图</a></th>';
     }
     var url = '/attribute/location/?uid='+uid+'&time_type=month';
     var monthly_location_map_data = new Array();
@@ -265,7 +265,7 @@ function location_all(){
             html += '<th style="text-align:center">-</th>';
             i++;
         }
-        html += '<th style="text-align:center"><a id="monthly_location_map" href="#map">查看地图</a></th>';
+        //html += '<th style="text-align:center"><a id="monthly_location_map" href="#map">查看地图</a></th>';
         html += '</tr>';
         // track map
         // month_process(data.month_track, true);
@@ -309,5 +309,5 @@ function location_all(){
     }
 
 }
-location_all();
+//location_all();
 
