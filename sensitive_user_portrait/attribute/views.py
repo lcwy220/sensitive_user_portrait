@@ -6,8 +6,10 @@ import json
 from flask import Blueprint, url_for, render_template, request, abort, flash, session, redirect
 from search import search_attribute_portrait, search_location, search_ip, search_mention, search_activity,\
                    search_attention, search_follower, search_portrait, get_geo_track, get_geo_track_ip, get_online_pattern
+from search import sensitive_search_mention, sensitive_search_attention, sensitive_search_follower, sensitive_search_be_comment, \
+                   sensitive_search_bidirect_interaction
 from search import delete_action, search_identify_uid, get_activeness_trend
-from search import get_activity_weibo, search_comment, search_be_comment
+from search import get_activity_weibo, search_comment, search_be_comment, sensitive_search_comment
 from search import search_bidirect_interaction, search_preference_attribute, search_sentiment_trend
 from search import search_sentiment_weibo, get_influence_trend, search_remark, edit_remark
 from sensitive_user_portrait.search_user_profile import es_get_source
@@ -128,12 +130,16 @@ def ajax_mention():
     uid = str(uid)
     top_count = request.args.get('top_count', SOCIAL_DEFAULT_COUNT)
     top_count = int(top_count)
+    sensitive = request.args.get("sensitive", 0)
     #run_type
     if RUN_TYPE == 1:
         now_ts = time.time()
     else:
         now_ts = test_time
-    results = search_mention(now_ts, uid, top_count)
+    if sensitive == 0:
+        results = search_mention(now_ts, uid, top_count)
+    else:
+        results = sensitive_search_mention(now_ts, uid, top_count)
 
     return json.dumps(results)
 
@@ -178,9 +184,13 @@ def ajax_activity_weibo():
 def ajax_attention():
     uid = request.args.get('uid', '')
     top_count = request.args.get('top_count', SOCIAL_DEFAULT_COUNT)
+    sensitive = request.args.get('sensitive', 0)
     uid = str(uid)
     top_count = int(top_count)
-    results = search_attention(uid, top_count)
+    if sensitive == 0:
+        results = search_attention(uid, top_count)
+    else:
+        results = sensitive_search_attention(uid, top_count)
     if not results:
         results = {}
     return json.dumps(results)
@@ -195,7 +205,11 @@ def ajax_follower():
     uid = str(uid)
     top_count = request.args.get('top_count', SOCIAL_DEFAULT_COUNT)
     top_count = int(top_count)
-    results = search_follower(uid, top_count)
+    sensitive = request.args.get("sensitive", 0)
+    if sensitive == 0:
+        results = search_follower(uid, top_count)
+    else:
+        results = sensitive_search_follower(uid, top_count)
     if not results:
         results = {}
     return json.dumps(results)
@@ -210,7 +224,11 @@ def ajax_comment():
     uid = str(uid)
     top_count = request.args.get('top_count', SOCIAL_DEFAULT_COUNT)
     top_count = int(top_count)
-    results = search_comment(uid, top_count)
+    sensitive = request.args.get("sensitive", 0)
+    if sensitive == 0:
+        results = search_comment(uid, top_count)
+    else:
+        results = sensitive_search_comment(uid, top_count)
     if not results:
         results = {}
     return json.dumps(results)
@@ -226,7 +244,11 @@ def ajax_be_comment():
     uid =str(uid)
     top_count = request.args.get('top_count', SOCIAL_DEFAULT_COUNT)
     top_count = int(top_count)
-    results = search_be_comment(uid, top_count)
+    sensitive = request.args.get('sensitive', 0)
+    if sensitive == 0:
+        results = search_be_comment(uid, top_count)
+    else:
+        results = sensitive_search_be_comment(uid, top_count)
     if not results:
         results = {}
     return json.dumps(results)
@@ -241,7 +263,11 @@ def ajax_interaction():
     uid = str(uid)
     top_count = request.args.get('top_count', SOCIAL_DEFAULT_COUNT)
     top_count = int(top_count)
-    results = search_bidirect_interaction(uid, top_count)
+    sensitive = request.args.get('sensitive', 0)
+    if sensitive == 0:
+        results = search_bidirect_interaction(uid, top_count)
+    else:
+        results = sensitive_search_bidirect_interaction(uid, top_count)
     if not results:
         results = {}
     return json.dumps(results)
@@ -402,10 +428,12 @@ def ajax_all_influenced_users():
     uid = request.args.get('uid', '')
     date = request.args.get('date', '')
     style = request.args.get("style", 0)
+    sensitive = request.args.get("sensitive", 0)
     uid = str(uid)
     style = int(style)
+    sensitive = int(sensitive)
 
-    results = statistics_influence_people(uid, date, style)
+    results = statistics_influence_people(uid, date, style, sensitive)
 
     return json.dumps(results)
 
