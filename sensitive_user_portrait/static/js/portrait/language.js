@@ -247,7 +247,7 @@ function get_radar_data (data) {
   topic_result.push(topic_value);
   return topic_result;
 }
-function Draw_topic(data){
+function Draw_topic_user(data){
   if(data[0][1].toFixed(3) == 0){
       $('#user_topic').append('<h4 style="text-align:center;margin-top:50%;">暂无数据</h4>');
       $('#showmore_topic').css('display', 'none');      
@@ -290,7 +290,7 @@ function Draw_topic(data){
       var topic_name = topic_result[0];
       //console.log(topic_name);
       var topic_value = topic_result[1];
-     // console.log(topic_value)
+     // //console.log(topic_value)
       var myChart2 = echarts.init(document.getElementById('user_topic'));
       var option = {
         // title : {
@@ -349,9 +349,13 @@ function Draw_topic(data){
 }
 
 function show_domain(data){
-
+  for(var i=0;i<3;i++){
+	  if(data[0][i]=='undefined')
+		  data[0][1] = '未知';
+  }
   // var html = '';
   //html += '<h3>用户领域分析</h3>';
+  //console.log(data);
   data1 = '根据注册信息分类：'+data[0][0];
   data2 = '根据转发结构分类：'+data[0][1];
   data3 = '根据发帖内容分类：'+data[0][2];
@@ -496,11 +500,11 @@ var option = {
 }
 
 function show_results(data){
-  //console.log(data.results.keywords);
+  console.log(data);
   var keywordsCloud = data.results.keywords;
   //console.log(keywordsCloud);
   var hashtag = data.results.hashtag;
-  console.log(hashtag);
+  //console.log(hashtag);
   var sensiti_hash = data.results.sensitive_hashtag;
   var topic = data.results.topic;
   var conclusion = data.description;
@@ -518,7 +522,7 @@ function show_results(data){
   Draw_keyword(keywordsCloud, keywords_name, keywords_more, key_more);
   Draw_hashtag(sensiti_hash,hashtag, hashtag_name, hashtag_more, hash_more);
   Draw_keyword(sensitive, sensitiv_name, sensitive_more, sensiti_more);
-  //Draw_topic(topic);
+  //Draw_topic_user(topic);
   show_conclusion(conclusion);
   show_domain(domain);
 

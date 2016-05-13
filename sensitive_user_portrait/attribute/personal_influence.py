@@ -96,6 +96,7 @@ def get_text(top_list, date, order):
                     temp.append(uname)
                 except:
                     temp.append(source['uid'])
+                #temp.append(source['sensitive_words_string'].replace("&", " "))
                 temp.append(int(source["timestamp"]))
             else:
                 temp.extend(["", "", "", "", "", "", "", "", time.time()])
@@ -125,7 +126,7 @@ def influenced_detail(uid, date, weibo_style, order):
     date1 = str(date).replace('-', '')
     index_name = pre_index + date1
     index_text = "flow_text_" + date
-    style = int(style)
+    weibo_style = int(weibo_style)
 
     if int(weibo_style) == 1:
         query_body_origin = {
@@ -149,7 +150,7 @@ def influenced_detail(uid, date, weibo_style, order):
             for item in result_1:
                 origin_set.append([item['_id'], item['_source'].get("retweeted", 0), item['_source'].get("comment", 0), item['_source'].get("sensitive", 0)])
 
-        detail_text = get_text(origin_set, date, style, order)
+        detail_text = get_text(origin_set, date, order)
 
 
     elif int(weibo_style) == 2:
@@ -170,11 +171,11 @@ def influenced_detail(uid, date, weibo_style, order):
         }
         result_3 = es.search(index=index_text, doc_type="text", body=query_body_comment)['hits']['hits']
         comment_set = []
-        if result_1:
-            for item in result_1:
+        if result_3:
+            for item in result_3:
                 comment_set.append([item['_id'], item['_source'].get("retweeted", 0), item['_source'].get("comment", 0), item['_source'].get("sensitive", 0)])
 
-        detail_text = get_text(comment_set, date, style, order)
+        detail_text = get_text(comment_set, date, order)
 
     else:
         query_body_retweeted = {
@@ -198,7 +199,7 @@ def influenced_detail(uid, date, weibo_style, order):
             for item in result_2:
                 retweeted_set.append([item['_id'], item['_source'].get("retweeted", 0), item['_source'].get("comment", 0), item['_source'].get("sensitive", 0)])
 
-        detail_text = get_text(retweeted_set, date, style, order)
+        detail_text = get_text(retweeted_set, date, order)
 
 
     return detail_text
@@ -439,6 +440,7 @@ def influenced_user_detail(uid, date, origin_retweeted_mid, retweeted_retweeted_
     if bci_results:
         total_influence = 0
         for item in bci_results:
+            print item
             if item['found']:
                 total_influence += item['fields']['user_index'][0]
     try:
