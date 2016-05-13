@@ -270,11 +270,11 @@ function group_analyze_confirm_button(){
   	});
   	//console.log(group_confirm_uids);
     if (group_confirm_uids.length > 0){
-        var group_ajax_url = '/detect/add_detect2analysis/?submit_user=' + submit_user;
+        var group_ajax_url = '/detect/add_detect2analysis/';
         var group_url = '/index/group_result/';
         var group_name = $('#group_name0').text();
         //console.log(group_name);
-        var job = {"task_name":group_name, "uid_list":group_confirm_uids};
+        var job = {"task_name":group_name, "uid_list":group_confirm_uids, "submit_user": submit_user};
         //console.log(job);
         $.ajax({
             type:'POST',

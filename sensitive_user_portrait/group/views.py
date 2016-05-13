@@ -188,6 +188,7 @@ def ajax_delete_group_task():
     task_name = request.args.get('task_name', '')
     submit_user = request.args.get('submit_user', '')
     results = delete_group_results(task_name, submit_user)
+    print results
     return json.dumps(results)
 
 @mod.route('/get_user_pinfo/')

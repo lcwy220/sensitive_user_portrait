@@ -452,7 +452,8 @@ def detect2analysis(input_data):
     results = {}
     status = True
     task_name = input_data['task_name']
-    task_id = input_data['task_id']
+    submit_user = input_data['submit_user']
+    task_id = submit_user + task_name
     uid_list = input_data['uid_list']
     #step1: identify the task is exist
     try:
