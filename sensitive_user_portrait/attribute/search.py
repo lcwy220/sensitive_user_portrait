@@ -2215,7 +2215,7 @@ def search_activity(now_ts, uid):
 #output: weibo_list
 def get_activity_weibo(uid, time_type, start_ts):
     weibo_list = []
-    sensitive_list = []
+    sensitive_weibo_list = []
     if time_type == 'day':
         time_segment = HALF_HOUR
         start_ts = start_ts - time_segment
@@ -3200,55 +3200,44 @@ def delete_action(uid_list):
 def get_activeness_trend(uid):
     results = {}
     try:
-        es_result = es_copy_portrait.get(index=copy_portrait_index_name, doc_type=copy_portrait_index_type, id=uid)['_source']
+        es_result = es_copy_portrait.get(index="copy_user_portrait_activeness", doc_type="activeness", id=uid)['_source']
     except:
         return None
-    value_list = []
-    for item in es_result:
+    influence_value_list = []
+    influence_time_list = []
+    print es_result
+    for item, value in es_result.iteritems():
+        print item
         item_list = item.split('_')
-        if len(item_list)==2 and '-' in item_list[1]:
-            value = es_result[item]
-            value_list.append(value)
-            
-            if '-' in item_list[1]:
-                results[item_list[1]] = value
-    sort_results = sorted(results.items(), key=lambda x:datetime2ts(x[0]))
-    time_list = [item[0] for item in sort_results]
-    activeness_list = [item[1] for item in sort_results]
+        if len(item_list) == 2 and "activeness_" in item:
+            #run_type
+            temp = []
+            temp.append(int(item_list[1]))
+            temp.append(ts2datetime(int(item_list[1])))
+            temp.append(value)
+            influence_value_list.append(value)
+            influence_time_list.append(temp)
+    max_list = sorted(influence_time_list, key=lambda x:x[2], reverse=True)
+    min_list = sorted(influence_time_list, key=lambda x:x[2], reverse=False)
+    sorted_results = sorted(influence_time_list, key=lambda x:x[0], reverse=False)
 
-    #get activeness description
-    max_activeness = max(value_list)
-    min_activeness = min(value_list)
-    ave_activeness = sum(value_list) / float(len(value_list))
-    
-    if max_activeness - min_activeness <= ACTIVENESS_TREND_SPAN_THRESHOLD and ave_activeness >= ACTIVENESS_TREND_AVE_MAX_THRESHOLD:
-        mark = ACTIVENESS_TREND_DESCRIPTION_TEXT['0']
-        tag_vector =  ACTIVENESS_TREND_TAG_VECTOR['0']
-        #u'活跃度较高, 且保持平稳'
-    elif max_activeness - min_activeness > ACTIVENESS_TREND_SPAN_THRESHOLD and ave_activeness >= ACTIVENESS_TREND_AVE_MAX_THRESHOLD:
-        mark = ACTIVENESS_TREND_DESCRIPTION_TEXT['1']
-        tag_vector =  ACTIVENESS_TREND_TAG_VECTOR['1']
-        #u'活跃度较高, 且波动性较大'
-    elif max_activeness - min_activeness <= ACTIVENESS_TREND_SPAN_THRESHOLD and ave_activeness < ACTIVENESS_TREND_AVE_MAX_THRESHOLD and ave_activeness >= ACTIVENESS_TREND_AVE_MIN_THRESHOLD:
-        mark = ACTIVENESS_TREND_DESCRIPTION_TEXT['2']
-        tag_vector =  ACTIVENESS_TREND_TAG_VECTOR['2']
-        #u'活跃度一般, 且保持平稳'
-    elif max_activeness - min_activeness > ACTIVENESS_TREND_SPAN_THRESHOLD and ave_activeness < ACTIVENESS_TREND_AVE_MAX_THRESHOLD and ave_activeness >= ACTIVENESS_TREND_AVE_MIN_THRESHOLD:
-        mark = ACTIVENESS_TREND_DESCRIPTION_TEXT['3']
-        tag_vector =  ACTIVENESS_TREND_TAG_VECTOR['3']
-        #u'活跃度一般, 且波动性较大'
-    elif max_activeness - min_activeness <= ACTIVENESS_TREND_SPAN_THRESHOLD and ave_activeness < ACTIVENESS_TREND_AVE_MIN_THRESHOLD:
-        mark = ACTIVENESS_TREND_DESCRIPTION_TEXT['4']
-        tag_vector =  ACTIVENESS_TREND_TAG_VECTOR['4']
-        #u'活跃度较低, 且保持平稳'
-    else:
-        mark = ACTIVENESS_TREND_DESCRIPTION_TEXT['5']
-        tag_vector =  ACTIVENESS_TREND_TAG_VECTOR['5']
-        #u'活跃度较低, 且波动性较大'
+    try:
+        max_influence = max_list[0][2]
+    except:
+        max_influence = 0
+    try:
+        min_influence = min_list[0][2]
+    except:
+        min_influence = 0
+    ave_influence = sum(influence_value_list) / float(len(influence_value_list))
+    results["max_activeness"] = max_influence
+    results["min_activeness"] = min_influence
+    results["ave_activeness"] = ave_influence
+    results["time_list"] = sorted_results
 
-    description = [u'该用户', mark]
+    return results
 
-    return {'time_line':time_list, 'activeness':activeness_list, 'description':description, 'tag_vector': tag_vector}
+
 
 #use to get influence_trend
 #write in version: 15-12-08
@@ -3261,62 +3250,39 @@ def get_influence_trend(uid, day_count):
     except:
         return None
     influence_value_list = []
-    for item in es_result:
+    influence_time_list = []
+    print es_result
+    for item, value in es_result.iteritems():
         print item
         item_list = item.split('_')
-        if len(item_list)==1 and item_list[0] != 'uid':
-            value = es_result[item]
+        if len(item_list) == 2 and "bci_" in item:
+            #run_type
+            temp = []
+            temp.append(int(item_list[1]))
+            temp.append(ts2datetime(int(item_list[1])))
+            temp.append(value)
             influence_value_list.append(value)
-            
-            query_key = item
-            query_body = {
-                    'query':{
-                        'match_all':{}
-                    },
-                    'size': 1,
-                    'sort': [{query_key: {'order': 'desc'}}]
-                }
-            try:
-                iter_max_value = es_user_portrait.search(index=COPY_USER_PORTRAIT_INFLUENCE, doc_type="influence", body=query_body)['hits']['hits']
-            except Exception, e:
-                raise e
-            iter_max = iter_max_value[0]['_source'][query_key]
-            
-            if '-' not in item_list[0]:
-                #run_type
-                if RUN_TYPE == 0:
-                    normal_value = math.log((value / iter_max) * 9 + 1 , 10) * 100
-                    results[item_list[0]] = normal_value
-                else:
-                    results[item_list[0]] = value
-    sort_results = sorted(results.items(), key=lambda x:datetimestr2ts(x[0]))[0-day_count:]
-    time_list = [ts2datetime(datetimestr2ts(item[0])) for item in sort_results]
-    influence_list = [item[1] for item in sort_results]
-    
-    max_influence = max(influence_value_list)
-    ave_influence = sum(influence_value_list) / float(len(influence_value_list))
-    min_influence = min(influence_value_list)
-    if max_influence - min_influence <= INFLUENCE_TREND_SPAN_THRESHOLD and ave_influence >= INFLUENCE_TREND_AVE_MAX_THRESHOLD:
-        mark = INFLUENCE_TREND_DESCRIPTION_TEXT['0']
-        #u'影响力较高,且保持平稳'
-    elif max_influence - min_influence > INFLUENCE_TREND_SPAN_THRESHOLD and ave_influence >= INFLUENCE_TREND_AVE_MAX_THRESHOLD:
-        mark = INFLUENCE_TREND_DESCRIPTION_TEXT['1']
-        #u'影响力较高,且波动性较大'
-    elif max_influence - min_influence <= INFLUENCE_TREND_SPAN_THRESHOLD and ave_influence < INFLUENCE_TREND_AVE_MAX_THRESHOLD and ave_influence >= INFLUENCE_TREND_AVE_MIN_THRESHOLD:
-        mark = INFLUENCE_TREND_DESCRIPTION_TEXT['2']
-        #u'影响力一般,且保持平稳'
-    elif max_influence - min_influence > INFLUENCE_TREND_SPAN_THRESHOLD and ave_influence < INFLUENCE_TREND_AVE_MAX_THRESHOLD and ave_influence >= INFLUENCE_TREND_AVE_MIN_THRESHOLD:
-        mark = INFLUENCE_TREND_DESCRIPTION_TEXT['3']
-        #u'影响力一般,且波动性较大'
-    elif max_influence - min_influence <= INFLUENCE_TREND_SPAN_THRESHOLD and ave_influence < INFLUENCE_TREND_AVE_MIN_THRESHOLD:
-        mark = INFLUENCE_TREND_DESCRIPTION_TEXT['4']
-        #u'影响力较低,且保持平稳'
-    else:
-        mark = INFLUENCE_TREND_DESCRIPTION_TEXT['5']
-        #u'影响力较低,且波动性较大'
-    description = [u'该用户', mark]
+            influence_time_list.append(temp)
+    max_list = sorted(influence_time_list, key=lambda x:x[2], reverse=True)
+    min_list = sorted(influence_time_list, key=lambda x:x[2], reverse=False)
+    sorted_results = sorted(influence_time_list, key=lambda x:x[0], reverse=False)
 
-    return {'time_line':time_list, 'influence':influence_list, 'description':description}
+    try:
+        max_influence = max_list[0][2]
+    except:
+        max_influence = 0
+    try:
+        min_influence = min_list[0][2]
+    except:
+        min_influence = 0
+    ave_influence = sum(influence_value_list) / float(len(influence_value_list))
+    results["max_influence"] = max_influence
+    results["min_influence"] = min_influence
+    results["ave_influence"] = ave_influence
+    results["time_list"] = sorted_results
+
+    return results
+
 
 if __name__=='__main__':
     uid = '1843990885'

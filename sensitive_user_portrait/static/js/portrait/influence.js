@@ -17,15 +17,21 @@ Influence.prototype = {   //获取数据，重新画表
   Draw_influence:function(data){
     //console.log(data);
 	var item_x = data.time_line;
-    var item_y = data.influence;
+    var item_y = data.time_line;
 	// var conclusion = data.description;
 
 	// document.getElementById('saysth').innerHTML = conclusion[0];
 	// document.getElementById('sayimportant').innerHTML = conclusion[1];
-	var dataFixed = [];
-	for(i=0;i<item_y.length;i++){
-		dataFixed.push(parseFloat(item_y[i].toFixed(2)));
-	}
+	var data_time = [];
+    var data_count = [];
+    var timeline = data.time_list;
+    //var activeness = data.ave_activeness;
+    for (var i = 0;i < timeline.length;i++){
+        data_time.push(timeline[i][1]);
+    }
+    for (var i = 0;i < timeline.length;i++){
+        data_count.push(parseFloat(timeline[i][2].toFixed(2)));
+    }
     var myChart = echarts.init(document.getElementById('influence_chart')); 
     var option = {
 
@@ -48,7 +54,7 @@ Influence.prototype = {   //获取数据，重新画表
           {
               type : 'category',
               boundaryGap : true,
-              data : item_x
+              data : data_time
           }
       ],
       yAxis : [
@@ -62,7 +68,7 @@ Influence.prototype = {   //获取数据，重新画表
       series : [
           {
               type:'line',
-              data:dataFixed,
+              data:data_count,
               markPoint : {
                   data : [
                       {type : 'max', name: '最大值'},
@@ -138,7 +144,7 @@ Draw_pie_all0:function(data){
   },
 
   Draw_basic_influence:function(data){
-    //console.log(data);
+    ////console.log(data);
     $('#influence_conclusion_c').empty();
     var html='';
     if(data[0][0] != ''){
@@ -213,7 +219,7 @@ Draw_pie_all0:function(data){
       html+= conclu_s3.join('，')+'。';
     };
     if (conclu_s4.length != 0){
-      //console.log(conclu_s4);
+      ////console.log(conclu_s4);
       html+= conclu_s4.join('，')+'。';
     };
     $('#influence_conclusion_c').append(html);  
@@ -336,7 +342,7 @@ Draw_pie_all0:function(data){
     Draw_pie(data.influence_distribution.domian, 're_user_domain');
     Draw_pie(data.influence_distribution.geo, 're_user_geo');
   },
-
+  
   Draw_conclusion:function(data){
     $('#influence_conclusion_all').empty();
     var html = '';
@@ -392,7 +398,7 @@ Draw_pie_all0:function(data){
     $('#'+div_name_in).empty();
 
     var html = '';
-    //console.log(data);
+    ////console.log(data);
     //html += '<hr style="margin-top:-10px;">';
     html += '<h4>已入库用户('+data[2]+')</h4><p style="text-align:left;padding: 0px 10px;width:800px;">';
     if (data[2] == 0){
@@ -513,7 +519,7 @@ Draw_pie_all0:function(data){
   }
 
 function Draw_get_top_weibo(data,div_name){
-  //console.log(data);
+  ////console.log(data);
   var html = '';
   $('#'+div_name).empty();
     if(data.length==0){
@@ -607,7 +613,7 @@ function click_action(){
         $("#re_influence").removeClass("hidden");
         var mid = $(this).prev(".hidden").text();
         var influenced_users_url_re = '/attribute/influenced_users/?uid='+parent.personalData.uid+'&date='+date_str+'&style=0&mid='+mid;
-        //console.log(influenced_users_url_re);
+        ////console.log(influenced_users_url_re);
         Influence.call_ajax_request(influenced_users_url_re, Influence.ajax_method, Influence.Single_users_influence_re);
         return false;
       });
@@ -616,7 +622,7 @@ function click_action(){
         $("#float-wrap").removeClass("hidden");
         $("#retweet_distribution_content").removeClass("hidden");
         var all_influenced_users_url_style0 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid+'&date='+date_str+'&style=0';
-        //console.log(all_influenced_users_url_style0);
+        ////console.log(all_influenced_users_url_style0);
         Influence.call_ajax_request(all_influenced_users_url_style0, Influence.ajax_method, Influence.Draw_pie_all0);
         return false;
       });
@@ -625,13 +631,13 @@ function click_action(){
         $("#float-wrap").removeClass("hidden");
         $("#comment_distribution_content").removeClass("hidden");
         var all_influenced_users_url_style1 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid +'&date='+date_str+'&style=1';
-        //console.log(all_influenced_users_url_style1);
+        ////console.log(all_influenced_users_url_style1);
         Influence.call_ajax_request(all_influenced_users_url_style1, Influence.ajax_method, Influence.Draw_pie_all1);
         return false;
       });
     $('input[name="choose_module"]').live('click', function(){             
       var index = $('input[name="choose_module"]:checked').val();
-      //console.log(index);
+      ////console.log(index);
       if(index == 1){
         var influence_url = '/attribute/influence_trend/?uid='+uid + '&time_segment=7';
         Influence.call_ajax_request(influence_url, Influence.ajax_method, Influence.Draw_influence);
@@ -671,8 +677,8 @@ function influence_load(){
 	//评论
     var get_top_weibo_url_style3 = '/attribute/get_top_weibo/?uid='+parent.personalData.uid+'&date='+date_str+'&style=3';
     Influence.call_async_ajax_request(get_top_weibo_url_style3, Influence.ajax_method, Influence.Draw_get_top_weibo4);
-    var summary_influence_url = '/attribute/summary_influence/?uid='+parent.personalData.uid+'&date='+date_str;
-    Influence.call_async_ajax_request(summary_influence_url, Influence.ajax_method, Influence.Draw_conclusion);
+    //var summary_influence_url = '/attribute/summary_influence/?uid='+parent.personalData.uid+'&date='+date_str;
+    //Influence.call_async_ajax_request(summary_influence_url, Influence.ajax_method, Influence.Draw_conclusion);
 };
 
 var Influence = new Influence();
