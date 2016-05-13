@@ -110,7 +110,7 @@ def ajax_ip():
     if RUN_TYPE == 1:
         now_ts = time.time()
     else:
-        now_ts = datetime2ts('2013-09-01')
+        now_ts = datetime2ts('2013-09-02')
     result = search_ip(now_ts, uid)
     if not result:
         result = {}
