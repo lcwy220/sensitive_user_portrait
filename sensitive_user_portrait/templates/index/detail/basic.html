@@ -53,6 +53,7 @@
     color: #858585;
     height: 18px;
     line-height: 18px;
+	margin-right:40px;
 }
 .weibo_info .m a {
     color: #666;
@@ -140,6 +141,7 @@ margin-top:0px;
   margin-bottom: -10px;
   font-size: 16px;
 }
+#modechoose li{list-style-type:none;float:left;margin-right:20px;}
 </style>
 
 <div id="Pdetail">
@@ -165,16 +167,36 @@ margin-top:0px;
         <h3>昨日影响力 (No.<span id="influence_index" style='color:red;'></span>/<span id='influence_total'></span>)</h3>
         <hr>
         <div id = "influence_table" style="width:100%;margin-bottom:-15px;"></div>
+		<div id = "sensitive_table" style="width:100%;margin-bottom:-15px;"></div>
         <div style = 'font-size:16px' id = "all_influenced_users_style0"></div>
         <div style = 'font-size:16px'id = "all_influenced_users_style1"></div>
         <div class="box-content" style="padding:0;margin:0;">
             <ul class="nav nav-tabs" id="myTab" style="margin:10px 0;">
-                <li class="active" title="领域"><a href="#rewteet_origin" style="font-size:15px">被转发的原创微博</a></li>
-                <li title="话题"><a href="#comment_origin" style="font-size:15px">被评论的原创微博</a></li>
-                <li title="领域"><a href="#retweet_retweet" style="font-size:15px">被转发的转发微博</a></li>
-                <li title="话题"><a href="#comment_retweet" style="font-size:15px">被评论的转发微博</a></li>
+                <!--<li class="active" title="领域"><a href="#rewteet_origin" style="font-size:15px">被转发的原创微博</a></li>-->
+                <li title="话题"><a href="#comment_origin" style="font-size:15px">原创微博</a></li>
+                <li title="领域"><a href="#retweet_retweet" style="font-size:15px">转发微博</a></li>
+                <li title="话题"><a href="#comment_retweet" style="font-size:15px">评论微博</a></li>
             </ul>
             <div id="myTabContent" class="tab-content" style="margin:0;width:1000px;background-color:whitesmoke;">
+                <span style="color:#1C41CE;margin-left:20px;float:left;">排序方式</span>
+				<ul style="float:left;" id="modechoose">
+				<li>
+					<input type="radio" name="mode_choose" value="time" checked="checked">
+					<span class="mode" style="">时间</span>
+				</li>
+				<li>
+					<input type="radio" name="mode_choose" value="sensitive">
+					<span class="mode" style="">敏感度</span>
+				</li>
+				<li>
+					<input type="radio" name="mode_choose" value="retweet">
+					<span class="mode" style="">转发数</span>
+				</li>
+				<li>
+					<input type="radio" name="mode_choose" value="comment">
+					<span class="mode" style="">评论数</span>
+				</li>
+				</ul>
                 <div class="tab-pane active" id="rewteet_origin" style="margin-top:10px;margin-bottom:0;">
                   <div class="row category margin-bottom-20" id='influence_weibo1' style="margin:0;"></div>
                 </div>
@@ -184,9 +206,11 @@ margin-top:0px;
                 <div class="tab-pane" id="retweet_retweet" style="margin-top:10px;margin-bottom:0;">
                <div class="row category margin-bottom-20" id='influence_weibo3' style="margin:0;"></div>
             </div>
+			<!--
             <div class="tab-pane" id="comment_retweet" style="margin-top:10px;margin-bottom:0;">
               <div class="row category margin-bottom-20" id='influence_weibo4' style="margin:0;"></div>
             </div>
+			-->
         </div>
     </div>
 	<!--
@@ -253,7 +277,8 @@ margin-top:0px;
       <div id="cmt_user_out" style="padding:0 10px;margin-top:-25px;"></div>
     </div>
 </div>
-
+<!--模态框-->
+<!--
 <div id="retweet_distribution_content" class="hidden">
   <h3 class="title">转发用户情况<a href="javascript:void(0)" class="closeList2" id="close"></a></h3>
   <div id="re_user_content_all" style="padding:0 10px;">
@@ -274,6 +299,32 @@ margin-top:0px;
     <div id="re_user_out_all" style="padding:0 10px;margin-top:-25px;float:left;"></div>
   </div>
 </div>
+-->
+<div class="modal fade" id="retweet_distribution" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="width: 500px;left:80%;">
+      <div class="modal-header" style="width:100%;">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+        <h4 class="modal-title" style="font-size:18px" id="myModalLabel">转发用户情况</h4>
+      </div>
+      <div id="re_user_in_all" style="padding:0 10px;align:left;"></div>
+    <div id="re_three_pie_all">
+      
+      <p style="margin-bottom: -35px;font-size: 16px;">
+        <span class = "user_title">领域分布</span>
+        <span class = "user_title">话题分布</span>
+        <span class = "user_title">地域分布</span>
+      </p>    
+      <div id="re_user_domain_all" style="width:270px;height:250px; margin:5px;float:left;"></div>
+      <div id="re_user_topic_all" style="width:310px;height:250px; margin:5px;float:left;border-left:1px #DDD solid;border-right:1px #DDD solid;"></div>
+      <div id="re_user_geo_all" style="width:305px;height:250px; margin:5px;float:left;"></div>
+      <hr style="margin-top:-10px;">
+    </div>  
+    <div id="re_user_out_all" style="padding:0 10px;margin-top:-25px;float:left;"></div>
+    </div>
+  </div>
+</div>
+
 
 <div id="comment_distribution_content" class="hidden">
     <h3 class="title">评论用户情况<a href="javascript:void(0)" class="closeList2" id="close"></a></h3>
