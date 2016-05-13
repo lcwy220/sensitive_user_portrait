@@ -19,7 +19,7 @@
 /* 2. General Styles
 --------------------------------------- */
 * { font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif; }
-body { background-color: rgb(235,235,235); }
+body { background-color:rgb(132, 132, 132); }
 h1 { font-size: 24px; }
 .btn a {
     color: white;
@@ -89,14 +89,14 @@ h1 { font-size: 24px; }
     font-size: 14px;
     font-weight: 500;    
 }
-.templatemo-sidebar-menu a { color: black; }
+.templatemo-sidebar-menu a { color: white; }
 .templatemo-sidebar-menu a:hover { text-decoration: none; }
 .templatemo-sidebar-menu li.sub .templatemo-submenu { display: none; }
 .templatemo-sidebar-menu li.sub.open .templatemo-submenu { display: block;margin:0px }
 .templatemo-submenu { padding-left: 0; }
 .templatemo-submenu li {
     list-style: none;
-    background-color: #DFDFDF;
+    background-color: #B3B1B1;
 }
 .templatemo-submenu li a {
     display: block;
@@ -111,7 +111,7 @@ h1 { font-size: 24px; }
 }
 
 .templatemo-sidebar .templatemo-sidebar-menu >li.active, .templatemo-sidebar .templatemo-sidebar-menu>li>a:hover {
-    background-color: rgb(191, 232, 167);
+    background-color: rgb(29, 144, 226);
 }
 
 .templatemo-submenu li > a:hover {
