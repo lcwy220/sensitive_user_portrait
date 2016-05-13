@@ -2,15 +2,13 @@ function Thought(){
 }
 Thought.prototype = {   //获取数据，重新画表
     Draw_emotion:function(data){
+		console.log(data);
         var items = data;
-        if(items==null){
+        if(items['time_list'].length==0){
             var say = document.getElementById('emotion');
             say.innerHTML = '该用户暂无此数据';
         }else{
-            var con0 = document.getElementById('con_emotion0');
-            con0.innerHTML = items['description'][0];
-            var con = document.getElementById('con_emotion');
-            con.innerHTML = items['description'][1];
+			console.log('sadfghjkl;');
             emotions(items);
             var time_init = new Date(items['time_list'][0]);
             var times_init = time_init.getTime().toString().substr(0,10);
@@ -23,7 +21,7 @@ Thought.prototype = {   //获取数据，重新画表
             var index = $('input[name="time-type"]:checked').val();
             var url_content = '/attribute/sentiment_weibo/?uid='+uid+'&start_ts='+times_init+'&time_type='+index+'&sentiment=0';
             person_call_ajax_request(url_content,th_draw_content);
-        }   
+        }
     }
 }
 function choose_time(){            
@@ -31,18 +29,22 @@ function choose_time(){
     var url = '/attribute/sentiment_trend/?uid='+uid+'&time_type='+index;
     person_call_ajax_request(url, Thought.Draw_emotion);
     //$('#emotion').empty();
-  }
+}
 function th_draw_content(data){
     var html = '';
     $('#thought_weibo_text').empty();
     //console.log(data);
    // console.log(data.length);
-    if(data.length==0){
+    if(data[0].length==0 && data[1].length==0){
         html += "<div style='width:100%;'><span style='margin-left:20px;'>该时段用户未发布任何微博</span></div>";
     }else{
-        for(i=0;i<data.length;i++){
+        for(i=0;i<data[1].length;i++){
             //console.log(data[i].text);
-            html += "<div style='width:100%;'><img src='/static/img/pencil-icon.png' style='height:10px;width:10px;margin:0px;margin-right:10px;'><span>"+data[i]['text']+"</span></div>";
+            html += "<div style='width:100%;'><img src='/static/img/pencil-icon.png' style='height:10px;width:10px;margin:0px;margin-right:10px;color:red;'><span>"+data[1][i]['text']+"</span></div>";
+        }
+		for(i=0;i<data[0].length;i++){
+            //console.log(data[i].text);
+            html += "<div style='width:100%;'><img src='/static/img/pencil-icon.png' style='height:10px;width:10px;margin:0px;margin-right:10px;'><span>"+data[0][i]['text']+"</span></div>";
         }
     }
     $('#thought_weibo_text').append(html);
@@ -265,8 +267,9 @@ function draw_character(data){
 function thought_load(){
     var url = '/attribute/sentiment_trend/?uid='+uid+'&time_type='+index;
     person_call_ajax_request(url, Thought.Draw_emotion);
-    var url_character = '/attribute/character_psy/?uid='+uid;
-    person_call_ajax_request(url_character,draw_character);
+    //var url_character = '/attribute/character_psy/?uid='+uid;
+    //person_call_ajax_request(url_character,draw_character);
 }
 var Thought = new Thought();
 var index = $('input[name="time-type"]:checked').val();
+console.log(index);

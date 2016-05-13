@@ -142,13 +142,19 @@
 
    <!-- Subhead
    ================================================== -->
-    <div class="navbar navbar-inverse" role="navigation">
+    <div class="navbar navbar-inverse" role="navigation" style="
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    z-index: 4;
+">
       <div class="navbar-header">
         <div class="logo" ><h1 style="color:#FFF">敏感人物系统</h1></div> 
       </div>   
     </div>
-     <div class="navbar-collapse collapse templatemo-sidebar" style="margin:0px">
-        <ul class="templatemo-sidebar-menu">
+    <div >
+     <div class="navbar-collapse collapse templatemo-sidebar" style="height:658px!important;margin:0px;/*background:url(/static/img/back_left.png);*/ background-size: 100%;background-attachment: fixed;position: fixed;top: 50px;box-shadow: 5px 6px 21px rgba(12,11,11,0.8);">
+        <ul class="templatemo-sidebar-menu" id='left_menu' style="overflow-y:auto;">
 <!--           <li>
             <form class="navbar-form">
               <input type="text" class="form-control" id="templatemo_search_box" placeholder="Search...">
@@ -210,12 +216,12 @@
       </div>
 
 
-        <div class="templatemo-content">
+        <div class="templatemo-content" style="min-height:670px;background:url(/static/img/back.jpg); background-size: 100%;background-attachment: fixed;margin-top:50px">
               {% block body %}
       		  {% endblock body %}
         </div>
+    </div>
 
-  
    <script type="text/javascript">
       $(".metro").metro();
       // $(".templatemo-sidebar-menu li").click(function(){
@@ -223,6 +229,11 @@
       // 	$(this).addClass("active").siblings().removeClass("active");
 
       // });
+      // document.body.offsetHeight
+      // 
+      var a = document.getElementById('left_menu');
+      var b = document.getElementById('content_menu');
+      a.style.height=window.screen.availHeight -60+'px';
       $(".templatemo-sidebar-menu a").each(function(){
         $this=$(this);
         //console.log($this.parent().parent().parent().hasClass('sub'));
