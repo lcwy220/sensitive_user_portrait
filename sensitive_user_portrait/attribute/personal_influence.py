@@ -218,7 +218,7 @@ def get_user_url(uid_list):
             temp.append(item['_id'])
         else:
             temp.append("unknown")
-            temp.append("unknown")
+            temp.append(item['_id'])
             temp.append(item['_id'])
         results.append(temp)
     return results
@@ -249,8 +249,10 @@ def influenced_people(uid, mid, influence_style, date, default_number=20):
         },
         "size": 30000
     }
+    if RUN_TYPE:
+        query_body["sort"] = {"user_fansnum":{"order":"desc"}}
 
-    if mid_type == 0:
+    if int(mid_type) == 0:
         if int(influence_style) == 0: # origin weibo, all retweeted people
             query_body["query"]["filtered"]["filter"]["bool"]["must"].extend([{"term": {"root_uid": uid}}, {"term": {"message_type": 3}}, {"term": {"root_mid": mid}}])
         else: # commented people
@@ -260,7 +262,7 @@ def influenced_people(uid, mid, influence_style, date, default_number=20):
             query_body["query"]["filtered"]["filter"]["bool"]["must"].extend([{"term": {"directed_uid": uid}}, {"term": {"message_type": 3}}, {"term": {"root_mid": temp_mid}}])
         else: # commented people
             query_body["query"]["filtered"]["filter"]["bool"]["must"].extend([{"term": {"directed_uid": uid}}, {"term": {"message_type": 2}}, {"term": {"root_mid": temp_mid}}])
-    search_results = es.search(index=index_flow_text, doc_type=flow_text_index_type, body=query_body, fields=["uid"], timeout=30)["hits"]["hits"]
+    search_results = es.search(index=index_flow_text, doc_type=flow_text_index_type, body=query_body, _source=False, fields=["uid"], timeout=30)["hits"]["hits"]
     results = [] # uid_list
     if search_results:
         for item in search_results:
@@ -276,7 +278,7 @@ def influenced_people(uid, mid, influence_style, date, default_number=20):
 
     if results:
         portrait_results = es_user_portrait.mget(index=user_portrait, doc_type=portrait_index_type, body={"ids": results}, fields=["domain", "topic_string", "activity_geo_dict","importance", "influence"])["docs"]
-        bci_results = es_user_portrait.mget(index=bci_index, doc_type='bci', body={"ids":results}, fields=['user_index'])['docs']
+        bci_results = es_cluster.mget(index=bci_index, doc_type='bci', body={"ids":results}, fields=['user_index'])['docs']
     else:
         portrait_results = {}
         bci_results = {}
@@ -415,7 +417,7 @@ def influenced_user_detail(uid, date, origin_retweeted_mid, retweeted_retweeted_
     if retweeted_uid_list:
         user_portrait_result = es_user_portrait.mget(index=user_portrait, doc_type=portrait_index_type, body={"ids": retweeted_uid_list}, fields=["domain", "topic_string", "activity_geo_dict","importance", "influence"])["docs"]
         bci_index = "bci_" + date.replace('-', '')
-        bci_results = es_user_portrait.mget(index=bci_index, doc_type="bci", body={"ids":retweeted_uid_list}, fields=['user_index'])["docs"]
+        bci_results = es_cluster.mget(index=bci_index, doc_type="bci", body={"ids":retweeted_uid_list}, fields=['user_index'])["docs"]
         for item in user_portrait_result:
             if item["found"]:
                 temp = []
@@ -440,7 +442,6 @@ def influenced_user_detail(uid, date, origin_retweeted_mid, retweeted_retweeted_
     if bci_results:
         total_influence = 0
         for item in bci_results:
-            print item
             if item['found']:
                 total_influence += item['fields']['user_index'][0]
     try:
@@ -484,11 +485,12 @@ def detail_weibo_influence(uid, mid, style, date,  number):
     return results
 
 
-def statistics_influence_people(uid, date, style):
+def statistics_influence_people(uid, date, style, sensitive=0):
     # output: different retweeted and comment, uids' domain distribution, topic distribution, registeration geo distribution
     results = {} # retwweted weibo people and comment weibo people
     date1 = str(date).replace('-', '')
     index_name = pre_index + date1
+    print index_name
     index_flow_text = pre_text_index + date
 
     try:
@@ -513,6 +515,9 @@ def statistics_influence_people(uid, date, style):
         "size":1000
     }
 
+    if sensitive:
+        query_body["query"]["filtered"]["filter"]["bool"]["must"].append({"range":{"sensitive":{"gt":0}}})
+
     body_1 = copy.deepcopy(query_body)
     body_2 = copy.deepcopy(query_body)
 
@@ -528,7 +533,6 @@ def statistics_influence_people(uid, date, style):
         for item in result_2:
             if item['_source'].get('root_mid', ''):
                 retweeted_mid.append(item['_source']['root_mid'])    
-    
 
     if int(style) == 0: # retweeted
         retweeted_results = influenced_user_detail(uid, date, origin_mid, retweeted_mid, 3)
