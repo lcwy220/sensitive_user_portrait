@@ -3,13 +3,17 @@
 {% block subtitle %}查看人物画像{% endblock subtitle %}
 
 {% block custom_css %}
-    <link href="/static/custom/css/search.css" rel="stylesheet">
+  <!--   <link href="/static/custom/css/search.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="/static/custom/css/overview.css" media="screen" />
+<link  type="text/css" href="/static/personal/css/style.css" rel="stylesheet"/>
 {% endblock custom_css %}
    {% block custom_js %}
 <script src='/static/custom/js/identify_table.js'></script>
    {% endblock custom_js %}
 {% block body %}
+<div id='page'>
 {% include "index/search/search_base.html" %}
+</div>
 {% endblock %}
 {% block end_js %}
 <script src="/static/js/portrait/search_portrait.js"></script>
