@@ -682,9 +682,17 @@ $(function(){
 <script>
     $('#vector_table').empty();
     var html = '';
-	
-    for (var i = 0;i < global_tag_vector.length; i++){
+	console.log(global_tag_vector);
+	html += '<li class="li_1"><span class="pt_title">领域</span><span class="pt_detail">'+global_tag_vector[1][1]+'</span></li>';
+	html += '<li class="li_1"><span class="pt_title">话题</span><span class="pt_detail">'+global_tag_vector[2][1]+'</span></li>';
+	html += '<li class="li_1"><span class="pt_title">关键词</span><span class="pt_detail">'+global_tag_vector[5][1]+'</span></li>';
+	html += '<li class="li_1"><span class="pt_title">敏感微话题</span><span class="pt_detail">'+global_tag_vector[3][1]+'</span></li>';
+	html += '<li class="li_1"><span class="pt_title">微话题</span><span class="pt_detail">'+global_tag_vector[0][1]+'</span></li>';
+	html += '<li class="li_1"><span class="pt_title">政治倾向性</span><span class="pt_detail">'+global_tag_vector[4][1]+'</span></li>';
+    /*
+	for (var i = 0;i < global_tag_vector.length; i++){
         var unit = global_tag_vector[i];
+        
         html += '<li class="li_1"><span class="pt_title">';
         html += unit[0] + '</span><span class="pt_detail">';
         html += unit[1] + '</span></li>';
