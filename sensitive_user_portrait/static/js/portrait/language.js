@@ -290,7 +290,7 @@ function Draw_topic_user(data){
       var topic_name = topic_result[0];
       //console.log(topic_name);
       var topic_value = topic_result[1];
-     // console.log(topic_value)
+     // //console.log(topic_value)
       var myChart2 = echarts.init(document.getElementById('user_topic'));
       var option = {
         // title : {
@@ -355,7 +355,7 @@ function show_domain(data){
   }
   // var html = '';
   //html += '<h3>用户领域分析</h3>';
-  console.log(data);
+  //console.log(data);
   data1 = '根据注册信息分类：'+data[0][0];
   data2 = '根据转发结构分类：'+data[0][1];
   data3 = '根据发帖内容分类：'+data[0][2];
@@ -500,11 +500,11 @@ var option = {
 }
 
 function show_results(data){
-  //console.log(data.results.keywords);
+  console.log(data);
   var keywordsCloud = data.results.keywords;
   //console.log(keywordsCloud);
   var hashtag = data.results.hashtag;
-  console.log(hashtag);
+  //console.log(hashtag);
   var sensiti_hash = data.results.sensitive_hashtag;
   var topic = data.results.topic;
   var conclusion = data.description;

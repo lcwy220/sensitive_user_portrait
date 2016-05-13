@@ -2,13 +2,13 @@ function Thought(){
 }
 Thought.prototype = {   //获取数据，重新画表
     Draw_emotion:function(data){
-		console.log(data);
+		//console.log(data);
         var items = data;
         if(items['time_list'].length==0){
             var say = document.getElementById('emotion');
             say.innerHTML = '该用户暂无此数据';
         }else{
-			console.log('sadfghjkl;');
+			//console.log('sadfghjkl;');
             emotions(items);
             var time_init = new Date(items['time_list'][0]);
             var times_init = time_init.getTime().toString().substr(0,10);
@@ -34,7 +34,7 @@ function th_draw_content(data){
     var html = '';
     $('#thought_weibo_text').empty();
     //console.log(data);
-   // console.log(data.length);
+   // //console.log(data.length);
     if(data[0].length==0 && data[1].length==0){
         html += "<div style='width:100%;'><span style='margin-left:20px;'>该时段用户未发布任何微博</span></div>";
     }else{
@@ -50,7 +50,7 @@ function th_draw_content(data){
     $('#thought_weibo_text').append(html);
 }
 function emotions(data){
-	console.log(data);
+	//console.log(data);
     var times = [];
     var time_name = [];
     var index = $('input[name="time-type"]:checked').val();
@@ -184,18 +184,18 @@ function draw_character(data){
     var second_content = [];
     for (var i = 0;i < 7; i++){
         if (pie_data[i] && pie_data[i] != 0){
-            console.log(i,pie_data[i]);
+            //console.log(i,pie_data[i]);
             var nod = {};
             nod['name'] = character_dict[i];
             nod['value'] = pie_data[i];
             second_content.push(nod);
             if ((i == 0 ) || (i == 1)){
-                console.log(2,nod);
+                //console.log(2,nod);
                 first_content.push(nod);
             }
             else{
                 neg += pie_data[i];
-                console.log(neg);
+                //console.log(neg);
             }
         }
     }
@@ -272,4 +272,4 @@ function thought_load(){
 }
 var Thought = new Thought();
 var index = $('input[name="time-type"]:checked').val();
-console.log(index);
+//console.log(index);

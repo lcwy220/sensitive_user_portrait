@@ -261,6 +261,7 @@ def ajax_sentiment_trend():
         now_ts = time.time()
     else:
         now_ts = test_time - DAY
+        now_ts = 1378011600
     results = search_sentiment_trend(uid, time_type, now_ts)
     if not results:
         results = {}

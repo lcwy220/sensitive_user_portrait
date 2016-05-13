@@ -17,15 +17,21 @@ Influence.prototype = {   //获取数据，重新画表
   Draw_influence:function(data){
     //console.log(data);
 	var item_x = data.time_line;
-    var item_y = data.influence;
+    var item_y = data.time_line;
 	// var conclusion = data.description;
 
 	// document.getElementById('saysth').innerHTML = conclusion[0];
 	// document.getElementById('sayimportant').innerHTML = conclusion[1];
-	var dataFixed = [];
-	for(i=0;i<item_y.length;i++){
-		dataFixed.push(parseFloat(item_y[i].toFixed(2)));
-	}
+	var data_time = [];
+    var data_count = [];
+    var timeline = data.time_list;
+    //var activeness = data.ave_activeness;
+    for (var i = 0;i < timeline.length;i++){
+        data_time.push(timeline[i][1]);
+    }
+    for (var i = 0;i < timeline.length;i++){
+        data_count.push(parseFloat(timeline[i][2].toFixed(2)));
+    }
     var myChart = echarts.init(document.getElementById('influence_chart')); 
     var option = {
 
@@ -48,7 +54,7 @@ Influence.prototype = {   //获取数据，重新画表
           {
               type : 'category',
               boundaryGap : true,
-              data : item_x
+              data : data_time
           }
       ],
       yAxis : [
@@ -62,7 +68,7 @@ Influence.prototype = {   //获取数据，重新画表
       series : [
           {
               type:'line',
-              data:dataFixed,
+              data:data_count,
               markPoint : {
                   data : [
                       {type : 'max', name: '最大值'},
@@ -221,13 +227,16 @@ Draw_pie_all0:function(data){
   
   Draw_user_influence_detail:function(data){
 	//影响力表
+	console.log(data);
     $('#influence_table').empty();
     var html = '';
     html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive" style="font-size:14px;">';
     html += '<tr><th rowspan="2" style="text-align:center;vertical-align:middle;">&nbsp;类别</th>';
-    html += '<th colspan="4" style="text-align:center;">转发情况<u id="retweet_distribution" style="font-size:12px;color:#555555;margin-left:20px;cursor: pointer">查看详情</u></th>';
-    html += '<th colspan="4" style="text-align:center;">评论情况<u id="comment_distribution" style="font-size:12px;color:#555555;margin-left:20px;cursor: pointer">查看详情</u></th></tr>';
-    html += '<tr><th style="text-align:center">总数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="所有发布微博被转发的总次数"></i></th>';
+    //html += '<th colspan="4" style="text-align:center;">转发情况<u id="retweet_distribution" style="font-size:12px;color:#555555;margin-left:20px;cursor: pointer">查看详情</u></th>';
+    //html += '<th colspan="4" style="text-align:center;">评论情况<u id="comment_distribution" style="font-size:12px;color:#555555;margin-left:20px;cursor: pointer">查看详情</u></th></tr>';
+    html += '<th colspan="4" style="text-align:center;">转发情况</th>';
+    html += '<th colspan="4" style="text-align:center;">评论情况</th></tr>';
+	html += '<tr><th style="text-align:center">总数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="所有发布微博被转发的总次数"></i></th>';
     html += '<th style="text-align:center">平均数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="平均每条发布微博被转发的平均数"></i></th>';
     html += '<th style="text-align:center">最高数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="单条发布微博被转发的最高次数"></i></th>';
     html += '<th style="text-align:center">爆发数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="所有微博在15分钟被转发的总次数"></i></th>';
@@ -264,9 +273,12 @@ Draw_pie_all0:function(data){
     var html = '';
     html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive" style="font-size:14px;">';
     html += '<tr><th rowspan="2" style="text-align:center;vertical-align:middle;">&nbsp;类别</th>';
-    html += '<th colspan="4" style="text-align:center;">转发情况<a href="#" data-toggle="modal" data-target="#retweet_distribution" id="morehashtag" style="font-size:12px;color:#555555;margin-left:20px;cursor: pointer"" >查看详情</a></th>';
-    html += '<th colspan="4" style="text-align:center;">评论情况<u id="comment_distribution" style="font-size:12px;color:#555555;margin-left:20px;cursor: pointer">查看详情</u></th></tr>';
-    html += '<tr><th style="text-align:center">总数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="所有发布微博被转发的总次数"></i></th>';
+    //html += '<th colspan="4" style="text-align:center;">转发情况<a href="#" data-toggle="modal" data-target="#retweet_distribution" id="morehashtag" style="font-size:12px;color:#555555;margin-left:20px;cursor: pointer"" >查看详情</a></th>';
+    //html += '<th colspan="4" style="text-align:center;">评论情况<u id="comment_distribution" style="font-size:12px;color:#555555;margin-left:20px;cursor: pointer">查看详情</u></th></tr>';
+    html += '<th colspan="4" style="text-align:center;">转发情况</th>';
+    html += '<th colspan="4" style="text-align:center;">评论情况</th></tr>';
+    
+	html += '<tr><th style="text-align:center">总数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="所有发布微博被转发的总次数"></i></th>';
     html += '<th style="text-align:center">平均数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="平均每条发布微博被转发的平均数"></i></th>';
     html += '<th style="text-align:center">最高数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="单条发布微博被转发的最高次数"></i></th>';
     html += '<th style="text-align:center">敏感词<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="所有微博在15分钟被转发的总次数"></i></th>';
@@ -336,7 +348,7 @@ Draw_pie_all0:function(data){
     Draw_pie(data.influence_distribution.domian, 're_user_domain');
     Draw_pie(data.influence_distribution.geo, 're_user_geo');
   },
-
+  
   Draw_conclusion:function(data){
     $('#influence_conclusion_all').empty();
     var html = '';
@@ -624,9 +636,9 @@ function click_action(){
       $("#comment_distribution").live("click",function(){
         $("#float-wrap").removeClass("hidden");
         $("#comment_distribution_content").removeClass("hidden");
-        var all_influenced_users_url_style1 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid +'&date='+date_str+'&style=1';
+        //var all_influenced_users_url_style1 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid +'&date='+date_str+'&style=1';
         //console.log(all_influenced_users_url_style1);
-        Influence.call_ajax_request(all_influenced_users_url_style1, Influence.ajax_method, Influence.Draw_pie_all1);
+        //Influence.call_ajax_request(all_influenced_users_url_style1, Influence.ajax_method, Influence.Draw_pie_all1);
         return false;
       });
     $('input[name="choose_module"]').live('click', function(){             
@@ -654,12 +666,12 @@ function influence_load(){
 
     var basic_influence_url = '/attribute/current_influence_comment/?uid='+parent.personalData.uid+'&date='+date_str;
     Influence.call_async_ajax_request(basic_influence_url, Influence.ajax_method, Influence.Draw_basic_influence);
-
+	/*
     var all_influenced_users_url_style0 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid+'&date='+date_str+'&style=0';
     Influence.call_async_ajax_request(all_influenced_users_url_style0, Influence.ajax_method, Influence.Draw_all_influenced_users_style0);
     var all_influenced_users_url_style1 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid+'&date='+date_str+'&style=1';
     Influence.call_async_ajax_request(all_influenced_users_url_style1, Influence.ajax_method, Influence.Draw_all_influenced_users_style1);
-
+	*/
     //var get_top_weibo_url_style0 = '/attribute/get_top_weibo/?uid='+parent.personalData.uid+'&date='+date_str+'&style=0';
     //Influence.call_async_ajax_request(get_top_weibo_url_style0, Influence.ajax_method, Influence.Draw_get_top_weibo1);
 	//原创
@@ -671,8 +683,8 @@ function influence_load(){
 	//评论
     var get_top_weibo_url_style3 = '/attribute/get_top_weibo/?uid='+parent.personalData.uid+'&date='+date_str+'&style=3';
     Influence.call_async_ajax_request(get_top_weibo_url_style3, Influence.ajax_method, Influence.Draw_get_top_weibo4);
-    var summary_influence_url = '/attribute/summary_influence/?uid='+parent.personalData.uid+'&date='+date_str;
-    Influence.call_async_ajax_request(summary_influence_url, Influence.ajax_method, Influence.Draw_conclusion);
+    //var summary_influence_url = '/attribute/summary_influence/?uid='+parent.personalData.uid+'&date='+date_str;
+    //Influence.call_async_ajax_request(summary_influence_url, Influence.ajax_method, Influence.Draw_conclusion);
 };
 
 var Influence = new Influence();

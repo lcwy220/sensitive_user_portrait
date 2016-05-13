@@ -64,7 +64,7 @@ function geo_track(data){
 
 function  active_chart(data){
     global_active_data = data;
-	console.log(global_active_data);
+	//console.log.log(global_active_data);
 	/*
     var tag_vector = data.tag_vector;
     //active time
@@ -90,25 +90,25 @@ function  active_chart(data){
     $('#saysay').html(this_desc);
 	*/
     if (global_time_type == 'day'){
-		console.log("day");
+		//console.log.log("day");
        week_chart(data.day_trend);
     }
     // week
     else{
-		console.log("week");
+		//console.log.log("week");
         week_chart(data.week_trend);
     }
 }
 function week_chart(trend_data){
     var trend = trend_data;
-	console.log(trend);
+	//console.log.log(trend);
     var data_count=[];
     var data_time = [];
     var date_zhang = [];
     if (global_time_type == 'day'){
         for(i=0;i<trend.length;i++){
             var time = getDate(pre_time+trend[i][0]);
-            //console.log(pre_time);
+            //console.log.log(pre_time);
             var count = trend[i][1];
             var date_zh =getYearDate(pre_time+trend[i][0]);
             data_time.push(time);
@@ -119,9 +119,9 @@ function week_chart(trend_data){
         $('#date_zh').html(date_zhang[0]);
         var dateStr = getFullDate(pre_time+trend[0][0]);
         var ts = get_unix_time(dateStr);
-        //console.log('ts',ts);
+        //console.log.log('ts',ts);
         var url ="/attribute/activity_weibo/?uid="+uid+"&type="+global_time_type+"&start_ts="+ts;
-        //console.log(url);
+        //console.log.log(url);
         activity_call_ajax_request(url, draw_content); // draw_weibo
     }
     else{
@@ -138,7 +138,7 @@ function week_chart(trend_data){
         var dateStr = getFullDate(trend[0][0]);
         var ts = get_unix_time(dateStr);
         var url ="/attribute/activity_weibo/?uid="+uid+"&type="+global_time_type+"&start_ts="+ts;
-        //console.log(url);
+        //console.log.log(url);
         activity_call_ajax_request(url, draw_content); // draw_weibo
     }
 	//Draw_trend:
@@ -220,12 +220,12 @@ function week_chart(trend_data){
 }
 //微博文本默认数据
 function point2weibo(xnum, ts){
-	console.log("fdghjkl;'l;kjhgfd");
-    console.log(xnum);
+	//console.log.log("fdghjkl;'l;kjhgfd");
+    //console.log.log(xnum);
     var delta = '';
     if (global_time_type == 'day'){
         var url ="/attribute/activity_weibo/?uid="+uid+"&type="+global_time_type+"&start_ts="+(pre_time+ts[0]);
-        //console.log(url);
+        //console.log.log(url);
         person_call_ajax_request(url, draw_content); //draw weibo
 
         var a = Math.floor(xnum / 2);
@@ -260,7 +260,7 @@ function point2weibo(xnum, ts){
     $('#time_zh').html(delta);
 }
 function draw_content(data){
-	console.log(data);
+	//console.log.log(data);
     var html = '';
     $('#weibo_text').empty();
     if(data[0].length==0 && data[1].length==0){
@@ -279,7 +279,7 @@ function draw_content(data){
 
 
 function draw_daily_ip_table(ip_data){
-    console.log(ip_data);
+    //console.log(ip_data);
 	var today_ip = document.getElementById('today_ip');
 	if(ip_data.today_top_ip){
 		today_ip.innerHTML = ip_data.today_top_ip;
@@ -319,7 +319,7 @@ function draw_daily_ip_table(ip_data){
     //var div_name = ['daily_ip','weekly_ip'];
     var this_desc = '';
 	
-    //console.log(ip_data.description);
+    //console.log.log(ip_data.description);
 	
     if (ip_data.description[1].length != 0){
         this_desc += "<span>" + ip_data.description[0] + "</span><span style='color:red;'>" + ip_data.description[1][0] + '(' + ip_data.description[1][1].split('\t').pop() +')' + "</span>"; //description
@@ -363,32 +363,32 @@ function draw_daily_ip_table(ip_data){
     html += '</tr>';
     html += '<tr><th style="text-align:center">一周IP</th>';
     for(var i=0;i<ip_data.ip_week_list.length;i++){
-		if(ip_data.ip_week_list[i]){
-			html += '<th style="text-align:center">'+ip_data.ip_week_list[i][0]+'</th>';
+		if(ip_data.ip_week_list[i][0]){
+			html += '<th style="text-align:center">'+ip_data.ip_week_list[i][0][0]+'</th>';
 		}else{
 			html += '<th style="text-align:center">-</th>';
 		}
 	}
 	html += '<tr><th style="text-align:center">一周位置</th>';
     for(var i=0;i<ip_data.geo_week_list.length;i++){
-		if(ip_data.geo_week_list[i]){
-			html += '<th style="text-align:center">'+ip_data.geo_week_list[i][0]+'</th>';
+		if(ip_data.geo_week_list[i][0]){
+			html += '<th style="text-align:center">'+ip_data.geo_week_list[i][0][0]+'</th>';
 		}else{
 			html += '<th style="text-align:center">-</th>';
 		}
 	}
 	html += '<tr><th style="text-align:center">敏感IP</th>';
     for(var i=0;i<ip_data.sensitive_ip_week_list.length;i++){
-		if(ip_data.sensitive_ip_week_list[i]){
-			html += '<th style="text-align:center">'+ip_data.sensitive_ip_week_list[i][0]+'</th>';
+		if(ip_data.sensitive_ip_week_list[i][0]){
+			html += '<th style="text-align:center">'+ip_data.sensitive_ip_week_list[i][0][0]+'</th>';
 		}else{
 			html += '<th style="text-align:center">-</th>';
 		}
 	}
 	html += '<tr><th style="text-align:center">敏感位置</th>';
     for(var i=0;i<ip_data.sensitive_geo_week_list.length;i++){
-		if(ip_data.sensitive_geo_week_list[i]){
-			html += '<th style="text-align:center">'+ip_data.sensitive_geo_week_list[i][0]+'</th>';
+		if(ip_data.sensitive_geo_week_list[i][0]){
+			html += '<th style="text-align:center">'+ip_data.sensitive_geo_week_list[i][0][0]+'</th>';
 		}else{
 			html += '<th style="text-align:center">-</th>';
 		}
@@ -478,18 +478,20 @@ function draw_online_pattern(data){
 }
 
 function draw_activeness_chart(data){
+	//console.log.log(data);
     //$('#activeness_desc').html("<span>" + data.description[0] + "</span><span style='color:red;'>" + data.description[1] + "</span>。");
     //global_tag_vector.push(['活跃类型', data.tag_vector]);
     var data_time = [];
     var data_count = [];
-    var timeline = data.time_line;
-    var activeness = data.activeness;
+    var timeline = data.time_list;
+    //var activeness = data.ave_activeness;
     for (var i = 0;i < timeline.length;i++){
-        data_time.push(timeline[i]);
+        data_time.push(timeline[i][1]);
     }
-    for (var i = 0;i < activeness.length;i++){
-        data_count.push(parseFloat(activeness[i].toFixed(2)));
+    for (var i = 0;i < timeline.length;i++){
+        data_count.push(parseFloat(timeline[i][2].toFixed(2)));
     }
+
     $('#activeness').highcharts({
         chart: {
             type: 'spline',// line,
@@ -559,8 +561,8 @@ function activity_load(){
     bind_time_option();
     var url = '/attribute/location/?uid='+ uid + '&time_type=week';
     person_call_ajax_request(url, geo_track);
-    var url = '/attribute/online_pattern/?uid='+uid;
-    person_call_ajax_request(url,draw_online_pattern);
+    //var url = '/attribute/online_pattern/?uid='+uid;
+    //person_call_ajax_request(url,draw_online_pattern);
     var url = '/attribute/activeness_trend/?uid=' + uid;
     person_call_ajax_request(url, draw_activeness_chart);
 }
