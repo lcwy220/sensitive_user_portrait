@@ -87,16 +87,16 @@ Influence.prototype = {   //获取数据，重新画表
   Draw_get_top_weibo(data, div_name);
 },
  Draw_get_top_weibo2:function(data){
-  var div_name = 'influence_weibo2';
+  var div_name = 'influence_weibo1';
   Draw_get_top_weibo(data, div_name);
 
 },
  Draw_get_top_weibo3:function(data){
-  var div_name = 'influence_weibo3';
+  var div_name = 'influence_weibo2';
   Draw_get_top_weibo(data, div_name);
 },
  Draw_get_top_weibo4:function(data){
-  var div_name = 'influence_weibo4';
+  var div_name = 'influence_weibo3';
   Draw_get_top_weibo(data, div_name);
 },
 Draw_pie_all0:function(data){
@@ -220,6 +220,7 @@ Draw_pie_all0:function(data){
   },
   
   Draw_user_influence_detail:function(data){
+	//影响力表
     $('#influence_table').empty();
     var html = '';
     html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive" style="font-size:14px;">';
@@ -235,36 +236,75 @@ Draw_pie_all0:function(data){
     html += '<th style="text-align:center">最高数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="单条发布微博被评论的最高次数"></i></th>';
     html += '<th style="text-align:center">爆发数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="所有微博在15分钟被评论的总次数"></i></th>';
     html += '</tr>';
-    html += '<tr><th style="text-align:center">原创微博 ('+data['origin_weibo_number']+')</th>';
-    html += '<th style="text-align:center">'+data['origin_weibo_retweeted_total_number']+'</th>';
-    html += '<th style="text-align:center">'+data['origin_weibo_retweeted_average_number'].toFixed(0)+'</th>';
-    html += '<th style="text-align:center">'+data['origin_weibo_retweeted_top_number']+'</th>';
-    html += '<th style="text-align:center">'+data['origin_weibo_retweeted_brust_average'].toFixed(0)+'</th>';
-    html += '<th style="text-align:center">'+data['origin_weibo_comment_total_number']+'</th>';
-    html += '<th style="text-align:center">'+data['origin_weibo_comment_average_number'].toFixed(0)+'</th>';
-    html += '<th style="text-align:center">'+data['origin_weibo_comment_top_number']+'</th>';
-    html += '<th style="text-align:center">'+data['origin_weibo_comment_brust_average'].toFixed(0)+'</th>';
+    html += '<tr><th style="text-align:center">原创微博 ('+data[0]['origin_weibo_number']+')</th>';
+    html += '<th style="text-align:center">'+data[0]['origin_weibo_retweeted_total_number']+'</th>';
+    html += '<th style="text-align:center">'+data[0]['origin_weibo_retweeted_average_number'].toFixed(0)+'</th>';
+    html += '<th style="text-align:center">'+data[0]['origin_weibo_retweeted_top_number']+'</th>';
+    html += '<th style="text-align:center">'+data[0]['origin_weibo_retweeted_brust_average'].toFixed(0)+'</th>';
+    html += '<th style="text-align:center">'+data[0]['origin_weibo_comment_total_number']+'</th>';
+    html += '<th style="text-align:center">'+data[0]['origin_weibo_comment_average_number'].toFixed(0)+'</th>';
+    html += '<th style="text-align:center">'+data[0]['origin_weibo_comment_top_number']+'</th>';
+    html += '<th style="text-align:center">'+data[0]['origin_weibo_comment_brust_average'].toFixed(0)+'</th>';
     html += '</tr>';
-    html += '<tr><th style="text-align:center">转发微博 ('+data['retweeted_weibo_number']+')</th>';
-    html += '<th style="text-align:center">'+data['retweeted_weibo_retweeted_total_number']+'</th>';
-    html += '<th style="text-align:center">'+data['retweeted_weibo_retweeted_average_number'].toFixed(0)+'</th>';
-    html += '<th style="text-align:center">'+data['retweeted_weibo_retweeted_top_number']+'</th>';
-    html += '<th style="text-align:center">'+data['retweeted_weibo_retweeted_brust_average'].toFixed(0)+'</th>';
-    html += '<th style="text-align:center">'+data['retweeted_weibo_comment_total_number']+'</th>';
-    html += '<th style="text-align:center">'+data['retweeted_weibo_comment_average_number'].toFixed(0)+'</th>';
-    html += '<th style="text-align:center">'+data['retweeted_weibo_comment_top_number']+'</th>';
-    html += '<th style="text-align:center">'+data['retweeted_weibo_comment_brust_average'].toFixed(0)+'</th>';
+    html += '<tr><th style="text-align:center">转发微博 ('+data[0]['retweeted_weibo_number']+')</th>';
+    html += '<th style="text-align:center">'+data[0]['retweeted_weibo_retweeted_total_number']+'</th>';
+    html += '<th style="text-align:center">'+data[0]['retweeted_weibo_retweeted_average_number'].toFixed(0)+'</th>';
+    html += '<th style="text-align:center">'+data[0]['retweeted_weibo_retweeted_top_number']+'</th>';
+    html += '<th style="text-align:center">'+data[0]['retweeted_weibo_retweeted_brust_average'].toFixed(0)+'</th>';
+    html += '<th style="text-align:center">'+data[0]['retweeted_weibo_comment_total_number']+'</th>';
+    html += '<th style="text-align:center">'+data[0]['retweeted_weibo_comment_average_number'].toFixed(0)+'</th>';
+    html += '<th style="text-align:center">'+data[0]['retweeted_weibo_comment_top_number']+'</th>';
+    html += '<th style="text-align:center">'+data[0]['retweeted_weibo_comment_brust_average'].toFixed(0)+'</th>';
     html += '</tr>';
     html += '</table>';
     $('#influence_table').append(html);
+	
+	//敏感微博影响力表
+	$('#sensitive_table').empty();
+    var html = '';
+    html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive" style="font-size:14px;">';
+    html += '<tr><th rowspan="2" style="text-align:center;vertical-align:middle;">&nbsp;类别</th>';
+    html += '<th colspan="4" style="text-align:center;">转发情况<a href="#" data-toggle="modal" data-target="#retweet_distribution" id="morehashtag" style="font-size:12px;color:#555555;margin-left:20px;cursor: pointer"" >查看详情</a></th>';
+    html += '<th colspan="4" style="text-align:center;">评论情况<u id="comment_distribution" style="font-size:12px;color:#555555;margin-left:20px;cursor: pointer">查看详情</u></th></tr>';
+    html += '<tr><th style="text-align:center">总数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="所有发布微博被转发的总次数"></i></th>';
+    html += '<th style="text-align:center">平均数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="平均每条发布微博被转发的平均数"></i></th>';
+    html += '<th style="text-align:center">最高数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="单条发布微博被转发的最高次数"></i></th>';
+    html += '<th style="text-align:center">敏感词<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="所有微博在15分钟被转发的总次数"></i></th>';
+    html += '<th style="text-align:center">总数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="所有发布微博被评论的总次数"></i></th>';
+    html += '<th style="text-align:center">平均数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="平均每条发布微博被评论的平均数"></i></th>';
+    html += '<th style="text-align:center">最高数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="单条发布微博被评论的最高次数"></i></th>';
+    html += '<th style="text-align:center">敏感词<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="所有微博在15分钟被评论的总次数"></i></th>';
+    html += '</tr>';
+    html += '<tr><th style="text-align:center">原创微博 ('+data[1]['origin_weibo_number']+')</th>';
+    html += '<th style="text-align:center">'+data[1]['origin_weibo_retweeted_total_number']+'</th>';
+    html += '<th style="text-align:center">'+data[1]['origin_weibo_retweeted_average_number'].toFixed(0)+'</th>';
+    html += '<th style="text-align:center">'+data[1]['origin_weibo_retweeted_top_number']+'</th>';
+    html += '<th style="text-align:center">'+data[1]['origin_sensitive_words_number']+'</th>';
+    html += '<th style="text-align:center">'+data[1]['origin_weibo_comment_total_number']+'</th>';
+    html += '<th style="text-align:center">'+data[1]['origin_weibo_comment_average_number'].toFixed(0)+'</th>';
+    html += '<th style="text-align:center">'+data[1]['origin_weibo_comment_top_number']+'</th>';
+    html += '<th style="text-align:center">-</th>';
+    html += '</tr>';
+    html += '<tr><th style="text-align:center">转发微博 ('+data[1]['retweeted_weibo_number']+')</th>';
+    html += '<th style="text-align:center">'+data[1]['retweeted_weibo_retweeted_total_number']+'</th>';
+    html += '<th style="text-align:center">'+data[1]['retweeted_weibo_retweeted_average_number'].toFixed(0)+'</th>';
+    html += '<th style="text-align:center">'+data[1]['retweeted_weibo_retweeted_top_number']+'</th>';
+    html += '<th style="text-align:center">'+data[1]['retweeted_sensitive_words_number']+'</th>';
+    html += '<th style="text-align:center">'+data[1]['retweeted_weibo_comment_total_number']+'</th>';
+    html += '<th style="text-align:center">'+data[1]['retweeted_weibo_comment_average_number'].toFixed(0)+'</th>';
+    html += '<th style="text-align:center">'+data[1]['retweeted_weibo_comment_top_number']+'</th>';
+    html += '<th style="text-align:center">-</th>';
+    html += '</tr>';
+    html += '</table>';
+    $('#sensitive_table').append(html);
 
-    $('#influence_index').html(data['order_count']);
+    $('#influence_index').html(data[0]['order_count']);
     var total_count;
     if (data['total_count'] > 10000){
-        total_count = Math.floor(data['total_count'] / 10000) + '万';
+        total_count = Math.floor(data[0]['total_count'] / 10000) + '万';
     }
     else{
-        total_count = data['total_count'];
+        total_count = data[0]['total_count'];
     }
     $('#influence_total').html(total_count);
   },
@@ -473,33 +513,36 @@ Draw_pie_all0:function(data){
   }
 
 function Draw_get_top_weibo(data,div_name){
+  //console.log(data);
   var html = '';
   $('#'+div_name).empty();
-    if(data[0][3]==''){
+    if(data.length==0){
         html += "<div style='margin-left:10px;width:100%;height:100px;'>用户在昨天未发布任何微博</div>";
     }else{
+	for(var i=0;i<data.length;i++){
       html += '<div id="weibo_list" class="weibo_list weibo_list_height scrolls tang-scrollpanel" style="margin:0;">';
       html += '<div id="content_control_height" class="tang-scrollpanel-wrapper" style="margin:0;">';
       html += '<div class="tang-scrollpanel-content" style="margin:0;">';
       html += '<ul>';
       for(var i=0;i<data.length;i++){
         s = (i+1).toString();
-        var weibo = data[i]
-        var mid = weibo[0];
-        var uid = weibo[9];
-        var name = weibo[10];
+        var weibo = data[i][4];
+        //var mid = weibo[0];
+		var reposts_count = data[i][1];
+		var comments_count = data[i][2];
+        var uid = data[i][12];
+        var name = data[i][11];
         if(name == 'unknown'){
-          name = '未知('+weibo[9]+')';
+          name = uid;
         };
-        var date = weibo[5];
-        var text = weibo[3];
-        var geo = weibo[4];
-        var reposts_count = weibo[1];
-        var comments_count = weibo[2];
-        var weibo_link = weibo[7];
-        var user_link = weibo[8];
+        var date = data[i][6];
+        var geo = data[i][5];
+       // var reposts_count = weibo[1];
+        //var comments_count = weibo[2];
+        //var weibo_link = weibo[7];
+       // var user_link = weibo[8];
         var profile_image_url = 'http://tp2.sinaimg.cn/1878376757/50/0/1';
-        var repost_tree_link = 'http://219.224.135.60:8080/show_graph/' + mid;
+        //var repost_tree_link = 'http://219.224.135.60:8080/show_graph/' + mid;
         if (geo==''){
            geo = '未知';
         }else{
@@ -509,16 +552,16 @@ function Draw_get_top_weibo(data,div_name){
         var user_link = 'http://weibo.com/u/' + uid;
         html += '<li class="item">';
         html += '<div class="weibo_detail" style="width:1000px">';
-        html += '<p style="text-align:left;margin-bottom:0;">' +s + '、昵称:<a class="undlin" target="_blank" href="' + user_link  + '">' + name + '</a>(' + geo_s + ')&nbsp;&nbsp;发布内容：&nbsp;&nbsp;' + text + '</p>';
+        html += '<p style="text-align:left;margin-bottom:0;margin-right:20px;">' +s + '、发布内容：&nbsp;&nbsp;' + weibo + '</p>';
         html += '<div class="weibo_info"style="width:100%">';
         html += '<div class="weibo_pz">';
-        html += '<div id="topweibo_mid" class="hidden">'+mid+'</div>';
+        //html += '<div id="topweibo_mid" class="hidden">'+mid+'</div>';
         html += '<a class="retweet_count" href="javascript:;" target="_blank">转发数(' + reposts_count + ')</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
         html += '<a class="comment_count" href="javascript:;" target="_blank">评论数(' + comments_count + ')</a></div>';
         html += '<div class="m">';
         html += '<u>' + date + '</u>&nbsp;-&nbsp;';
-        html += '<a target="_blank" href="' + weibo_link + '">微博</a>&nbsp;-&nbsp;';
-        html += '<a target="_blank" href="' + user_link + '">用户</a>;';
+        //html += '<a target="_blank" href="' + weibo_link + '">微博</a>&nbsp;-&nbsp;';
+        html += '<a target="_blank" href="">'+geo_s+'</a>;';
        // html += '<a target="_blank" href="' + repost_tree_link + '">转发树</a>';
         html += '</div>';
         html += '</div>';
@@ -537,6 +580,7 @@ function Draw_get_top_weibo(data,div_name){
     html += '</div>';
     html += '</div>';   
     }
+	}
       $('#'+div_name).append(html);
   }
 
@@ -567,6 +611,7 @@ function click_action(){
         Influence.call_ajax_request(influenced_users_url_re, Influence.ajax_method, Influence.Single_users_influence_re);
         return false;
       });
+	  /*
       $("#retweet_distribution").live("click",function(){
         $("#float-wrap").removeClass("hidden");
         $("#retweet_distribution_content").removeClass("hidden");
@@ -575,6 +620,7 @@ function click_action(){
         Influence.call_ajax_request(all_influenced_users_url_style0, Influence.ajax_method, Influence.Draw_pie_all0);
         return false;
       });
+	  */
       $("#comment_distribution").live("click",function(){
         $("#float-wrap").removeClass("hidden");
         $("#comment_distribution_content").removeClass("hidden");
@@ -602,7 +648,8 @@ function influence_load(){
     var influence_url = '/attribute/influence_trend/?uid='+uid + '&time_segment=7';
     Influence.call_async_ajax_request(influence_url, Influence.ajax_method, Influence.Draw_influence);
 
-    var user_influence_detail_url = '/attribute/user_influence_detail/?uid='+parent.personalData.uid+'&date='+date_str;
+    //var user_influence_detail_url = '/attribute/user_influence_detail/?uid='+parent.personalData.uid+'&date='+date_str;
+	var user_influence_detail_url = '/attribute/user_influence_detail/?uid='+parent.personalData.uid+'&date=2013-09-02';
     Influence.call_async_ajax_request(user_influence_detail_url, Influence.ajax_method, Influence.Draw_user_influence_detail);
 
     var basic_influence_url = '/attribute/current_influence_comment/?uid='+parent.personalData.uid+'&date='+date_str;
@@ -613,12 +660,15 @@ function influence_load(){
     var all_influenced_users_url_style1 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid+'&date='+date_str+'&style=1';
     Influence.call_async_ajax_request(all_influenced_users_url_style1, Influence.ajax_method, Influence.Draw_all_influenced_users_style1);
 
-    var get_top_weibo_url_style0 = '/attribute/get_top_weibo/?uid='+parent.personalData.uid+'&date='+date_str+'&style=0';
-    Influence.call_async_ajax_request(get_top_weibo_url_style0, Influence.ajax_method, Influence.Draw_get_top_weibo1);
+    //var get_top_weibo_url_style0 = '/attribute/get_top_weibo/?uid='+parent.personalData.uid+'&date='+date_str+'&style=0';
+    //Influence.call_async_ajax_request(get_top_weibo_url_style0, Influence.ajax_method, Influence.Draw_get_top_weibo1);
+	//原创
     var get_top_weibo_url_style1 = '/attribute/get_top_weibo/?uid='+parent.personalData.uid+'&date='+date_str+'&style=1';
     Influence.call_async_ajax_request(get_top_weibo_url_style1, Influence.ajax_method, Influence.Draw_get_top_weibo2);
+	//转发
     var get_top_weibo_url_style2 = '/attribute/get_top_weibo/?uid='+parent.personalData.uid+'&date='+date_str+'&style=2';
     Influence.call_async_ajax_request(get_top_weibo_url_style2, Influence.ajax_method, Influence.Draw_get_top_weibo3);
+	//评论
     var get_top_weibo_url_style3 = '/attribute/get_top_weibo/?uid='+parent.personalData.uid+'&date='+date_str+'&style=3';
     Influence.call_async_ajax_request(get_top_weibo_url_style3, Influence.ajax_method, Influence.Draw_get_top_weibo4);
     var summary_influence_url = '/attribute/summary_influence/?uid='+parent.personalData.uid+'&date='+date_str;
