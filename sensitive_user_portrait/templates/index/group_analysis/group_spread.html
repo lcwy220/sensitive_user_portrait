@@ -87,28 +87,7 @@
       <input type="radio" name="user_select" value="1" style="margin-left:5px" /> 非入库用户          
 	</div>
 	<div id="influence_in_user">
-		<div class="col-lg-6">
-		    <div class="panel panel-default">
-		        <div class="panel-heading" style="border-bottom: 1px solid transparent;border-color: #dddddd;">
-		            <div><span class="showmore" id="showmore_domain_influ" style="float:right;cursor:pointer" type="button"data-toggle="modal" data-target="#more_domain_influ" ><u>查看详情</u></span>用户领域分布</div>
-		        </div>
-		        <div class="panel-body">
-		          <div id="influence_domain" style="width:400px;height:280px;margin:30px 40px;margin:-10px 50px 0px 20px;">
-		          </div>
-		      </div>
-		  </div>
-		</div>
-		<div class="col-lg-6">
-		    <div class="panel panel-default">
-		        <div class="panel-heading" style="border-bottom: 1px solid transparent;border-color: #dddddd;">
-		            <div><span class="showmore" id="showmore_topic_influ" style="float:right;cursor:pointer" type="button"data-toggle="modal" data-target="#more_topic_influ" ><u>查看详情</u></span>用户话题分布</div>
-		        </div>
-		        <div class="panel-body">
-		          <div id="influence_topic" style="width:400px;height:280px;margin:30px 40px;margin:-10px 50px 0px 20px;">
-		          </div>
-		      </div>
-		  	</div>
-		</div>
+
 		<div class="col-lg-6" style="margin-top:10px">
 		    <div class="panel panel-default">
 		        <div class="panel-heading" style="border-bottom: 1px solid transparent;border-color: #dddddd;">
@@ -166,8 +145,6 @@
 		      	</div>
 		  	</div>
 		</div>
-<!-- 		<div id='whole_out_user' style="float:left;width:960px;height:400px;"></div>
- -->
 	</div>
 </div>
 
@@ -177,32 +154,3 @@
  <div id='influence'style='width:320px;height:420px;float:left'></div>
 	<div id='weibo' style='width:960px;float:left;margin-top:10px;max-height:520px;'>
  </div> -->
-
-<!-- 模态框 -->
- <div class="modal fade" id="more_topic_influ" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" style="font-size:18px" id="myModalLabel">主要话题分布</h4>
-      </div>
-      <div class="modal-body" id='influ_topic_WordList'>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
- <div class="modal fade" id="more_domain_influ" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" style="font-size:18px" id="myModalLabel">主要领域分布</h4>
-      </div>
-      <div class="modal-body" id='influ_domain_WordList'>
-      </div>
-    </div>
-  </div>
-</div>

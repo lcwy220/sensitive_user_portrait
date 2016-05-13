@@ -13,7 +13,7 @@ g_psy.prototype = {   //获取数据，重新画表
   }
 }
 function draw_think_all(data){
-    draw_group_kind(data);
+    //draw_group_kind(data);
     Draw_group_think(data);
     Draw_group_trend(data);
 }
@@ -111,6 +111,7 @@ function Draw_group_think(data){
 }
     myChart.setOption(option);                    
 }
+/*
 function draw_group_kind(data){
 	var g_text = data['character']['character_text'];
 	var g_sen = data['character']['character_sentiment'];
@@ -220,6 +221,7 @@ function draw_group_kind(data){
 }
 	myChart1.setOption(option);    
 }
+*/
 function group_draw_content(data){
 	//console.log('asdfadf');
     var html_c = '';

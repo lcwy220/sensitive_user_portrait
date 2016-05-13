@@ -715,6 +715,7 @@ function social_click(){
 
 
 function draw_social(data){
+    console.log(data);
 	Draw_group(data);
 	Draw_out_group(data);
 	draw_in_table(data);
@@ -728,7 +729,7 @@ function draw_social(data){
 }
 function social_load(){
     if (!global_social_flag){
-        var social_url = '/group/show_group_result/?task_name='+name+'&module=social';
+        var social_url = '/group/show_group_result/?task_name='+name + '&submit_user=' + submit_user +'&module=social';
         g_social.call_sync_ajax_request(social_url, g_social.ajax_method, draw_social);
         //var group_weibo_url = '/group/social_out_content/?uid1=3270561561&uid2=2656274875';
         //g_social.call_sync_ajax_request(group_weibo_url, g_social.ajax_method, draw_group_weibo1);

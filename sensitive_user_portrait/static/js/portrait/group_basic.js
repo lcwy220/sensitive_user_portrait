@@ -1,6 +1,7 @@
 function g_basic(){
   this.ajax_method = 'GET';
 }
+
 g_basic.prototype = {   //获取数据，重新画表
   call_sync_ajax_request:function(url, method, callback){
     $.ajax({
@@ -12,161 +13,164 @@ g_basic.prototype = {   //获取数据，重新画表
     });
   }
 }
+
 function draw_basic(data){
+	console.log("group basic data: ");
 	console.log(data);
-	draw_sex(data);
-	draw_verify(data);
 	Draw_totalnumber(data);
-	draw_tag(data);
-	//draw_tag({'user_tag':{'好':13,'中':21,'坏':9}});
+
+    var topics = data['topic'];
+    var domains = data['domain'];
+
+    if(topics.length == 0){
+        //$('#showmore_topic_influ').css('display', 'none');
+        $('#group_topic').append('<div style="padding-top: 40%;margin-left:40%;">暂无数据</div>');
+    }else{
+        Draw_topic_group_spread(topics,'group_topic', 'influ_topic_WordList','showmore_topic');
+    };
+    if(domains.length == 0){
+        //$('#showmore_domain_influ').css('display', 'none');
+        $('#group_domain').append('<div style="padding-top: 40%;margin-left:40%;">暂无数据</div>');
+    }else{
+        Draw_topic_group_spread(domains,'group_domain', 'influ_domain_WordList','showmore_domain');
+    }
+
+    var div_name = 'sensitiveCloud';
+    var c_title = '敏感词';
+    var cloud_data = data['sensitive_words'];
+    drawSensitiveCloud(div_name, c_title, cloud_data);
+    var div_name = 'hashtagCloud';
+    var c_title = 'hashtag';
+    var cloud_data = data['hashtag'];
+    drawSensitiveCloud(div_name, c_title, cloud_data);
+    var div_name = 'psychologyState';
+    var c_title = '关键词';
+    var cloud_data = data['keywords'];
+    drawSensitiveCloud(div_name, c_title, cloud_data);
+    
+    var influ_his = data['influence_his'];
+    if(influ_his[1][1] == 0 & influ_his[1][5] == 1){
+        $('#influ_distribution').append('<div style="padding-top: 40%;margin-left:40%;">暂无数据</div>');
+    }else{
+        draw_influ_distribution(influ_his,'influ_distribution', '影响力排名');
+    }
 }
-function draw_sex(data){
-	var mychart1 =  echarts.init(document.getElementById('group_sex')); 
-	var option = {
-	    tooltip : {
-	        trigger: 'item',
-	        formatter: "{a} <br/>{b} : {c} ({d}%)"
-	    },
-	    legend: {
-	        orient : 'vertical',
-	        x : 'left',
-	        data:['男','女']
-	    },
-	    toolbox: {
-	        show : false,
-	        feature : {
-	            mark : {show: true},
-	            dataView : {show: true, readOnly: false},
-	            magicType : {
-	                show: true, 
-	                type: ['pie', 'funnel'],
-	                option: {
-	                    funnel: {
-	                        x: '25%',
-	                        width: '50%',
-	                        funnelAlign: 'center',
-	                        max: 1548
-	                    }
-	                }
-	            },
-	            restore : {show: true},
-	            saveAsImage : {show: true}
-	        }
-	    },
-	    calculable : true,
-	    series : [
-	        {
-	            name:'性别',
-	            type:'pie',
-	            radius : ['50%', '70%'],
-	            itemStyle : {
-	                normal : {
-	                    label : {
-	                        show : false
-	                    },
-	                    labelLine : {
-	                        show : false
-	                    }
-	                },
-	                emphasis : {
-	                    label : {
-	                        show : true,
-	                        position : 'center',
-	                        textStyle : {
-	                            fontSize : '30',
-	                            fontWeight : 'bold'
-	                        }
-	                    }
-	                }
-	            },
-	            data:[
-	                {value:data['gender']['1'], name:'男'},
-	                {value:data['gender']['2'], name:'女'}
-	            ]
-	        }
-	    ]
-	};
-	                  
-  mychart1.setOption(option);
+
+//影响力分布
+function draw_influ_distribution(data,radar_div, title){
+    //console.log(data);
+    var mychart1 = echarts.init(document.getElementById(radar_div));
+    var y_axi = data[0];
+    var x_axi = data[1];
+    var xdata = [];
+    var ydata = [];
+    var count_sum = 0;
+    for (var i =0; i < y_axi.length;i++){
+        count_sum += y_axi[i];
+        if(y_axi[i]!=0){
+            xdata.push(data[1][i] + '-' + data[1][i+1]);
+            ydata.push(data[0][i]);
+        }
+    }
+    /*
+    for (i = 0; i< data[1].length-1; i++){
+        xdata.push(data[1][i] + '-' + data[1][i+1]);
+    };
+    */
+    var option = {
+    tooltip : {
+        trigger: 'axis',
+        formatter: "{a}<br/>{b} : {c}"
+    },
+    toolbox: {
+        show : false,
+        feature : {
+            mark : {show: true},
+            dataView : {show: true, readOnly: false},
+            magicType: {show: true, type: ['line', 'bar']},
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    calculable : true,
+    xAxis : [
+        {
+            type : 'value',
+            boundaryGap : [0, 0.01]
+        }
+    ],
+    yAxis : [
+        {
+            type : 'category',
+            //scale: true,
+            name : title,
+            data : xdata
+        }
+    ],
+    series : [
+        {
+            name:title,
+            type:'bar',
+            data:ydata
+        }
+    ]
+    };
+    mychart1.setOption(option);
 }
-function draw_verify(data){
-	var veri = data['verified'];
-	var yes = 0;
-	var no = 0;
-	for (var k in veri){
-		if (k == ''){
-			no = veri[k];
-		}else{
-			yes = veri[k];
-		}
-	}
-	var mychart1 =  echarts.init(document.getElementById('group_verify')); 
-	var option = {
-	    tooltip : {
-	        trigger: 'item',
-	        formatter: "{a} <br/>{b} : {c} ({d}%)"
-	    },
-	    legend: {
-	        orient : 'vertical',
-	        x : 'left',
-	        data:['已认证','未认证']
-	    },
-	    toolbox: {
-	        show : false,
-	        feature : {
-	            mark : {show: true},
-	            dataView : {show: true, readOnly: false},
-	            magicType : {
-	                show: true, 
-	                type: ['pie', 'funnel'],
-	                option: {
-	                    funnel: {
-	                        x: '25%',
-	                        width: '50%',
-	                        funnelAlign: 'center',
-	                        max: 1548
-	                    }
-	                }
-	            },
-	            restore : {show: true},
-	            saveAsImage : {show: true}
-	        }
-	    },
-	    calculable : true,
-	    series : [
-	        {
-	            name:'认证情况',
-	            type:'pie',
-	            radius : ['50%', '70%'],
-	            itemStyle : {
-	                normal : {
-	                    label : {
-	                        show : false
-	                    },
-	                    labelLine : {
-	                        show : false
-	                    }
-	                },
-	                emphasis : {
-	                    label : {
-	                        show : true,
-	                        position : 'center',
-	                        textStyle : {
-	                            fontSize : '20',
-	                            fontWeight : 'bold'
-	                        }
-	                    }
-	                }
-	            },
-	            data:[
-	                {value:yes, name:'已认证'},
-	                {value:no, name:'未认证'}
-	            ]
-	        }
-	    ]
-	};
-  mychart1.setOption(option);
+
+//词云
+function createRandomItemStyle() {
+    return {
+        normal: {
+            color: 'rgb(' + [
+                Math.round(Math.random() * 160),
+                Math.round(Math.random() * 160),
+                Math.round(Math.random() * 160)
+            ].join(',') + ')'
+        }
+    };
 }
+
+function drawSensitiveCloud(div_name, c_title, cloud_data){
+    var sensitiveChart = echarts.init(document.getElementById(div_name)); 
+    function getCloudData(cloud_data){
+        var chart_data = new Array();
+        for (var i = 0;i < cloud_data.length;i++){
+            var item = cloud_data[i];
+            var item_dict =  {
+                name: item[0],
+                value: item[1] * 100,
+                itemStyle: createRandomItemStyle()
+            };
+            chart_data.push(item_dict);
+        }
+        return chart_data;
+    }
+    
+    var optionSensitive = {
+        title: {
+            text: c_title,
+        },
+        tooltip: {
+            show: true
+        },
+        series: [{
+            type: 'wordCloud',
+            size: ['80%', '80%'],
+            textRotation : [0, 45, 90, -45],
+            textPadding: 0,
+            autoSize: {
+                enable: true,
+                minSize: 14
+            },
+            data: []
+        }]
+    };
+    var chart_data = getCloudData(cloud_data);
+    optionSensitive["series"][0]["data"] = chart_data;
+    sensitiveChart.setOption(optionSensitive);
+}	  
+
 function Draw_totalnumber(data){
     $('#totalnumber').empty();
     html = '';
@@ -232,9 +236,145 @@ function draw_tag(data){
 };
   mychart1.setOption(option);
 }
+
+function Draw_topic_group_spread(data, radar_div, motal_div, show_more){
+  var topic = [];
+  var html = '';
+    if(data[0][1] == 0){
+      $('#'+ motal_div).empty();
+      $('#'+ motal_div).empty();
+      html = '<h3 style="font-size:20px;text-align:center;margin-top:50%;">暂无数据</h3>';
+      $('#'+ radar_div).append(html);
+      $('#'+ motal_div).append(html);
+    }else{
+      var topic_sta = [];
+      var topic_name_sta = [];
+      for(var i=0;i<data.length;i++){
+        if(data[i][1] != 0){
+          topic_sta.push(data[i][1]/data[0][1]);
+          topic_name_sta.push(data[i][0]);
+        }
+      };
+      $('#'+ motal_div).empty();
+  if(topic_sta.length == 0){
+      $('#'+ motal_div).empty();
+      html = '<h3 style="font-size:20px;text-align:center;margin-top:50%;">暂无数据</h3>';
+      //$('#'+ more_div).append(html);
+      $('#'+ radar_div).append(html);
+      $('#'+ motal_div).append(html);
+      $('#'+ show_more).empty();
+  }else{
+      html = '';
+      html += '<table class="table table-striped table-bordered">';
+      html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">关键词</th><th style="text-align:center">概率</th></tr>';
+      for (var i = 0; i < topic_sta.length; i++) {
+         var s = i.toString();
+         var m = i + 1;
+         html += '<tr style=""><th style="text-align:center">' + m + '</th><th style="text-align:center"><a href="/index/search_result/?stype=2&uid=&uname=&location=&hashtag=&adkeyword=' + topic_name_sta[i] +  '&psycho_status=&domain&topic" target="_blank">' + topic_name_sta[i] +  '</a></th><th style="text-align:center">' + topic_sta[i].toFixed(2) + '</th></tr>';
+      };
+      html += '</table>'; 
+      $('#'+ motal_div).append(html);
+    };
+    var topic_val = [];
+    topic_val.push(topic_name_sta);
+    topic_val.push(topic_sta);
+    var topic_result = [];
+    topic_result = get_radar_data(topic_val);
+  var topic_name = topic_result[0];
+  var topic_value = topic_result[1];
+  var myChart2 = echarts.init(document.getElementById(radar_div));
+  var option = {
+    // title : {
+    //   text: '用户话题分布',
+    //   subtext: ''
+    // },
+      tooltip : {
+        show: true,
+        trigger: 'axis',
+        formatter:  function (params){
+          var res  = '';
+          var indicator = params.indicator;
+          //console.log(params);
+          res += params['0'][3]+' : '+(params['0'][2]/10).toFixed(2);
+          return res;
+          }
+        },
+      toolbox: {
+        show : true,
+        feature : {
+            mark : {show: true},
+            dataView : {show: true, readOnly: false},
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+      },
+      calculable : true,
+      polar : [
+       {
+        indicator :topic_name,
+        radius : 90
+       }
+      ],
+      series : [
+       {
+        name: '话题分布情况',
+        type: 'radar',
+        itemStyle: {
+         normal: {
+          areaStyle: {
+            type: 'default'
+          }
+         }
+        },
+       data : [
+        {
+         value : topic_value,
+         //name : '用户话题分布'
+        }
+       ]
+      }]
+  };
+  myChart2.setOption(option);
+}
+}
+
+function get_radar_data (data) {
+  var topic = data;
+  var topic_name = [];
+  var topic_value = [];
+  for(var i=0; i<topic[0].length;i++){
+    topic_value.push(topic[1][i].toFixed(2)*10)
+    topic_name.push(topic[0][i]);
+  };
+  // var topic_value2 = [];
+  // var topic_name2 = [];
+  // for(var i=0; i<8;i++){ //取前8个最大值
+  //   a=topic_value.indexOf(Math.max.apply(Math, topic_value));
+  //   topic_value2.push(topic_value[a].toFixed(3));
+  //   topic_name2.push(topic_name[a]);
+  //   topic_value[a]=0;
+  // }
+  var topic_name3 = [];
+  var max_topic = 8;
+  if(topic_value.length<8){
+    max_topic = topic_value.length;
+  }
+  for(var i=0;i<max_topic;i++){ //设置最大值的话题的阈值
+    var name_dict = {};
+    var index = topic_name[i];
+    name_dict["text"] = index;
+    name_dict["max"] = Math.max.apply(Math, topic_value).toFixed(3)+1;
+    topic_name3.push(name_dict);
+  }
+  var topic_result = [];
+  topic_result.push(topic_name3);
+  topic_result.push(topic_value);
+  return topic_result;
+}
+
 //var basic_name=document.getElementById('').text();
 //var basic_name=$("#stickynote").text();
 var g_basic = new g_basic();
-var basic_url='/group/show_group_result/?task_name='+name + '&submit_user=' + submit_user;
+var basic_url='/group/show_group_result/?task_name='+name + '&submit_user=' + submit_user + '&module=basic';
 g_basic.call_sync_ajax_request(basic_url,g_basic.ajax_method,draw_basic);
 

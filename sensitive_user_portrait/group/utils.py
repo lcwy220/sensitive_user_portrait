@@ -206,29 +206,28 @@ def search_group_results(task_name, submit_user, module):
         result['importance_star'] = source['importance_star']
         result['tag_vector'] = json.loads(source['tag_vector'])
     elif module == 'basic':
-        result['gender'] = json.loads(source['gender'])
-        result['verified'] = json.loads(source['verified'])
-        result['user_tag'] = json.loads(source['user_tag'])
+        result['domain'] = json.loads(source['domain'])
+        result['topic'] = json.loads(source['topic'])
+        result['keywords'] = json.loads(source['keywords'])
+        result['hashtag'] = json.loads(source['hashtag'])
+        result['sensitive_words'] = []
+        result['influence_his'] = json.loads(source['influence_his'])
         result['count'] = source['count']
     elif module == 'activity':
         result['activity_trend'] = json.loads(source['activity_trend'])
         result['activity_time'] = json.loads(source['activity_time'])
-        #result['activity_geo_disribution'] = json.loads(source['activity_geo_distribution'])
-        new_activity_geo_distribution = deal_geo_distribution(json.loads(source['activity_geo_distribution']))
-        result['activity_geo_disribution'] = new_activity_geo_distribution
-        result['activiy_geo_vary'] = json.loads(source['activity_geo_vary'])
         result['activeness_trend'] = json.loads(source['activeness'])
         result['activeness_his'] = json.loads(source['activeness_his'])
         result['activeness_description'] = source['activeness_description']
         result['online_pattern'] = json.loads(source['online_pattern'])
+    elif module == 'geo':
+        #result['activity_geo_disribution'] = json.loads(source['activity_geo_distribution'])
+        new_activity_geo_distribution = deal_geo_distribution(json.loads(source['activity_geo_distribution']))
+        result['activity_geo_disribution'] = new_activity_geo_distribution
+        result['activiy_geo_vary'] = json.loads(source['activity_geo_vary'])
     elif module == 'preference':
-        result['keywords'] = json.loads(source['keywords'])
-        result['hashtag'] = json.loads(source['hashtag'])
         result['sentiment_word'] = json.loads(source['sentiment_word'])
-        result['domain'] = json.loads(source['domain'])
-        result['topic'] = json.loads(source['topic'])
     elif module == 'influence':
-        result['influence_his'] = json.loads(source['influence_his'])
         result['influence_trend'] = json.loads(source['influence'])
         result['influence_in_user'] = json.loads(source['influence_in_user'])
         result['influence_out_user'] = json.loads(source['influence_out_user'])
