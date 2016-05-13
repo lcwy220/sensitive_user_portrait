@@ -124,6 +124,7 @@ def ajax_single_person():
     task_information_dict['submit_date'] = int(time.time())
     task_information_dict['state'] = request.args.get('state', '')
     task_information_dict['submit_user'] = request.args.get('submit_user', 'admin')
+    task_information_dict['task_id'] = task_information_dict['submit_user'] + task_information_dict['task_name']
     task_information_dict['task_type'] = 'detect'   #type: detect/analysis
     task_information_dict['detect_type'] = 'single' #type: single/multi/attribute/event
     task_information_dict['detect_process'] = 0     #type: 0/20/50/70/100
@@ -161,6 +162,7 @@ def ajax_multi_person():
     task_information_dict['state'] = input_data['state']
     task_information_dict['submit_date'] = int(time.time())
     task_information_dict['submit_user'] = input_data['submit_user']
+    task_information_dict['task_id'] = task_information_dict['submit_user'] + task_information_dict['task_name']
     #identify whether to extend
     extend_mark = input_data['extend'] # extend_mark = 0/1
     if extend_mark == '0':
@@ -366,6 +368,7 @@ def ajax_attribute_pattern():
     task_information_dict['task_name'] = request.args.get('task_name', '')
     task_information_dict['state'] = request.args.get('state', '')
     task_information_dict['submit_user'] = request.args.get('submit_user', 'admin')
+    task_information_dict['task_id'] = task_information_dict['submit_user'] + task_information_dict['task_name']
     task_information_dict['submit_date'] = int(time.time())
     task_information_dict['task_type'] = 'detect'
     task_information_dict['detect_type'] = 'attribute'
@@ -456,6 +459,7 @@ def ajax_event_detect():
     task_information_dict['submit_date'] = int(time.time())
     task_information_dict['state'] = request.args.get('state', '')
     task_information_dict['submit_user'] = request.args.get('submit_user', 'admin')
+    task_information_dict['task_id'] = task_information_dict['submit_user'] + task_information_dict['task_name']
     task_information_dict['task_type'] = 'detect'
     task_information_dict['detect_type'] = 'event'
     task_information_dict['detect_process'] = 0
@@ -472,7 +476,8 @@ def ajax_event_detect():
 #output: group detect task information list
 @mod.route('/show_detect_task/')
 def ajax_show_detect_task():
-    results = show_detect_task()
+    submit_user = request.args.get('submit_user', '')
+    results = show_detect_task(submit_user)
     return json.dumps(results)
 
 #use to search group detect task
@@ -496,7 +501,8 @@ def ajax_search_detect_task():
 def ajax_show_detect_result():
     results = {}
     task_name = request.args.get('task_name', '')
-    results = show_detect_result(task_name)
+    submit_user = request.args.get('submit_user', '')
+    results = show_detect_result(submit_user + task_name)
     return json.dumps(results)
 
 
@@ -515,7 +521,8 @@ def ajax_add_detect2analysis():
 def ajax_delete_task():
     status = True
     task_name = request.args.get('task_name', '')
-    status = delete_task(task_name)
+    submit_user = request.args.get('submit_user', '')
+    status = delete_task(submit_user + task_name)
     return json.dumps(status)
 
 #use to get social sensing group detect results

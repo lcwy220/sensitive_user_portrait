@@ -371,7 +371,7 @@ function submit_event(){
 		}
 
 
-		event_pattern_url += event_all_url.join('&') + '&submit_user=admin';
+		event_pattern_url += event_all_url.join('&') + '&submit_user=' + submit_user ;
 		console.log(event_pattern_url);
 	
 		$.ajax({
