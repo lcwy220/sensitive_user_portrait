@@ -440,6 +440,7 @@ def influenced_user_detail(uid, date, origin_retweeted_mid, retweeted_retweeted_
     if bci_results:
         total_influence = 0
         for item in bci_results:
+            print item
             if item['found']:
                 total_influence += item['fields']['user_index'][0]
     try:
