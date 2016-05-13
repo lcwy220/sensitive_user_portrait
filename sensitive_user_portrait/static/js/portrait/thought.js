@@ -14,7 +14,7 @@ Thought.prototype = {   //获取数据，重新画表
             var times_init = time_init.getTime().toString().substr(0,10);
             //console .log(times_init);    
             var html0 = '';
-            ////console.log(url_content);
+            //console.log(url_content);
             $('#select_time').empty();  
             html0 += "<div>当前选择时间段：</div><div style='color:brown;'>"+items['time_list'][0]+"</div><br><div>当前选择情绪：</div><div style='color:brown;'>中性</div>";
             $('#select_time').append(html0);
@@ -33,17 +33,17 @@ function choose_time(){
 function th_draw_content(data){
     var html = '';
     $('#thought_weibo_text').empty();
-    ////console.log(data);
+    //console.log(data);
    // //console.log(data.length);
     if(data[0].length==0 && data[1].length==0){
         html += "<div style='width:100%;'><span style='margin-left:20px;'>该时段用户未发布任何微博</span></div>";
     }else{
         for(i=0;i<data[1].length;i++){
-            ////console.log(data[i].text);
+            //console.log(data[i].text);
             html += "<div style='width:100%;'><img src='/static/img/pencil-icon.png' style='height:10px;width:10px;margin:0px;margin-right:10px;color:red;'><span>"+data[1][i]['text']+"</span></div>";
         }
 		for(i=0;i<data[0].length;i++){
-            ////console.log(data[i].text);
+            //console.log(data[i].text);
             html += "<div style='width:100%;'><img src='/static/img/pencil-icon.png' style='height:10px;width:10px;margin:0px;margin-right:10px;'><span>"+data[0][i]['text']+"</span></div>";
         }
     }
@@ -59,12 +59,12 @@ function emotions(data){
     }
     else{
         for (var t in data['time_list']){
-            ////console.log(data['time_list'][t]);
+            //console.log(data['time_list'][t]);
             times.push(data['time_list'][t].substr(11,5));
         }
     }
     time_name = data['time_list'];
-    ////console.log(times);
+    //console.log(times);
     var names = ['中性','积极','消极']; 
     var data0 = data['trend_result']['0'];
     var data1 = data['trend_result']['1'];
@@ -79,7 +79,7 @@ function emotions(data){
         nods['data'] = datas[i];
         nodcontent.push(nods);
     }
-    ////console.log(nodcontent[0]);
+    //console.log(nodcontent[0]);
     var myChart1 = echarts.init(document.getElementById('emotion'));
     var option = {
     tooltip : {
@@ -146,7 +146,7 @@ function emotions(data){
     )
 }
 function draw_character(data){
-    ////console.log(data);
+    //console.log(data);
     var sentiment_dict = ['冲动', '抑郁', '未知'];
     var text_dict = ['批判', '未知'];
     var character_sent = data['character_sentiment'];
@@ -200,7 +200,7 @@ function draw_character(data){
         }
     }
     var nod = {};
-    ////console.log(neg);
+    //console.log(neg);
     nod['name'] = '消极';
     nod['value'] = neg;
     if (neg != 0){
