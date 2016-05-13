@@ -279,7 +279,7 @@ function draw_content(data){
 
 
 function draw_daily_ip_table(ip_data){
-    //console.log.log(ip_data);
+    //console.log(ip_data);
 	var today_ip = document.getElementById('today_ip');
 	if(ip_data.today_top_ip){
 		today_ip.innerHTML = ip_data.today_top_ip;
@@ -363,32 +363,32 @@ function draw_daily_ip_table(ip_data){
     html += '</tr>';
     html += '<tr><th style="text-align:center">一周IP</th>';
     for(var i=0;i<ip_data.ip_week_list.length;i++){
-		if(ip_data.ip_week_list[i]){
-			html += '<th style="text-align:center">'+ip_data.ip_week_list[i][0]+'</th>';
+		if(ip_data.ip_week_list[i][0]){
+			html += '<th style="text-align:center">'+ip_data.ip_week_list[i][0][0]+'</th>';
 		}else{
 			html += '<th style="text-align:center">-</th>';
 		}
 	}
 	html += '<tr><th style="text-align:center">一周位置</th>';
     for(var i=0;i<ip_data.geo_week_list.length;i++){
-		if(ip_data.geo_week_list[i]){
-			html += '<th style="text-align:center">'+ip_data.geo_week_list[i][0]+'</th>';
+		if(ip_data.geo_week_list[i][0]){
+			html += '<th style="text-align:center">'+ip_data.geo_week_list[i][0][0]+'</th>';
 		}else{
 			html += '<th style="text-align:center">-</th>';
 		}
 	}
 	html += '<tr><th style="text-align:center">敏感IP</th>';
     for(var i=0;i<ip_data.sensitive_ip_week_list.length;i++){
-		if(ip_data.sensitive_ip_week_list[i]){
-			html += '<th style="text-align:center">'+ip_data.sensitive_ip_week_list[i][0]+'</th>';
+		if(ip_data.sensitive_ip_week_list[i][0]){
+			html += '<th style="text-align:center">'+ip_data.sensitive_ip_week_list[i][0][0]+'</th>';
 		}else{
 			html += '<th style="text-align:center">-</th>';
 		}
 	}
 	html += '<tr><th style="text-align:center">敏感位置</th>';
     for(var i=0;i<ip_data.sensitive_geo_week_list.length;i++){
-		if(ip_data.sensitive_geo_week_list[i]){
-			html += '<th style="text-align:center">'+ip_data.sensitive_geo_week_list[i][0]+'</th>';
+		if(ip_data.sensitive_geo_week_list[i][0]){
+			html += '<th style="text-align:center">'+ip_data.sensitive_geo_week_list[i][0][0]+'</th>';
 		}else{
 			html += '<th style="text-align:center">-</th>';
 		}
