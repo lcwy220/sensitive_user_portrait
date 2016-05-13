@@ -220,7 +220,8 @@ function week_chart(trend_data){
 }
 //微博文本默认数据
 function point2weibo(xnum, ts){
-    //console.log(xnum);
+	console.log("fdghjkl;'l;kjhgfd");
+    console.log(xnum);
     var delta = '';
     if (global_time_type == 'day'){
         var url ="/attribute/activity_weibo/?uid="+uid+"&type="+global_time_type+"&start_ts="+(pre_time+ts[0]);
@@ -259,13 +260,17 @@ function point2weibo(xnum, ts){
     $('#time_zh').html(delta);
 }
 function draw_content(data){
+	console.log(data);
     var html = '';
     $('#weibo_text').empty();
-    if(data==''){
+    if(data[0].length==0 && data[1].length==0){
         html += "<div style='width:100%;'><span style='margin-left:20px;'>该时段用户未发布任何微博</span></div>";
     }else{
-        for(i=0;i<data.length;i++){
-            html += "<div style='width:100%;'><img src='/static/img/pencil-icon.png' style='height:10px;width:10px;margin:0px;margin-right:10px;'><span>"+data[i].text+"</span><br></div>";
+        for(i=0;i<data[1].length;i++){
+            html += "<div style='width:100%;'><img src='/static/img/pencil-icon.png' style='height:10px;width:10px;margin:0px;margin-right:10px;color:red;'><span>"+data[1][i].text+"</span><br></div>";
+        }
+		for(i=0;i<data[0].length;i++){
+            html += "<div style='width:100%;'><img src='/static/img/pencil-icon.png' style='height:10px;width:10px;margin:0px;margin-right:10px;'><span>"+data[0][i].text+"</span><br></div>";
         }
 
     }
