@@ -180,7 +180,7 @@ def search_identify_uid(uid):
 def get_db_num(timestamp):
     date = ts2datetime(timestamp)
     date_ts = datetime2ts(date)
-    db_number = ((date_ts - r_beigin_ts) / (DAY*7)) %2 +1
+    db_number = ((date_ts - r_begin_ts) / (DAY*7)) %2 +1
     #run_type
     if RUN_TYPE == 0:
         db_number = 1
@@ -761,7 +761,7 @@ def search_comment(uid, top_count):
 def sensitive_search_comment(uid, top_count):
     results = {}
     evaluate_max_dict = get_evaluate_max()
-    if RNU_TYPE == 0:
+    if RUN_TYPE == 0:
         now_ts = datetime2ts('2013-09-02')
     else:
         now_ts = time.time()
@@ -2710,7 +2710,16 @@ def search_sentiment_trend(uid, time_type, now_ts):
         description_text = u'该用户今日主要情绪为'
         description = [description_text, max_sentiment]
         new_time_list = [ts2date(item) for item in time_list]
-        return {'trend_result':trend_results, 'description':description, 'time_list':new_time_list}
+        negtive_count = len(trend_results['2'])
+        neutral_count = len(trend_results['0'])
+        total_count = len(trend_results['2']) + len(trend_results['1']) +len(trend_results['2'])
+        if total_count == 0:
+            negetive_index = 0
+            negtive_influence = 0
+        else:
+            negetive_index = negtive_count/float(total_count)
+            negetive_influence = neutral_count/float(total_count)
+        return {'trend_result':trend_results, 'negetive_index':negetive_index, 'negetive_influence':negetive_influence,'time_list':new_time_list}
     elif time_type=='week':
         #run_type
         if RUN_TYPE == 0:
@@ -2751,8 +2760,17 @@ def search_sentiment_trend(uid, time_type, now_ts):
         description = [description_text, max_sentiment]
 
         time_list = [ts2datetime(item) for item in results['time_list']]
+        negtive_count = len(trend_results['2'])
+        neutral_count = len(trend_results['0'])
+        total_count = len(trend_results['2']) + len(trend_results['1']) +len(trend_results['2'])
+        if total_count == 0:
+            negetive_index = 0
+            negtive_influence = 0
+        else:
+            negetive_index = negtive_count/float(total_count)
+            negetive_influence = neutral_count/float(total_count)
 
-        return {'trend_result':trend_results, 'time_list':time_list, 'description':description}
+        return {'trend_result':trend_results,'negetive_index':negetive_index, 'negetive_influence':negetive_influence, 'time_list':time_list}
 
 
 
