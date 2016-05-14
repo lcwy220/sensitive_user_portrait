@@ -69,8 +69,10 @@ def delete_uid_file(filename):
 def submit_task(input_data):
     status = 0 # mark it can not submit
     task_name = input_data['task_name']
+    submit_user = input_data['submit_user']
+    task_id = submit_user + task_name
     try:
-        result = es_group_result.get(index=group_index_name, doc_type=group_index_type, id=task_name)['_source']
+        result = es_group_result.get(index=group_index_name, doc_type=group_index_type, id=task_id)['_source']
     except:
         status = 1
     
@@ -83,7 +85,7 @@ def submit_task(input_data):
         input_data['detect_type'] = ''
         input_data['detect_process'] = ''
         add_es_dict = {'task_information': input_data, 'query_condition':''}
-        es_group_result.index(index=group_index_name, doc_type=group_index_type, id=task_name, body=input_data)
+        es_group_result.index(index=group_index_name, doc_type=group_index_type, id=task_id, body=input_data)
         r.lpush(group_analysis_queue_name, json.dumps(input_data))
     
     return status
@@ -91,9 +93,9 @@ def submit_task(input_data):
 
 
 #search task by some condition -whether add download
-def search_task(task_name, submit_date, state, status):
+def search_task(task_name, submit_user, submit_date, state, status):
     results = []
-    query = []
+    query = [{"term": {"submit_user": submit_user}}]
     condition_num = 0
     if task_name:
         task_name_list = task_name.split(' ')
@@ -206,29 +208,31 @@ def search_group_results(task_name, submit_user, module):
         result['importance_star'] = source['importance_star']
         result['tag_vector'] = json.loads(source['tag_vector'])
     elif module == 'basic':
-        result['gender'] = json.loads(source['gender'])
-        result['verified'] = json.loads(source['verified'])
-        result['user_tag'] = json.loads(source['user_tag'])
+        result['politics'] = json.loads(source['politics'])
+        result['domain'] = json.loads(source['domain'])
+        result['topic'] = json.loads(source['topic'])
+        result['keywords'] = json.loads(source['keywords'])
+        result['sensitive_hashtag'] = json.loads(source['sensitive_hashtag'])
+        result['hashtag'] = json.loads(source['hashtag'])
+        result['sensitive_words'] = json.loads(source['sensitive_words'])
+        result['influence_his'] = json.loads(source['influence_his'])
+        result['sensitive_his'] = json.loads(source['sensitive_his'])
         result['count'] = source['count']
     elif module == 'activity':
         result['activity_trend'] = json.loads(source['activity_trend'])
         result['activity_time'] = json.loads(source['activity_time'])
-        #result['activity_geo_disribution'] = json.loads(source['activity_geo_distribution'])
-        new_activity_geo_distribution = deal_geo_distribution(json.loads(source['activity_geo_distribution']))
-        result['activity_geo_disribution'] = new_activity_geo_distribution
-        result['activiy_geo_vary'] = json.loads(source['activity_geo_vary'])
         result['activeness_trend'] = json.loads(source['activeness'])
         result['activeness_his'] = json.loads(source['activeness_his'])
         result['activeness_description'] = source['activeness_description']
         result['online_pattern'] = json.loads(source['online_pattern'])
+    elif module == 'geo':
+        #result['activity_geo_disribution'] = json.loads(source['activity_geo_distribution'])
+        new_activity_geo_distribution = deal_geo_distribution(json.loads(source['activity_geo_distribution']))
+        result['activity_geo_disribution'] = new_activity_geo_distribution
+        result['activiy_geo_vary'] = json.loads(source['activity_geo_vary'])
     elif module == 'preference':
-        result['keywords'] = json.loads(source['keywords'])
-        result['hashtag'] = json.loads(source['hashtag'])
         result['sentiment_word'] = json.loads(source['sentiment_word'])
-        result['domain'] = json.loads(source['domain'])
-        result['topic'] = json.loads(source['topic'])
     elif module == 'influence':
-        result['influence_his'] = json.loads(source['influence_his'])
         result['influence_trend'] = json.loads(source['influence'])
         result['influence_in_user'] = json.loads(source['influence_in_user'])
         result['influence_out_user'] = json.loads(source['influence_out_user'])
@@ -464,13 +468,14 @@ def get_group_list(task_name, submit_user):
 
 #use to get group member uid_uname
 #version: write in 2016-02-26
-#input: task_name
+#input: task_name, submit_user
 #output: uid_uname dict
-def get_group_member_name(task_name):
+def get_group_member_name(task_name, submit_user):
     results = {}
+    task_id = submit_user + task_name
     try:
         group_result = es_group_result.get(index=group_index_name, doc_type=group_index_type,\
-                id=task_name)['_source']
+                id=task_id)['_source']
     except:
         return results
     uid_list = group_result['uid_list']
@@ -493,9 +498,10 @@ def get_group_member_name(task_name):
 
 
 # delete group results from es_user_portrait 'group_analysis'
-def delete_group_results(task_name):
+def delete_group_results(task_name, submit_user):
+    task_id = submit_user + task_name
     try:
-        result = es.delete(index=index_name, doc_type=index_type, id=task_name)
+        result = es.delete(index=index_name, doc_type=index_type, id=task_id)
     except:
         return False
     return True
@@ -534,12 +540,13 @@ def get_group_user_track(uid):
 # show group members weibo for activity ---week
 # input: task_name, start_ts
 # output: weibo_list
-def get_activity_weibo(task_name, start_ts):
+def get_activity_weibo(task_name, submit_user, start_ts, time_segment=FOUR_HOUR):
     results = []
     #step1: get task_name uid
+    task_id = submit_user + task_name
     try:
         group_result = es_group_result.get(index=group_index_name, doc_type=group_index_type ,\
-                id=task_name, _source=False, fields=['uid_list'])
+                id=task_id, _source=False, fields=['uid_list'])
     except:
         group_result = {}
     if group_result == {}:
@@ -563,7 +570,6 @@ def get_activity_weibo(task_name, start_ts):
             uname = item['fields']['uname'][0]
         uid2uname[uid] = uname
     #step3: search time_segment weibo
-    time_segment = FOUR_HOUR
     end_ts = start_ts + time_segment
     time_date = ts2datetime(start_ts)
     flow_text_index_name = flow_text_index_name_pre + time_date
@@ -700,12 +706,13 @@ def get_social_inter_content(uid1, uid2, type_mark):
 #show group members sentiment weibo
 #input: task_name, start_ts ,sentiment_type
 #output: weibo_list
-def search_group_sentiment_weibo(task_name, start_ts, sentiment):
+def search_group_sentiment_weibo(task_name, submit_user, start_ts, sentiment):
     weibo_list = []
     #step1:get task_name uid
+    task_id = submit_user + task_name
     try:
         group_result = es_group_result.get(index=group_index_name, doc_type=group_index_type,\
-                        id=task_name, _source=False, fields=['uid_list'])
+                        id=task_id, _source=False, fields=['uid_list'])
     except:
         group_result = {}
     if group_result == {}:

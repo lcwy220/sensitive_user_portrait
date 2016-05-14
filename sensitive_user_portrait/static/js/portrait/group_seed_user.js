@@ -395,7 +395,7 @@ function seed_single_user_data(){
     // group_task
     url += '&task_name=' + $('#seed_user #'+seed_user_option+' #first_name').val();
     url += '&state=' + $('#seed_user #'+seed_user_option+' #first_remarks').val();
-    url += '&submit_user=admin';
+    url += '&submit_user=' + submit_user;
     return url;
 }
 function seed_multi_user_data(){
@@ -404,7 +404,7 @@ function seed_multi_user_data(){
     // group_task
     upload_job['task_name'] = $('#seed_user #'+seed_user_option+' #first_name').val();
     upload_job['state']  = $('#seed_user #'+seed_user_option+' #first_remarks').val();
-    upload_job['submit_user'] = 'admin';
+    upload_job['submit_user'] = submit_user;
     if ($('#seed_user #multi_user_ext [name="ext_choose"]:checked').val() == 0){
         upload_job['extend'] = '0';
     }

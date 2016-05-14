@@ -8,12 +8,14 @@ import IP
 import sys
 import time
 import json
-from cron_text_attribute import topic_en2ch, get_fansnum_max
+from cron_text_attribute import topic_en2ch, get_fansnum_max, domain_en2ch, politics_en2ch
 from elasticsearch.helpers import scan
 from weibo_api_v2 import read_flow_text_sentiment, read_flow_text
 from evaluate_index import get_importance
 # compute user topic
 from topic.test_topic import topic_classfiy
+from domain.test_domain_v2 import domain_classfiy
+from policy.political_main import political_classify
 
 reload(sys)
 sys.path.append('../../')
@@ -21,9 +23,10 @@ from global_utils import es_user_portrait as es
 from global_utils import es_user_portrait
 from global_utils import portrait_index_name, portrait_index_type
 from global_utils import update_week_redis, UPDATE_WEEK_REDIS_KEY
-from global_utils import R_CLUSTER_FLOW2 as r_cluster
+from global_utils import redis_cluster
+from global_utils import redis_ip
 from parameter import WEIBO_API_INPUT_TYPE, WEEK, RUN_TYPE,\
-                      RUN_TEST_TIME, DAY
+                      RUN_TEST_TIME, DAY, WORK_TYPE
 from time_utils import ts2datetime, datetime2ts
 
 def ip2school(ip):
@@ -49,7 +52,7 @@ def get_school(uid_list):
     school_results = {}
     for i in range(WEEK, 0, -1):
         ts = now_date_ts - DAY * i
-        ip_results = r_cluster.hmget('new_ip_'+str(ts), uid_list)
+        ip_results = redis_ip.hmget('ip_'+str(ts), uid_list)
         count = 0
         for uid in uid_list:
             if uid not in school_results:
@@ -92,23 +95,39 @@ def deal_bulk_action(user_info_list, fansnum_max):
     #compute attribute--keywords, topic, online_pattern            
     #get user topic results by bulk action
     topic_results_dict, topic_results_label = topic_classfiy(uid_list, user_keywords_dict)
-    
+    domain_results = domain_classfiy(uid_list, user_keywords_dict)
+    politics_results = political_classify(uid_list, user_keywords_dict)
+
     #update school attribute---is_school/school_string/school_dict
-    school_results_dict = get_school(uid_list)
+    #school_results_dict = get_school(uid_list)
     #get bulk action
     bulk_action = []
     for uid in uid_list:
         results = {}
         results['uid'] = uid
-        results['is_school'] = school_results_dict[uid]['is_school']
-        results['school_string'] = school_results_dict[uid]['school_string']
-        results['school_dict'] = school_results_dict[uid]['school_dict']
+        #results['is_school'] = school_results_dict[uid]['is_school']
+        #results['school_string'] = school_results_dict[uid]['school_string']
+        #results['school_dict'] = school_results_dict[uid]['school_dict']
         #print 'is_school, school_string, school_dict:', results['is_school'],type(results['is_school']) ,results['school_string'],type(results['school_string']), results['school_dict'], type(results['school_dict'])
         #add user topic attribute
         user_topic_dict = topic_results_dict[uid]
         user_label_dict = topic_results_label[uid]
         results['topic'] = json.dumps(user_topic_dict)
         results['topic_string'] = topic_en2ch(user_label_dict)
+
+        #add user domain attribute
+        user_domain_dict = domain_results[uid]
+        domain_list = domain_en2ch(user_domain_dict)
+        if domain_list:
+            results['domain_list'] = json.dumps(domain_list)
+            results['domain'] = domain_list[0]
+        else:
+            results['domain'] = "其他"
+            results['domain_list'] = json.dumps(["其他"])
+
+        politics_label = politics_results[uid]
+        results['politics'] = politics_en2ch(politics_label)
+
         #add user keywords attribute
         try:
             keywords_dict = user_keywords_dict[uid]
@@ -132,12 +151,14 @@ def deal_bulk_action(user_info_list, fansnum_max):
         user_domain = user_info_list[uid]['domain'].encode('utf-8')
         user_fansnum = user_info_list[uid]['fansnum']
         results['importance'] = get_importance(user_domain, results['topic_string'], user_fansnum, fansnum_max)
-        
+        # politics
+        politics_label = politics_results[user]
+        results['politics'] = politics_en2ch(politics_label)
         #bulk action
         action = {'update':{'_id': uid}}
         bulk_action.extend([action, {'doc': results}])
-    #print 'bulk_action:', bulk_action
-    es_user_portrait.bulk(bulk_action, index=portrait_index_name, doc_type=portrait_index_type)
+    print 'bulk_action:', bulk_action
+    #es_user_portrait.bulk(bulk_action, index=portrait_index_name, doc_type=portrait_index_type)
     end_ts = time.time()
     #log_should_delete
     #print '%s sec count %s' % (end_ts - start_ts, len(uid_list))

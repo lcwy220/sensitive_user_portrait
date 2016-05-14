@@ -637,7 +637,7 @@ function attribute_pattern_check(){             // check validation
       url_all.push(important_to_url);
 
 
-      url_attribute += url_all.join('&') + '&submit_user=admin';
+      url_attribute += url_all.join('&') + '&submit_user=' + submit_user;
 
       $.ajax({
         type:'GET',

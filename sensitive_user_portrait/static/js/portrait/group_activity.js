@@ -96,10 +96,14 @@ function Draw_activity(data){
 function point2weibo(xnum, ts){
     //console.log(ts);
     var delta = '';
-    var activity_weibo_url = '/group/activity_weibo/?task_name='+ name +'&start_ts=' + ts;
-    call_sync_ajax_request(activity_weibo_url, ajax_method, draw_content);
-        switch(xnum % 6)
-        {
+    if(xnum == -1){
+        delta = "00:00-24:00";
+        $('#date_zh').html(getYearDate(ts) + "至" +  getYearDate(ts + 7 * 24 * 3600));
+        var activity_weibo_url = '/group/activity_weibo/?task_name='+ name +'&start_ts=' + ts + '&submit_user=' + submit_user + '&during=' + 7 * 24 * 3600;
+        call_sync_ajax_request(activity_weibo_url, ajax_method, draw_content);
+    }
+    else{
+        switch(xnum % 6){
             case 0: delta = "00:00-04:00";break;
             case 1: delta = "04:00-08:00";break;
             case 2: delta = "08:00-12:00";break;
@@ -108,7 +112,9 @@ function point2weibo(xnum, ts){
             case 5: delta = "20:00-24:00";break;
         }
         $('#date_zh').html(getYearDate(ts));
-    
+        var activity_weibo_url = '/group/activity_weibo/?task_name='+ name +'&start_ts=' + ts + '&submit_user=' + submit_user;
+        call_sync_ajax_request(activity_weibo_url, ajax_method, draw_content);
+    }
     $('#time_zh').html(delta);
 }
 function getYearDate(tm){
@@ -269,125 +275,6 @@ function show_online_time(data){
 
 }
 
-function Draw_top_location(data){
-	var timeline_data = [];
-	var bar_data = [];
-	var bar_data_x = [];
-	var bar_data_y = [];
-	for(var key in data){
-		var key_time = new Date(parseInt(key)*1000).format("yyyy-MM-dd");
-		timeline_data.push(key_time);
-		bar_data.push(data[key]);
-        //console.log(data[key]);
-        //console.log(key_time);
-        // var data_xx = [];
-        // for(var j in data[key]){
-        //     data_xx.push(j);
-        // }
-        //console.log(data_xx.length);
-    }
-    //console.log(timeline_data);
-    //console.log(data.key.length)
-	for(var i=0;i<bar_data.length;i++){
-		var bar_data_x_single = [];
-		var bar_data_y_single = [];
-		// for(var key in bar_data[i]){
-        for(var j=0; j<bar_data[i].length;j++){
-            //var city = key.split('\t')
-            //console.log(city.pop());
-			//bar_data_x_single.push(key);
-			bar_data_x_single.push(bar_data[i][j][0]);
-			bar_data_y_single.push(bar_data[i][j][1]);
-		}
-		bar_data_x.push(bar_data_x_single);
-		bar_data_y.push(bar_data_y_single);
-	}
-	
-	var bar_data_2 = []
-	for(var j=0;j<bar_data_x.length;j++){
-        var bar_data_x_2 = []
-        if(bar_data_x[j].length>45){
-            bar_data_x[j].length = 45;
-		}
-		for(var i = 0;i<bar_data_x[j].length;i++){
-            if(i%2 != 0){
-                bar_data_x_2.push('\n'+bar_data_x[j][i]);
-		    }else{
-                bar_data_x_2.push(bar_data_x[j][i]);
-            }
-	    }
-        bar_data_2.push(bar_data_x_2);
-	}
-	//console.log(bar_data_x);
-	//console.log(bar_data_2);
-	bar_data_x = bar_data_2;
-	
-		//console.log(timeline_data.length);
-    var myChart = echarts.init(document.getElementById('top_active_geo_line')); 
-    var option = {
-        timeline:{
-            data:timeline_data,
-            // label : {
-            //     formatter : function(s) {
-            //         return s.slice(0, 4);
-            //     }
-            // },
-            autoPlay : true,
-            playInterval : 1000
-        },
-        toolbox : {
-            'show':false, 
-            orient : 'vertical',
-            x: 'right', 
-            y: 'center',
-            'feature':{
-                'mark':{'show':true},
-                'dataView':{'show':true,'readOnly':false},
-                'magicType':{'show':true,'type':['line','bar','stack','tiled']},
-                'restore':{'show':true},
-                'saveAsImage':{'show':true}
-            }
-        },
-        options : (function () {
-        	var option_data = [];
-        	for(var i=0;i<timeline_data.length;i++){
-        		var option_single_data = {};
-        		option_single_data.title={'text': '' };
-        		option_single_data.tooltip ={'trigger':'axis'};
-        		option_single_data.calculable = true;
-                option_single_data.grid = {'y':50,'y2':100};
-                option_single_data.xAxis = [{
-                    'type':'category',
-                    'axisLabel':{'interval':0},
-                    'data':bar_data_x[i]
-                }];
-                option_single_data.yAxis = [
-                    {
-                        'type':'value',
-                        'name':'活跃次数',
-                        //'max':53500
-                    }
-                ];
-                option_single_data.series = [
-                    {
-                        'name':'活跃次数',
-                        'type':'bar',
-                        'barwidth':10,
-                        'data': bar_data_y[i]
-                    },
-
-                ];
-                option_data.push(option_single_data);
-        	};
-        	//console.log(option_data);
-        	return option_data;
-        }
-        )()
-    };
-    myChart.setOption(option);
-                    
-}
-
 function get_max_data (data) {
   // var topic = data;
   //console.log(data);
@@ -412,109 +299,6 @@ function get_max_data (data) {
   data_result.push(data_value_after);
   return data_result;
 }
-
-function moving_geo(data){
-    //var data = {'北京&上海2': 150,'北京2&上海': 122,'北京2&上海2': 170,'北京4&上海2': 750, '北京5&上海': 120};
-    var dealt_data = get_max_data(data);
-    $('#move_location').empty();
-    var from_city = [];
-    var end_city = [];
-    for(var i=0;i < dealt_data[0].length;i++){
-        var city_split = dealt_data[0][i].split('&');
-        var from_last_city = city_split[0].split('\t');
-        var end_last_city = city_split[1].split('\t');
-        from_city.push(from_last_city[from_last_city.length-1])
-        end_city.push(end_last_city[end_last_city.length-1]);
-    }
-    var html = '';
-    if (dealt_data[0].length == 0){
-        html += '<span style="margin:20px;">暂无数据</span>';
-        $('#geo_show_more').css('display', 'none');
-        $('#move_location').css('height', '260px');
-    }else{
-        if(dealt_data[0].length < 5){
-            $('#geo_show_more').css('display', 'none');
-        };
-            Draw_more_moving_geo(from_city, end_city, dealt_data);
-            html += '<table class="table table-striped" style="width:100%;font-size:14px;margin-bottom:0px;">';
-            html += '<tr><th style="text-align:center">起始地</th>';
-            html += '<th style="text-align:right;width:30px;"></th>';
-            html += '<th style="text-align:left">目的地</th>';
-            html += '<th style="text-align:center">人次</th>';
-            html += '</tr>';
-            for (var i = 0; i < 5; i++) {
-                html += '<tr>';
-                html += '<td style="text-align:center;vertical-align: middle;">' + from_city[i] + '</td>';
-                html += '<td style="text-align:center;"><img src="/../../static/img/arrow_geo.png" style="width:25px;"></td>';
-                html += '<td style="text-align:center;vertical-align: middle;">' + end_city[i] + '</td>';
-                html += '<td style="text-align:center;vertical-align: middle;">' + dealt_data[1][i] + '</td>';
-            html += '</tr>'; 
-            };
-            html += '</table>'; 
-        
-    }
-    $('#move_location').append(html);
-}
-
-function Draw_more_moving_geo(from_city, end_city, dealt_data){
-    // var data = [['北京', '上海', 100], ['北京', '1上海', 100], ['北京', '上1海', 20],['北京', '1上海', 100],  ['北京', '上海', 30]];
-    $('#move_location_more_detail').empty();
-    var html = '';
-    html += '<table class="table table-striped " font-size:14px">';
-    html += '<tr><th style="text-align:center">起始地</th>';
-    html += '<th style="text-align:right"></th>';
-    html += '<th style="text-align:center">目的地</th>';
-    html += '<th style="text-align:center">人次</th>';
-    html += '</tr>';
-    for (var i = 0; i < dealt_data[0].length; i++) {
-        html += '<tr>';
-        html += '<td style="text-align:center;vertical-align: middle;">' + from_city[i] + '</td>';
-        html += '<td style="text-align:center;"><img src="/../../static/img/arrow_geo.png" style="width:30px;"></td>';
-        html += '<td style="text-align:center;vertical-align: middle;">' + end_city[i] + '</td>';
-        html += '<td style="text-align:center;vertical-align: middle;">' + dealt_data[1][i] + '</td>';
-    html += '</tr>'; 
-    };
-    html += '</table>'; 
-    $('#move_location_more_detail').append(html);
-}
-
-function Draw_top_platform(dealt_data){
-    var data = get_max_data(dealt_data)
-    var online_pattern = [];
-    var pattern_num = [];
-    var html = '';
-
-    if (data[0].length == 0){
-        html += '<span style="margin:20px;">暂无数据</span>';
-        $('#top_platform').css('height', '260px');
-    }else{
-        $('#top_platform').empty();
-        var html = '';
-        html += '<table class="table table-striped" style="width:250px;font-size:14px;margin-bottom:0px;">';
-        html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">上网方式</th><th style="text-align:center">微博数</th></tr>';
-        for (var i = 0; i < data[0].length; i++) {
-           var s = i.toString();
-           var m = i + 1;
-           html += '<tr><th style="text-align:center">' + m + '</th><th style="text-align:center">' + data[0][i] + '</th><th style="text-align:center">' + data[1][i] + '</th></tr>';
-        };
-        html += '</table>'; 
-    }
-    $('#top_platform').append(html);
-}
-
-// function Draw_more_top_platform(data){
-//     $('#top_more_platform').empty();
-//     var html = '';
-//     html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive" font-size:14px">';
-//     html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">平台</th><th style="text-align:center">微博数</th></tr>';
-//     for (var i = 0; i < 1; i++) {
-//        var s = i.toString();
-//        var m = i + 1;
-//        html += '<tr><th style="text-align:center">' + m + '</th><th style="text-align:center">' + 'web' + '</th><th style="text-align:center">2819</th></tr>';
-//     };
-//     html += '</table>'; 
-//     $('#top_more_platform').append(html);
-// }
 
 function draw_active_distribution(data){
     var xdata = [];
@@ -710,25 +494,17 @@ function group_activity(data){
 }
 
 function show_activity(data) {
+    console.log("activity data: ");
+    console.log(data);
 	var time_data = [23,3,4,55,22,6]
     // console.log(runtype);
     //默认显示第一天微博；
-    point2weibo(0, data.activity_trend[0][0]);
+    point2weibo(-1, data.activity_trend[0][0]);
 
 	//微博走势，点击后显示微博
 	Draw_activity(data.activity_trend);
 
 	show_online_time(data.activity_time);
-
-	//活跃地区分布
-	Draw_top_location(data.activity_geo_disribution);
-
-	//位置转移统计
-    moving_geo(data.activiy_geo_vary);
-    //var data333 = {'北京&上海2': 150,'北京2&上海': 122,'北京2&上海2': 170,'北京4&上海2': 750, '北京5&上海': 120};
-
-	Draw_top_platform(data.online_pattern);
-	//Draw_more_top_platform();
 
 	draw_active_distribution(data.activeness_his);
 
@@ -737,64 +513,7 @@ function show_activity(data) {
 	$('#activity_conclusion').append(data.activeness_description + '。');
     // body...
 }
-function show_activity_track(data){
-    $('#track_weibo_user').empty();
-    var html = '';
-    html += '<select id="select_track_weibo_user" style="max-width:150px;">';
-    for (var i = 0; i < data.length; i++) {
-        if(data[i][1]=='unknown'){
-            data[i][1] = '未知('+ data[i][0] +')';
-		}
-        html += '<option value="' + data[i][0] + '">' + data[i][1] + '</option>';
-    }
-    html += '</select>';
-    $('#track_weibo_user').append(html);
 
-    $('#track_user_commit').click(function(){
-        var track_user_id = $('#select_track_weibo_user').val();
-        var group_track_url = '/group/show_group_member_track/?uid=' + track_user_id;
-        call_sync_ajax_request(group_track_url,ajax_method, month_process);
-    });
-    track_init();
-}
-function track_init(){
-    require.config({
-        paths: {
-            echarts: '/static/js/bmap/js'
-        },
-        packages: [
-            {
-                name: 'BMap',
-                location: '/static/js/bmap',
-                main: 'main'
-            }
-        ]
-    });
-
-    require(
-    [
-        'echarts',
-        'BMap',
-        'echarts/chart/map'
-    ],
-    function (echarts, BMapExtension) {
-        // 初始化地图
-        var BMapExt = new BMapExtension($('#user_geo_map')[0], BMap, echarts,{
-            enableMapClick: false
-        });
-        var map = BMapExt.getMap();
-        var container = BMapExt.getEchartsContainer();
-        var startPoint = {
-            x: 85.114129,
-            y: 50.550339
-        };
-
-        var point = new BMap.Point(startPoint.x, startPoint.y);
-        map.centerAndZoom(point, 5);
-        //map.enableScrollWheelZoom(true);
-    }
-);
-}
 function month_process(data){
     //console.log(data);
     require.config({
@@ -975,10 +694,8 @@ function month_process(data){
 }
 
 function  activity_load(){
-    var group_activity_url = '/group/show_group_result/?module=activity&task_name=' + name;
+    var group_activity_url = '/group/show_group_result/?module=activity&task_name=' + name + '&submit_user=' + submit_user;
     call_sync_ajax_request(group_activity_url,ajax_method, show_activity);
-    var group_user_url =  "/group/show_group_list/?task_name=" + name;
-    call_sync_ajax_request(group_user_url,ajax_method, show_activity_track);
 }
 
 // var activity_data = []

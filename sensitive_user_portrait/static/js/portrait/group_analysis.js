@@ -371,7 +371,7 @@ var global_pre_page = 1;
 var global_choose_uids = new Array();
 var Search_weibo = new Search_weibo(); 
 $(document).ready(function(){
-    var group_overview_url = '/group/show_group_result/?module=overview&task_name=' + name;
+    var group_overview_url = '/group/show_group_result/?module=overview&task_name=' + name + '&submit_user=' + submit_user;
      Search_weibo.call_sync_ajax_request(group_overview_url, Search_weibo.ajax_method, Search_weibo.Draw_overview);
     var tag_url =  "/tag/show_attribute_name/";
     Search_weibo.call_sync_ajax_request(tag_url, Search_weibo.ajax_method, Search_weibo.Draw_attribute_name);

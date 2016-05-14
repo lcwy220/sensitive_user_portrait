@@ -83,7 +83,6 @@
 
 
     {% block body %}
-    	<!--<script type="text/javascript" src="/static/js/highstock.js" charset="utf-8"></script> --> 
 	<script type="text/javascript" src="/static/js/exporting.js" charset="utf-8"></script>
     <script type="text/javascript" src='/static/js/esl.js'></script>
     <script type="text/javascript" src="/static/js/jquery.datetimepicker.js"></script>
@@ -94,7 +93,7 @@
         <div id="content">
         	<div style='height:190px;width:100%' id='overview'>        	
 			</div>
-
+            <div id="totalnumber"></div>
 			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 			  <div class="panel panel-default">
 			    <div class="panel-heading panel-color" role="tab" id="headingOne">
@@ -127,34 +126,17 @@
 			    </div>
 			  </div>
 
-
-
 			  <div class="panel panel-default">
 			    <div class="panel-heading panel-color" role="tab" id="headingThree">
 			      <h4 class="panel-title">
-			        <a class="collapsed" role="button" onclick="preference_load();" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-			          偏好特征
+			        <a class="collapsed" role="button" onclick="geo_load();" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+			          地理特征
 			        </a>
 			      </h4>
 			    </div>
 			    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
 			      <div class="panel-body">
-			         {% include "index/group_analysis/group_preference.html"%}
-			      </div>
-			    </div>
-			  </div>
-
-			  <div class="panel panel-default">
-			    <div class="panel-heading panel-color" role="tab" id="headingFour">
-			      <h4 class="panel-title">
-			        <a class="collapsed" role="button" onclick="spread_load();" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-			          传播特征
-			        </a>
-			      </h4>
-			    </div>
-			    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
-			      <div class="panel-body">
-			      	{% include "index/group_analysis/group_spread.html"%}
+ 					{% include "index/group_analysis/group_geo.html"%}
 			      </div>
 			    </div>
 			  </div>
@@ -224,7 +206,8 @@
 				</div>
              
         </div>
-    </div>			
+    </div>
+    <input type="hidden" id="submituser" name="submituser" value="{{g.user}}"/>	
     {% endblock body %}
 
     {% block end_js %}
@@ -233,7 +216,7 @@
     <script>
         var name = "{{ task_name }}";
         var task_name = name;
-        var submit_user = "{{ user_name }}"
+        var submit_user = $("#submituser").val();
         //console.log('dddd', name);
         $(document).ready(function(){
             $("#closeness_tooltip").tooltip();
@@ -320,8 +303,10 @@ function pageDown(pageNum,pageCount){
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=aBrX8X2tEjcqiKwL78DLmanZ"></script>
 	<script type="text/javascript" src="/static/js/portrait/group_basic.js"></script>
     <script type="text/javascript" src="/static/js/portrait/group_activity.js"></script>
+    <script type="text/javascript" src="/static/js/portrait/group_geo.js"></script>
+    <!--
 	<script type="text/javascript" src="/static/js/portrait/group_preference.js"></script>
-	<script type="text/javascript" src="/static/js/portrait/group_spread.js"></script>
+	<script type="text/javascript" src="/static/js/portrait/group_spread.js"></script>-->
 	<script type="text/javascript" src="/static/js/portrait/group_social.js"></script>
 	<script type="text/javascript" src="/static/js/portrait/group_psy.js"></script>
     {% endblock end_js %}

@@ -18,59 +18,6 @@ Group_identify_task.prototype = {   //获取数据，重新画表
     });
   },
 
-/*
-Draw_resultTable: function(data){
-    $('#content_manage').empty();
-    var item = data;
-	var html = '';
-	html += '<a id="turnback" onclick="redraw_result();" style="float:right;margin-right:40px;margin-top:12px;">查看全部任务</a><a data-toggle="modal" id="searchTable" href="#task_search" style="margin-bottom:10px;margin-top:12px;float: right;margin-right: 20px;"">表单搜索</a>';
-	html += '<table id="group_analysis_body" class="table table-bordered table-striped table-condensed datatable" >';
-	html += '<thead><tr style="text-align:center;">	';
-    html += '<th style="width:160px;">群组名称</th>';
-    html += '<th style="width:170px;">时间</th><th>群组人数</th>';
-    html += '<th style="width:200px;">备注</th><th>计算状态</th><th>操作</th></tr></thead>';
-	html += '<tbody>';
-	for (i=0;i<item.length;i++){
-		console.log(data[i]);
-		html += '<tr>';
-		var time0 = new Date(item[i][1]*1000).format('yyyy/MM/dd hh:mm')
-		html += '<td name="task_name">'+item[i][0]+'</td>';
-		html += '<td>'+time0+'</td>';
-		html += '<td>'+item[i][2]+'</td>';
-		html += '<td>'+item[i][3]+'</td>';
-		if(item[i][4]==1){
-			html += '<td><a style="cursor:hand;" href="/index/group_analysis/?name=' + item[i][0]+ '">已完成</a></td>';
-		}else{
-			html += '<td>正在计算</td>';
-		}
-		//html +='<td><a href="javascript:void(0)" style="background:white" id="commit_control">提交监控</a>&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" id="analyze_del">删除</a></td>';
-		html += '</tr>';
-	}
-	html += '</tbody>';
-    html += '</table>';
-	$('#content_manage').append(html);
-    $('a[id="analyze_del"]').click(function(e){
-		var a = confirm('确定要删除吗？');
-    	if (a == true){
-    		var url = '/detect/delete_task/?';
-			var temp = $(this).parent().prev().prev().prev().prev().prev().html();
-			url = url + 'task_name=' + temp;
-			//console.log(url);
-			//window.location.href = url;
-			Group_identify_task.call_sync_ajax_request(url,Group_identify_task.ajax_method,del);
-		}
-	});	
-    $('#group_analysis_body').dataTable({
-       "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
-       "sPaginationType": "bootstrap",
-       "aaSorting": [[ 1, "desc" ]],
-       "aoColumnDefs":[ {"bSortable": false, "aTargets":[5]}],
-       "oLanguage": {
-           "sLengthMenu": "_MENU_ 每页"
-       }
-    });
-	},*/
-
 Draw_dis_Table:function(data){
 	$('#dis_table').empty();
 	var html = '';
@@ -104,12 +51,12 @@ Draw_dis_Table:function(data){
 			var url = '/detect/delete_task/?';
 			var temp = $(this).parent().prev().prev().prev().prev().prev().prev().html();
 			url = url + 'task_name=' + temp;
+			url += "&submit_user=" + submit_user;
 			//window.location.href = url;
 			Group_identify_task.call_sync_ajax_request(url,Group_identify_task.ajax_method,del);
 		}
 	});	
 	submit_analyze();
-	submit_control();
     $('#dis_table_body').dataTable({
        "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
        "sPaginationType": "bootstrap",
@@ -124,22 +71,13 @@ Draw_dis_Table:function(data){
 
 }
 var Group_identify_task = new Group_identify_task();
-/*
-function redraw_result(){
-	url = '/group/show_task/';
-	Group_identify_task.call_sync_ajax_request(url, Group_identify_task.ajax_method, Group_identify_task.Draw_resultTable);
-	//deleteGroup();
-	control_click();
-}
-*/
+
 window.setInterval(redraw,10000);
 function redraw(){
-	deurl= '/detect/show_detect_task/';
+	deurl= '/detect/show_detect_task/?submit_user=' + submit_user;
 	Group_identify_task.call_sync_ajax_request(deurl, Group_identify_task.ajax_method, Group_identify_task.Draw_dis_Table);
 }
 redraw();
-//redraw_result();
-
 
 function del(data){
 		//console.log(data);
@@ -150,18 +88,6 @@ function del(data){
 		}
 }
 
-function control_click(){
-	$('a[id^="commit_control"]').click(function(){
-		var temp = $(this).parent().prev().prev().prev().prev().prev().html();
-		var remark0 =  $(this).parent().prev().prev().html();
-		//url = "/detect/show_detect_result/?task_name=" + temp;
-		url = '/social_sensing/get_group_detail/?task_name='+temp;
-		Group_identify_task.call_sync_ajax_request(url,Group_identify_task.ajax_method,draw_control_table);
-		$('input[name="con_group_name"]').val(temp);
-		$('input[name="con_remark"]').val(remark0);
-		$('#group_control').modal();
-	});
-}
 var current_date = new Date().format('yyyy/MM/dd hh:mm');
 var max_date = '+1970/01/30';
 var min_date = '-1970/01/30';
@@ -179,7 +105,7 @@ function submit_analyze(that){
 			alert('进度没有达到100%，无法提交分析任务！');
 		}
 		else{
-			url = "/detect/show_detect_result/?task_name=" + temp;
+			url = "/detect/show_detect_result/?task_name=" + temp + "&submit_user=" + submit_user;
 			Group_identify_task.call_sync_ajax_request(url,Group_identify_task.ajax_method,function(data){draw_table(data,"#group_analyze_confirm")});
 			//draw_table('1',"#group_analyze_confirm");
 			remark0 = $(this).parent().prev().prev().html();
@@ -188,29 +114,6 @@ function submit_analyze(that){
 			$('#group_analyze').modal();
 		}
 	});	
-}
-
-function submit_control(that){
-	$('a[id^="group_commit_control"]').click(function(e){
-		var temp = $(this).parent().prev().prev().prev().prev().prev().prev().html();
-		var percent = $(this).parent().prev().text();
-		var remark0 = $(this).parent().prev().prev().html();
-		if(percent.replace(/[^0-9]/ig,"") != 100){
-			alert('进度没有达到100%，无法提交监控任务！');
-		}
-		else{
-			//url = "/detect/show_detect_result/?task_name=" + temp;
-			url = '/social_sensing/get_group_detail/?task_name='+temp;
-			Group_identify_task.call_sync_ajax_request(url,Group_identify_task.ajax_method,draw_control_table);
-			//that.call_sync_ajax_request(url,that.ajax_method,draw_table);
-			$('input[name="con_group_name"]').val(temp);
-			$('input[name="con_remark"]').val(remark0);
-			$('#group_control').modal();
-		 }
-	});	
-	// $('a[id^="commit_control"]').onMouseover=function(e){
-	// 	this.style.background='yellow';
-	// };
 }
 
 have_keys(['sdfa','asdfasg','1231','asdfa','dsga4','12sdfa']);
@@ -371,7 +274,7 @@ function group_analyze_confirm_button(){
         var group_url = '/index/group_result/';
         var group_name = $('#group_name0').text();
         //console.log(group_name);
-        var job = {"task_name":group_name, "uid_list":group_confirm_uids};
+        var job = {"task_name":group_name, "uid_list":group_confirm_uids, "submit_user": submit_user};
         //console.log(job);
         $.ajax({
             type:'POST',
@@ -529,7 +432,7 @@ function group_search_button(){ //表单搜索
 	a['submit_date'] = $('input[name="submit_date"]').val();
 	a['state'] = $('input[name="state"]').val();
 	a['detect_type'] = $('select[name="detect_type"] option:selected').val();
-	a['submit_user'] = $('input[name="submit_user"]').val();
+	a['submit_user'] = submit_user;
 	for(var k in a){
 		if(a[k]){
 			url0.push(k +'='+a[k]);
@@ -560,6 +463,7 @@ function task_search_button(){ //表单搜索
 	a['state'] = $('input[name="state0"]').val();
 	var status =  $('input[name="status0"]').val();
 	a['status'] = $('select[name="task_type"] option:selected').val();
+	a['submit_user'] = submit_user;
 	for(var k in a){
 		if(a[k]){
 			url0.push(k +'='+a[k]);
