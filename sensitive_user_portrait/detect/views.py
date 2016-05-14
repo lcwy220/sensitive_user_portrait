@@ -60,44 +60,6 @@ def ajax_single_person():
         attribute_weight = 0
     query_dict['attribute'] = attribute_list
     query_dict['attribute_weight'] = attribute_weight
-    """
-    #get query_dict: strucure
-    structure_list = {}
-    for structure_item in DETECT_QUERY_STRUCTURE:
-        structure_mark = request.args.get(structure_item, DETECT_DEFAULT_MARK)
-        structure_list[structure_item] = structure_mark
-        if structure_mark != '0':
-            structure_condition_num += 1
-    struture_condition_num = len(structure_list)
-    structure_weight = request.args.get('structure_weight', DETECT_DEFAULT_WEIGHT) #default weight 0.5
-    structure_weight = float(structure_weight)
-    if struture_condition_num==0:
-        attribute_weight = 0
-    query_dict['structure'] = structure_list
-    query_dict['structure_weight'] = structure_weight
-    #get query_dict: text
-    text_query_list = []
-
-    for text_item in DETECT_TEXT_FUZZ_ITEM:
-        item_value_string = request.args.get(text_item, '') # a string joint by ' '
-        item_value_list = item_value_string.split(' ')
-        if len(item_value_list) > 0 and item_value_string != '':
-            nest_body_list = []
-            for item_value in item_value_list:
-                nest_body_list.append({'wildcard':{text_item: '*'+item_value+'*'}})
-            text_query_list.append({'bool':{'should':nest_body_list}})
-
-    for text_item in DETECT_TEXT_RANGE_ITEM:
-        item_value_from = request.args.get(text_item+'_from', '')
-        item_value_to = request.args.get(text_item+'_to', '')
-        if item_value_from!='' and item_value_to != '':
-            if int(item_value_from) > int(item_value_to):
-                return 'invalid input for range'
-            else:
-                text_query_list.append({'range':{text_item:{'gte':int(item_value_from), 'lt':int(item_value_to)}}})
-
-    query_dict['text'] = text_query_list
-    """
 
     #identify the query condition num at least one
     if attribute_condition_num + structure_condition_num == 0:

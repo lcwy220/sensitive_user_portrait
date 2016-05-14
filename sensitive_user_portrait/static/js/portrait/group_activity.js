@@ -271,8 +271,6 @@ function show_online_time(data){
     html += '</tr></table>'; 
     $('#online_time_table').append(html);
     $('#online_time_conclusion').append(data[1]+'。');
-
-
 }
 
 function get_max_data (data) {
@@ -499,7 +497,7 @@ function show_activity(data) {
 	var time_data = [23,3,4,55,22,6]
     // console.log(runtype);
     //默认显示第一天微博；
-    point2weibo(-1, data.activity_trend[0][0]);
+    point2weibo(0, data.activity_trend[0][0]);
 
 	//微博走势，点击后显示微博
 	Draw_activity(data.activity_trend);
