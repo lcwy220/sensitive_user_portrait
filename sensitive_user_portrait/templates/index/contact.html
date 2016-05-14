@@ -5,6 +5,7 @@
 {{ super() }}
 <link  type="text/css" href="/static/personal/css/style.css" rel="stylesheet"/>
 <link  type="text/css" href="/static/personal/css/basic.css" rel="stylesheet"/>
+<link rel="stylesheet" href="/static/custom/css/overview.css" media="screen" />
 <link href="/static/css/lanrenzhijia.css" type="text/css" rel="stylesheet" />
 <style>
     .caroufredsel_wrapper{
@@ -26,12 +27,12 @@
 {% endblock %}
 
 {% block body %}
-
+<div id="page">
 <div id="personal_head" style="font-family:"Microsoft YaHei UI"; font-size:16px;" >
     <div class="PortraitImg" ><img id="portraitImg" src="" alt="" class="img-circle"></div>
     <div class="nickname" id="nickname"></div>
     <div style="text-align:center;height:30px;">
-        <a id="basic_info" target='_blank' style="cursor:pointer;">ta的注册信息</a>&nbsp;&nbsp;
+        <a id="basic_info" data-toggle="modal" href="#basicInfo" style="cursor:pointer;">ta的注册信息</a>&nbsp;&nbsp;
         <a id="homepage" target='_blank' style="cursor:hand;">ta的微博主页</a>&nbsp;&nbsp;
       </div>
     <div class="power">
@@ -41,91 +42,51 @@
     </div>
     <div class="PersonPre" style="text-align:center;"><span class="lightw">个人描述：</span><span class="" style="font-family: "宋体";" id="portraitDetail">【请勿关注此账号】此账号信息由微博系统自动发出，并无人工管理。</sapn></div>
 </div>
-<div id="float-wrap" class="hidden"></div>
-<div id="basicInfo" class="hidden" style="position: fixed;margin-top: -200px;left: 69%;top: 50%;z-index: 1005;width: 420px;background: #FFF none repeat scroll 0% 0%;border: 1px solid #999;height: 450px;margin-left: -460px;font_family: "Microsoft YaHei UI";">
-    <h3 class="title" style="padding-left:30px;padding-bottom:5px;border-bottom:solid 1px #999;">基本注册信息<a href="javascript:void(0)" class="Basicclose" id="close"></a></h3>
-    <div class="m-wrap" style="overflow-y: scroll;height: 375px;">
-        <ul class="clearfix">
-            <li class="li_1">
-                <span class="pt_title">用户ID</span>
-                <span class="pt_detail" id="userId" ></span>
-            </li>
-            <li class="li_1">
-                <span class="pt_title">注册地</span>
-                <span class="pt_detail" id="userLocation" ></span>
-            </li>
-            <li class="li_1">
-                <span class="pt_title">性别</span>
-                <span class="pt_detail" id="userGender" ></span>
-            </li>
-            <li class="li_1">
-                <span class="pt_title">领域</span>
-                <span class="pt_detail" id="userDomain" ></span>
-            </li>
-            <li class="li_1">
-                <span class="pt_title">话题</span>
-                <span class="pt_detail" id="userTopic" ></span>
-            </li>
-            <li class="li_1">
-                <span class="pt_title">粉丝数</span>
-                <span class="pt_detail" id="userFans" ></span>
-            </li>
-            <li class="li_1">
-                <span class="pt_title">关注数</span>
-                <span class="pt_detail" id="userFriend" ></span>
-            </li>
-<!--             <li class="li_1">
-                <span class="pt_title">在线方式</span>
-                <span class="pt_detail" id="userOnline" ></span>
-            </li> -->
-        </ul>
-    </div>
-</div>
 <div class='row'>
 <div class="box col-md-12" >
     <div class="box-inner" id = 'box-height' style="height:250px;">
         <div class="box-header" style="background-color:rgba(195,220,224,0.4)">
-            <h2 style='margin-left:5px'>条件选择</h2>
+            <h2 style='margin-left:5px'>关联维度（权重从1到10）</h2>
         </div>
         <div id="contact_select" class="box-content" style="height:200px;">
             <div class="col-md-12">
-                <label class='control-label'>关联维度（权重从1到10）：</label>
+                <!-- <label class='control-label'>关联维度（权重从1到10）：</label> -->
                 <div class='controls'>
                     <div class='col-md-12' style="margin-bottom:4px">
                         <div class='col-lg-3'>
-                            <input type='checkbox' class='inline-checkbox' value='option1' checked='checked'>
+                            <!-- <input type='checkbox' class='inline-checkbox' value='option1' checked='checked'> -->
                             <span class="input-group-addon" style="width:96px;border:1px solid white;background-color:white; display:inline-block" id="domain">领域</span>                             
                              <input type='text' class="form-control" style='width:40%; display:inline-block;height:25px'  value='1'>
                         </div>
 
                          <div class='col-lg-3'>
-                            <input type='checkbox' class='inline-checkbox' value='option1'>
+                            <!-- <input type='checkbox' class='inline-checkbox' value='option1'> -->
                             <span class="input-group-addon" style="width:96px;border:1px solid white;background-color:white; display:inline-block" id="topic_string">话题</span>
                              <input type='text' class="form-control" style='width:40%; display:inline-block;height:25px' disabled>
                         </div>
                          <div class='col-lg-3'>
-                            <input type='checkbox' class='inline-checkbox' value='option1'>
+                            <!-- <input type='checkbox' class='inline-checkbox' value='option1'> -->
                             <span class="input-group-addon" style="width:96px;border:1px solid white;background-color:white; display:inline-block" id="keywords_string">关键词</span>
                              <input type='text' class="form-control" style='width:40%; display:inline-block;height:25px' disabled>
                         </div>
                         <div class='col-lg-3'>
-                            <input type='checkbox' class='inline-checkbox' value='option1'>
+                            <!-- <input type='checkbox' class='inline-checkbox' value='option1'> -->
                             <span class="input-group-addon" style="width:96px;border:1px solid white; background-color:white;display:inline-block" id="activity_geo">地理特征</span>
                              <input type='text' class="form-control" style='width:40%; display:inline;height:25px' disabled>
                         </div>
                     </div>
                     <div class='col-md-12' style="margin-bottom:4px" >
                         <div class='col-lg-3'>
-                            <input type='checkbox' class='inline-checkbox' value='option1'>
+                            <!-- <input type='checkbox' class='inline-checkbox' value='option1'> -->
                             <span class="input-group-addon" style="width:96px;border:1px solid white; background-color:white;display:inline-block" id="character_sentiment">性格（情绪）</span>
                              <input type='text' class="form-control" style='width:40%; display:inline-block;height:25px' disabled>
                         </div>
                         <div class='col-lg-3'>
-                            <input type='checkbox' class='inline-checkbox' value='option1'>
+                            <!-- <input type='checkbox' class='inline-checkbox' value='option1'> -->
                             <span class="input-group-addon" style="width:96px;border:1px solid white; background-color:white;display:inline-block" id="character_text">性格（语言）</span>
                              <input type='text' class="form-control" style='width:40%; display:inline-block;height:25px' disabled>
                         </div>                        <div class='col-lg-3' >
-                            <input type='checkbox' class='inline-checkbox' value='option1'>
+                            <!-- <input type='checkbox' class='inline-checkbox' value='option1'> -->
                             <span class="input-group-addon" style="width:96px;border:1px solid white; background-color:white;display:inline-block" id="hashtag">hashtag</span>
                              <input type='text' class="form-control" style='width:40%; display:inline;height:25px' disabled>
                         </div>
@@ -135,7 +96,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12" style="padding-top:5px">
+<!--             <div class="col-md-12" style="padding-top:5px">
                 <label class='control-label'>提升维度：</label>
                 <div class='controls'>
                     <div class='col-md-12'>
@@ -157,7 +118,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="col-md-12" style='margin-top:11px'>
                 <div class='col-md-12' style='text-align:right; padding-right:35px'>
                     <span class="label label-success" style='cursor:pointer; background-color:rgba(69, 133, 195, 0.89)'>提交</span>
@@ -197,6 +158,71 @@
             </div> 
         </div>
 </div>
+</div>
+
+
+    <div class="modal fade" id="basicInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document" style="width:850px;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">基本注册信息</h4>
+          </div>
+          <div class="modal-body">
+            <div style='width:400px;margin: 0px auto;'>
+                <!-- <div class="m-wrap" style="overflow-y: scroll;height: 375px;"> -->
+                    <!-- <ul class="clearfix"> -->
+                        <li class="li_1">
+                            <span class="pt_title">用户ID</span>
+                            <span class="pt_detail" id="userId" ></span>
+                        </li>
+                        <li class="li_1">
+                            <span class="pt_title">注册地</span>
+                            <span class="pt_detail" id="userLocation" ></span>
+                        </li>
+                         <li class="li_1">
+                            <span class="pt_title">性别</span>
+                            <span class="pt_detail" id="userGender" ></span>
+                        </li>
+                        <li class="li_1">
+                            <span class="pt_title">领域</span>
+                            <span class="pt_detail" id="userDomain" ></span>
+                        </li>
+                        <li class="li_1">
+                            <span class="pt_title">话题</span>
+                            <span class="pt_detail" id="userTopic" ></span>
+                        </li>
+                        <li class="li_1">
+                            <span class="pt_title">粉丝数</span>
+                            <span class="pt_detail" id="userFans" ></span>
+                        </li>
+<!--                         <li class="li_1">
+                            <span class="pt_title">关注数</span>
+                            <span class="pt_detail" id="userFriend" ></span>
+
+                        </li> -->
+                    <!-- </ul> -->
+                <!-- </div> -->
+
+
+
+
+<!--                 <div style="margin-top:5px;">用户ID<input type="text"  id="groupName" class="input searchinput" name="task_name" placeholder="请输入群组名称" style="float: right;width: 175px;"/></div>
+                <div style="margin-top:10px;">注册地<input type="text" id="groupState" class="input searchinput" name="state" placeholder="请输入备注"  style="float: right;width: 175px;"/></div>
+                <div style="margin-top:10px;">性别<input type="text" id="groupState" class="input searchinput" name="submit_date" placeholder="请输入时间2015-07-15"  style="float: right;width: 175px;"/></div>
+                <div style="margin-top:10px;">领域<input type="text"  id="submitUser" class="input searchinput" name="submit_user" placeholder="请输入提交用户"  style="float: right;width: 175px;"/></div>
+                <div style="margin-top:10px;">话题<input type="text"  id="submitUser" class="input searchinput" name="submit_user" placeholder="请输入提交用户"  style="float: right;width: 175px;"/></div>
+                <div style="margin-top:10px;">粉丝数<input type="text"  id="submitUser" class="input searchinput" name="submit_user" placeholder="请输入提交用户"  style="float: right;width: 175px;"/></div>
+                <div style="margin-top:10px;">关注数<input type="text"  id="submitUser" class="input searchinput" name="submit_user" placeholder="请输入提交用户"  style="float: right;width: 175px;"/></div> -->
+            </div>  
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="group_search_button()">确认</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
 
 <div class="modal fade" id="Diymodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
