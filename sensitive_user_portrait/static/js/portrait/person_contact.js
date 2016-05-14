@@ -48,17 +48,20 @@ Search_weibo.prototype = {
     },
 
     Draw_table: function(data){
-        //console.log(data);
+        //console.log('Draw_table',data);
         that.data = data;
-        if(data.length == 2){
-            alert("暂无相关人物！");
+        if(data.length == 2||data.length==0){
+            alert("没有相关人物推荐");
+            $('#table').empty();
+            $('#table').append('<div><center>暂无数据</center></div>')
+            document.getElementById('relatednum').innerHTML = '0';
             return false;
         }
         $('#table').empty();
         var html = '';
         var height = 39 * (data.length-1);
-        html += '<table class="table table-striped table-bordered bootstrap-datatable datatype responsive" style="table-layout:fixed">';
-        html += '<thead><tr><th class="center" style="text-align:center">用户id</th><th class="center" style="text-align:center">昵称</th><th class="center" style="text-align:center; ">活跃度</th><th class="center" style="text-align:center;">重要度</th><th class="center" style="text-align:center">影响力</th><th class="center" style="text-align:center">得分</th><th style="width:40px"><input name="choose_all" id="choose_all" type="checkbox" value="" onclick="choose_all()" /></th></tr></thead>';
+        html += '<table  id="recom_table" class="table table-striped table-bordered bootstrap-datatable datatable responsive" style="table-layout:fixed">';
+        html += '<thead><tr><th class="center" style="text-align:center">用户ID</th><th class="center" style="text-align:center">昵称</th><th class="center" style="text-align:center; ">活跃度</th><th class="center" style="text-align:center;">身份敏感度</th><th class="center" style="text-align:center">影响力</th><th class="center" style="text-align:center">相关度</th><th style="width:40px"><input name="choose_all" id="choose_all" type="checkbox" value="" onclick="choose_all()" /></th></tr></thead>';
         html += '<tbody>';
         for(var item = 1; item < data.length-1; item++){
             html += '<tr style="border-bottom:1px solid #ddd">';
@@ -67,17 +70,20 @@ Search_weibo.prototype = {
                 if(data[item][i] == 'unknown'){
                     data[item][i] = '未知'
                 }
+                if (data[item][1] == '未知'){
+                    data[item][1] = data[item][0];
+                }
                 if(i >= 2) {
                     html += '<td class="center" style="text-align:center;vertical-align:middle">'+ data[item][i].toFixed(2) +'</td>';
                 }
                 else{
-                    if(i == 0){
-                       var user_url = personal_url + data[item][0];
-                       save_id.push(data[item][0]);
-                        html += '<td class="center" style="text-align:center;vertical-align:middle"><a href='+user_url +' target="_blank">'+ data[item][i] +'</a></td>';
-                    }else{
-                       html += '<td class="center" style="text-align:center;vertical-align:middle">'+ data[item][i] +'</td>'; 
-                    }
+            if(i == 0){
+               var user_url = personal_url + data[item][0];
+               save_id.push(data[item][0]);
+                html += '<td class="center" style="text-align:center;vertical-align:middle"><a href='+user_url +' target="_blank">'+ data[item][i] +'</a></td>';
+            }else{
+               html += '<td class="center" style="text-align:center;vertical-align:middle">'+ data[item][i] +'</td>'; 
+            }
                 }            
             }
             html += '<td class="center"><input name="search_result_option" class="search_result_option" type="checkbox" value="' + item + '" /></td>';
@@ -85,13 +91,24 @@ Search_weibo.prototype = {
         }
         html += '</tbody>';
         html += '</table>';
+        //console.log(data.length)
+        document.getElementById('relatednum').innerHTML = data.length-2;
         $('#table').css('height',height);
         $('#table').append(html);
         for (var i = 0; i < save_id.length; i++) {
-            var s=i.toString();
+            s=i.toString();
             id_string += save_id[s] + ',';
         };
         id_string=id_string.substring(0,id_string.length-1)
+//        $('#recom_table').dataTable({
+//        "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
+//        "sPaginationType": "custom_bootstrap",
+//        "aaSorting":[[4,"desc"]],
+//        "aoColumnDefs":[ {"bSortable": false, "aTargets":[8]}],
+//       // "oLanguage": {
+//       // "sLengthMenu": "_MENU_ 每页",
+//       // }
+//        });
     },
 
   Draw_attribute_name: function(data){
@@ -259,8 +276,8 @@ var save_id = [];
 var id_string = '';
 var Search_weibo = new Search_weibo();
 //get tag
-var user_tag = '/tag/show_user_attribute_name/?uid='+ uid;
-Search_weibo.call_sync_ajax_request(user_tag, Search_weibo.ajax_method, Show_tag);
+//var user_tag = '/tag/show_user_attribute_name/?uid='+ uid;
+//Search_weibo.call_sync_ajax_request(user_tag, Search_weibo.ajax_method, Show_tag);
 
 Search_weibo.call_sync_ajax_request(get_choose_data(uid), Search_weibo.ajax_method, Search_weibo.Draw_table);
 Search_weibo.Draw_picture(Search_weibo.data);
@@ -274,6 +291,49 @@ attribute_value_url = '/tag/show_attribute_value/?attribute_name=' + select_attr
 Search_weibo.call_sync_ajax_request(attribute_value_url, Search_weibo.ajax_method, Search_weibo.Draw_attribute_value);
 
 var global_data = Search_weibo.data;
+
+
+var attr_url='/imagine/portrait_related/?uid='+uid;
+console.log(attr_url);
+Search_weibo.call_sync_ajax_request(attr_url, Search_weibo.ajax_method, draw_attribute);
+
+function draw_attribute(data){
+    console.log(data);
+    $('#politics').html(data.politics);
+    $('#sensitive_words_string').html(data.sensitive_words_string);
+    $('#domain').html(data.domain);    
+    if(data.topic.length>10){
+        $('#topic').html(data.topic.substr(0,8)+'...');
+        $('#topic').attr('title',data.topic);
+    }else{
+        $('#topic').html(data.topic);
+    }
+    $('#hashtag').html(data.hashtag);
+    $('#geo_activity').html(data.geo_activity);
+    $('#keywords_string').html(data.keywords_string);
+    draw_list(data.keywords_detail,'key_WordList','关键词');
+    draw_list(data.geo_activity_detail,'location_WordList','地理位置');
+    draw_list(data.hashtag_detail,'hashtag_WordList','微话题');
+    draw_list(data.sensitive_words_detail,'sensitive_WordList','敏感词');
+  //  $('#sensitive_words_string').html(data.sensitive_words_string);        
+}
+
+function draw_list(data,div,title0){
+    var html = '';
+    $('#'+div).empty();
+    html += '<table class="table table-striped table-bordered" style="width:450px;">';
+    html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">'+title0+'</th><th style="text-align:center">频数</th></tr>';
+    for (var i = 0; i < data.length; i++) {
+        var s = i.toString();
+        var m = i + 1;
+        if(data[i][0]=='m'){
+            data[i][0] = '暂无数据';
+        }
+        html += '<tr style=""><th style="text-align:center">' + m + '</th><th style="text-align:center">' + data[i][0] +  '</th><th style="text-align:center">' + data[i][1]+ '</th></tr>';
+    };
+    html += '</table>'; 
+    $('#'+ div).append(html);
+}
 
 function recommend_all(){
   $('input[name="in_status"]:not(:disabled)').prop('checked', $("#recommend_all").prop('checked'));
@@ -356,12 +416,13 @@ $('.label-success').click(function(){
 
 //获取选择的条件，把参数传出获取返回值
 function get_choose_data(uid){
-    var url = '/manage/imagine/?uid=' + uid + '&keywords=';
+    var url = '/imagine/imagine/?uid=' + uid + '&keywords=';
     var keywords = new Array();
     var weight = new Array();
     var field ;
     var isflag = 1;
     $('.input-group-addon').each(function(){
+        console.log('dddd');
         if ($(this).attr('id') != ''){ 
         keywords.push($(this).attr('id'));
         var value = $(this).next().val();

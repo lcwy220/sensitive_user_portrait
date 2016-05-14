@@ -20,17 +20,17 @@
     #basicInfo .li_1 {margin-left:60px;}
     #basicInfo .pt_title {width:80px;}
     #basicInfo .pt_detail {padding-left:55px;}
-    .col-lg-2 {width:20%;}
+    .col-lg-2 {width:30%;}
 </style>
 
 {% endblock custom_css %}
 
-{% block head_js %}
+   {% block custom_js %}
 {{ super() }}
 <script type="text/javascript" src="/static/js/lanrenzhijia.js"></script>
 
 <script type="text/javascript" src='/static/js/esl.js'></script>
-{% endblock %}
+   {% endblock custom_js %}
 
 {% block body %}
 <div id="page">
@@ -52,34 +52,34 @@
                     <label style="margin-left:38px;color:grey;font-weight:normal">请填写各维度的关联权重，范围是0-10的整数，权重为0则忽略该关联维度。</label>
                     <div class='col-md-12' style="margin-bottom:4px">
                         <div class='col-lg-2'>
-                            <span class="input-group-addon" style="width:70px;padding:0px;border:1px solid white;background-color:white; display:inline-block" id="domain">身份关联</span>                             
-                             <input type='text' class="form-control" style='width:40%; display:inline-block;height:25px'  value='1'>
+                            <span class="input-group-addon" style="width:170px;padding:0px;border:1px solid white;background-color:white; display:inline-block" >领域：<span id="domain"></span></span>    
+                             <input type='text' class="form-control" style='width:10%; display:inline-block;height:25px'  value='1'>
+                        </div>
+                         <div class='col-lg-2'>
+                            <span class="input-group-addon" style="width:170px;padding:0px;border:1px solid white;background-color:white; display:inline-block" >政治倾向性：<span id="politics"></span></span>
+                             <input type='text' class="form-control" style='width:10%; display:inline-block;height:25px' value='0'>
+                        </div>
+                         <div class='col-lg-2'>
+                            <span class="input-group-addon" style="width:170px;padding:0px;border:1px solid white;background-color:white; display:inline-block">话题：<span  id="topic"></span></span>
+                             <input type='text' class="form-control" style='width:10%; display:inline-block;height:25px' value='0'>
                         </div>
 
-                         <div class='col-lg-2'>
-                            <span class="input-group-addon" style="width:70px;padding:0px;border:1px solid white;background-color:white; display:inline-block" id="topic_string">领域关联</span>
-                             <input type='text' class="form-control" style='width:40%; display:inline-block;height:25px' value='0'>
+                        <div class='col-lg-2'>
+                            <span class="input-group-addon" style="width:170px;padding:0px;border:1px solid white; background-color:white;display:inline-block" >关键词：<a id="keywords_string" href="#" data-toggle="modal" data-target="#more_keywords"  ></a></span>
+                             <input type='text' class="form-control" style='width:10%; display:inline;height:25px' value='0'>
                         </div>
                          <div class='col-lg-2'>
-                            <span class="input-group-addon" style="width:70px;padding:0px;border:1px solid white;background-color:white; display:inline-block" id="keywords_string">内容关联</span>
-                             <input type='text' class="form-control" style='width:40%; display:inline-block;height:25px' value='0'>
+                            <span class="input-group-addon" style="width:170px;padding:0px;border:1px solid white;background-color:white; display:inline-block">地理位置：<a id="geo_activity"  href="#" data-toggle="modal" data-target="#more_location" ></a></span>
+                             <input type='text' class="form-control" style='width:10%; display:inline-block;height:25px' value='0'>
                         </div>
                         <div class='col-lg-2'>
-                            <span class="input-group-addon" style="width:70px;padding:0px;border:1px solid white; background-color:white;display:inline-block" id="activity_geo">位置关联</span>
-                             <input type='text' class="form-control" style='width:40%; display:inline;height:25px' value='0'>
+                            <span class="input-group-addon" style="width:170px;padding:0px;border:1px solid white; background-color:white;display:inline-block" >微话题：<a id="hashtag" href="#" data-toggle="modal" data-target="#more_hashtag" ></a></span>
+                             <input type='text' class="form-control" style='width:10%; display:inline;height:25px' value='0'>
                         </div>
-                       <!-- <div class='col-lg-3'>
-                            <span class="input-group-addon" style="width:60px;padding:0px;border:1px solid white; background-color:white;display:inline-block" id="character_sentiment">性格关联</span>
-                             <input type='text' class="form-control" style='width:40%; display:inline-block;height:25px' value='0'>
-                        </div>
-                        <div class='col-lg-3'>
-                            <span class="input-group-addon" style="width:60px;padding:0px;border:1px solid white; background-color:white;display:inline-block" id="character_text">文风关联</span>
-                             <input type='text' class="form-control" style='width:40%; display:inline-block;height:25px' value='0'>
-                        </div>-->                        
-                        <div class='col-lg-2' >
-                            <span class="input-group-addon" style="width:70px;padding:0px;border:1px solid white; background-color:white;display:inline-block" id="hashtag">微话题关联</span>
-                             <input type='text' class="form-control" style='width:40%; display:inline;height:25px' value='0'>
-                        </div>
+                        <div class='col-lg-2'>
+                            <span class="input-group-addon" style="width:170px;padding:0px;border:1px solid white; background-color:white;display:inline-block" >敏感词：<a id="sensitive_words_string" href="#" data-toggle="modal" data-target="#more_sensitive"  ></a></span>
+                             <input type='text' class="form-control" style='width:10%; display:inline;height:25px' value='0'>
+                        </div>                                              
                         </div>
                     <div class='col-md-12' id='tag' >
                         
@@ -151,6 +151,57 @@
 
 </div>
 
+
+<div class="modal fade" id="more_keywords" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="width: 500px;">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" style="font-size:18px" id="myModalLabel">关键词排名</h4>
+      </div>
+      <div class="modal-body" id='key_WordList'>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="more_hashtag" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="width: 500px;">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" style="font-size:18px" id="myModalLabel">微话题排名</h4>
+      </div>
+      <div class="modal-body" id='hashtag_WordList'>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="more_sensitive" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="width: 500px;">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" style="font-size:18px" id="myModalLabel">敏感词排名</h4>
+      </div>
+      <div class="modal-body" id='sensitive_WordList'>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="more_location" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="width: 500px;">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" style="font-size:18px" id="myModalLabel">地理位置排名</h4>
+      </div>
+      <div class="modal-body" id='location_WordList'>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="modal fade" id="compare" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document" style="width:850px;">
