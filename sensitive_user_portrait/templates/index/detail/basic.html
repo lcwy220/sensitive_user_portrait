@@ -93,7 +93,29 @@
   margin-left: -520px;
   font-family: "Microsoft YaHei UI";
 }
+#sensitive_retweet_distribution_content{
+  position: fixed;
+  left: 55%;
+  top: 5%;
+  z-index: 1002;
+  width: 965px;
+  background: #FFF none repeat scroll 0% 0%;
+  border: 1px solid #AA8BE8;
+  margin-left: -520px;
+  font-family: "Microsoft YaHei UI";
+}
 #comment_distribution_content{
+  position: fixed;
+  left: 55%;
+  top: 5%;
+  z-index: 1002;
+  width: 965px;
+  background: #FFF none repeat scroll 0% 0%;
+  border: 1px solid #AA8BE8; 
+  margin-left: -520px;
+  font-family: "Microsoft YaHei UI";
+}
+#sensitive_comment_distribution_content{
   position: fixed;
   left: 55%;
   top: 5%;
@@ -141,6 +163,7 @@ margin-top:0px;
   margin-bottom: -10px;
   font-size: 16px;
 }
+.closeList2:hover{style:none;}
 #modechoose li{list-style-type:none;float:left;margin-right:20px;}
 </style>
 
@@ -166,22 +189,25 @@ margin-top:0px;
         <div style="float:right;cursor: pointer" type="button" data-toggle="modal" data-target="#basic_info"><u>计算说明</u></div>
         <h3>昨日影响力 (No.<span id="influence_index" style='color:red;'></span>/<span id='influence_total'></span>)</h3>
         <hr>
+		<h5 style="width:100%">所有微博</h5>
         <div id = "influence_table" style="width:100%;margin-bottom:-15px;"></div>
+		<h5 style="width:100%">敏感微博</h5>
 		<div id = "sensitive_table" style="width:100%;margin-bottom:-15px;"></div>
         <div style = 'font-size:16px' id = "all_influenced_users_style0"></div>
         <div style = 'font-size:16px'id = "all_influenced_users_style1"></div>
+		<h5 style="width:100%">微博文本</h5>
         <div class="box-content" style="padding:0;margin:0;">
             <ul class="nav nav-tabs" id="myTab" style="margin:10px 0;">
                 <!--<li class="active" title="领域"><a href="#rewteet_origin" style="font-size:15px">被转发的原创微博</a></li>-->
-                <li title="话题"><a href="#comment_origin" style="font-size:15px">原创微博</a></li>
-                <li title="领域"><a href="#retweet_retweet" style="font-size:15px">转发微博</a></li>
-                <li title="话题"><a href="#comment_retweet" style="font-size:15px">评论微博</a></li>
+                <li ><a href="#comment_origin" title="原创微博" style="font-size:15px">原创微博</a></li>
+                <li ><a href="#retweet_retweet" title="转发微博" style="font-size:15px">转发微博</a></li>
+                <li ><a href="#comment_retweet" title="评论微博" style="font-size:15px">评论微博</a></li>
             </ul>
             <div id="myTabContent" class="tab-content" style="margin:0;width:1000px;background-color:whitesmoke;">
                 <span style="color:#1C41CE;margin-left:20px;float:left;">排序方式</span>
 				<ul style="float:left;" id="modechoose">
 				<li>
-					<input type="radio" name="mode_choose" value="time" checked="checked">
+					<input type="radio" name="mode_choose" value="ts" checked="checked">
 					<span class="mode" style="">时间</span>
 				</li>
 				<li>
@@ -239,8 +265,9 @@ margin-top:0px;
 </div>
 
 <div id="float-wrap" class="hidden"></div>
+
 <div id="re_influence" class="hidden">
-  <h3 class="title">转发用户情况<a href="javascript:void(0)" class="closeList2" id="close"></a></h3>
+  <h3 class="title">转发用户情况<a href="javascript:void(0)" class="closeList2" style="float:right;margin-right:40px;" id="close">X</a></h3>
   <div id="re_user_content" style="padding:0 10px;">
     <div id="re_user_in" style="padding:0 10px;align:left;"></div>
     <div id="re_three_pie">
@@ -259,7 +286,7 @@ margin-top:0px;
 </div>
 
 <div id="cmt_influence" class="hidden">
-    <h3 class="title">评论用户情况<a href="javascript:void(0)" class="closeList2" id="close"></a></h3>
+    <h3 class="title">评论用户情况<a href="javascript:void(0)" class="closeList2" style="float:right;margin-right:20px;" id="close">X</a></h3>
     <div id="cmt_user_content" style="padding:0 10px;">
       <div id="cmt_user_in" style="padding:0 10px;align:left;"></div>
       <div id="cmt_three_pie">
@@ -277,10 +304,11 @@ margin-top:0px;
       <div id="cmt_user_out" style="padding:0 10px;margin-top:-25px;"></div>
     </div>
 </div>
+
 <!--模态框-->
-<!--
+
 <div id="retweet_distribution_content" class="hidden">
-  <h3 class="title">转发用户情况<a href="javascript:void(0)" class="closeList2" id="close"></a></h3>
+  <h3 class="title">转发用户情况<a href="javascript:void(0)" class="closeList2" id="close" style="margin-right:20px;float:right;">X</a></h3>
   <div id="re_user_content_all" style="padding:0 10px;">
     <h4 id="all_re_conclusion" style="margin-left:10px;"></h4>
     <div id="re_user_in_all" style="padding:0 10px;align:left;"></div>
@@ -299,7 +327,28 @@ margin-top:0px;
     <div id="re_user_out_all" style="padding:0 10px;margin-top:-25px;float:left;"></div>
   </div>
 </div>
--->
+
+<div id="sensitive_retweet_distribution_content" class="hidden">
+  <h3 class="title">敏感微博转发用户情况<a href="javascript:void(0)" class="closeList2" id="close" style="margin-right:20px;float:right;">X</a></h3>
+  <div id="re_user_content_all_sensitive" style="padding:0 10px;">
+    <h4 id="sensitive_all_re_conclusion" style="margin-left:10px;"></h4>
+    <div id="re_user_in_all_sensitive" style="padding:0 10px;align:left;"></div>
+    <div id="re_three_pie_all_sensitive">
+      
+      <p style="margin-bottom: -35px;font-size: 16px;">
+        <span class = "user_title">领域分布</span>
+        <span class = "user_title">话题分布</span>
+        <span class = "user_title">地域分布</span>
+      </p>    
+      <div id="re_user_domain_all_sensitive" style="width:270px;height:250px; margin:5px;float:left;"></div>
+      <div id="re_user_topic_all_sensitive" style="width:310px;height:250px; margin:5px;float:left;border-left:1px #DDD solid;border-right:1px #DDD solid;"></div>
+      <div id="re_user_geo_all_sensitive" style="width:305px;height:250px; margin:5px;float:left;"></div>
+      <hr style="margin-top:-10px;">
+    </div>  
+    <div id="re_user_out_all_sensitive" style="padding:0 10px;margin-top:-25px;float:left;"></div>
+  </div>
+</div>
+<!--
 <div class="modal fade" id="retweet_distribution" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content" style="width: 500px;left:80%;">
@@ -324,10 +373,10 @@ margin-top:0px;
     </div>
   </div>
 </div>
-
+-->
 
 <div id="comment_distribution_content" class="hidden">
-    <h3 class="title">评论用户情况<a href="javascript:void(0)" class="closeList2" id="close"></a></h3>
+    <h3 class="title">评论用户情况<a href="javascript:void(0)" class="closeList2" style="margin-right:20px;float:right;" id="close">X</a></h3>
     <div id="cmt_user_content_all" style="padding:0 10px;">
       <h4 id="all_cmt_conclusion"  style="margin-left:10px;"></h4>
       <div id="cmt_user_in_all" style="padding:0 10px;float:left;"></div>
@@ -342,6 +391,26 @@ margin-top:0px;
         <div id="cmt_user_geo_all" style="width:305px;height:250px;float:left; margin:5px;"></div>
       </div>
     <div id="cmt_user_out_all" style="float:left;padding:0 10px;margin-top:-25px;"></div>
+  </div>
+</div>
+
+
+<div id="sensitive_comment_distribution_content" class="hidden">
+    <h3 class="title">敏感微博评论用户情况<a href="javascript:void(0)" class="closeList2" style="margin-right:20px;float:right;" id="close">X</a></h3>
+    <div id="cmt_user_content_all_sensitive" style="padding:0 10px;">
+      <h4 id="all_cmt_conclusion_sensitive"  style="margin-left:10px;"></h4>
+      <div id="cmt_user_in_all_sensitive" style="padding:0 10px;float:left;"></div>
+      <div id="cmt_three_pie_all_sensitive">
+        <p style="margin-bottom: -35px;font-size: 16px;">
+          <span class = "user_title">领域分布</span>
+          <span class = "user_title">话题分布</span>
+          <span class = "user_title">地域分布</span>
+        </p>
+        <div id="cmt_user_domain_all_sensitive" style="width:270px;height:250px;float:left; margin:5px;"></div>
+        <div id="cmt_user_topic_all_sensitive" style="width:310px;height:250px;float:left; margin:5px;border-left:1px #DDD solid;border-right:1px #DDD solid;"></div>
+        <div id="cmt_user_geo_all_sensitive" style="width:305px;height:250px;float:left; margin:5px;"></div>
+      </div>
+    <div id="cmt_user_out_all_sensitive" style="float:left;padding:0 10px;margin-top:-25px;"></div>
   </div>
 </div>
 

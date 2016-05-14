@@ -239,8 +239,8 @@ $('[data-toggle="city-picker"]').citypicker({
     placeholder: '请选择省/市',
     level: 'city',
 });
-$('.city-picker-span').css('height','42px');
-$('.city-picker-dropdown').css('left','932px');
-$('.city-picker-dropdown').css('top','618px');
+$('.city-picker-span').css('height','30px');
+$('.city-picker-dropdown').css('left','1000px');
+$('.city-picker-dropdown').css('top','405px');
 getAttributeName();
 bindAdvanced();

@@ -106,7 +106,7 @@ Influence.prototype = {   //获取数据，重新画表
   Draw_get_top_weibo(data, div_name);
 },
 Draw_pie_all0:function(data){
-  
+    console.log(data);
     $('#all_re_conclusion').empty();
     var html = '';
     html += '该类用户共有<span style="color:red">'+data.total_number+'</span>人，';
@@ -122,10 +122,28 @@ Draw_pie_all0:function(data){
     data_set.push(data.in_portrait_number);
     data_set.push(data.out_portrait_number);
     Influence_motal(data_set, 're_user_in_all', 're_user_out_all', 're_three_pie_all', 're_user_content_all')
-
-    
+  },
+Draw_pie_all0_sensitive:function(data){
+    console.log(data);
+    $('#sensitive_all_re_conclusion').empty();
+    var html = '';
+    html += '该类用户共有<span style="color:red">'+data.total_number+'</span>人，';
+    html += '平均影响力为<span style="color:red">'+data.influence.toFixed(2)+'</span>';
+    $('#sensitive_all_re_conclusion').append(html);
+    var div_name = ['re_user_domain_all_sensitive','re_user_topic_all_sensitive','re_user_geo_all_sensitive'];
+    Draw_pie(data.domian, div_name[0]);
+    Draw_pie(data.geo, div_name[2]);
+    Draw_pie(data.topic, div_name[1]);
+    var data_set = [];
+    data_set.push(data.in_portrait);
+    data_set.push(data.out_portrait);
+    data_set.push(data.in_portrait_number);
+    data_set.push(data.out_portrait_number);
+    Influence_motal(data_set, 're_user_in_all_sensitive', 're_user_out_all_sensitive', 're_three_pie_all_sensitive', 're_user_content_all_sensitive')
   },
   Draw_pie_all1:function(data){
+	  console.log(data);
+	  
     var div_name = ['cmt_user_domain_all','cmt_user_topic_all','cmt_user_geo_all'];
     $('#all_cmt_conclusion').empty();
     var html = '';
@@ -141,6 +159,25 @@ Draw_pie_all0:function(data){
     data_set.push(data.in_portrait_number);
     data_set.push(data.out_portrait_number);
     Influence_motal(data_set, 'cmt_user_in_all', 'cmt_user_out_all', 'cmt_three_pie_all', 'cmt_user_content_all')
+  },
+  Draw_pie_all1_sensitive:function(data){
+	  console.log(data);
+	  
+    var div_name = ['cmt_user_domain_all_sensitive','cmt_user_topic_all_sensitive','cmt_user_geo_all_sensitive'];
+    $('#all_cmt_conclusion_sensitive').empty();
+    var html = '';
+    html += '该类用户共有<span style="color:red">'+data.total_number+'</span>人，';
+    html += '平均影响力为<span style="color:red">'+data.influence.toFixed(2)+'</span>';
+    $('#all_cmt_conclusion_sensitive').append(html);
+    Draw_pie(data.domian, div_name[0]);
+    Draw_pie(data.topic, div_name[1]);
+    Draw_pie(data.geo, div_name[2]);
+    var data_set = [];
+    data_set.push(data.in_portrait);
+    data_set.push(data.out_portrait);
+    data_set.push(data.in_portrait_number);
+    data_set.push(data.out_portrait_number);
+    Influence_motal(data_set, 'cmt_user_in_all_sensitive', 'cmt_user_out_all_sensitive', 'cmt_three_pie_all_sensitive', 'cmt_user_content_all_sensitive')
   },
 
   Draw_basic_influence:function(data){
@@ -227,15 +264,15 @@ Draw_pie_all0:function(data){
   
   Draw_user_influence_detail:function(data){
 	//影响力表
-	console.log(data);
+	//console.log(data);
     $('#influence_table').empty();
     var html = '';
     html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive" style="font-size:14px;">';
     html += '<tr><th rowspan="2" style="text-align:center;vertical-align:middle;">&nbsp;类别</th>';
-    //html += '<th colspan="4" style="text-align:center;">转发情况<u id="retweet_distribution" style="font-size:12px;color:#555555;margin-left:20px;cursor: pointer">查看详情</u></th>';
-    //html += '<th colspan="4" style="text-align:center;">评论情况<u id="comment_distribution" style="font-size:12px;color:#555555;margin-left:20px;cursor: pointer">查看详情</u></th></tr>';
-    html += '<th colspan="4" style="text-align:center;">转发情况</th>';
-    html += '<th colspan="4" style="text-align:center;">评论情况</th></tr>';
+    html += '<th colspan="4" style="text-align:center;">转发情况<u id="retweet_distribution" style="font-size:12px;color:#555555;margin-left:20px;cursor: pointer">查看详情</u></th>';
+    html += '<th colspan="4" style="text-align:center;">评论情况<u id="comment_distribution" style="font-size:12px;color:#555555;margin-left:20px;cursor: pointer">查看详情</u></th></tr>';
+    //html += '<th colspan="4" style="text-align:center;">转发情况</th>';
+    //html += '<th colspan="4" style="text-align:center;">评论情况</th></tr>';
 	html += '<tr><th style="text-align:center">总数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="所有发布微博被转发的总次数"></i></th>';
     html += '<th style="text-align:center">平均数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="平均每条发布微博被转发的平均数"></i></th>';
     html += '<th style="text-align:center">最高数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="单条发布微博被转发的最高次数"></i></th>';
@@ -275,17 +312,17 @@ Draw_pie_all0:function(data){
     html += '<tr><th rowspan="2" style="text-align:center;vertical-align:middle;">&nbsp;类别</th>';
     //html += '<th colspan="4" style="text-align:center;">转发情况<a href="#" data-toggle="modal" data-target="#retweet_distribution" id="morehashtag" style="font-size:12px;color:#555555;margin-left:20px;cursor: pointer"" >查看详情</a></th>';
     //html += '<th colspan="4" style="text-align:center;">评论情况<u id="comment_distribution" style="font-size:12px;color:#555555;margin-left:20px;cursor: pointer">查看详情</u></th></tr>';
-    html += '<th colspan="4" style="text-align:center;">转发情况</th>';
-    html += '<th colspan="4" style="text-align:center;">评论情况</th></tr>';
-    
-	html += '<tr><th style="text-align:center">总数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="所有发布微博被转发的总次数"></i></th>';
+    html += '<th colspan="4" style="text-align:center;">转发情况<u id="sensitive_retweet_distribution" style="font-size:12px;color:#555555;margin-left:20px;cursor: pointer">查看详情</u></th>';
+    html += '<th colspan="4" style="text-align:center;">评论情况<u id="sensitive_comment_distribution" style="font-size:12px;color:#555555;margin-left:20px;cursor: pointer">查看详情</u></th></tr>';
+    //html += '<tr><th style="text-align:center">总数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="所有发布微博被转发的总次数"></i></th>';
+	html += '<th style="text-align:center">总数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="所有发布微博被转发的总次数"></i></th>';
     html += '<th style="text-align:center">平均数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="平均每条发布微博被转发的平均数"></i></th>';
     html += '<th style="text-align:center">最高数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="单条发布微博被转发的最高次数"></i></th>';
-    html += '<th style="text-align:center">敏感词<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="所有微博在15分钟被转发的总次数"></i></th>';
+    html += '<th style="text-align:center">敏感词<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="单条发布微博包含敏感词的总次数"></i></th>';
     html += '<th style="text-align:center">总数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="所有发布微博被评论的总次数"></i></th>';
     html += '<th style="text-align:center">平均数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="平均每条发布微博被评论的平均数"></i></th>';
     html += '<th style="text-align:center">最高数<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="单条发布微博被评论的最高次数"></i></th>';
-    html += '<th style="text-align:center">敏感词<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="所有微博在15分钟被评论的总次数"></i></th>';
+    html += '<th style="text-align:center">敏感词<i class="glyphicon glyphicon-question-sign" data-toggle="tootlip" data-placement="right" title="单条发布微博包含敏感词的总次数"></i></th>';
     html += '</tr>';
     html += '<tr><th style="text-align:center">原创微博 ('+data[1]['origin_weibo_number']+')</th>';
     html += '<th style="text-align:center">'+data[1]['origin_weibo_retweeted_total_number']+'</th>';
@@ -334,6 +371,7 @@ Draw_pie_all0:function(data){
   },
 
   Single_users_influence_re:function(data){
+	console.log(data);
     var data_user_detail = [];
     data_user_detail.push(data.influence_users[0]);
     data_user_detail.push(data.influence_users[1]);
@@ -530,72 +568,80 @@ function Draw_get_top_weibo(data,div_name){
   $('#'+div_name).empty();
     if(data.length==0){
         html += "<div style='margin-left:10px;width:100%;height:100px;'>用户在昨天未发布任何微博</div>";
-    }else{
-	for(var i=0;i<data.length;i++){
-      html += '<div id="weibo_list" class="weibo_list weibo_list_height scrolls tang-scrollpanel" style="margin:0;">';
-      html += '<div id="content_control_height" class="tang-scrollpanel-wrapper" style="margin:0;">';
-      html += '<div class="tang-scrollpanel-content" style="margin:0;">';
-      html += '<ul>';
-      for(var i=0;i<data.length;i++){
-        s = (i+1).toString();
-        var weibo = data[i][4];
-        //var mid = weibo[0];
-		var reposts_count = data[i][1];
-		var comments_count = data[i][2];
-        var uid = data[i][12];
-        var name = data[i][11];
-        if(name == 'unknown'){
-          name = uid;
-        };
-        var date = data[i][6];
-        var geo = data[i][5];
-       // var reposts_count = weibo[1];
-        //var comments_count = weibo[2];
-        //var weibo_link = weibo[7];
-       // var user_link = weibo[8];
-        var profile_image_url = 'http://tp2.sinaimg.cn/1878376757/50/0/1';
-        //var repost_tree_link = 'http://219.224.135.60:8080/show_graph/' + mid;
-        if (geo==''){
-           geo = '未知';
-        }else{
-          var geo_s = geo.split('&');
-          geo_s = geo_s.join(' ');
-        }
-        var user_link = 'http://weibo.com/u/' + uid;
-        html += '<li class="item">';
-        html += '<div class="weibo_detail" style="width:1000px">';
-        html += '<p style="text-align:left;margin-bottom:0;margin-right:20px;">' +s + '、发布内容：&nbsp;&nbsp;' + weibo + '</p>';
-        html += '<div class="weibo_info"style="width:100%">';
-        html += '<div class="weibo_pz">';
-        //html += '<div id="topweibo_mid" class="hidden">'+mid+'</div>';
-        html += '<a class="retweet_count" href="javascript:;" target="_blank">转发数(' + reposts_count + ')</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
-        html += '<a class="comment_count" href="javascript:;" target="_blank">评论数(' + comments_count + ')</a></div>';
-        html += '<div class="m">';
-        html += '<u>' + date + '</u>&nbsp;-&nbsp;';
-        //html += '<a target="_blank" href="' + weibo_link + '">微博</a>&nbsp;-&nbsp;';
-        html += '<a target="_blank" href="">'+geo_s+'</a>;';
-       // html += '<a target="_blank" href="' + repost_tree_link + '">转发树</a>';
-        html += '</div>';
-        html += '</div>';
-        html += '</div>';
-        html += '</li>';
-            }
-                                    
-    html += '<div id="TANGRAM_54__slider" class="tang-ui tang-slider tang-slider-vtl" style="height: 100%;">';
-    html += '<div id="TANGRAM_56__view" class="tang-view" style="width: 6px;">';
-    html += '<div class="tang-content"><div id="TANGRAM_56__inner" class="tang-inner"><div id="TANGRAM_56__process" class="tang-process tang-process-undefined" style="height: 0px;"></div></div></div>';
-    html += '<a id="TANGRAM_56__knob" href="javascript:;" class="tang-knob" style="top: 0%; left: 0px;"></a></div>';
-    html += '<div class="tang-corner tang-start" id="TANGRAM_54__arrowTop"></div><div class="tang-corner tang-last" id="TANGRAM_54__arrowBottom"></div></div>';
-
-    html += '</ul>';
-    html += '</div>';
-    html += '</div>';
-    html += '</div>';   
     }
-	}
-      $('#'+div_name).append(html);
-  }
+	else{
+		//console.log(data);
+		for(var i=0;i<data.length;i++){
+			html += '<div id="weibo_list" class="weibo_list weibo_list_height scrolls tang-scrollpanel" style="margin:0;">';
+			html += '<div id="content_control_height" class="tang-scrollpanel-wrapper" style="margin:0;">';
+			html += '<div class="tang-scrollpanel-content" style="margin:0;">';
+			html += '<ul>';
+			for(var i=0;i<data.length;i++){
+				s = (i+1).toString();
+				var weibo = data[i][4];
+				var mid = data[i][0];
+				var reposts_count = data[i][1];
+				var comments_count = data[i][2];
+				var uid = data[i][12];
+				var name = data[i][11];
+				if(name == 'unknown'){
+					name = uid;
+				};
+				var date = data[i][6];
+				var geo = data[i][5];
+				//console.log(geo);
+				// var reposts_count = weibo[1];
+				//var comments_count = weibo[2];
+				//var weibo_link = weibo[7];
+				// var user_link = weibo[8];
+				var profile_image_url = 'http://tp2.sinaimg.cn/1878376757/50/0/1';
+				//var repost_tree_link = 'http://219.224.135.60:8080/show_graph/' + mid;
+				if (geo==''){
+					geo = '未知';
+				}else{
+					var geo_s = geo.split('&');
+					geo_s = geo_s.join(' ');
+				}
+				var user_link = 'http://weibo.com/u/' + uid;
+				html += '<li class="item">';
+				html += '<div class="weibo_detail" style="width:1000px">';
+				if(i==1){
+					html += '<p style="text-align:left;margin-bottom:0;margin-right:20px;">' +s + '、发布内容：&nbsp;&nbsp;<span style="color:red">' + weibo + '<span></p>';
+				}else{
+					html += '<p style="text-align:left;margin-bottom:0;margin-right:20px;">' +s + '、发布内容：&nbsp;&nbsp;' + weibo + '</p>';
+				}
+				
+				html += '<div class="weibo_info"style="width:100%">';
+				html += '<div class="weibo_pz">';
+				html += '<div id="topweibo_mid" class="hidden">'+mid+'</div>';
+				html += '<a class="retweet_count" >转发数(' + reposts_count + ')</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
+				html += '<a class="comment_count" >评论数(' + comments_count + ')</a></div>';
+				html += '<div class="m">';
+				html += '<u>' + date + '</u>&nbsp;-&nbsp;';
+				//html += '<a target="_blank" href="' + weibo_link + '">微博</a>&nbsp;-&nbsp;';
+				html += '<a target="_blank" href="">'+geo_s+'</a>;';
+				// html += '<a target="_blank" href="' + repost_tree_link + '">转发树</a>';
+				html += '</div>';
+				html += '</div>';
+				html += '</div>';
+				html += '</li>';
+			}
+                                    
+			html += '<div id="TANGRAM_54__slider" class="tang-ui tang-slider tang-slider-vtl" style="height: 100%;">';
+			html += '<div id="TANGRAM_56__view" class="tang-view" style="width: 6px;">';
+			html += '<div class="tang-content"><div id="TANGRAM_56__inner" class="tang-inner"><div id="TANGRAM_56__process" class="tang-process tang-process-undefined" style="height: 0px;"></div></div></div>';
+			html += '<a id="TANGRAM_56__knob" href="javascript:;" class="tang-knob" style="top: 0%; left: 0px;"></a></div>';
+			html += '<div class="tang-corner tang-start" id="TANGRAM_54__arrowTop"></div><div class="tang-corner tang-last" id="TANGRAM_54__arrowBottom"></div></div>';
 
+			html += '</ul>';
+			html += '</div>';
+			html += '</div>';
+			html += '</div>';   
+			}
+		$('#'+div_name).append(html);
+		}
+
+}
 
 function click_action(){
       $(".closeList2").live('click',function(){
@@ -604,8 +650,11 @@ function click_action(){
         $("#cmt_influence").addClass("hidden");
         $("#comment_distribution_content").addClass("hidden");
         $("#retweet_distribution_content").addClass("hidden");
+		$("#sensitive_retweet_distribution_content").addClass("hidden");
+		$("#sensitive_comment_distribution_content").addClass("hidden");
         return false;
       });
+	  
       $(".comment_count").live("click",function(){       
         $("#float-wrap").removeClass("hidden");
         $("#cmt_influence").removeClass("hidden"); 
@@ -623,7 +672,8 @@ function click_action(){
         Influence.call_ajax_request(influenced_users_url_re, Influence.ajax_method, Influence.Single_users_influence_re);
         return false;
       });
-	  /*
+	  
+	  
       $("#retweet_distribution").live("click",function(){
         $("#float-wrap").removeClass("hidden");
         $("#retweet_distribution_content").removeClass("hidden");
@@ -632,13 +682,30 @@ function click_action(){
         Influence.call_ajax_request(all_influenced_users_url_style0, Influence.ajax_method, Influence.Draw_pie_all0);
         return false;
       });
-	  */
+	  $("#sensitive_retweet_distribution").live("click",function(){
+		console.log("sdfghjk");
+        $("#float-wrap").removeClass("hidden");
+        $("#sensitive_retweet_distribution_content").removeClass("hidden");
+        var all_influenced_users_url_style0 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid+'&date='+date_str+'&sensitive=1';
+        //console.log(all_influenced_users_url_style0);
+        Influence.call_ajax_request(all_influenced_users_url_style0, Influence.ajax_method, Influence.Draw_pie_all0_sensitive);
+        return false;
+      });
+	  
       $("#comment_distribution").live("click",function(){
         $("#float-wrap").removeClass("hidden");
         $("#comment_distribution_content").removeClass("hidden");
-        //var all_influenced_users_url_style1 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid +'&date='+date_str+'&style=1';
-        //console.log(all_influenced_users_url_style1);
-        //Influence.call_ajax_request(all_influenced_users_url_style1, Influence.ajax_method, Influence.Draw_pie_all1);
+        var all_influenced_users_url_style1 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid +'&date='+date_str+'&style=1';
+        console.log(all_influenced_users_url_style1);
+        Influence.call_ajax_request(all_influenced_users_url_style1, Influence.ajax_method, Influence.Draw_pie_all1);
+        return false;
+      });
+	  $("#sensitive_comment_distribution").live("click",function(){
+        $("#float-wrap").removeClass("hidden");
+        $("#sensitive_comment_distribution_content").removeClass("hidden");
+        var all_influenced_users_url_style1 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid +'&date='+date_str+'&sensitive=1';
+        console.log(all_influenced_users_url_style1);
+        Influence.call_ajax_request(all_influenced_users_url_style1, Influence.ajax_method, Influence.Draw_pie_all1_sensitive);
         return false;
       });
     $('input[name="choose_module"]').live('click', function(){             
@@ -666,12 +733,12 @@ function influence_load(){
 
     var basic_influence_url = '/attribute/current_influence_comment/?uid='+parent.personalData.uid+'&date='+date_str;
     Influence.call_async_ajax_request(basic_influence_url, Influence.ajax_method, Influence.Draw_basic_influence);
-	/*
+	
     var all_influenced_users_url_style0 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid+'&date='+date_str+'&style=0';
     Influence.call_async_ajax_request(all_influenced_users_url_style0, Influence.ajax_method, Influence.Draw_all_influenced_users_style0);
     var all_influenced_users_url_style1 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid+'&date='+date_str+'&style=1';
     Influence.call_async_ajax_request(all_influenced_users_url_style1, Influence.ajax_method, Influence.Draw_all_influenced_users_style1);
-	*/
+	
     //var get_top_weibo_url_style0 = '/attribute/get_top_weibo/?uid='+parent.personalData.uid+'&date='+date_str+'&style=0';
     //Influence.call_async_ajax_request(get_top_weibo_url_style0, Influence.ajax_method, Influence.Draw_get_top_weibo1);
 	//原创
@@ -686,6 +753,53 @@ function influence_load(){
     //var summary_influence_url = '/attribute/summary_influence/?uid='+parent.personalData.uid+'&date='+date_str;
     //Influence.call_async_ajax_request(summary_influence_url, Influence.ajax_method, Influence.Draw_conclusion);
 };
+
+$(function(){
+	
+	$('#modechoose').click(function(){
+	var tabs = $('#myTab .active').text();
+	//console.log(tabs);
+	if(tabs == "原创微博"){
+		var style = 1;
+	}
+	if(tabs == "转发微博"){
+		var style = 2;
+	}
+	if(tabs == "评论微博"){
+		var style = 3;
+	}
+	var box = document.getElementsByName('mode_choose');
+	for(var i=0;i<box.length;i++){
+		if(box[i].checked){
+			sort_type = box[i].value;
+		}
+	}
+	if(sort_type == "ts"){
+		var order = 4;
+	}
+	if(sort_type == "sensitive"){
+		var order = 1;
+	}
+	if(sort_type == "retweet"){
+		var order = 2;
+	}
+	if(sort_type == "comment"){
+		var order = 3;
+	}
+	
+	var url = "/attribute/get_top_weibo/?uid="+parent.personalData.uid+'&date='+date_str+"&style="+style+'&order='+order;
+	console.log(url);
+	if(style==1){
+		Influence.call_async_ajax_request(url, Influence.ajax_method, Influence.Draw_get_top_weibo2);
+	}
+    if(style==2){
+		Influence.call_async_ajax_request(url, Influence.ajax_method, Influence.Draw_get_top_weibo3);
+	}
+	if(style==3){
+		Influence.call_async_ajax_request(url, Influence.ajax_method, Influence.Draw_get_top_weibo4);
+	}
+	});
+});
 
 var Influence = new Influence();
 var influence_date = choose_time_for_mode();
