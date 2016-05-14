@@ -164,7 +164,7 @@
 								<td style="padding:0px;font-size:14px;text-align:center;vertical-align:middle"><b>敏感度<i id="" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="right" title="（日更新）根据用户微博中出现的敏感词的次数和等级综合计算得到"></i>&nbsp;&nbsp;</b></td></tr>
                         </table>
                     </div>
-                    <div class="m-wrap" style="margin-top;0px;">
+                    <div class="m-wrap" style="margin-top:50px;">
                         <ul id="vector_table"class="clearfix">
                         </ul>
                     </div>
@@ -686,8 +686,12 @@ $(function(){
 	html += '<li class="li_1"><span class="pt_title">政治倾向性</span><span class="pt_detail">'+global_tag_vector[4][1]+'</span></li>';
 	html += '<li class="li_1"><span class="pt_title">领域</span><span class="pt_detail">'+global_tag_vector[1][1]+'</span></li>';
 	html += '<li class="li_1"><span class="pt_title">话题</span><span class="pt_detail">'+global_tag_vector[2][1]+'</span></li>';
-	html += '<li class="li_1"><span class="pt_title">关键词</span><span class="pt_detail">'+global_tag_vector[5][1]+'</span></li>';
-	html += '<li class="li_1"><span class="pt_title">敏感微话题</span><span class="pt_detail">'+global_tag_vector[3][1]+'</span></li>';
+	//var active_geo = personalData.activity_geo;
+	//active_geo = active_geo.replace('&',' ');
+	html += '<li class="li_1"><span class="pt_title">活跃时间</span><span class="pt_detail">'+personalData.活跃时间+'</span></li>';
+	html += '<li class="li_1"><span class="pt_title">活跃地方</span><span class="pt_detail">'+personalData.activity_geo_aggs+'</span></li>';
+	html += '<li class="li_1"><span class="pt_title">敏感词</span><span class="pt_detail">'+personalData.sensitive_words_string.split('&').join(' ')+'</span></li>';
+	//html += '<li class="li_1"><span class="pt_title">敏感微话题</span><span class="pt_detail">'+global_tag_vector[3][1]+'</span></li>';
 	html += '<li class="li_1"><span class="pt_title">微话题</span><span class="pt_detail">'+global_tag_vector[0][1]+'</span></li>';
 	
     /*
