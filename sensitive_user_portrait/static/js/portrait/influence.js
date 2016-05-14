@@ -264,7 +264,7 @@ Draw_pie_all0_sensitive:function(data){
   
   Draw_user_influence_detail:function(data){
 	//影响力表
-	console.log(data);
+	//console.log(data);
     $('#influence_table').empty();
     var html = '';
     html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive" style="font-size:14px;">';
@@ -371,6 +371,7 @@ Draw_pie_all0_sensitive:function(data){
   },
 
   Single_users_influence_re:function(data){
+	console.log(data);
     var data_user_detail = [];
     data_user_detail.push(data.influence_users[0]);
     data_user_detail.push(data.influence_users[1]);
@@ -567,72 +568,80 @@ function Draw_get_top_weibo(data,div_name){
   $('#'+div_name).empty();
     if(data.length==0){
         html += "<div style='margin-left:10px;width:100%;height:100px;'>用户在昨天未发布任何微博</div>";
-    }else{
-	for(var i=0;i<data.length;i++){
-      html += '<div id="weibo_list" class="weibo_list weibo_list_height scrolls tang-scrollpanel" style="margin:0;">';
-      html += '<div id="content_control_height" class="tang-scrollpanel-wrapper" style="margin:0;">';
-      html += '<div class="tang-scrollpanel-content" style="margin:0;">';
-      html += '<ul>';
-      for(var i=0;i<data.length;i++){
-        s = (i+1).toString();
-        var weibo = data[i][4];
-        //var mid = weibo[0];
-		var reposts_count = data[i][1];
-		var comments_count = data[i][2];
-        var uid = data[i][12];
-        var name = data[i][11];
-        if(name == 'unknown'){
-          name = uid;
-        };
-        var date = data[i][6];
-        var geo = data[i][5];
-       // var reposts_count = weibo[1];
-        //var comments_count = weibo[2];
-        //var weibo_link = weibo[7];
-       // var user_link = weibo[8];
-        var profile_image_url = 'http://tp2.sinaimg.cn/1878376757/50/0/1';
-        //var repost_tree_link = 'http://219.224.135.60:8080/show_graph/' + mid;
-        if (geo==''){
-           geo = '未知';
-        }else{
-          var geo_s = geo.split('&');
-          geo_s = geo_s.join(' ');
-        }
-        var user_link = 'http://weibo.com/u/' + uid;
-        html += '<li class="item">';
-        html += '<div class="weibo_detail" style="width:1000px">';
-        html += '<p style="text-align:left;margin-bottom:0;margin-right:20px;">' +s + '、发布内容：&nbsp;&nbsp;' + weibo + '</p>';
-        html += '<div class="weibo_info"style="width:100%">';
-        html += '<div class="weibo_pz">';
-        //html += '<div id="topweibo_mid" class="hidden">'+mid+'</div>';
-        html += '<span class="retweet_count" >转发数(' + reposts_count + ')</span>&nbsp;&nbsp;|&nbsp;&nbsp;';
-        html += '<span class="comment_count" >评论数(' + comments_count + ')</span></div>';
-        html += '<div class="m">';
-        html += '<u>' + date + '</u>&nbsp;-&nbsp;';
-        //html += '<a target="_blank" href="' + weibo_link + '">微博</a>&nbsp;-&nbsp;';
-        html += '<a target="_blank" href="">'+geo_s+'</a>;';
-       // html += '<a target="_blank" href="' + repost_tree_link + '">转发树</a>';
-        html += '</div>';
-        html += '</div>';
-        html += '</div>';
-        html += '</li>';
-            }
-                                    
-    html += '<div id="TANGRAM_54__slider" class="tang-ui tang-slider tang-slider-vtl" style="height: 100%;">';
-    html += '<div id="TANGRAM_56__view" class="tang-view" style="width: 6px;">';
-    html += '<div class="tang-content"><div id="TANGRAM_56__inner" class="tang-inner"><div id="TANGRAM_56__process" class="tang-process tang-process-undefined" style="height: 0px;"></div></div></div>';
-    html += '<a id="TANGRAM_56__knob" href="javascript:;" class="tang-knob" style="top: 0%; left: 0px;"></a></div>';
-    html += '<div class="tang-corner tang-start" id="TANGRAM_54__arrowTop"></div><div class="tang-corner tang-last" id="TANGRAM_54__arrowBottom"></div></div>';
-
-    html += '</ul>';
-    html += '</div>';
-    html += '</div>';
-    html += '</div>';   
     }
-	}
-      $('#'+div_name).append(html);
-  }
+	else{
+		//console.log(data);
+		for(var i=0;i<data.length;i++){
+			html += '<div id="weibo_list" class="weibo_list weibo_list_height scrolls tang-scrollpanel" style="margin:0;">';
+			html += '<div id="content_control_height" class="tang-scrollpanel-wrapper" style="margin:0;">';
+			html += '<div class="tang-scrollpanel-content" style="margin:0;">';
+			html += '<ul>';
+			for(var i=0;i<data.length;i++){
+				s = (i+1).toString();
+				var weibo = data[i][4];
+				var mid = data[i][0];
+				var reposts_count = data[i][1];
+				var comments_count = data[i][2];
+				var uid = data[i][12];
+				var name = data[i][11];
+				if(name == 'unknown'){
+					name = uid;
+				};
+				var date = data[i][6];
+				var geo = data[i][5];
+				//console.log(geo);
+				// var reposts_count = weibo[1];
+				//var comments_count = weibo[2];
+				//var weibo_link = weibo[7];
+				// var user_link = weibo[8];
+				var profile_image_url = 'http://tp2.sinaimg.cn/1878376757/50/0/1';
+				//var repost_tree_link = 'http://219.224.135.60:8080/show_graph/' + mid;
+				if (geo==''){
+					geo = '未知';
+				}else{
+					var geo_s = geo.split('&');
+					geo_s = geo_s.join(' ');
+				}
+				var user_link = 'http://weibo.com/u/' + uid;
+				html += '<li class="item">';
+				html += '<div class="weibo_detail" style="width:1000px">';
+				if(i==1){
+					html += '<p style="text-align:left;margin-bottom:0;margin-right:20px;">' +s + '、发布内容：&nbsp;&nbsp;<span style="color:red">' + weibo + '<span></p>';
+				}else{
+					html += '<p style="text-align:left;margin-bottom:0;margin-right:20px;">' +s + '、发布内容：&nbsp;&nbsp;' + weibo + '</p>';
+				}
+				
+				html += '<div class="weibo_info"style="width:100%">';
+				html += '<div class="weibo_pz">';
+				html += '<div id="topweibo_mid" class="hidden">'+mid+'</div>';
+				html += '<a class="retweet_count" >转发数(' + reposts_count + ')</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
+				html += '<a class="comment_count" >评论数(' + comments_count + ')</a></div>';
+				html += '<div class="m">';
+				html += '<u>' + date + '</u>&nbsp;-&nbsp;';
+				//html += '<a target="_blank" href="' + weibo_link + '">微博</a>&nbsp;-&nbsp;';
+				html += '<a target="_blank" href="">'+geo_s+'</a>;';
+				// html += '<a target="_blank" href="' + repost_tree_link + '">转发树</a>';
+				html += '</div>';
+				html += '</div>';
+				html += '</div>';
+				html += '</li>';
+			}
+                                    
+			html += '<div id="TANGRAM_54__slider" class="tang-ui tang-slider tang-slider-vtl" style="height: 100%;">';
+			html += '<div id="TANGRAM_56__view" class="tang-view" style="width: 6px;">';
+			html += '<div class="tang-content"><div id="TANGRAM_56__inner" class="tang-inner"><div id="TANGRAM_56__process" class="tang-process tang-process-undefined" style="height: 0px;"></div></div></div>';
+			html += '<a id="TANGRAM_56__knob" href="javascript:;" class="tang-knob" style="top: 0%; left: 0px;"></a></div>';
+			html += '<div class="tang-corner tang-start" id="TANGRAM_54__arrowTop"></div><div class="tang-corner tang-last" id="TANGRAM_54__arrowBottom"></div></div>';
 
+			html += '</ul>';
+			html += '</div>';
+			html += '</div>';
+			html += '</div>';   
+			}
+		$('#'+div_name).append(html);
+		}
+
+}
 
 function click_action(){
       $(".closeList2").live('click',function(){
@@ -645,7 +654,7 @@ function click_action(){
 		$("#sensitive_comment_distribution_content").addClass("hidden");
         return false;
       });
-	  /*
+	  
       $(".comment_count").live("click",function(){       
         $("#float-wrap").removeClass("hidden");
         $("#cmt_influence").removeClass("hidden"); 
@@ -663,7 +672,7 @@ function click_action(){
         Influence.call_ajax_request(influenced_users_url_re, Influence.ajax_method, Influence.Single_users_influence_re);
         return false;
       });
-	  */
+	  
 	  
       $("#retweet_distribution").live("click",function(){
         $("#float-wrap").removeClass("hidden");
@@ -746,17 +755,49 @@ function influence_load(){
 };
 
 $(function(){
+	
 	$('#modechoose').click(function(){
+	var tabs = $('#myTab .active').text();
+	//console.log(tabs);
+	if(tabs == "原创微博"){
+		var style = 1;
+	}
+	if(tabs == "转发微博"){
+		var style = 2;
+	}
+	if(tabs == "评论微博"){
+		var style = 3;
+	}
 	var box = document.getElementsByName('mode_choose');
 	for(var i=0;i<box.length;i++){
 		if(box[i].checked){
 			sort_type = box[i].value;
 		}
 	}
-	console.log(sort_type);
-	//var url = "/attribute/new_user_weibo/?uid="+uid+"&sort_type="+sort_type;
-	//console.log(url);
-    //Personal.call_sync_ajax_request(url, Personal.ajax_method, Personal.weiboData);
+	if(sort_type == "ts"){
+		var order = 4;
+	}
+	if(sort_type == "sensitive"){
+		var order = 1;
+	}
+	if(sort_type == "retweet"){
+		var order = 2;
+	}
+	if(sort_type == "comment"){
+		var order = 3;
+	}
+	
+	var url = "/attribute/get_top_weibo/?uid="+parent.personalData.uid+'&date='+date_str+"&style="+style+'&order='+order;
+	console.log(url);
+	if(style==1){
+		Influence.call_async_ajax_request(url, Influence.ajax_method, Influence.Draw_get_top_weibo2);
+	}
+    if(style==2){
+		Influence.call_async_ajax_request(url, Influence.ajax_method, Influence.Draw_get_top_weibo3);
+	}
+	if(style==3){
+		Influence.call_async_ajax_request(url, Influence.ajax_method, Influence.Draw_get_top_weibo4);
+	}
 	});
 });
 
