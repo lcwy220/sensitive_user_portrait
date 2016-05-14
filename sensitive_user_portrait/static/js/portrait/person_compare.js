@@ -1,6 +1,7 @@
+//draw function
 function Search_weibo(){
   this.ajax_method = 'GET';
-  that = this;
+  that = this ;
 }
 
 Search_weibo.prototype = {
@@ -10,424 +11,695 @@ Search_weibo.prototype = {
           type: method,
           dataType: 'json',
           async: false,
-          success:callback,
+          success:callback
         });
     },
-    call_async_ajax_request:function(url, method, callback){
-        $.ajax({
-          url: url,
-          type: method,
-          dataType: 'json',
-          async: true,
-          beforeSend:function(){$('#compare_loading').showLoading();},
-          complete:function(){$('#compare_loading').hideLoading();},
-          success:callback,
-        });
-    },
-    Total_callback:function(all_data){
-        var data = all_data.user_portrait;
-        var url_photo = data.photo_url;
-        var portrait = data.portrait;
-        var tag_data = data.tag;
-        //console.log(portrait);
-        Compare(url_photo, portrait, tag_data);
-        compare_extra(portrait);
-        bind_close_click(portrait);
-    },
-    Get_Callback_data:function(data){
-        that.call_data = data;
-    },
-    Return_data: function(){
-        return that.call_data;
-    },
-    Draw_cloud_keywords:function(data, div){
-        function createRandomItemStyle() {
-            return {
-                normal: {
-                    color: 'rgb(' + [
-                        Math.round(Math.random() * 160),
-                        Math.round(Math.random() * 160),
-                        Math.round(Math.random() * 160)
-                    ].join(',') + ')'
-                }
-            };
-        }
-        // var keywords_data = data;
-        //console.log(data);
 
-        var key_value = [];
-        var key_name = [];
-        for(var i=0;i<data.length;i++){
-          key_value.push(data[i][1]+Math.random());
-          key_name.push(data[i][0]);
-        };
-
-        var word_num = Math.min(50, data.length);
-        var key_value2 = [];
-        var key_name2 = [];
-        for(var i=0; i<word_num; i++){ //最多取前50个最大值
-          a=key_value.indexOf(Math.max.apply(Math, key_value));
-          key_value2.push(key_value[a]);
-          key_name2.push(key_name[a]);
-          key_value[a]=0;
-        }
-        var keyword = [];
-        for (var i=0;i<word_num;i++){
-            var word = {};
-            word['name'] = key_name2[i];
-            word['value'] = key_value2[i]*1000;
-            word['itemStyle'] = createRandomItemStyle();
-            keyword.push(word);
-        }        
-        // var keywords = new Array();
-        // for(i in keywords_data){
-        //     keywords.push({'name':keywords_data[i][0], 'value':keywords_data[i][1]*1000, 'itemStyle':createRandomItemStyle()});
-        //     if(keywords.length == 20){
-        //         break;
-        //     }
-        // }
-        var option = {
-            title: {
-                text: '',
-            },
-            tooltip: {
-              show: true,
-              formatter:  function (params){
-                var res  = '';
-                var value_after = parseInt(params.value/100);
-                res += params.name+' : '+value_after;
-                return res;
-              }
-            },
-            series: [{
-                name: '',
-                type: 'wordCloud',
-                size: ['80%', '80%'],
-                textRotation : [0, 45, 90, -45],
-                textPadding: 0,
-                autoSize: {
-                    enable: true,
-                    minSize: 14,
-                },
-                data: keyword,
-            }]
-        };
-        var myChart = echarts.init(document.getElementById(div));
-        myChart.setOption(option);
-    },
-}
-
-
-function Compare(url_photo, portrait, tag_data){
-    var html = '';
-    var num = 0;
-    var j = 0;
-    for(var k in url_photo){
-        num += 1;
-    }
-    html += '<thead id="head_id">';
-    html += '<tr style="background: #fafafa;"><th style="width:100px;font-size:20px;vertical-align:middle; text-align:center;"></th>';
-    var i =0;
-    var photos = '';
-    for(var k in url_photo){
-        var person_url = "http://"+window.location.host+"/index/personal/?uid=";
-        person_url = person_url + k;
-        i += 1;
-        if(url_photo[k]['photo_url']=='unkown'){
-            photos = 'http://tp2.sinaimg.cn/1878376757/50/0/1';
-        }else{
-            photos = url_photo[k]['photo_url'];
-        }
-        html += '<th name="line'+ i +'" id='+k +' value='+i+'>';
-        html += '<div class="panel-heading text-center">';
-        html += '<div class="col-md-12">';
-        html += '<a href="'+ person_url +'" target="_blank">';
-        html += '<img src='+photos+' alt="" class="img-circle">';
-        html += '</a>';
-        html += '</div>';
-        html += '<div style="float:right;margin-top:-66px">';
-        html += '<a  name="line'+i+'" class="btn btn-round btn-default" style="border-radius:40px;font-size:12px;padding-top:4px;padding-bottom:0px"><i class="glyphicon glyphicon-remove"></i></a>';
-        html += '</div>'
-        html += '</div>';
-        html += '</th>';
-    }
-    html += '</tr></thead><tbody>';
-    html += '<tr><td colspan="'+ (num +1) +'" name="list-1" class="cate_title" style="font-size:20px"><b>基本信息</b></td></tr>';
-    j = 0;
-    html += '<tr class="list-1"><td class="cate_title" style="width:90px;text-align:right">昵称</td>';
-    for(var k in portrait){
-
-        if(portrait[k]['uname'] == 'unknown'){
-            portrait[k]['uname'] = '未知('+k+')';
-        }
-        j += 1;
-        html += '<td class="center" name="line'+ j +'">'+ portrait[k]['uname'] +'</td>';
-    }
-    html += '</tr>';
-    j = 0;
-    html += '<tr class="list-1"><td class="cate_title" style="width:90px;text-align:right">注册地</td>';
-    for(var k in portrait){
-        if(portrait[k]['location'] = 'unknown'){
-            portrait[k]['location'] = '未知';
-        }
-        j += 1;
-        html += '<td class="center" name="line'+ j +'">'+ portrait[k]['location'] +'</td>';
-    }
-    html += '</tr>';
-    j = 0;
-    html += '<tr><td colspan="'+ (num+1) +'" name="list-2" class="cate_title" style="font-size:20px"><b>整体评价</b></td></tr>';
-    j = 0;
-    html += '<tr class="list-2"><td class="cate_title" style="width:90px;text-align:right">活跃度</td>';
-    for(var k in portrait){
-        j += 1;
-        html += '<td class="center" name="line'+ j +'">'+ portrait[k]['activeness'].toFixed(2) +'</td>';
-    }
-    html += '</tr>';
-    j = 0;
-    html += '<tr class="list-2"><td class="cate_title" style="width:90px;text-align:right">重要度</td>';
-    for(var k in portrait){
-        j += 1;
-        html += '<td class="center" name="line'+ j +'">'+ portrait[k]['importance'].toFixed(2) +'</td>';
-    }
-    html += '</tr>';
-    j = 0;
-    html += '<tr class="list-2"><td class="cate_title" style="width:90px;text-align:right">影响力</td>';
-    for(var k in portrait){
-        j += 1;
-        html += '<td class="center" name="line'+ j +'">'+ portrait[k]['influence'].toFixed(2) +'</td>';
-    }
-    html += '</tr>';
-    j = 0;
-    html += '<tr><td colspan="'+ (num+1) +'" name="list-3" class="cate_title" style="font-size:20px"><b>标签属性</b></td></tr>';
-    html += '<tr class="list-3"><td class="cate_title" style="width:90px;text-align:right">领域</td>';
-    for(var k in portrait){
-        j += 1;
-        html += '<td class="center" name="line'+ j +'">'+ portrait[k]['domain'] +'</td>';
-    }
-    html += '</tr>';
-    j = 0;
-    html += '<tr class="list-3"><td class="cate_title" style="width:90px;text-align:right">话题</td>';
-    for(var k in portrait){
-        j += 1;
-        html += '<td class="center" name="line'+ j +'">'+ portrait[k]['topic'][0]+','+ portrait[k]['topic'][1]+','+portrait[k]['topic'][2]+ '</td>';
-		
-    }
-    html += '</tr>';
-    j = 0;
-    html += '<tr><td colspan="'+ (num+1) +'" name="list-5" class="cate_title" style="font-size:20px"><b>语言属性</b></td></tr>';
-    html += '<tr class="list-5"><td class="cate_title" style="width:90px;text-align:right">关键词</td>';
-    for(var k in portrait){
-        j += 1;
-        html += '<td class="center" name="line'+ j +'"><div id="line'+ j +'" style="height:300px"></div></td>';
-    }
-    html += '</tr>';
-    j = 0 ;
-    html += '<tr class="list-5"><td class="cate_title" style="width:90px;text-align:right">hashtag</td>';
-    for(var k in portrait){
-        j += 1;
-        html += '<td class="center" name="line'+ j +'"><div id = "hashtag'+ j +'" style="height:200px"></div></td>';
-    }
-    html += '</tr>';
-    j = 0;
-    html += '<tr><td colspan="'+ (num+1) +'" name="list-6" class="cate_title" style="font-size:20px"><b>思想属性</b></td></tr>';
-    j = 0;
-    html += '<tr class="list-6"><td class="cate_title" style="width:90px;text-align:right">心理状态</td>';
-    for(var k in portrait){
-        j += 1;
-        html += '<td class="center" name="line'+ j +'"><div id="emotion'+ j +'" style="height:300px"></div></td>';
-    }
-    html += '</tr>';
     
-    j = 0;
-    html += '<tr><td colspan="'+ (num+1) +'" name="list-7" class="cate_title" style="font-size:20px"><b>自定义标签</b></td></tr>';
-    html += '<tr class="list-7"><td class="cate_title" style="width:90px;text-align:right">标签</td>';
-    for(var k in tag_data){
-        j += 1;
-        html += '<td class="center" name="line'+ j +'">';
-        if(tag_data[k].length == 0){
-        	 html += '';
-        }
-        else{
-        	for(var i = 0; i < tag_data[k].length; i++){
-        		if(i == tag_data[k].length -1){
-        			html += '<span class="input-group-addon" style="width:96px;border:1px solid white; border-radius: 8px;display:inline-block">'+ tag_data[k][i] +'</span>';
-        		}
-        		else{
-        			html += '<span class="input-group-addon" style="width:96px;border:1px solid white; border-radius: 8px;display:inline-block">'+ tag_data[k][i] +',</span>';
-        		}
-        	}
-        }
-    }
-    html += '</tr>';
-    html += '</tbody>';
-    $('#table_compare').append(html);
+    Return_data: function(data){
+        return data;
+    },
 
-    var html2 = '';
-    j = 0;
-    for(var k in portrait){
-        j += 1;
-        html2 += '<div id="activityb'+ j +'"; style="display:none;height:600px;width:1000px"></div>'
-    }
-    $('#picturebig').append(html2);
-}
-function Draw_think_emotion(psycho_status,div){
-    //console.log(psycho_status);
-    var first_data = psycho_status['first'];
-    var first = new Array();
+    Draw_user_tag: function(data){
+      //console.log(data);
+      $('#user_lable').empty();
+      user_lable_html = '';
+      user_lable_html += '<table id="" class="table table-striped table-bordered bootstrap-datatable datatype responsive">';
+      user_lable_html += '<thead><tr><th class="center" style="text-align:center">用户ID</th>';
+      user_lable_html += '<th class="center" style="text-align:center">用户昵称</th>';
+      user_lable_html += '<th class="center" style="text-align:center">用户标签</th>';
+      user_lable_html += '<th class="center" style="text-align:center">全选<input name="recommend_all" id="recommend_all" type="checkbox" value="" onclick="recommend_all()"></th>';
+      user_lable_html += '</tr></thead>';
+      user_lable_html += '<tbody>';
+      for (var i=1;i < Search_weibo.data.length - 1; i++){
+           var key = Search_weibo.data[i][0];
+           var uname = Search_weibo.data[i][1];
+           user_lable_html += '<tr>';
+           user_lable_html += '<th class="center" style="text-align:center"><a target="_blank" href="/index/personal/?uid=' + key + '">' + key +'</a></th>'; 
+           user_lable_html += '<th class="center" style="text-align:center">' + uname +'</th>';
+           user_lable_html += '<th class="center" style="text-align:center">' + data[key] + '</th>';
+           user_lable_html += '<th class="center" style="text-align:center"><input name="in_status" class="in_status" type="checkbox" value="' + key + '"/></th>';
+           user_lable_html += '</tr>';
+      }    
+      user_lable_html += '</tbody>';
+      user_lable_html += '</table>';     
+      $('#user_lable').append(user_lable_html);
+    },
 
-    for(var key in first_data){
-        if(first_data[key] != 0){
-            if(key == 7){
-                first.push({'name':SENTIMENT_DICT_NEW[key],'value':first_data[key].toFixed(2),selected:true});
+    Draw_add_group_tag: function(data){
+      var downloadurl = window.location.host;
+      show_group_tag_url = 'http://' + downloadurl + '/tag/show_user_tag/?uid_list=' + id_string+'&user='+contact_user;
+      Search_weibo.call_sync_ajax_request(show_group_tag_url, Search_weibo.ajax_method, Search_weibo.Draw_user_tag);
+    },
+
+    Draw_table: function(data){
+        //console.log('Draw_table',data);
+        that.data = data;
+        if(data.length == 2||data.length==0){
+            alert("没有相关人物推荐");
+            $('#table').empty();
+            $('#table').append('<div><center>暂无数据</center></div>')
+            document.getElementById('relatednum').innerHTML = '0';
+            return false;
+        }
+        $('#table').empty();
+        var html = '';
+        var height = 39 * (data.length-1);
+        html += '<table  id="recom_table" class="table table-striped table-bordered bootstrap-datatable datatable responsive" style="table-layout:fixed">';
+        html += '<thead><tr><th class="center" style="text-align:center">用户ID</th><th class="center" style="text-align:center">昵称</th><th class="center" style="text-align:center; ">活跃度</th><th class="center" style="text-align:center;">身份敏感度</th><th class="center" style="text-align:center">影响力</th><th class="center" style="text-align:center">相关度</th><th style="width:40px"><input name="choose_all" id="choose_all" type="checkbox" value="" onclick="choose_all()" /></th></tr></thead>';
+        html += '<tbody>';
+        for(var item = 1; item < data.length-1; item++){
+            html += '<tr style="border-bottom:1px solid #ddd">';
+            var personal_url = 'http://'+ window.location.host + '/index/personal/?uid=';
+            for(var i =0; i < data[item].length; i++){  
+                if(data[item][i] == 'unknown'){
+                    data[item][i] = '未知'
+                }
+                if (data[item][1] == '未知'){
+                    data[item][1] = data[item][0];
+                }
+                if(i >= 2) {
+                    html += '<td class="center" style="text-align:center;vertical-align:middle">'+ data[item][i].toFixed(2) +'</td>';
+                }
+                else{
+            if(i == 0){
+               var user_url = personal_url + data[item][0];
+               save_id.push(data[item][0]);
+                html += '<td class="center" style="text-align:center;vertical-align:middle"><a href='+user_url +' target="_blank">'+ data[item][i] +'</a></td>';
             }else{
-                first.push({'name':SENTIMENT_DICT_NEW[key],'value':first_data[key].toFixed(2)});
-            } 
+               html += '<td class="center" style="text-align:center;vertical-align:middle">'+ data[item][i] +'</td>'; 
+            }
+                }            
+            }
+            html += '<td class="center"><input name="search_result_option" class="search_result_option" type="checkbox" value="' + item + '" /></td>';
+            html += '</tr>';
         }
-    }
-    var second = new Array();
-    var second_data = psycho_status['second'];
-    if(first_data[0] != 0){
-        second.push({'name':SENTIMENT_DICT_NEW[0],'value':first_data[0].toFixed(2)});
-    }
-    if(first_data[1] != 0){
-        second.push({'name':SENTIMENT_DICT_NEW[1],'value':first_data[1].toFixed(2)});
-    }
-    for(var key in second_data){
-        //console.log(second_data[key]);
-        if(second_data[key] != 0){
-            second.push({'name':SENTIMENT_DICT_NEW[key],'value':second_data[key].toFixed(2)});
-        }
-    };
-
-    var myChart = echarts.init(document.getElementById(div)); 
-    var option = {
-    tooltip : {
-        trigger: 'item',
-        formatter: "{a} <br/>{b} : {c} ({d}%)"
+        html += '</tbody>';
+        html += '</table>';
+        //console.log(data.length)
+        document.getElementById('relatednum').innerHTML = data.length-2;
+        $('#table').css('height',height);
+        $('#table').append(html);
+        for (var i = 0; i < save_id.length; i++) {
+            s=i.toString();
+            id_string += save_id[s] + ',';
+        };
+        id_string=id_string.substring(0,id_string.length-1)
+//        $('#recom_table').dataTable({
+//        "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
+//        "sPaginationType": "custom_bootstrap",
+//        "aaSorting":[[4,"desc"]],
+//        "aoColumnDefs":[ {"bSortable": false, "aTargets":[8]}],
+//       // "oLanguage": {
+//       // "sLengthMenu": "_MENU_ 每页",
+//       // }
+//        });
     },
 
-    toolbox: {
-        show : true,
-        feature : {
-            mark : {show: false},
-            dataView : {show: false, readOnly: false},
-            magicType : {
-                show: false, 
-                type: ['pie', 'funnel']
-            },
-            restore : {show: false},
-            saveAsImage : {show: true}
+  Draw_attribute_name: function(data){
+    $('#attribute_name').empty();
+    html = '';
+    html += '<select id="select_attribute_name">';
+    if (data.length > 0){
+        for (var i = 0; i < data.length-1; i++) {
+          var s = i.toString();
+          html += '<option value="' + data[s] + '">' + data[s] + '</option>';
         }
-    },
-    calculable : false,
-    series : [
-        {
-            name:'',
-            type:'pie',
-            selectedMode: 'single',
-            radius : [0, 35],
-            
-            // for funnel
-            x: '20%',
-            width: '40%',
-            funnelAlign: 'right',
-            max: 1548,
-            
-            itemStyle : {
-                normal : {
-                    label : {
-                        position : 'inner'
-                    },
-                    labelLine : {
-                        show : false
+        var t = (data.length-1).toString();
+        html += '<option value="' + data[t] + '" selected="selected">' + data[t] + '</option>';
+    }
+    html += '</select>';
+    $('#attribute_name').append(html);
+  },
+
+  Draw_attribute_value: function(data){
+    //console.log(data);
+    $('#attribute_value').empty();
+    html = '';
+    html += '';
+    html += '<select id="select_attribute_value">';
+    if (data != 'no attribute'){
+        for (var i = 0; i < data.length-1; i++) {
+          var s = i.toString();
+          html += '<option value="' + data[s] + '">' + data[s] + '</option>';
+        }
+        var t = (data.length-1).toString();
+        html += '<option value="' + data[t] + '" selected="selected">' + data[t] + '</option>';
+    }
+    html += '</select>';
+    $('#attribute_value').append(html);
+  },
+
+    Draw_picture: function(data){
+        if(data.length == 2||data.length==0){
+            //alert("");
+            $('#echart').html('<div><center>暂无数据</center></div>');
+        }else{
+        
+        var Related_Node = new Array();
+        var Related_Link = new Array();
+        if (data[0][1] == 'unknown'){
+            data[0][1] = data[0][0];
+        }
+        Related_Node.push({'name':data[0][0],'value':data[0][4],'label':data[0][1],'category':0,'symbolSize':2*Math.sqrt(data[0][4]),'itemStyle':{'normal':{'color':'rgba(255,215,0,0.4)'}}});
+        var user_name = data[0][0];
+         var personal_url = 'http://'+ window.location.host + '/index/personal/?uid=';
+        for(var item =1; item < data.length-1; item++){
+            if(data[item][1]=='unknown'){
+                data[item][1] = data[item][0];
+                Related_Node.push({'name':data[item][0], 'value':data[item][4], 'label':data[item][1],'category':1,'symbolSize':2*Math.sqrt(data[item][4])});
+                Related_Link.push({'source':user_name, 'target':data[item][0], 'weight':data[item][4],'itemStyle':{'normal':{'width':Math.sqrt(data[item][4])}}});
+            }
+            else{
+                Related_Node.push({'name':data[item][0], 'value':data[item][4], 'label':data[item][1],'category':1,'symbolSize':2*Math.sqrt(data[item][4])});
+                Related_Link.push({'source':user_name, 'target':data[item][0], 'weight':data[item][4],'itemStyle':{'normal':{'width':Math.sqrt(data[item][4])}}});
+            }
+        }
+        var option = {
+                title : {
+                    text: '',
+                    subtext: '注：线的粗细表示影响力的大小',
+                    x:'right',
+                    y:'bottom'
+                },
+                color:['#B0E0E6','#FFC0CB'],
+                tooltip : {
+                    trigger: 'item',
+                    formatter: '{a} : {b}'
+                },
+                toolbox: {
+                    show : true,
+                    feature : {
+                        restore : {show: true},
+                        magicType: {show: true, type: ['force', 'chord']},
+                        saveAsImage : {show: true}
+                    }
+                },
+                series : [
+                    {
+                        type:'force',
+                        name : "用户ID",
+                        ribbonType: false,
+                        categories:[
+                            {
+                                name:'',
+                                symbol:'circle',
+                            },
+                            {
+                                name:'',
+                                symbol:'circle',
+                            },
+                        ],
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    show: true,
+                                    textStyle: {
+                                        color: '#333'
+                                    }
+                                },
+                                nodeStyle : {
+                                    brushType : 'both',
+                                    borderColor : 'rgba(255,215,0,0.4)',
+                                    borderWidth : 1
+                                },
+                                linkStyle: {
+                                    type: 'curve'
+                                }
+                            },
+                            emphasis: {
+                                label: {
+                                    show: false
+                                    // textStyle: null      // 默认使用全局文本样式，详见TEXTSTYLE
+                                },
+                                nodeStyle : {
+                                    //r: 30
+                                },
+                                linkStyle : {}
+                            }
+                        },
+                        useWorker: false,
+                        minRadius : 15,
+                        maxRadius : 25,
+                        linkSymbol:'arrow',
+                        gravity: 1.1,
+                        scaling: 1.1,
+                        roam: 'move',
+                        nodes: Related_Node,
+                        links : Related_Link,
+                    }
+                ]
+        };  
+
+        var myChart = echarts.init(document.getElementById('echart'));
+        myChart.setOption(option);
+        //回调函数，添加监听事件
+        require([
+                'echarts'
+            ],
+            function(ec){
+                var ecConfig = require('echarts/config');
+                function focus(param) {
+                    var data = param.data;
+                    var links = option.series[0].links;
+                    var nodes = option.series[0].nodes;
+                    if (
+                        data.source != null
+                        && data.target != null
+                    ) { //点击的是边
+                        var sourceNode = nodes.filter(function (n) {return n.name == data.source})[0];
+                        var targetNode = nodes.filter(function (n) {return n.name == data.target})[0];
+                        } else {
+                        var node_url = personal_url + data.name;
+                        window.open(node_url);
                     }
                 }
-            },
-            data:first
-        },
-        {
-            name:'',
-            type:'pie',
-            radius : [50, 70],
-            // for funnel
-            x: '60%',
-            width: '35%',
-            funnelAlign: 'left',
-            max: 1048,
-            data:second
-        }
-    ]
-}
-myChart.setOption(option);  
-}
-function compare_extra(portrait){
-    var mark = 1;
-    var div ;
-    for(var key in portrait){
-        div = 'line'+ mark;
-        if(portrait[key]['keywords'].length == 0){
-            $('#'+div).empty();
-            $('#'+div).append('<span style="display:block; padding-top:83px">该数据为空</span>');
-        }else{
-            Search_weibo.Draw_cloud_keywords(portrait[key]['keywords'], div);
-        }
-        div = 'emotion'+ mark;
-        var psycho_status = portrait[key]['psycho_status']
-        Draw_think_emotion(psycho_status,div);
+                    myChart.on(ecConfig.EVENT.CLICK, focus)
 
-        div = 'hashtag'+ mark;
-        if(portrait[key]['hashtag']){
-            $('#'+div).empty();
-            $('#'+div).append('<span style="display:block; padding-top:83px">该数据为空</span>');
-        }else{
-            Search_weibo.Draw_cloud_keywords(portrait[key]['hashtag'], div);
-        }
-        mark = mark + 1;
+                    myChart.on(ecConfig.EVENT.FORCE_LAYOUT_END, function () {
+                    });
+                }
+        )     }
     }
 }
-function bind_close_click(portrait){
-     $('.btn-round').live('click', function(){
-        var cell = $('#table_compare').find('th').prevAll().length;
-        if (cell == 2){
-            $('.btn-round').css('display', 'none');
-        }
-        $('#table_compare').css('table-layout', 'fixed');
-        $('[name='+ $(this).attr("name") +']').remove();
-        $('#table_compare').css('table-layout', 'auto');
-        $("td[name^='list-']").attr('colspan',cell);
-        $('#table_compare').css('table-layout', 'fixed');
-        var length = $("#head_id").find('th').length;
-        for(var i = 1; i < length; i++){
-            var obj = $("#head_id").find('th').eq(i);
-            var uid = obj.attr('id');
-            var value = obj.attr("value");
-            var cloud_div = 'line'+value;
-            var topic_div = 'topic'+ value;
-            var emotion_div = 'emotion' + value;
-            var hashtag_div = 'hashtag'+ value ;
-            if(portrait[uid]['keywords'].length == 0){
-                $('#'+cloud_div).empty();
-                $('#'+cloud_div).append('<span style="display:block; padding-top:83px">该数据为空</span>');
-            }else{
-                Search_weibo.Draw_cloud_keywords(portrait[uid]['keywords'], cloud_div);
-            }
-            if(portrait[uid]['hashtag']){
-                $('#'+hashtag_div).empty();
-                $('#'+hashtag_div).append('<span style="display:block; padding-top:83px">该数据为空</span>');
-            }else{
-                Search_weibo.Draw_cloud_keywords(portrait[uid]['hashtag'], hashtag_div);
-            }
-            var psycho_status = portrait[uid]['psycho_status']
-            Draw_think_emotion(psycho_status,emotion_div);
-        }
+var save_id = [];
+var id_string = '';
+var test_uids = [];
+var test_uids_string = '';
+var Search_weibo = new Search_weibo();
+//get tag
+var user_tag = '/tag/show_user_attribute_name/?uid='+ uid +'&user='+contact_user;
+Search_weibo.call_sync_ajax_request(user_tag, Search_weibo.ajax_method, Show_tag);
+//console.log(get_choose_data(uid));
+Search_weibo.call_sync_ajax_request(get_choose_data(uid), Search_weibo.ajax_method, Search_weibo.Draw_table);
+Search_weibo.Draw_picture(Search_weibo.data);
+var show_user_tag_url = '/tag/show_user_tag/?uid_list=' + id_string +'&user='+contact_user;
+Search_weibo.call_sync_ajax_request(show_user_tag_url, Search_weibo.ajax_method, Search_weibo.Draw_user_tag);
+var tag_url = "/tag/show_attribute_name/?user="+contact_user;
+Search_weibo.call_sync_ajax_request(tag_url, Search_weibo.ajax_method, Search_weibo.Draw_attribute_name);
+var select_attribute_name = $("#select_attribute_name").val()
+var attribute_value_url = '';
+attribute_value_url = '/tag/show_attribute_value/?attribute_name=' + select_attribute_name +'&user='+contact_user;
+Search_weibo.call_sync_ajax_request(attribute_value_url, Search_weibo.ajax_method, Search_weibo.Draw_attribute_value);
+$('#select_attribute_name').click(function(){
+    var get_attribute_name = $('#select_attribute_name').val();
+    attribute_value_url = '/tag/show_attribute_value/?attribute_name='+get_attribute_name +'&user='+contact_user;
+    Search_weibo.call_sync_ajax_request(attribute_value_url, Search_weibo.ajax_method, Search_weibo.Draw_attribute_value);
+});
+var global_data = Search_weibo.data;
 
-     });
+function recommend_all(){
+  $('input[name="in_status"]:not(:disabled)').prop('checked', $("#recommend_all").prop('checked'));
 }
-var uid_list = window.location.search;
-Search_weibo = new Search_weibo();
-//心理状态
-var SENTIMENT_DICT_NEW = {'0':'中性', '1':'积极', '2':'生气', '3':'焦虑', '4':'悲伤', '5':'厌恶', '6':'其他', '7':'消极'};
-//$('#compare_loading').showLoading();
-var url_total = '/manage/all_user_portrait/' + uid_list;
-Search_weibo.call_async_ajax_request(url_total, Search_weibo.ajax_method, Search_weibo.Total_callback);
-//$('#compare_loading').hideLoading();
+
+function Show_tag(data){
+   // var height = $('#box-height').height();
+    var unit = Math.ceil(data.length / 4);
+   // $('#box-height').css('height',height+20*unit);
+
+    /*
+    if(data.length <=4 && data.length > 0 ){
+        $('#box-height').css('height',height+20);
+    }
+    else if(data.length >4 && data.length <=8){
+        $('#box-height').css('height',height+20*2);
+    }
+    else{
+        $('#box-height').css('height',height+20*3);
+    }
+    */
+    var html = '';
+    if(data.length == 0){
+      return false;
+    }
+    else{
+      for(var i = 0; i < data.length; i++){
+        if (data[i] != ''){
+        html += '<div class="col-lg-2" >';
+        html += '<span class="input-group-addon" style="width:70px;border:1px solid white; background-color:white;display:inline-block" id="'+ data[i] +'">'+ data[i] +'</span>';
+        html += '<input type="text" class="form-control" style="width:40%; display:inline;height:25px;margin-left:4px" value="0">';
+        html += '</div>';
+        }
+      }
+      $('#tag').append(html);
+    }
+}
+
+function add_group_tag(){
+    var select_uids = [];
+    $('input[name="in_status"]:checked').each(function(){
+        select_uids.push($(this).attr('value'));
+    })
+    //console.log(select_uids);
+    var select_uids_string = select_uids.join(',');
+
+    add_tag_attribute_name = $("#select_attribute_name").val();
+    add_tag_attribute_value = $("#select_attribute_value").val();
+    //console.log(add_tag_attribute_value);
+    if (!add_tag_attribute_value){
+        alert('不能添加空白标签！');
+        return;
+    }
+    add_group_tag_url = '/tag/add_group_tag/?uid_list=' + select_uids_string + "&attribute_name=" + add_tag_attribute_name + "&attribute_value=" + add_tag_attribute_value+'&user='+contact_user;
+    //console.log(add_group_tag_url);
+    Search_weibo.call_sync_ajax_request(add_group_tag_url, Search_weibo.ajax_method, Search_weibo.Draw_add_group_tag);
+}
+
+$('.label-success').click(function(){
+    var url = get_choose_data(uid);
+    //console.log(url);
+    if(url == ''){
+        return false;
+    }
+    else{
+    Search_weibo.call_sync_ajax_request(url, Search_weibo.ajax_method, Search_weibo.Draw_table);
+    Search_weibo.Draw_picture(Search_weibo.data);
+   // Search_weibo.call_sync_ajax_request(url, Search_weibo.ajax_method, Search_weibo.Draw_picture);
+    }
+});
+
+$('.inline-checkbox').click(function(){
+    //console.log('dddd');
+    if($(this).is(':checked')){
+        $(this).next().next().val('1');
+        $(this).next().next().attr('disabled',false);
+    }
+    else{
+        $(this).next().next().val('');
+        $(this).next().next().attr('disabled',true);
+    }
+});
+
+//获取选择的条件，把参数传出获取返回值
+function get_choose_data(uid){
+    var url = '/manage/imagine/?uid=' + uid + '&submit_user='+$('#con_user').text()+'&keywords=';
+    var keywords = new Array();
+    var weight = new Array();
+    //var field ;
+    var isflag = 1;
+    $('.input-group-addon').each(function(){
+        if ($(this).attr('id') != ''){ 
+        keywords.push($(this).attr('id'));
+        var value = $(this).next().val();
+        if((parseInt(value) != value) || (value > 10) || (value < 0 )){
+            alert("请输入0-10的整数");
+            isflag = 0;
+            return false;
+        }else{
+            weight.push(value);
+        }
+        }
+    });
+    /*
+    $('[type="radio"]').each(function(){
+        if($(this).is(':checked')){
+            field = $(this).attr('id');
+        }
+    });
+    */
+    if(isflag == 1){
+        url = url + keywords.join(',') + '&weight=' + weight.join(',');
+    }
+    else{
+        url = '';
+    }
+    console.log(url);
+    return url;
+}
+
+// 保留原有的html代码
+var origin_html = $('#ADD').html();
+
+function diy_button(){
+ // $('#ADD').html(origin_html);
+  // var cur_uids = []
+  // $('input[name="search_result_option"]:checked').each(function(){
+  //     cur_uids.push($(this).attr('value'));
+  // });
+  // if(cur_uids.length < 1){
+  //   alert('请选择至少1个用户');
+  // }
+  // else{
+      $('#Diymodal').modal();
+  // }
+  $(".addIcon").off("click").click(function(){
+    var html = '';
+    html += '<div class="tagCols"><span >标签名</span><input name="tagname" class="inputbox " type="text" value="" style="margin-left:35px;line-height:36px;"></div>';
+    $('#ADD').append(html);
+  });
+
+}
+
+
+function compare_button(){
+  var compare_uids = []
+  $('input[name="search_result_option"]:checked').each(function(){
+      compare_uids.push($(this).attr('value'));
+  });
+  //console.log(compare_uids);
+  var len = compare_uids.length;
+  if(len>3 || len<2){
+    alert("请选择2至3个用户！");
+  }
+  else{
+      draw_table_compare_confirm(compare_uids, "#compare_comfirm");
+      $('#compare').modal();
+  }
+}
+
+function group_button(){
+  var group_uids = []
+  $('input[name="search_result_option"]:checked').each(function(){
+      group_uids.push($(this).attr('value'));
+  });
+  //var group_uids = [];
+  //console.log(group_uids);
+  var len = group_uids.length;
+  if (len < 1){
+      alert("请选择至少1个用户!");
+  }
+  else{
+      draw_table_group_confirm(group_uids, "#group_comfirm");
+      $("#group").modal();
+  }
+}
+
+function delete_button(){
+  var cur_uids = []
+  $('input[name="search_result_option"]:checked').each(function(){
+      cur_uids.push($(this).attr('value'));
+  });
+  global_choose_uids[global_pre_page] = cur_uids;
+  var delete_uids = [];
+  for (var key in global_choose_uids){
+      var temp_list = global_choose_uids[key];
+      for (var i = 0; i < temp_list.length; i++){
+        delete_uids.push(temp_list[i]);
+      }
+  }
+  //console.log(delete_uids);
+  var len = delete_uids.length;
+  if (len < 1){
+      alert("请选择至少1个用户!");
+  }
+  else{
+      draw_table_delete_confirm(delete_uids, "#delete_comfirm");
+      $('#delete').modal();
+  }
+}
+
+function choose_all(){
+  $('input[name="search_result_option"]').prop('checked', $("#choose_all").prop('checked'));
+}
+
+function draw_table_compare_confirm(uids, div){
+  $(div).empty();
+    var html = '';
+    html += '<table id="compare_cofirm_table" class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
+    html += '<thead><tr><th class="center" style="text-align:center">用户id</th><th class="center" style="text-align:center">昵称</th><th class="center" style="text-align:center">活跃度</th><th class="center" style="text-align:center;width:72px">身份敏感度</th><th class="center" style="text-align:center">影响力</th><th class="center" style="text-align:center">相关度</th><th></th></tr></thead>';
+    html += '<tbody>';
+    for(var i in uids){
+      var item = global_data[uids[i]];
+      html += '<tr">';
+      html += '<td class="center" name="compare_confirm_uids">'+ item[0] +'</td>';
+      html += '<td class="center">'+ item[1] + '</td>';
+      html += '<td class="center">'+ item[2].toFixed(2) + '</td>';
+      html += '<td class="center" style="width:100px;">'+ item[3].toFixed(2) + '</td>';
+      html += '<td class="center" style="width:100px;">'+ item[4].toFixed(2) + '</td>';
+      html += '<td class="center" style="width:100px;">'+ item[5] + '</td>';
+      html += '<td class="center" style="width:80px;"><button class="btn btn-primary btn-sm" style="width:60px;height:30px" onclick="delRow(this)">移除</button></td>';
+      html += '</tr>';
+    }
+    html += '</tbody>';
+    html += '</table>';
+    $(div).append(html);
+}
+
+function draw_table_group_confirm(uids, div){
+  $(div).empty();
+    var html = '';
+    html += '<table id="group_confirm_table" class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
+    html += '<thead><tr><th class="center" style="text-align:center">用户id</th><th class="center" style="text-align:center">昵称</th><th class="center" style="text-align:center">活跃度</th><th class="center" style="text-align:center;width:72px">身份敏感度</th><th class="center" style="text-align:center">影响力</th><th class="center" style="text-align:center">相关度</th><th></th></tr></thead>';
+    html += '<tbody>';
+    for(var i in uids){
+      var item = global_data[uids[i]];
+      html += '<tr">';
+      html += '<td class="center" name="group_confirm_uids">'+ item[0] +'</td>';
+      html += '<td class="center">'+ item[1] + '</td>';
+      html += '<td class="center">'+ item[2].toFixed(2) + '</td>';
+      html += '<td class="center" style="width:100px;">'+ item[3].toFixed(2) + '</td>';
+      html += '<td class="center" style="width:100px;">'+ item[4].toFixed(2) + '</td>';
+      html += '<td class="center" style="width:100px;">'+ item[5] + '</td>';
+      html += '<td class="center" style="width:80px;"><button class="btn btn-primary btn-sm" style="width:60px;height:30px" onclick="delRow(this)">移除</button></td>';
+      html += '</tr>';
+    }
+    html += '</tbody>';
+    html += '</table>';
+    $(div).append(html);
+}
+
+function draw_table_delete_confirm(uids, div){
+  $(div).empty();
+    var html = '';
+    html += '<table id="delete_confirm_table" class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
+    html += '<thead><tr><th>用户ID</th><th>用户名</th><th>注册地</th><th>活跃度</th><th>身份敏感度</th><th>影响力</th><th>相关度</th>d>';
+    html += '<tbody>';
+    for(var i in uids){
+      var item = global_data[uids[i]];
+      html += '<tr id=' + uids[1] +'>';
+      html += '<td class="center" name="delete_confirm_uids">'+ uids[i] +'</td>';
+      html += '<td class="center">'+ item[1] + '</td>';
+      html += '<td class="center">'+ item[2] + '</td>';
+      html += '<td class="center" style="width:100px;">'+ item[3] + '</td>';
+      html += '<td class="center" style="width:100px;">'+ item[4] + '</td>';
+      html += '<td class="center" style="width:100px;">'+ item[5] + '</td>';
+      html += '<td class="center" style="width:100px;">'+ item[6] + '</td>';
+      html += '<td class="center" style="width:80px;"><button class="btn btn-primary btn-sm" style="width:60px;height:30px" onclick="delRow(this)">移除</button></td>';
+      html += '</tr>';
+    }
+    html += '</tbody>';
+    html += '</table>';
+    $(div).append(html);
+}
+
+function delRow(obj){
+  var Row = obj.parentNode;
+  while(Row.tagName.toLowerCase()!="tr"){
+    Row = Row.parentNode;
+  }
+  Row.parentNode.removeChild(Row);
+}
+
+function compare_confirm_button(){
+  var compare_confirm_uids = [];
+  $('[name="compare_confirm_uids"]').each(function(){
+      compare_confirm_uids.push($(this).text());
+  })
+  if (compare_confirm_uids.length <= 1){
+      alert('对比的用户至少需要2名!');
+      return;
+  }
+  var compare_url = '/index/contrast/?uid_list='+ compare_confirm_uids.join(',');
+  //console.log(compare_url);
+  window.open(compare_url);
+}
+
+function group_confirm_button(){
+  var group_confirm_uids = [];
+  $('[name="group_confirm_uids"]').each(function(){
+      group_confirm_uids.push($(this).text());
+  })
+  //console.log(group_confirm_uids);
+  var group_ajax_url = '/group/submit_task/';
+  var group_url = '/index/group_list';
+  var group_name = $('input[name="group_name"]').val();
+  var remark = $('input[name="remark"]').val();
+  //console.log(group_name, remark);
+  if (group_name.length == 0){
+      alert('群体名称不能为空');
+      return;
+  }
+  //console.log(group_url);
+  var reg = "^[a-zA-Z0-9_\u4e00-\u9fa5\uf900-\ufa2d]+$";
+  if (!group_name.match(reg)){
+    alert('群体名称只能包含英文、汉字、数字和下划线,请重新输入!');
+    return;
+  }
+  if ((remark.length > 0) && (!remark.match(reg))){
+    alert('备注只能包含英文、汉字、数字和下划线,请重新输入!');
+    return;
+  }
+  if(group_confirm_uids.length <=1){
+    alert("请选择至少1个用户");
+    return ;
+  }
+  var job = {"task_name":group_name,"task_max_count":task_max_count, "submit_user":$('#con_user').text(),"uid_list":group_confirm_uids, "state":remark};
+  $.ajax({
+      type:'POST',
+      url: group_ajax_url,
+      contentType:"application/json",
+      data: JSON.stringify(job),
+      dataType: "json",
+      success: callback
+  });
+  function callback(data){
+      //console.log(data);
+      if (data == '1'){
+          //console.log('seceed',group_ajax_url)
+          window.location.href = group_url;
+      }
+      else if (data == '0'){ 
+          alert('已存在相同名称的群体分析任务,请重试一次!');
+      }else if ( data =='more than limit'){
+          alert('提交任务数超过用户限制，请等待结果计算完成后提交新任务！');
+      }
+  }
+}
+
+function delete_confirm_button(){
+  var now_date = new Date();
+  var now = now_date.getFullYear()+"-"+((now_date.getMonth()+1)<10?"0":"")+(now_date.getMonth()+1)+"-"+((now_date.getDate())<10?"0":"")+(now_date.getDate());
+  var delete_confirm_uids = [];
+  $('[name="delete_confirm_uids"]').each(function(){
+      delete_confirm_uids.push($(this).text());
+  })
+  //console.log(delete_confirm_uids);
+  var delete_uid_list = '';
+  for(var i in delete_confirm_uids){
+      delete_uid_list += delete_confirm_uids[i];
+      if(i<(delete_confirm_uids.length-1))
+        delete_uid_list += ',';
+  }
+  if(confirm("确认要删除吗?")){
+      var delete_url = '/recommentation/search_delete/?date=' + now + '&uid_list=' + delete_uid_list;
+      //console.log(delete_url);
+      $.ajax({
+          type:'get',
+          url: delete_url,
+          dataType: "json",
+          success: callback
+      });
+      function callback(data){
+           //console.log(data);
+           if (data == '1'){
+               for (var i = 0; i < delete_confirm_uids.length; i++){
+                   global_data[delete_confirm_uids[i]] = '';
+               }
+               alert('出库成功！');
+               draw_table_search_result.Re_Draw_table(global_data);
+           }
+           else{
+               alert('fail');
+           }
+      }
+  }
+}
+
+function replace_space(data){
+  for(var i in data){
+    if(data[i]===""||data[i]==="unknown"){
+      data[i] = "未知";
+    }
+  }
+  return data;
+}
