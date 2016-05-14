@@ -208,12 +208,15 @@ def search_group_results(task_name, submit_user, module):
         result['importance_star'] = source['importance_star']
         result['tag_vector'] = json.loads(source['tag_vector'])
     elif module == 'basic':
+        result['politics'] = json.loads(source['politics'])
         result['domain'] = json.loads(source['domain'])
         result['topic'] = json.loads(source['topic'])
         result['keywords'] = json.loads(source['keywords'])
+        result['sensitive_hashtag'] = json.loads(source['sensitive_hashtag'])
         result['hashtag'] = json.loads(source['hashtag'])
-        result['sensitive_words'] = []
+        result['sensitive_words'] = json.loads(source['sensitive_words'])
         result['influence_his'] = json.loads(source['influence_his'])
+        result['sensitive_his'] = json.loads(source['sensitive_his'])
         result['count'] = source['count']
     elif module == 'activity':
         result['activity_trend'] = json.loads(source['activity_trend'])
@@ -537,7 +540,7 @@ def get_group_user_track(uid):
 # show group members weibo for activity ---week
 # input: task_name, start_ts
 # output: weibo_list
-def get_activity_weibo(task_name, submit_user, start_ts):
+def get_activity_weibo(task_name, submit_user, start_ts, time_segment=FOUR_HOUR):
     results = []
     #step1: get task_name uid
     task_id = submit_user + task_name
@@ -567,7 +570,6 @@ def get_activity_weibo(task_name, submit_user, start_ts):
             uname = item['fields']['uname'][0]
         uid2uname[uid] = uname
     #step3: search time_segment weibo
-    time_segment = FOUR_HOUR
     end_ts = start_ts + time_segment
     time_date = ts2datetime(start_ts)
     flow_text_index_name = flow_text_index_name_pre + time_date

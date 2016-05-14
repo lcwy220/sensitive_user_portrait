@@ -96,10 +96,14 @@ function Draw_activity(data){
 function point2weibo(xnum, ts){
     //console.log(ts);
     var delta = '';
-    var activity_weibo_url = '/group/activity_weibo/?task_name='+ name +'&start_ts=' + ts + '&submit_user=' + submit_user;
-    call_sync_ajax_request(activity_weibo_url, ajax_method, draw_content);
-        switch(xnum % 6)
-        {
+    if(xnum == -1){
+        delta = "00:00-24:00";
+        $('#date_zh').html(getYearDate(ts) + "至" +  getYearDate(ts + 7 * 24 * 3600));
+        var activity_weibo_url = '/group/activity_weibo/?task_name='+ name +'&start_ts=' + ts + '&submit_user=' + submit_user + '&during=' + 7 * 24 * 3600;
+        call_sync_ajax_request(activity_weibo_url, ajax_method, draw_content);
+    }
+    else{
+        switch(xnum % 6){
             case 0: delta = "00:00-04:00";break;
             case 1: delta = "04:00-08:00";break;
             case 2: delta = "08:00-12:00";break;
@@ -108,7 +112,9 @@ function point2weibo(xnum, ts){
             case 5: delta = "20:00-24:00";break;
         }
         $('#date_zh').html(getYearDate(ts));
-    
+        var activity_weibo_url = '/group/activity_weibo/?task_name='+ name +'&start_ts=' + ts + '&submit_user=' + submit_user;
+        call_sync_ajax_request(activity_weibo_url, ajax_method, draw_content);
+    }
     $('#time_zh').html(delta);
 }
 function getYearDate(tm){
@@ -493,7 +499,7 @@ function show_activity(data) {
 	var time_data = [23,3,4,55,22,6]
     // console.log(runtype);
     //默认显示第一天微博；
-    point2weibo(0, data.activity_trend[0][0]);
+    point2weibo(-1, data.activity_trend[0][0]);
 
 	//微博走势，点击后显示微博
 	Draw_activity(data.activity_trend);

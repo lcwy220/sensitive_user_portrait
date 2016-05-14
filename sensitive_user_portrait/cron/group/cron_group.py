@@ -37,7 +37,7 @@ from parameter import ACTIVITY_GEO_TOP, MAX_VALUE, DAY, HIS_BINS_COUNT, GROUP_AC
         IDENTIFY_ATTRIBUTE_LIST, GROUP_DENSITY_THRESHOLD, GROUP_DENSITY_DESCRIPTION,\
         GROUP_SENTIMENT_LIST, GROUP_NEGATIVE_SENTIMENT, GROUP_KEYWORD_COUNT,\
         GROUP_HASHTAG_COUNT, GROUP_SENTIMENT_WORD_COUNT, TOPIC_MODEL_COUNT, \
-        GROUP_INDEX_RANK_RATIO_DICT
+        GROUP_INDEX_RANK_RATIO_DICT, GROUP_SENSITIVE_WORDS_COUNT
 from parameter import RUN_TYPE, RUN_TEST_TIME
 from time_utils import ts2datetime, datetime2ts, datetimestr2ts, ts2date
 
@@ -113,9 +113,12 @@ def get_attr_portrait(uid_list, submit_user):
     verified_ratio = dict()
     online_pattern_ratio = dict()
     domain_ratio = dict()
+    politics_ratio = dict()
     topic_ratio = dict()
     keyword_ratio = dict()
+    sensitive_hashtag_ratio = dict()
     hashtag_ratio = dict()
+    sensitive_words_ratio = dict()
     character_dict = {'character_sentiment':{}, 'character_text':{}}
     activity_geo_distribution_date = dict() # {'date1':{geo1:person_count, geo2:person_count}, 'date2':{geo1:person_count,..}, ..} # one month
     activity_geo_vary = dict() # {'geo2geo': count, ...}  geo2geo='activity_geo1&activity_geo2'
@@ -125,6 +128,8 @@ def get_attr_portrait(uid_list, submit_user):
     importance_list = []
     influence_list = []
     influence_rank_ratio_dis = {}
+    sensitive_list = []
+    sensitive_rank_ratio_dis = {}
     activeness_list = []
     activeness_rank_ratio_dis = {}
     sentiment_dict_list = []
@@ -170,6 +175,22 @@ def get_attr_portrait(uid_list, submit_user):
                     online_pattern_ratio[pattern] += 1
                 except:
                     online_pattern_ratio[pattern] = 1
+
+            # attr 3.8 sensitive_words
+            sensitive_words_dic_ = json.loads(source['sensitive_words_dict'])
+            for w, c in sensitive_words_dic_.iteritems():
+                if w != '':
+                    try:
+                        sensitive_words_ratio[w] += c
+                    except:
+                        sensitive_words_ratio[w] = c
+
+            # attr3.9: politics
+            politics = source['politics']
+            try:
+                politics_ratio[politics] += 1
+            except:
+                politics_ratio[politics] = 1
             #attr4: domain
             domain = source['domain']
             try:
@@ -192,6 +213,14 @@ def get_attr_portrait(uid_list, submit_user):
                     keyword_ratio[keyword] += 1
                 except:
                     keyword_ratio[keyword] = 1
+            # attr 6.9: sensitive_hashtag
+            sensitive_hashtag_dic_ = json.loads(source['sensitive_hashtag_dict'])
+            for k, v in sensitive_hashtag_dic_.iteritems():
+                try:
+                    sensitive_hashtag_ratio[k] += v
+                except:
+                    sensitive_hashtag_ratio[k] = v
+
             #attr7: hashtag
             hashtag_string = source['hashtag_string']
             hashtag_list = hashtag_string.split('&')
@@ -252,40 +281,22 @@ def get_attr_portrait(uid_list, submit_user):
                         vary_detail_geo[vary_item].append([uid, vary_ts[0], vary_ts[1]])
                     except:
                         vary_detail_geo[vary_item] = [[uid, vary_ts[0], vary_ts[1]]]
-            
+            # attr 8.9: sensitive distribution
+            sensitive = source['sensitive']
+            sensitive_rank = get_index_rank(sensitive, 'sensitive')
+            sensitive_list.append(sensitive_rank)
             #attr9: influence distribution
             influence = source['influence']
             influence_rank = get_index_rank(influence, 'influence')
             influence_list.append(influence_rank) 
-            '''
-            influence_rank_ratio = get_index_rank_ratio(influence_rank, all_user_count)
-            try:
-                influence_rank_ratio_dis[influence_rank_ratio] += 1
-            except:
-                influence_rank_ratio_dis[influence_rank_ratio] = 1
-            '''
             #attr10: importance distribution
             importance = source['importance']
             importance_rank = get_index_rank(importance, 'importance')
             importance_list.append(importance_rank)
-            '''
-            importance_rank_ratio = get_index_rank_ratio(importance_rank, all_user_count)
-            try:
-                importance_rank_ratio_dis[importance_rank_ratio] += 1
-            except:
-                importance_rank_ratio_dis[importance_rank_ratio] = 1
-            '''
             #attr11: activeness distribution
             activeness = source['activeness']
             activeness_rank = get_index_rank(activeness, 'activeness')
             activeness_list.append(activeness_rank)
-            '''
-            activeness_rank_ratio = get_index_rank_ratio(activeness_rank, all_user_count)
-            try:
-                activeness_rank_ratio_dis[activeness_rank_ratio] += 1
-            except:
-                activeness_rank_ratio_dis[activeness_rank_ratio] = 1
-            '''
             #attr12: tag
             try:
                 portrait_tag_string = source[submit_user + '-tag']
@@ -299,30 +310,6 @@ def get_attr_portrait(uid_list, submit_user):
                         tag_dict[portrait_tag_item] += 1
                     except:
                         tag_dict[portrait_tag_item] = 1
-            '''
-            for user_attribute_item in source:
-                if user_attribute_item not in IDENTIFY_ATTRIBUTE_LIST:
-                    tag_name = user_attribute_item
-                    tag_value = source[user_attribute_item]
-                    tag_key = tag_name + ':' + tag_value
-                    try:
-                        tag_dict[tag_key] += 1
-                    except:
-                        tag_dict[tag_key] = 1
-            '''
-            """
-            #attr13: character
-            character_sentiment = source['character_sentiment']
-            character_text = source['character_text']
-            try:
-                character_dict['character_sentiment'][character_sentiment] += 1
-            except:
-                character_dict['character_sentiment'][character_sentiment] = 1
-            try:
-                character_dict['character_text'][character_text] += 1
-            except:
-                character_dict['character_text'][character_text] = 1
-            """
 
         iter_count += GROUP_ITER_COUNT
     # importance ditribution
@@ -330,6 +317,8 @@ def get_attr_portrait(uid_list, submit_user):
     results['importance_his'] = json.dumps([p.tolist(), [int(item) for item in t.tolist()]])
     p, t = np.histogram(influence_list, bins=HIS_BINS_COUNT, normed=False)
     results['influence_his'] = json.dumps([p.tolist(), [int(item) for item in t.tolist()]])
+    p, t = np.histogram(sensitive_list, bins=HIS_BINS_COUNT, normed=False)
+    results['sensitive_his'] = json.dumps([p.tolist(), [int(item) for item in t.tolist()]])
     p, t = np.histogram(activeness_list, bins=HIS_BINS_COUNT ,normed=False)
     results['activeness_his'] = json.dumps([p.tolist(), [int(item) for item in t.tolist()]])
     # ave activeness rank
@@ -384,9 +373,11 @@ def get_attr_portrait(uid_list, submit_user):
     results['domain'] = json.dumps(sort_domain_ratio)
     #tag vector---main topic
     sort_topic_ratio = sorted(topic_ratio.items(), key=lambda x:x[1], reverse=True)
+    sort_politics_ratio = sorted(politics_ratio.items(), key=lambda x:x[1], reverse=True)
     main_topic = sort_topic_ratio[0][0]
     tag_vector_result['topic'] = [u'主要话题', main_topic]
     results['topic'] = json.dumps(sort_topic_ratio)
+    results['politics'] = json.dumps(sort_politics_ratio)
     results['activity_geo_distribution'] = json.dumps(activity_geo_distribution_date)
     results['activity_geo_vary'] = json.dumps(activity_geo_vary)
     results['main_start_geo'] = json.dumps(main_start_geo)
@@ -401,8 +392,13 @@ def get_attr_portrait(uid_list, submit_user):
     sort_keyword_ratio = sorted(keyword_ratio.items(), key=lambda x:x[1], reverse=True)[:GROUP_KEYWORD_COUNT]
     results['keywords'] = json.dumps(sort_keyword_ratio)
     #tag vector---main hashtag
+    sort_sensi_hashtag_dict = sorted(sensitive_hashtag_ratio.items(), key=lambda x:x[1], reverse=True)[:GROUP_HASHTAG_COUNT]
     sort_hashtag_dict = sorted(hashtag_ratio.items(), key=lambda x:x[1], reverse=True)[:GROUP_HASHTAG_COUNT]
     results['hashtag'] = json.dumps(sort_hashtag_dict)
+    results['sensitive_hashtag'] = json.dumps(sort_sensi_hashtag_dict)
+    sort_sensitive_words_ratio = sorted(sensitive_words_ratio.items(), key=lambda x:x[1], reverse=True)[:GROUP_SENSITIVE_WORDS_COUNT]
+    results['sensitive_words'] = json.dumps(sort_sensitive_words_ratio)
+
     if len(sort_hashtag_dict) != 0:
         tag_vector_result['hashtag'] = [u'hashtag', sort_hashtag_dict[0][0]]
     else:
@@ -424,166 +420,6 @@ def get_index_rank_ratio(rank, all_count):
         result = GROUP_INDEX_RANK_RATIO_DICT[4]
     
     return result
-
-
-#abandon in version: 160122
-'''
-# compute attr from es_user_portrait
-def get_attr_portrait(uid_list):
-    result = {}
-    index_name = 'user_portrait'
-    index_type = 'user'
-    user_dict_list = es_user_portrait.mget(index=portrait_index_name, doc_type=portrait_index_type, body={'ids':uid_list})['docs']
-    gender_ratio = dict()
-    verified_ratio = dict()
-    online_pattern_ratio = dict()
-    domain_ratio = dict()
-    topic_ratio = dict()
-    emoticon_ratio = dict()
-    keyword_ratio = dict()
-    importance_list = []
-    activeness_list = []
-    influence_list = []
-    psycho_status_ratio  = dict()
-    psycho_feature_ratio = dict()
-    hashtag_ratio = dict()
-    activity_geo_ratio = dict()
-    for user_dict in user_dict_list:
-        user_dict = user_dict['_source']
-        #attr1 gender ratio
-        gender = user_dict['gender']
-        if gender:
-            try:
-                gender_ratio[gender] += 1
-            except:
-                gender_ratio[gender] = 1
-        #attr2 verified ratio
-        verified = user_dict['verified']
-        if verified:
-            try:
-                verified_ratio[verified] += 1
-            except:
-                verified_ratio[verified] = 1
-        #attr3 online pattern
-        online_pattern = user_dict['online_pattern']
-        if online_pattern:
-            online_pattern = json.loads(online_pattern)
-            for pattern in online_pattern:
-                try:
-                    online_pattern_ratio[pattern] += 1
-                except:
-                    online_pattern_ratio[pattern] = 1
-        #attr4 domain
-        domain_string = user_dict['domain']
-        if domain_string:
-            domain_list = domain_string.split('_')
-            for domain in domain_list:
-                try:
-                    domain_ratio[domain] += 1
-                except:
-                    domain_ratio[domain] = 1
-        #attr5 topic
-        topic_string = user_dict['topic']
-        if topic_string:
-            topic_dict = json.loads(topic_string)
-            for topic in topic_dict:
-                try:
-                    topic_ratio[topic] += 1
-                except:
-                    topic_ratio[topic] = 1
-        #attr6 emoticon
-        emoticon_string = user_dict['emoticon']
-        if emoticon_string:
-            emoticon_dict = json.loads(emoticon_string)
-            for emoticon in emoticon_dict:
-                try:
-                    emoticon_ratio[emoticon] += 1
-                except:
-                    emoticon_ratio[emoticon] = 1
-        #attr7 keywords
-        keyword_string = user_dict['keywords']
-        if keyword_string:
-            keyword_dict = json.loads(keyword_string)
-            for keyword in keyword_dict:
-                try:
-                    keyword_ratio[keyword] += keyword_dict[keyword]
-                except:
-                    keyword_ratio[keyword] = keyword_dict[keyword]
-        #attr8 importance distribution
-        importance = user_dict['importance']
-        importance_rank = get_index_rank(importance, 'importance')
-        importance_list.append(int(importance_rank))
-        importance_rank_ratio = get_index_rank_ratio(importance_rank, all_user_count)
-        #attr9 activeness distribution
-        activeness = user_dict['activeness']
-        activeness_rank = get_index_rank(activeness, 'activeness')
-        activeness_list.append(int(activeness_rank))
-        activeness_rank_ratio = get_index_rank_ratio(activeness_rank, all_user_count)
-        #attr10 influence distribution
-        influence = user_dict['influence']
-        influence_rank = get_index_rank(influence, 'influence')
-        influence_list.append(int(influence_rank))
-        influence_rank_ratio = get_index_rank_ratio(influence_rank, all_user_count)
-        #attr11 psycho_status ratio
-        psycho_status_string = user_dict['psycho_status']
-        if psycho_status_string:
-            psycho_status_dict = json.loads(psycho_status_string)
-            for psycho_status in psycho_status_dict:
-                try:
-                    psycho_status_ratio[psycho_status] += psycho_status_dict[psycho_status]
-                except:
-                    psycho_status_ratio[psycho_status] = psycho_status_dict[psycho_status]
-        #attr12 psycho_feature ratio
-        psycho_feature_string = user_dict['psycho_feature']
-        if psycho_feature_string:
-            psycho_feature_list = psycho_feature_string.split('_')
-            for psycho_feature in psycho_feature_list:
-                try:
-                    psycho_feature_ratio[psycho_feature] += 1
-                except:
-                    psycho_feature_ratio[psycho_feature] = 1
-        #attr13 activity geo ratio
-        activity_geo_string = user_dict['activity_geo_dict']
-        if activity_geo_string:
-            activity_geo_dict = json.loads(activity_geo_string)
-            for activity_geo in activity_geo_dict:
-                city_list = activity_geo.split('\t')
-                city = city_list[len(city_list)-1]
-                try:
-                    activity_geo_ratio[city] += activity_geo_dict[activity_geo]
-                except:
-                    activity_geo_ratio[city] = activity_geo_dict[activity_geo]
-        #attr14 hashtag
-        hashtag_string = user_dict['hashtag_dict']
-        if hashtag_string:
-            hashtag_dict = json.loads(hashtag_string)
-            for hashtag in hashtag_dict:
-                try:
-                    hashtag_ratio[hashtag] += hashtag_dict[hashtag]
-                except:
-                    hashtag_ratio[hashtag] = hashtag_dict[hashtag]
-    p, t = np.histogram(importance_list, bins=5, normed=False)
-    importance_his = [p.tolist(), t.tolist()]
-    p, t = np.histogram(activeness_list, bins=5, normed=False)
-    activeness_his = [p.tolist(), t.tolist()]
-    p, t = np.histogram(influence_list, bins=5, normed=False)
-    influence_his = [p.tolist(), t.tolist()]
-    result['gender'] = json.dumps(gender_ratio)
-    result['verified'] = json.dumps(verified_ratio)
-    result['online_pattern'] = json.dumps(online_pattern_ratio)
-    result['domain'] = json.dumps(domain_ratio)
-    result['topic'] = json.dumps(topic_ratio)
-    result['psycho_status'] = json.dumps(psycho_status_ratio)
-    result['psycho_feature'] = json.dumps(psycho_feature_ratio)
-    result['emoticon'] = json.dumps(emoticon_ratio)
-    result['keywords'] = json.dumps(keyword_ratio)
-    result['hashtag'] = json.dumps(hashtag_ratio)
-    result['activity_geo'] = json.dumps(activity_geo_ratio)
-    result['importance_his'] = json.dumps(importance_his)
-    result['activeness_his'] = json.dumps(activeness_his)
-    result['influence_his'] = json.dumps(influence_his)
-    return result
-'''
 
 
 #use to get db number for retweet/be_retweet/comment/be_comment
@@ -612,6 +448,7 @@ def get_attr_social(uid_list, uid2uname):
     #step2: split uid list to iter mget
     iter_count = 0
     all_user_count = len(uid_list)
+    print '-----', uid_list
     in_stat_results = dict()
     out_stat_result = dict()
     all_in_record = []
@@ -621,92 +458,58 @@ def get_attr_social(uid_list, uid2uname):
     while iter_count < all_user_count:
         iter_uid_list = uid_list[iter_count:iter_count+GROUP_ITER_COUNT]
         #step3:mget retweet
-        try:
-            retweet_result = es_retweet.mget(index=retweet_index_name, doc_type=retweet_index_type, \
-                                             body={'ids':iter_uid_list})['docs']
-        except:
-            retweet_result = []
+        #try:
+        retweet_result = es_retweet.mget(index=retweet_index_name, doc_type=retweet_index_type, body={'ids':iter_uid_list})['docs']
+        print retweet_result
+        #except:
+        #    retweet_result = []
         retweet_dict = {} #{uid1: {ruid1:count1, ruid2:count2}, uid2:{},...}
         for item in retweet_result:
             uid = item['_id']
             #tesit for error es
-            try:
-                if item['found'] == True:
-                    retweet_dict[uid] = json.loads(item['_source']['uid_retweet'])
-            except:
-                pass
+            if item['found'] == True:
+                retweet_dict[uid] = json.loads(item['_source']['uid_retweet'])
 
         #step4:mget comment
-        try:
-            comment_result = es_comment.mget(index=comment_index_name, doc_type=comment_index_type, \
-                                             body={'ids':iter_uid_list})['docs']
-        except:
-            comment_result = []
+        comment_result = es_comment.mget(index=comment_index_name, doc_type=comment_index_type, body={'ids':iter_uid_list})['docs']
         comment_dict = {} #{uid1:{ruid1:count1, ruid2:count2},...}
         for item in comment_result:
             uid = item['_id']
             if item['found'] == True:
                 comment_dict[uid] = json.loads(item['_source']['uid_comment'])
+
         #step5:mget be_retweet
-        try:
-            be_retweet_result = es_comment.mget(index=be_retweet_index_name, doc_type=be_retweet_index_type, \
-                                                body={'ids':iter_uid_list})['docs']
-        except:
-            be_retweet_result = []
+        be_retweet_result = es_comment.mget(index=be_retweet_index_name, doc_type=be_retweet_index_type, body={'ids':iter_uid_list})['docs']
         be_retweet_dict = dict() #{uid1: {uid_be_retweet dict}, uid2:{},...}
         for item in be_retweet_result:
             uid = item['_id']
             #test for error es
-            try:
-                if item['found'] == True:
-                    be_retweet_dict[uid] = json.loads(item['_source']['uid_be_retweet'])
-            except:
-                pass
+            if item['found'] == True:
+                be_retweet_dict[uid] = json.loads(item['_source']['uid_be_retweet'])
+
         #step6:mget be_comment
-        try:
-            be_comment_result = es_comment.mget(index=be_comment_index_name, doc_type=be_comment_index_type,\
-                                                body={'ids':iter_uid_list})['docs']
-        except:
-            be_comment_result = []
+        be_comment_result = es_comment.mget(index=be_comment_index_name, doc_type=be_comment_index_type, body={'ids':iter_uid_list})['docs']
         be_comment_dict = dict() #{uid1:{uid_be_comment dict}, uid2:{},...}
         for item in be_comment_result:
             uid = item['_id']
             #test for error es
-            try:
-                if item['found'] == True:
-                    be_comment_dict[uid] = json.loads(item['_source']['uid_be_comment'])
-            except:
-                pass
+            if item['found'] == True:
+                be_comment_dict[uid] = json.loads(item['_source']['uid_be_comment'])
+
         #step7:union retweet&comment, be_retweet&be_comment
         for iter_uid in iter_uid_list:
-            try:
-                user_retweet_result = retweet_dict[iter_uid]
-            except:
-                user_retweet_result = {}
-            try:
-                user_comment_result = comment_dict[iter_uid]
-            except:
-                user_comment_result = {}
+            user_retweet_result = retweet_dict[iter_uid]
+            user_comment_result = comment_dict[iter_uid]
             filter_in_dict, filter_out_dict = filter_union_dict([user_retweet_result, user_comment_result], uid_list, 'in&out')
             #step8: record the retweet/coment relaton in group uid 
             uid_in_record = [[iter_uid, ruid, filter_in_dict[ruid], uid2uname[iter_uid], uid2uname[ruid]] for ruid in filter_in_dict if iter_uid != ruid]
             all_in_record.extend(uid_in_record)  # [[uid1, ruid1, count1],[uid1,ruid2,count2],[uid2,ruid2,count3],...]
             #step9: record the retweet/comment/be_retweet/be_comment relation out group uid
-            try:
-                user_be_retweet_result = be_retweet_dict[iter_uid]
-            except:
-                user_be_retweet_result = {}
-            try:
-                user_be_comment_result = be_comment_dict[iter_uid]
-            except:
-                user_be_comment_result = {}
+            user_be_retweet_result = be_retweet_dict[iter_uid]
+            user_be_comment_result = be_comment_dict[iter_uid]
             filter_out_dict = filter_union_dict([filter_out_dict, user_be_retweet_result, user_be_comment_result], uid_list, 'out')
             #step10: filter out user who is in user_portrait
-            try:
-                out_in_user_portrait = es_user_portrait.mget(index=portrait_index_name, doc_type=portrait_index_type,\
-                                    body={'ids':filter_out_dict.keys()}, _source=False, fields=['influence'])['docs']
-            except:
-                out_in_user_portrait = []
+            out_in_user_portrait = es_user_portrait.mget(index=portrait_index_name, doc_type=portrait_index_type, body={'ids':filter_out_dict.keys()}, _source=False, fields=['influence'])['docs']
             uid_out_record = []
             for out_in_item in out_in_user_portrait:
                 ruid = out_in_item['_id']
@@ -722,11 +525,7 @@ def get_attr_social(uid_list, uid2uname):
     sort_out_record = sorted(all_out_record, key=lambda x:x[3], reverse=True)[:GROUP_SOCIAL_OUT_COUNT]
     #get social out user uname
     sort_out_record_out_user = [item[1] for item in sort_out_record]
-    try:
-        user_profile_result = es_user_profile.mget(index=profile_index_name, doc_type=profile_index_type,\
-                body={'ids': sort_out_record_out_user}, _source=False, fields=['nick_name'])['docs']
-    except:
-        user_profile_result = []
+    user_profile_result = es_user_profile.mget(index=profile_index_name, doc_type=profile_index_type, body={'ids': sort_out_record_out_user}, _source=False, fields=['nick_name'])['docs']
     out_uid2uname = {}
     for user_profile_item in user_profile_result:
         uid = user_profile_item['_id']
@@ -764,10 +563,7 @@ def get_attr_social(uid_list, uid2uname):
     union_mention_dict = dict()
     for i in range(7, 0, -1):
         iter_ts = now_date_ts - i*DAY
-        try:
-            result_string_list = redis_cluster.hmget('at_'+str(iter_ts), uid_list)
-        except:
-            result_string = []
+        result_string_list = redis_cluster.hmget('at_'+str(iter_ts), uid_list)
         count = 0
         for uid in uid_list:
             result_dict = result_string_list[count]
@@ -775,11 +571,8 @@ def get_attr_social(uid_list, uid2uname):
                 result_dict = json.loads(result_dict)
             else:
                 result_dict = {}
-            try:
-                union_mention_dict[uid] = union_dict([union_mention_dict[uid], result_dict])
-            except:
-                union_mention_dict[uid] = result_dict
-                count += 1
+            union_mention_dict[uid] = union_dict([union_mention_dict[uid], result_dict])
+            count += 1
     #make [[uid1, @uname, count], [uid2, @uname, count], ...]
     mention_list = []
     for uid in union_mention_dict:
@@ -970,92 +763,6 @@ def get_influence_user(uid_list):
     results['influence_in_user'] = json.dumps(in_user_dict)
     results['influence_out_user'] = json.dumps(out_user_dict)
     return results
-
-#abandon in version:16-01-23
-'''
-def get_attr_social(uid_list):
-    result = {}
-    union_dict = {}
-    union_edge_count = 0
-    union_weibo_count = 0
-    union_user_set = set()
-    group_user_set = set(uid_list)
-    be_retweeted_out = 0
-    be_retweeted_count_out = 0
-    retweet_relation = []
-    out_beretweet_relation = []
-    for uid in uid_list:
-        in_stat_results = dict()
-        out_stat_results = dict()
-        for db_num in r_dict:
-            r_db = r_dict[db_num]
-            ruid_results = r_db.hgetall('retweet_'+str(uid))
-            if ruid_results:
-                for ruid in ruid_results:
-                    try:
-                        in_stat_results[ruid] += ruid_results[ruid]
-                    except:
-                        in_stat_results[ruid] = ruid_results[ruid]
-            br_uid_results = r_db.hgetall('be_retweet_'+str(uid))
-            if br_uid_results:
-                for br_uid in br_uid_results:
-                    try:
-                        out_stat_results[br_uid] += br_uid_results[br_uid]
-                    except:
-                        out_stat_results[br_uid] = br_uid_results[br_uid]
-        # record the retweet relation in group uid
-        uid_retweet_relation = [[uid, user, int(in_stat_results[user])] for user in in_stat_results if user in uid_list and user != uid]
-        retweet_relation.extend(uid_retweet_relation)
-        
-        # record the be_retweet relation out group uid but in user_portrait
-        uid_beretweet_relation = []
-        uid_beretweet = [user for user in out_stat_results if user not in uid_list]
-        es_portrait_result = es.mget(index='user_portrait', doc_type='user', body={'ids':uid_beretweet})['docs']
-        for be_retweet_item in es_portrait_result:
-            br_uid = be_retweet_item['_id']
-            beretweet_count = int(out_stat_results[br_uid])
-            try:
-                be_retweet_source = be_retweet_item['_source']
-                if be_retweet_source['influence']>=900:
-                    uid_beretweet_relation.append([uid, br_uid, be_retweet_source['uname'], beretweet_count, be_retweet_source['influence']])
-            except:
-                next
-        out_beretweet_relation.extend(uid_beretweet_relation)
-
-        retweet_user_set = set(in_stat_results.keys())
-        union_set = retweet_user_set & (group_user_set - set([uid]))
-        union_edge_count += len(union_set) # count the retweet edge number
-        if union_set:
-            for ruid in union_set:
-                union_weibo_count += int(in_stat_results[ruid])
-        union_user_set = union_user_set | union_set
-
-        #use to count the beretweeted by user who is out of the group
-        be_retweeted_user_set = set(out_stat_results.keys())
-        subtract_set = be_retweeted_user_set - set(uid_list)
-        be_retweeted_out += len(subtract_set)
-        be_retweeted_count_out_list = [int(out_stat_results[br_uid]) for br_uid in subtract_set]
-        be_retweeted_count_out += sum(be_retweeted_count_out_list)
-
-    result['density'] = float(union_edge_count) / (len(uid_list) * (len(uid_list)-1))
-    result['retweet_weibo_count'] = float(union_weibo_count) / len(uid_list)
-    result['retweet_user_count'] = float(len(union_user_set)) / len(uid_list)
-    result['be_retweeted_count_out'] = be_retweeted_count_out
-    result['be_retweeted_out'] = be_retweeted_out
-    if retweet_relation!=[]:
-        sort_retweet_relation = sorted(retweet_relation, key=lambda x:x[2], reverse=True)
-    else:
-        sort_retweet_relation = []
-    result['retweet_relation'] = json.dumps(sort_retweet_relation)
-    
-    if out_beretweet_relation!=[]:
-        sort_out_beretweet_relation = sorted(out_beretweet_relation, key=lambda x:x[4], reverse=True)
-    else:
-        sort_out_beretweet_relation = []
-    result['out_beretweet_relation'] = json.dumps(sort_out_beretweet_relation)
-    return result
-'''
-
 
 
 #use to get user activity trend
@@ -1683,129 +1390,7 @@ def get_attr_bci(uid_list):
     influence_dict['total_weibo_number'] = total_weibo_number
     #print 'results:', results
     return {'user_influence_list': json.dumps(results), 'total_weibo_number': total_weibo_number}, influence_dict
-           
 
-'''
-def get_attr_bci(uid_list):
-    result = dict()
-    influence_dict = {}
-    now_ts = time.time()
-    now_date = ts2datetime(now_ts-24*3600)
-    ts = datetime2ts(now_date)
-    #test
-    ts = datetime2ts('2013-09-07')
-    total_weibo_number = 0
-    origin_max_retweeted_number = 0
-    origin_max_retweeted_id = ''
-    origin_max_retweeted_user = ''
-    origin_max_comment_number = 0
-    origin_max_comment_id = ''
-    origin_max_comment_user = ''
-    retweet_max_retweeted_number = 0
-    retweet_max_retweeted_id = ''
-    retweet_max_retweeted_user = ''
-    retweet_max_comment_number = 0
-    retweet_max_comment_id = ''
-    retweet_max_comment_user = ''
-
-
-    fans_number = 0
-    origin_weibo_number = 0
-    retweeted_weibo_number = 0
-    origin_weibo_retweeted_total_number = 0
-    origin_weibo_comment_total_number = 0
-    retweeted_weibo_retweeted_total_number = 0
-    retweeted_weibo_comment_total_number = 0
-
-    origin_weibo_retweeted_top = 0
-    origin_weibo_comment_top = 0
-    retweeted_weibo_retweeted_top = 0
-    retweeted_weibo_comment_top = 0
-
-    for i in range(0, 7):
-        timestamp = ts - i*24*3600
-        date = ts2datetime(timestamp)
-        hash_key = ''.join(date.split('-'))
-        user_results = es_cluster.mget(index=hash_key, doc_type='bci', body={'ids':uid_list})['docs']
-        #print 'user_results:', user_results
-        for user_dict in user_results:
-        #try:
-            try:
-                user_item = user_dict['_source']
-            except:
-                next
-            total_weibo_number += user_item['origin_weibo_number']
-            total_weibo_number += user_item['retweeted_weibo_number']
-
-            # yuankun revise
-            origin_weibo_number += user_item['origin_weibo_number']
-            retweeted_weibo_number += user_item['retweeted_weibo_number']
-            origin_weibo_retweeted_top += user_item['origin_weibo_retweeted_top_number']
-            origin_weibo_comment_top += user_item['origin_weibo_comment_top_number']
-            retweeted_weibo_retweeted_top += user_item['retweeted_weibo_retweeted_top_number']
-            retweeted_weibo_comment_top += user_item['retweeted_weibo_comment_top_number']
-
-            origin_weibo_retweeted_top_number = user_item['origin_weibo_retweeted_top_number']
-            if origin_weibo_retweeted_top_number >= origin_max_retweeted_number:
-                origin_max_retweeted_number = origin_weibo_retweeted_top_number
-                origin_max_retweeted_id = user_item['origin_weibo_top_retweeted_id']
-                origin_max_retweeted_user = user_item['user']
-            origin_weibo_comment_top_number = user_item['origin_weibo_comment_top_number']
-            if origin_weibo_comment_top_number >= origin_max_comment_number:
-                origin_max_comment_number = origin_weibo_comment_top_number
-                origin_max_comment_id = user_item['origin_weibo_top_comment_id']
-                origin_max_comment_user = user_item['user']
-            retweeted_weibo_retweeted_top_number = user_item['retweeted_weibo_retweeted_top_number']
-            if retweeted_weibo_retweeted_top_number >= retweet_max_retweeted_number:
-                retweet_max_retweeted_number = retweeted_weibo_retweeted_top_number
-                retweet_max_retweeted_id = user_item['retweeted_weibo_top_retweeted_id']
-                retweet_max_retweeted_user = user_item['user']
-            retweeted_weibo_comment_top_number = user_item['retweeted_weibo_comment_top_number']
-            if retweeted_weibo_comment_top_number >= retweet_max_comment_number:
-                retweet_max_comment_number = retweeted_weibo_comment_top_number
-                retweet_max_comment_id = user_item['retweeted_weibo_top_comment_id']
-                retweet_max_comment_user = user_item['user']
-
-
-            # yuankun revise
-            fans_number += user_item['user_fansnum']
-            origin_weibo_retweeted_total_number += user_item['origin_weibo_retweeted_total_number']
-            origin_weibo_comment_total_number += user_item['origin_weibo_comment_total_number']
-            retweeted_weibo_retweeted_total_number += user_item['retweeted_weibo_retweeted_total_number']
-            retweeted_weibo_comment_total_number += user_item['retweeted_weibo_comment_total_number']
-
-
-        #except:
-        #pass
-
-    # yuankun revise
-
-    influence_dict['origin_weibo_retweeted_average_number'] = origin_weibo_retweeted_total_number/origin_weibo_number/7
-    influence_dict['origin_weibo_comment_average_number'] = origin_weibo_comment_total_number/origin_weibo_number/7
-    influence_dict['retweeted_weibo_retweeted_average_number'] = retweeted_weibo_retweeted_total_number/retweeted_weibo_number/7
-    influence_dict['retweeted_weibo_comment_average_number'] = retweeted_weibo_comment_total_number/retweeted_weibo_number/7
-    influence_dict['origin_weibo_retweeted_top_number'] = origin_weibo_retweeted_top/len(uid_list)/7
-    influence_dict['origin_weibo_comment_top_number'] = origin_weibo_comment_top/len(uid_list)/7
-    influence_dict['retweeted_weibo_retweeted_top_number'] = retweeted_weibo_retweeted_top/len(uid_list)/7
-    influence_dict['retweeted_weibo_comment_top_number'] = retweeted_weibo_comment_top/len(uid_list)/7
-    influence_dict['fans_number'] = fans_number
-    influence_dict['total_weibo_number'] = total_weibo_number
-
-    result['origin_max_retweeted_number'] = origin_max_retweeted_number
-    result['origin_max_retweeted_id'] = origin_max_retweeted_id
-    result['origin_max_comment_number'] = origin_max_comment_number
-    result['origin_max_comment_id'] = origin_max_comment_id
-    result['retweet_max_retweeted_number'] = retweet_max_retweeted_number
-    result['retweet_max_retweeted_id'] = retweet_max_retweeted_number
-    result['retweet_max_comment_number'] = retweet_max_comment_number
-    result['retweet_max_comment_id'] = retweet_max_comment_id
-    result['total_weibo_number'] = total_weibo_number
-    result['origin_max_retweeted_user'] = origin_max_retweeted_user
-    result['origin_max_comment_user'] = origin_max_comment_user
-    result['retweet_max_retweeted_user'] = retweet_max_retweeted_user
-    result['retweet_max_comment_user'] = retweet_max_comment_user
-    return result,influence_dict
-'''
 
 # yuankun revise
 def get_attr_influence(uid_list, bci_dict):
@@ -1877,33 +1462,6 @@ def get_attr_tightness(density, retweet_weibo_count, retweet_user_count):
                           tightness_weight_dict['retweet_user_count'] * math.log(retweet_user_count + 1)
     return result
 
-#abandon in version: 16-01-24
-'''
-def get_attr_geo_track(uid_list):
-    date_results = [] # results = {'2013-09-01':[(geo1, count1), (geo2, track2)], '2013-09-02'...} 7day
-    now_ts = time.time()
-    now_date = ts2datetime(now_ts)
-    #test
-    now_date = '2013-09-08'
-    ts = datetime2ts(now_date)
-    for i in range(7, 0, -1):
-        timestamp = ts - i*24*3600
-        ip_dict = dict()
-        results = redis_ip.hmget('ip_'+str(timestamp), uid_list)
-        for item in results:
-            if item:
-                item_dict = json.loads(item)
-                for ip_item in item_dict:
-                    try:
-                        ip_dict[ip_item] += item_dict[ip_item]
-                    except:
-                        ip_dict[ip_item] = item_dict[ip_item]
-        geo_dict = ip2geo(ip_dict)
-        sort_geo_dict = sorted(geo_dict.items(), key=lambda x:x[1], reverse=True)
-        date_key = ts2datetime(timestamp)
-        date_results.append([date_key, sort_geo_dict[:2]])
-    return {'geo_track': json.dumps(date_results)}
-'''
 
 def ip2geo(ip_dict):
     city_set = set()
@@ -2008,13 +1566,12 @@ def compute_group_task_v2():
     while True:
         task = r.rpop(group_analysis_queue_name)
         #test
-        #r.lpush(group_analysis_queue_name, task)
+        r.lpush(group_analysis_queue_name, task)
         if not task:
             break
         else:
             results = dict()
             task = json.loads(task)
-            print task
             task_name = task['task_name']
             uid_list = task['uid_list']
             submit_date = task['submit_date']  #submit_date = timestamp
@@ -2033,9 +1590,11 @@ def compute_group_task_v2():
                 if item['found'] == True:
                     uname = item['fields']['uname'][0]
                 uid2uname[uid] = uname
+
             #step1: get attr from es_user_portrait--basic/activity_geo/online_pattern/evaluate_index_his/preference/psycho_ratio
             uid_list = uid2uname.keys() #identify the uid is in user_portrait
             submit_user = task['submit_user']
+
             print 'get_attr_portrait'
             attr_in_portrait, tag_vector_result = get_attr_portrait(uid_list, submit_user)
             results['task_name'] = task_name
@@ -2044,10 +1603,12 @@ def compute_group_task_v2():
             results['state'] = task['state']
             results['submit_user'] = task['submit_user']
             results = dict(results, **attr_in_portrait)
+
             #step2: get attr from social es----es_retweet&es_comment
             print 'get_attr_social'
             attr_in_social = get_attr_social(uid_list, uid2uname)
             results = dict(results, **attr_in_social)
+
             #step3: get attr activity trend and activity_time----redis for activity time
             print 'get_attr_trend'
             attr_weibo_trend = get_attr_trend(uid_list) # {'activity_trend':[], 'activity_time':{}}
@@ -2081,7 +1642,7 @@ def compute_group_task_v2():
             #step10: add group tag
             add_group_tag(results['submit_user'], task_name, uid_list)
             #test
-            #break 
+            break 
 
 
 #test compute group task
@@ -2162,34 +1723,4 @@ if __name__=='__main__':
     log_time_ts = time.time()
     log_time_date = ts2datetime(log_time_ts)
     print 'cron/group/cron_group.py&end&' + log_time_date
-    
-    '''
-    #test
-    input_data = {}
-    input_data['task_name'] = u'媒体2'
-    
-    input_data['uid_list'] = ['2803301701', '1292808363', '2656274875', '2062994093', '1663937380', \
-                              '2651176564', '1999472465', '1855514017', '2127460165', '1887790981', '1639498782', \
-                              '1402977920', '1414148492', '3114175427', '2105426467']
-    #topic_model_result = get_attr_topic_model(input_data['uid_list'])
-    #result, tag_vector = get_attr_portrait(input_data['uid_list'])
-    #print 'activity geo vary:',len(json.loads(result['activity_geo_vary']))
-    #print 'main start geo:', result['main_start_geo']
-    #print 'main end geo:', result['main_end_geo']
-    #print 'geo detail vary:', len(json.loads(result['vary_detail_geo']))
-    
-    input_data['submit_date'] = datetime2ts('2013-09-08')
-    input_data['state'] = u'关注的媒体'
-    input_data['submit_user'] = 'admin'
-    input_data['task_type'] = 'analysis'
-    input_data['task_id'] = 'admin-媒体2'
-    #TASK = json.dumps(input_data)
-    #result = get_attr_evaluate_trend(input_data['uid_list'])
-    #result = compute_group_task()
-    #result = get_attr_sentiment_trend(input_data['uid_list'])
-    #print 'result activity_geo_detail', result['vary_detail_geo']
-    #print 'result main start geo:', result['main_start_geo']
-    #print 'result main end geo:', result['main_end_geo']
-    #print 'result topic model:', result['topic_model']
-    #print 'result:', result
-    '''
+

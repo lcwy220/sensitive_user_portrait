@@ -690,6 +690,7 @@ function social_click(){
 }
 
 function draw_social(data){
+    console.log("Network data: ");
     console.log(data);
 	Draw_group(data);
 	Draw_out_group(data);

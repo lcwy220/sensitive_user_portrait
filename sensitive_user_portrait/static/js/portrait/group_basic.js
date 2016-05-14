@@ -21,6 +21,7 @@ function draw_basic(data){
 
     var topics = data['topic'];
     var domains = data['domain'];
+    var politics = data['politics'];
 
     if(topics.length == 0){
         //$('#showmore_topic_influ').css('display', 'none');
@@ -33,6 +34,12 @@ function draw_basic(data){
         $('#group_domain').append('<div style="padding-top: 40%;margin-left:40%;">暂无数据</div>');
     }else{
         Draw_topic_group_spread(domains,'group_domain', 'influ_domain_WordList','showmore_domain');
+    }
+    if(politics.length == 0){
+        //$('#showmore_domain_influ').css('display', 'none');
+        $('#group_politics').append('<div style="padding-top: 40%;margin-left:40%;">暂无数据</div>');
+    }else{
+        Draw_topic_group_spread(politics,'group_politics', 'influ_politics_WordList','showmore_politics');
     }
 
     var div_name = 'sensitiveCloud';
@@ -53,6 +60,13 @@ function draw_basic(data){
         $('#influ_distribution').append('<div style="padding-top: 40%;margin-left:40%;">暂无数据</div>');
     }else{
         draw_influ_distribution(influ_his,'influ_distribution', '影响力排名');
+    }
+
+    var sensitive_his = data['sensitive_his'];
+    if(sensitive_his[1][1] == 0 & sensitive_his[1][5] == 1){
+        $('#group_sensitive_distribution').append('<div style="padding-top: 40%;margin-left:40%;">暂无数据</div>');
+    }else{
+        draw_influ_distribution(sensitive_his,'group_sensitive_distribution', '敏感度排名');
     }
 }
 

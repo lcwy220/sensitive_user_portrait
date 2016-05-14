@@ -111,9 +111,10 @@ def ajax_group_member():
 def ajax_activity_weibo():
     results = []
     task_name = request.args.get('task_name', '')
+    during = int(request.args.get('during', 4 * 3600))
     submit_user = request.args.get('submit_user', '')
     start_ts = int(request.args.get('start_ts', ''))
-    results = get_activity_weibo(task_name, submit_user, start_ts)
+    results = get_activity_weibo(task_name, submit_user, start_ts, time_segment=during)
     return json.dumps(results)
 
 

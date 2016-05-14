@@ -1,23 +1,35 @@
+function month_process(data){
+    console.log(data);
+    $('#active_geo').append("<div>");
+    for(var i in data){
+        $('#active_geo').append("日期：" + data[i][0] + "，位置：" + data[i][1]);
+    }
+    $('#active_geo').append("</div>");
+}
 function show_geo_track(data){
-    $('#track_weibo_user').empty();
+    $('#active_geo').empty();
     var html = '';
-    html += '<select id="select_track_weibo_user" style="max-width:150px;">';
+    html += '<div id="select_track_weibo_user" style="">';
     for (var i = 0; i < data.length; i++) {
         if(data[i][1]=='unknown'){
             data[i][1] = '未知('+ data[i][0] +')';
 		}
-        html += '<option value="' + data[i][0] + '">' + data[i][1] + '</option>';
+        html += '<div value="' + data[i][0] + '">' + data[i][1] + ' 注册地：' + data[i][3] + '</div>';
+        var group_track_url = '/group/show_group_member_track/?uid=' + data[i][0];
+        call_sync_ajax_request(group_track_url, ajax_method, month_process);
     }
-    html += '</select>';
-    $('#track_weibo_user').append(html);
-
+    html += '</div>';
+    $('#active_geo').append(html);
+    /*
     $('#track_user_commit').click(function(){
         var track_user_id = $('#select_track_weibo_user').val();
         var group_track_url = '/group/show_group_member_track/?uid=' + track_user_id;
         call_sync_ajax_request(group_track_url,ajax_method, month_process);
     });
-    track_init();
+    */
+    //track_init();
 }
+/*
 function track_init(){
     require.config({
         paths: {
@@ -56,6 +68,7 @@ function track_init(){
     }
 );
 }
+*/
 
 function Draw_top_location(data){
 	var timeline_data = [];
@@ -176,6 +189,7 @@ function Draw_top_location(data){
                     
 }
 
+/*
 function moving_geo(data){
     //var data = {'北京&上海2': 150,'北京2&上海': 122,'北京2&上海2': 170,'北京4&上海2': 750, '北京5&上海': 120};
     var dealt_data = get_max_data(data);
@@ -240,6 +254,7 @@ function Draw_more_moving_geo(from_city, end_city, dealt_data){
     html += '</table>'; 
     $('#move_location_more_detail').append(html);
 }
+*/
 
 function show_geo(data){
 	console.log("geo data: ");
@@ -248,7 +263,7 @@ function show_geo(data){
 	Draw_top_location(data.activity_geo_disribution);
 
 	//位置转移统计
-    moving_geo(data.activiy_geo_vary);
+    //moving_geo(data.activiy_geo_vary);
     //var data333 = {'北京&上海2': 150,'北京2&上海': 122,'北京2&上海2': 170,'北京4&上海2': 750, '北京5&上海': 120};
 }
 
