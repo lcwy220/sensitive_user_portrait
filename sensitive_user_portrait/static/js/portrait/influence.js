@@ -677,7 +677,7 @@ function click_action(){
 		console.log("sdfghjk");
         $("#float-wrap").removeClass("hidden");
         $("#sensitive_retweet_distribution_content").removeClass("hidden");
-        var all_influenced_users_url_style0 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid+'&date='+date_str+'&sensitive=0';
+        var all_influenced_users_url_style0 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid+'&date='+date_str+'&sensitive=1';
         //console.log(all_influenced_users_url_style0);
         Influence.call_ajax_request(all_influenced_users_url_style0, Influence.ajax_method, Influence.Draw_pie_all0_sensitive);
         return false;
@@ -694,7 +694,7 @@ function click_action(){
 	  $("#sensitive_comment_distribution").live("click",function(){
         $("#float-wrap").removeClass("hidden");
         $("#sensitive_comment_distribution_content").removeClass("hidden");
-        var all_influenced_users_url_style1 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid +'&date='+date_str+'&sensitive=0';
+        var all_influenced_users_url_style1 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid +'&date='+date_str+'&sensitive=1';
         console.log(all_influenced_users_url_style1);
         Influence.call_ajax_request(all_influenced_users_url_style1, Influence.ajax_method, Influence.Draw_pie_all1_sensitive);
         return false;
