@@ -39,7 +39,8 @@ from sensitive_user_portrait.parameter import SENTIMENT_SECOND
 from sensitive_user_portrait.parameter import RUN_TYPE, RUN_TEST_TIME, WORK_TYPE
 from sensitive_user_portrait.get_user_info import get_evaluate_max, normalize_index
 
-r_beigin_ts = datetime2ts(R_BEGIN_TIME)
+r_begin_ts = datetime2ts(R_BEGIN_TIME)
+
 
 
 emotion_mark_dict = {'126': 'positive', '127':'negative', '128':'anxiety', '129':'angry'}
