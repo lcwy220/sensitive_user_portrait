@@ -495,7 +495,9 @@ function confirm_ok(data){
 }
 function bind_social_mode_choose(){
     $('#detail #graph_button').click(function(){
-      var select_graph = $('input[name="graph-type"]:checked').val();
+      //var select_graph = $('input[name="graph-type"]:checked').val();
+	  var weibo_type = $("#weibo_type").val();
+	  var select_graph = $("#weibo_way").val();
       var select_num=document.getElementById('num-range').value;
       var UserName = document.getElementById('nickname').innerHTML;
         $("#test1").empty();
@@ -506,45 +508,45 @@ function bind_social_mode_choose(){
       if (select_graph == 1){
           var test_html='转发情况 <hr style="margin-top:10px;margin-right:20px;" /> ';
         $("#test0").append(test_html);
-        var url = '/attribute/attention/?uid='+uid+'&top_count='+select_num  ;
+        var url = '/attribute/attention/?uid='+uid+'&top_count='+select_num+'&sensitive='+ weibo_type ;
         Attention.call_sync_ajax_request(url, Attention.ajax_method, Attention.Draw_attention);
       }
       else if(select_graph == 2){
         var test_html='被转发情况 <hr style="margin-top:10px;margin-right:20px;" /> ';
         $("#test0").append(test_html);
-        var url = '/attribute/follower/?uid='+uid+'&top_count='+select_num ;
+        var url = '/attribute/follower/?uid='+uid+'&top_count='+select_num+'&sensitive='+ weibo_type ;
         Attention.call_sync_ajax_request(url, Attention.ajax_method, Attention.Draw_attention);
       }
       else if(select_graph == 3){
         var test_html='提及情况 <hr style="margin-top:10px;margin-right:20px;" /> ';
         $("#test0").append(test_html);
-        var url = '/attribute/mention/?uid='+uid+'&top_count='+select_num  ;
+        var url = '/attribute/mention/?uid='+uid+'&top_count='+select_num +'&sensitive='+ weibo_type ;
         Attention.call_sync_ajax_request(url, Attention.ajax_method, Attention.Draw_attention);
       }
       else if(select_graph == 4){
         var test_html='评论情况 <hr style="margin-top:10px;margin-right:20px;" /> ';
         $("#test0").append(test_html);
-        var url = '/attribute/comment/?uid='+uid+'&top_count='+select_num  ;
+        var url = '/attribute/comment/?uid='+uid+'&top_count='+select_num +'&sensitive='+ weibo_type ;
         Attention.call_sync_ajax_request(url, Attention.ajax_method, Attention.Draw_attention);
         //Comment.call_sync_ajax_request(url, Comment.ajax_method, Comment.Draw_picture);
       }
       else if(select_graph == 5){
         var test_html='被评论情况 <hr style="margin-top:10px;margin-right:20px;" /> ';
         $("#test0").append(test_html);
-        var url = '/attribute/be_comment/?uid='+uid+'&top_count='+select_num  ;
+        var url = '/attribute/be_comment/?uid='+uid+'&top_count='+select_num+'&sensitive='+ weibo_type   ;
         Attention.call_sync_ajax_request(url, Attention.ajax_method, Attention.Draw_attention);
         //Comment.call_sync_ajax_request(url, Comment.ajax_method, Comment.Draw_picture);
       }
       else if(select_graph == 6){
         var test_html='互动情况 <hr style="margin-top:10px;margin-right:20px;" /> ';
         $("#test0").append(test_html);
-        var url = '/attribute/bidirect_interaction/?uid='+uid+'&top_count='+select_num  ;
+        var url = '/attribute/bidirect_interaction/?uid='+uid+'&top_count='+select_num +'&sensitive='+ weibo_type  ;
         Attention.call_sync_ajax_request(url, Attention.ajax_method, Attention.Draw_attention);
       }      
     });
 }
 function social_load(){
-    var url = '/attribute/attention/?uid='+uid+'&top_count='+select_num ;
+    var url = '/attribute/attention/?uid='+uid+'&top_count='+select_num+'&sensitive=0' ;
     Attention.call_sync_ajax_request(url, Attention.ajax_method, Attention.Draw_attention);
     bind_social_mode_choose();
 }
