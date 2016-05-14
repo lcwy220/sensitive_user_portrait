@@ -6,7 +6,6 @@ import math
 from elasticsearch import Elasticsearch
 from sensitive_user_portrait.global_utils import es_user_portrait as es
 from sensitive_user_portrait.global_utils import portrait_index_name, portrait_index_type
-#from sensitive_user_portrait.filter_uid import all_delete_uid
 from sensitive_user_portrait.global_utils import R_ADMIN
 
 #use to get evaluate max

@@ -44,6 +44,15 @@ from time_utils import ts2datetime, datetime2ts, datetimestr2ts, ts2date
 
 r_begin_ts = datetime2ts(R_BEGIN_TIME)
 
+#use to merge dict
+#input: dict1, dict2, dict3...
+#output: merge dict
+def union_dict(*objs):
+    _keys = set(sum([obj.keys() for obj in objs], []))
+    _total = {}
+    for _key in _keys:
+        _total[_key] = sum([int(obj.get(_key, 0)) for obj in objs])
+    return _total
 
 #use to merge dict list
 #input: dict_list
@@ -445,10 +454,11 @@ def get_attr_social(uid_list, uid2uname):
     db_num = get_db_num(timestamp)
     retweet_index_name = retweet_index_name_pre + str(db_num)
     be_retweet_index_name = be_retweet_index_name_pre + str(db_num)
+    comment_index_name = comment_index_name_pre + str(db_num)
+    be_comment_index_name = be_comment_index_name_pre + str(db_num)
     #step2: split uid list to iter mget
     iter_count = 0
     all_user_count = len(uid_list)
-    print '-----', uid_list
     in_stat_results = dict()
     out_stat_result = dict()
     all_in_record = []
@@ -458,17 +468,15 @@ def get_attr_social(uid_list, uid2uname):
     while iter_count < all_user_count:
         iter_uid_list = uid_list[iter_count:iter_count+GROUP_ITER_COUNT]
         #step3:mget retweet
-        #try:
         retweet_result = es_retweet.mget(index=retweet_index_name, doc_type=retweet_index_type, body={'ids':iter_uid_list})['docs']
-        print retweet_result
-        #except:
-        #    retweet_result = []
         retweet_dict = {} #{uid1: {ruid1:count1, ruid2:count2}, uid2:{},...}
         for item in retweet_result:
             uid = item['_id']
             #tesit for error es
             if item['found'] == True:
                 retweet_dict[uid] = json.loads(item['_source']['uid_retweet'])
+            else:
+                retweet_dict[uid] = {}
 
         #step4:mget comment
         comment_result = es_comment.mget(index=comment_index_name, doc_type=comment_index_type, body={'ids':iter_uid_list})['docs']
@@ -477,6 +485,8 @@ def get_attr_social(uid_list, uid2uname):
             uid = item['_id']
             if item['found'] == True:
                 comment_dict[uid] = json.loads(item['_source']['uid_comment'])
+            else:
+                comment_dict[uid] = {}
 
         #step5:mget be_retweet
         be_retweet_result = es_comment.mget(index=be_retweet_index_name, doc_type=be_retweet_index_type, body={'ids':iter_uid_list})['docs']
@@ -486,6 +496,8 @@ def get_attr_social(uid_list, uid2uname):
             #test for error es
             if item['found'] == True:
                 be_retweet_dict[uid] = json.loads(item['_source']['uid_be_retweet'])
+            else:
+                be_retweet_dict[uid] = {}
 
         #step6:mget be_comment
         be_comment_result = es_comment.mget(index=be_comment_index_name, doc_type=be_comment_index_type, body={'ids':iter_uid_list})['docs']
@@ -495,6 +507,8 @@ def get_attr_social(uid_list, uid2uname):
             #test for error es
             if item['found'] == True:
                 be_comment_dict[uid] = json.loads(item['_source']['uid_be_comment'])
+            else:
+                be_comment_dict[uid] = {}
 
         #step7:union retweet&comment, be_retweet&be_comment
         for iter_uid in iter_uid_list:
@@ -525,7 +539,11 @@ def get_attr_social(uid_list, uid2uname):
     sort_out_record = sorted(all_out_record, key=lambda x:x[3], reverse=True)[:GROUP_SOCIAL_OUT_COUNT]
     #get social out user uname
     sort_out_record_out_user = [item[1] for item in sort_out_record]
-    user_profile_result = es_user_profile.mget(index=profile_index_name, doc_type=profile_index_type, body={'ids': sort_out_record_out_user}, _source=False, fields=['nick_name'])['docs']
+    if len(sort_out_record_out_user):
+        user_profile_result = es_user_profile.mget(index=profile_index_name, doc_type=profile_index_type, body={'ids': sort_out_record_out_user}, _source=False, fields=['nick_name'])['docs']
+    else:
+        user_profile_result = []
+
     out_uid2uname = {}
     for user_profile_item in user_profile_result:
         uid = user_profile_item['_id']
@@ -571,7 +589,11 @@ def get_attr_social(uid_list, uid2uname):
                 result_dict = json.loads(result_dict)
             else:
                 result_dict = {}
-            union_mention_dict[uid] = union_dict([union_mention_dict[uid], result_dict])
+            try:
+                union_mention_dict[uid] = union_dict(union_mention_dict[uid], result_dict)
+            except:
+                union_mention_dict[uid] = union_dict({}, result_dict)
+
             count += 1
     #make [[uid1, @uname, count], [uid2, @uname, count], ...]
     mention_list = []
@@ -1566,7 +1588,7 @@ def compute_group_task_v2():
     while True:
         task = r.rpop(group_analysis_queue_name)
         #test
-        r.lpush(group_analysis_queue_name, task)
+        #r.lpush(group_analysis_queue_name, task)
         if not task:
             break
         else:
@@ -1642,7 +1664,7 @@ def compute_group_task_v2():
             #step10: add group tag
             add_group_tag(results['submit_user'], task_name, uid_list)
             #test
-            break 
+            #break 
 
 
 #test compute group task

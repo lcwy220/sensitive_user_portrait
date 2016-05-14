@@ -7,7 +7,7 @@ from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts
 attribute_index_name = 'custom_attribute'
 attribute_index_type = 'attribute'
 
-user_index_name = 'test_sensitive_user_portrait'
+user_index_name = 'sensitive_user_portrait'
 user_index_type = 'user'
 
 group_index_name = 'group_result'
@@ -95,6 +95,7 @@ def delete_attribute(attribute_name):
     # delete attribute in user_portrait
     query = []
     attribute_value = result['attribute_value'].split('&')
+    attribute_name = "tag-" + str(attribute_name)
     for value in attribute_value:
         query.append({'match':{attribute_name: value}})
     try:
@@ -139,6 +140,7 @@ def add_attribute_portrait(uid, attribute_name, attribute_value, submit_user):
     attribute_value_list = attribute_result['attribute_value'].split('&')
     if attribute_value not in attribute_value_list:
         return 'no attribute value'
+    attribute_name = "tag-" + str(attribute_name)
     if attribute_name in user_result:
         return 'attribute exist'
     add_attribute_dict = {attribute_name: attribute_value}
@@ -165,6 +167,7 @@ def change_attribute_portrait(uid, attribute_name, attribute_value, submit_user)
     value_list = attribute_result['attribute_value'].split('&')
     if attribute_value not in value_list:
         return 'no attribute value'
+    attribute_name = "tag-" + str(attribute_name)
     change_attribute_dict = {attribute_name: attribute_value}
     es.update(index=user_index_name, doc_type=user_index_type, id=uid, body={'doc': change_attribute_dict})
     status = True
@@ -180,6 +183,7 @@ def delete_attribute_portrait(uid, attribute_name, submit_user):
         user_exist = es.get(index=user_index_name, doc_type=user_index_type, id=uid)['_source']
     except:
         return 'no user'
+    attribute_name = "tag-"+str(attribute_name)
     if attribute_name not in user_exist:
         return 'user have no attribtue'
     try:
@@ -215,8 +219,10 @@ def get_user_tag(uid_list):
         except:
             source = {}
         for key in source:
-            if key not in identify_attribute_list:
+            if "tag-" in key:
                 value = source[key]
+                temp_list = key.split('-')
+                key = "-".join(temp_list[1:])
                 tag_string = key+':'+value
                 result[uid].append(tag_string)
 
@@ -241,6 +247,7 @@ def add_tag2group(uid_list, attribute_name, attribute_value):
             user_exist = es.get(index=user_index_name, doc_type=user_index_type, id=uid)['_source']
         except:
             user_exist = {}
+        attribute_name = "tag-" + str(attribute_name)
         if user_exist and attribute_name not in user_exist:
             add_attribute_dict = {attribute_name: attribute_value}
             es.update(index=user_index_name, doc_type=user_index_type, id=uid, body={'doc':add_attribute_dict})
@@ -294,13 +301,15 @@ def get_group_tag(group_name):
         raise e
     for user_item in user_result:
         uid = user_item['_id']
-        try:
+        if user_item["found"]:
             source = user_item['_source']
-        except:
+        else:
             source = {}
         for key in source:
-            if key not in identify_attribute_list:
+            if "tag_" in key:
                 value = source[key]
+                tmp_list = key.split("-")
+                key = "-".join(tmp_list[1:])
                 tag_string = key + ':' + value
                 try:
                     result[tag_string] += 1
@@ -348,6 +357,8 @@ def get_user_attribute_name(uid):
     except:
         source = {}
     for key in source:
-        if key not in identify_attribute_list:
+        if "tag-" in key:
+            temp_list = key.split("-")
+            key = "-".join(temp_list[1:])
             result.append(key)
     return result
