@@ -114,7 +114,7 @@ def get_total_evaluation(uid):
     return results
 
 
-def search_user_weibo(uid):
+def search_user_weibo(uid, order="timestamp"):
     sensitive_results = []
     results = []
     if RUN_TYPE:
@@ -124,8 +124,15 @@ def search_user_weibo(uid):
         ts = datetime2ts('2013-09-03')
         date = "2013-09-02"
     start_ts = datetime2ts(date)
-    index_name = "flow_text_" + date
-    exist_bool = es_flow_text.indices.exists(index=index_name)
+    index_list = []
+    for i in range(7):
+        ts = start_ts - i*3600*24
+        index_name = "flow_text_" + str(ts2datetime(ts))
+        exist_bool = es_flow_text.indices.exists(index=index_name)
+        if exist_bool:
+            index_list.append(index_name)
+        else:
+            break
     query_body = {
         "query":{
             "bool":{
@@ -141,28 +148,39 @@ def search_user_weibo(uid):
                 ]
             }
         },
-        "sort":{"timestamp":{"order":"desc"}},
+        "sort":{order:{"order":"desc"}},
         "size":1000
     }
-    if exist_bool:
-        flow_results = es_flow_text.search(index=index_name, doc_type="text", body=query_body, _source=False, fields=["text", "geo", "message_type","timestamp"])['hits']['hits']
+    if index_list:
+        flow_results = es_flow_text.search(index=index_list, doc_type="text", body=query_body)['hits']['hits']
         for item in flow_results:
+            source = item['_source']
             temp = []
-            temp.append(item['fields']['text'][0])
-            temp.append(item['fields']['geo'][0])
-            temp.append(item['fields']['message_type'][0])
-            temp.append(ts2date(item['fields']['timestamp'][0]))
+            temp.append(source['text'])
+            temp.append(source['geo'])
+            temp.append(source['message_type'])
+            temp.append(ts2date(source['timestamp']))
+            temp.append(int(source['timestamp']))
+            temp.append(source.get("retweeted", 0))
+            temp.append(source.get("comment", 0))
+            temp.append(source.get("sensitive", 0))
             results.append(temp)
 
+        query_body['query']['bool']['must'].remove({"term":{"sensitive":0}})
         query_body['query']['bool']['must'].append({"range":{"sensitive":{"gt":0}}})
-        sensitive_flow_results = es_flow_text.search(index=index_name, doc_type="text", body=query_body, _source=False, fields=["text", "geo", "message_type", "sensitive_words_string", "timestamp"])['hits']['hits']
+        sensitive_flow_results = es_flow_text.search(index=index_list, doc_type="text", body=query_body)['hits']['hits']
         for item in sensitive_flow_results:
             temp = []
-            temp.append(item['fields']['text'][0])
-            temp.append(item['fields']['geo'][0])
-            temp.append(item['fields']['message_type'][0])
-            temp.append(ts2date(item['fields']['timestamp'][0]))
-            temp.append(" ".join(item['fields']['sensitive_words_string'][0].split('&')))
+            source = item['source']
+            temp.append(source['text'])
+            temp.append(source['geo'])
+            temp.append(source['message_type'])
+            temp.append(ts2date(source['timestamp']))
+            temp.append(" ".join(source['sensitive_words_string'].split('&')))
+            temp.append(int(source['timestamp']))
+            temp.append(source.get("retweeted", 0))
+            temp.append(source.get("comment", 0))
+            temp.append(source.get("sensitive", 0))
             sensitive_results.append(temp)
 
     return sensitive_results, results
@@ -2710,9 +2728,9 @@ def search_sentiment_trend(uid, time_type, now_ts):
         description_text = u'该用户今日主要情绪为'
         description = [description_text, max_sentiment]
         new_time_list = [ts2date(item) for item in time_list]
-        negtive_count = len(trend_results['2'])
-        neutral_count = len(trend_results['0'])
-        total_count = len(trend_results['2']) + len(trend_results['1']) +len(trend_results['2'])
+        negtive_count = sum(trend_results['2'])
+        neutral_count = sum(trend_results['0'])
+        total_count = sum(trend_results['2']) + sum(trend_results['1']) +sum(trend_results['2'])
         if total_count == 0:
             negetive_index = 0
             negtive_influence = 0
@@ -2760,9 +2778,9 @@ def search_sentiment_trend(uid, time_type, now_ts):
         description = [description_text, max_sentiment]
 
         time_list = [ts2datetime(item) for item in results['time_list']]
-        negtive_count = len(trend_results['2'])
-        neutral_count = len(trend_results['0'])
-        total_count = len(trend_results['2']) + len(trend_results['1']) +len(trend_results['2'])
+        negtive_count = sum(trend_results['2'])
+        neutral_count = sum(trend_results['0'])
+        total_count = sum(trend_results['2']) + sum(trend_results['1']) +sum(trend_results['2'])
         if total_count == 0:
             negetive_index = 0
             negtive_influence = 0
