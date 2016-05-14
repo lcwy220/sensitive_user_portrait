@@ -19,7 +19,6 @@ from sensitive_user_portrait.parameter import DEFAULT_SENTIMENT, DAY
 from sensitive_user_portrait.parameter import RUN_TYPE, RUN_TEST_TIME, WORK_TYPE
 from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts
 from personal_influence import get_user_influence, influenced_detail, influenced_people, influenced_user_detail, statistics_influence_people, tag_vector, comment_on_influence, detail_weibo_influence, influence_summary
-#from description import conclusion_on_influence
 
 
 # use to test 13-09-08
@@ -39,7 +38,7 @@ def ajax_portrait_attribute():
     if results:
         return json.dumps(results)
     else:
-        return None
+        return json.dumps(None)
 
 
 #get preference attribute
