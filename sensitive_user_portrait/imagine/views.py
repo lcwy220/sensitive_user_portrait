@@ -23,6 +23,20 @@ def ajax_portrait_related():
         results["domain"] = portrait_result['domain']
         results["topic"] = portrait_result["topic_string"].replace("&", " ")
         results["politics"] = portrait_result["politics"]
+        custom_tag = []
+        for key in portrait_result:
+            if "tag-" in key:
+                tag_value = portrait_result[key]
+                temp_list = key.split("-")
+                key = temp_list[1:]
+                custom_string = key + "-" + tag_value
+                custom_tag.append([key, tag_value])
+        if custom_tag:
+            results["tag_detail"] = custom_tag
+            results["tag_string"] = custom_string
+        else:
+            results["tag_detail"] = []
+            results["tag_string"] = ""
         sensitive_words_dict = json.loads(portrait_result["sensitive_words_dict"])
         if sensitive_words_dict:
             sorted_sensitive_words = sorted(sensitive_words_dict.items(), key=lambda x:x[1], reverse=True)
