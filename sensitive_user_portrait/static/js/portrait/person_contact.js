@@ -298,7 +298,7 @@ function Show_tag(data){
     else{
       for(var i = 0; i < data.length; i++){
         html += '<div class="col-lg-3" style="margin-bottom:4px">';
-        html += '<input type="checkbox" class="inline-checkbox" value="option1">';
+        // html += '<input type="checkbox" class="inline-checkbox" value="option1">';
         html += '<span class="input-group-addon" style="width:96px;border:1px solid white; background-color:white;display:inline-block" id="'+ data[i] +'">'+ data[i] +' *</span>';
         html += '<input type="text" class="form-control" style="width:40%; display:inline;height:25px;margin-left:7px" disabled>';
         html += '</div>';
@@ -343,16 +343,16 @@ $('.label-success').click(function(){
     }
 });
 
-$('.inline-checkbox').click(function(){
-    if($(this).is(':checked')){
-        $(this).next().next().val('1');
-        $(this).next().next().attr('disabled',false);
-    }
-    else{
-        $(this).next().next().val('');
-        $(this).next().next().attr('disabled',true);
-    }
-});
+// $('.inline-checkbox').click(function(){
+//     if($(this).is(':checked')){
+//         $(this).next().next().val('1');
+//         $(this).next().next().attr('disabled',false);
+//     }
+//     else{
+//         $(this).next().next().val('');
+//         $(this).next().next().attr('disabled',true);
+//     }
+// });
 
 //获取选择的条件，把参数传出获取返回值
 function get_choose_data(uid){
@@ -361,22 +361,24 @@ function get_choose_data(uid){
     var weight = new Array();
     var field ;
     var isflag = 1;
-    $('.inline-checkbox').each(function(){
-        if($(this).is(':checked')){
-            keywords.push($(this).next().attr('id'));
-            if($(this).next().next().val() > 10 || $(this).next().next().val < 1 ){
-                alert("请输入1到10之间的权重");
-                isflag = 0;
-            }else{
-                weight.push($(this).next().next().val());
-            }
+    $('.input-group-addon').each(function(){
+        if ($(this).attr('id') != ''){ 
+        keywords.push($(this).attr('id'));
+        var value = $(this).next().val();
+        if((parseInt(value) != value) || (value > 10) || (value < 0 )){
+            alert("请输入0-10的整数");
+            isflag = 0;
+            return false;
+        }else{
+            weight.push(value);
+        }
         }
     });
-    $('[type="radio"]').each(function(){
-        if($(this).is(':checked')){
-            field = $(this).attr('id');
-        }
-    });
+    // $('[type="radio"]').each(function(){
+    //     if($(this).is(':checked')){
+    //         field = $(this).attr('id');
+    //     }
+    // });
     if(isflag == 1){
         url = url + keywords.join(',') + '&weight=' + weight.join(',') + '&field=' +field ;
     }
