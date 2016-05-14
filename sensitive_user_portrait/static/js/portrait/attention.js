@@ -342,7 +342,8 @@ function draw_out_list(data){
 function draw_in_list(data){
   ////console.log(personalData.uname);
   ////console.log(uname);
-    var select_graph = $('input[name="graph-type"]:checked').attr("title");
+    //var select_graph = $('input[name="graph-type"]:checked').attr("title");
+	var select_graph =$("#weibo_way").val();
     if(personalData.uname == 'unknown'){
       var uname = '未知';
     }else if(personalData.uname == 'undefined'){
