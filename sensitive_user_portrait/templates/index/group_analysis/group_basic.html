@@ -107,7 +107,7 @@
 </div>
 <div class="col-lg-4">
     <div class="panel panel-default">
-        <div class="panel-heading" style="border-bottom: 1px solid transparent;border-color: #dddddd;">
+        <div class="panel-heading" style="border-bottom: 1px solid transparent;border-color: #dddddd;"><span class="showmore" id="showmore_topic_influ" style="float:right;cursor:pointer" type="button"data-toggle="modal" data-target="#more_sen" ><u>敏感微话题</u></span>
             微话题词云
         </div>
         <div class="panel-body">
@@ -162,6 +162,19 @@
         <h4 class="modal-title" style="font-size:18px" id="myModalLabel">话题排名</h4>
       </div>
       <div class="modal-body" id='topic_WordList'>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="more_sen" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="width: 500px;">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" style="font-size:18px" id="myModalLabel">敏感微话题</h4>
+      </div>
+      <div class="modal-body" id='sen_words'>
       </div>
     </div>
   </div>

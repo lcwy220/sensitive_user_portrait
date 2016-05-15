@@ -47,7 +47,7 @@ function draw_basic(data){
     var cloud_data = data['sensitive_words'];
     drawSensitiveCloud(div_name, c_title, cloud_data);
     var div_name = 'hashtagCloud';
-    var c_title = 'hashtag';
+    var c_title = '微话题';
     var cloud_data = data['hashtag'];
     drawSensitiveCloud(div_name, c_title, cloud_data);
     var div_name = 'psychologyState';
@@ -68,6 +68,20 @@ function draw_basic(data){
     }else{
         draw_influ_distribution(sensitive_his,'group_sensitive_distribution', '敏感度排名');
     }
+
+    $('#sen_words').empty();
+    var html = '';
+    html += '<table id="modal_online_pattern" class="table table-striped table-bordered bootstrap-datatable datatype responsive">';
+    html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">敏感微话题</th><th style="text-align:center">词频</th></tr>';
+    for (var i = 0; i < data['sensitive_hashtag'].length; i++) {
+       var s = i.toString();
+       var m = i + 1;
+       html += '<tr><th style="text-align:center">' + m + '</th><th style="text-align:center">' + data['sensitive_hashtag'][s]['0'] +  '</th><th style="text-align:center">' + data['sensitive_hashtag'][s]['1'] +  '</th></tr>';
+    };
+    html += '</table>'; 
+    $('#sen_words').append(html);  
+
+
 }
 
 //影响力分布
@@ -146,6 +160,7 @@ function createRandomItemStyle() {
 }
 
 function drawSensitiveCloud(div_name, c_title, cloud_data){
+ // console.log(c_title,cloud_data);
     var sensitiveChart = echarts.init(document.getElementById(div_name)); 
     function getCloudData(cloud_data){
         var chart_data = new Array();
@@ -254,6 +269,7 @@ function draw_tag(data){
 function Draw_topic_group_spread(data, radar_div, motal_div, show_more){
   var topic = [];
   var html = '';
+ // console.log(data);
     if(data[0][1] == 0){
       $('#'+ motal_div).empty();
       $('#'+ motal_div).empty();
@@ -289,65 +305,123 @@ function Draw_topic_group_spread(data, radar_div, motal_div, show_more){
       html += '</table>'; 
       $('#'+ motal_div).append(html);
     };
-    var topic_val = [];
-    topic_val.push(topic_name_sta);
-    topic_val.push(topic_sta);
-    var topic_result = [];
-    topic_result = get_radar_data(topic_val);
-  var topic_name = topic_result[0];
-  var topic_value = topic_result[1];
-  var myChart2 = echarts.init(document.getElementById(radar_div));
-  var option = {
-    // title : {
-    //   text: '用户话题分布',
-    //   subtext: ''
-    // },
-      tooltip : {
-        show: true,
-        trigger: 'axis',
-        formatter:  function (params){
-          var res  = '';
-          var indicator = params.indicator;
-          //console.log(params);
-          res += params['0'][3]+' : '+(params['0'][2]/10).toFixed(2);
-          return res;
-          }
-        },
-      toolbox: {
+
+
+
+    var legends = [];
+    for(i=0;i<data.length;i++){
+      var cons={};
+      name=data[i][0];
+      value=data[i][1];
+      cons.name=name;
+      cons.value=value;
+      legends.push[name];
+      topic.push(cons);
+    }
+var myChart2 = echarts.init(document.getElementById(radar_div));
+var option = {
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        orient : 'vertical',
+        x : 'left',
+        data:legends
+    },
+    toolbox: {
         show : true,
         feature : {
             mark : {show: true},
             dataView : {show: true, readOnly: false},
+            magicType : {
+                show: true, 
+                type: ['pie', 'funnel'],
+                option: {
+                    funnel: {
+                        x: '25%',
+                        width: '50%',
+                        funnelAlign: 'left',
+                        max: 1548
+                    }
+                }
+            },
             restore : {show: true},
             saveAsImage : {show: true}
         }
-      },
-      calculable : true,
-      polar : [
-       {
-        indicator :topic_name,
-        radius : 90
-       }
-      ],
-      series : [
-       {
-        name: '话题分布情况',
-        type: 'radar',
-        itemStyle: {
-         normal: {
-          areaStyle: {
-            type: 'default'
-          }
-         }
-        },
-       data : [
+    },
+    calculable : true,
+    series : [
         {
-         value : topic_value,
-         //name : '用户话题分布'
+            name:'访问来源',
+            type:'pie',
+            radius : '55%',
+            center: ['50%', '60%'],
+            data:topic
         }
-       ]
-      }]
-  };
+    ]
+};
+                    
+  //   var topic_val = [];
+  //   topic_val.push(topic_name_sta);
+  //   topic_val.push(topic_sta);
+  //   var topic_result = [];
+  //   topic_result = get_radar_data(topic_val);
+  // var topic_name = topic_result[0];
+  // var topic_value = topic_result[1];
+  // console.log(topic_result);
+  // var myChart2 = echarts.init(document.getElementById(radar_div));
+  // var option = {
+  //   // title : {
+  //   //   text: '用户话题分布',
+  //   //   subtext: ''
+  //   // },
+  //     tooltip : {
+  //       show: true,
+  //       trigger: 'axis',
+  //       formatter:  function (params){
+  //         var res  = '';
+  //         var indicator = params.indicator;
+  //         //console.log(params);
+  //         res += params['0'][3]+' : '+(params['0'][2]/10).toFixed(2);
+  //         return res;
+  //         }
+  //       },
+  //     toolbox: {
+  //       show : true,
+  //       feature : {
+  //           mark : {show: true},
+  //           dataView : {show: true, readOnly: false},
+  //           restore : {show: true},
+  //           saveAsImage : {show: true}
+  //       }
+  //     },
+  //     calculable : true,
+  //     polar : [
+  //      {
+  //       indicator :topic_name,
+  //       radius : 90
+  //      }
+  //     ],
+  //     series : [
+  //      {
+  //       name: '话题分布情况',
+  //       type: 'radar',
+  //       itemStyle: {
+  //        normal: {
+  //         areaStyle: {
+  //           type: 'default'
+  //         }
+  //        }
+  //       },
+  //      data : [
+  //       {
+  //        value : topic_value,
+  //        //name : '用户话题分布'
+  //       }
+  //      ]
+  //     }]
+  // };
   myChart2.setOption(option);
 }
 }
