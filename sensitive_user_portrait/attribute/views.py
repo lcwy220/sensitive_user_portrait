@@ -462,7 +462,6 @@ def ajax_current_tag_vector():
     results = tag_vector(uid, date)
 
     return json.dumps(results)
-"""
 
 @mod.route('/history_activeness_influence/')
 def ajax_history_activeness_influence():
@@ -483,3 +482,4 @@ def ajax_summary_influence():
     result = influence_summary(uid, date)
 
     return json.dumps(result)
+"""
