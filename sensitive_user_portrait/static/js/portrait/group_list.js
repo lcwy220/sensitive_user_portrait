@@ -33,7 +33,7 @@ Draw_resultTable: function(data){
 		html += '<td>'+item[i][2]+'</td>';
 		html += '<td>'+item[i][3]+'</td>';
 		if(item[i][4]==1){
-			html += '<td><a style="cursor:hand;" href="/index/group_analysis/?name=' + item[i][0]+ '">已完成</a></td><td><a href="javascript:void(0)" id="detail_analysis">查看详情</a>&nbsp;&nbsp;&nbsp;';
+			html += '<td><a style="cursor:hand;" href="/index/group_analysis/?task_name=' + item[i][0]+ '">已完成</a></td><td><a href="javascript:void(0)" id="detail_analysis">查看详情</a>&nbsp;&nbsp;&nbsp;';
 		}else{
 			html += '<td>正在计算</td><td>';
 		}
@@ -164,6 +164,7 @@ function control_click(){
 		var temp = $(this).parent().prev().prev().prev().prev().prev().html();
 		var remark0 =  $(this).parent().prev().prev().html();
 		url = '/index/group_analysis/?task_name='+temp;
+		console.log(url);
         window.open(url);
         /*
 		Group_analysis_task.call_sync_ajax_request(url,Group_analysis_task.ajax_method,draw_control_table);
