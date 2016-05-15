@@ -44,7 +44,6 @@ def ajax_search_attribute():
         if item:
             query_body.append({'match':{term: item}})
             condition_num += 1
-    print 'query_body,condition_num:', query_body, condition_num
     result = search_attribute(query_body, condition_num)
     return json.dumps(result)
 

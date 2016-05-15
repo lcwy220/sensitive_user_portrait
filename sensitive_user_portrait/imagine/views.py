@@ -83,14 +83,13 @@ def ajax_portrait_related():
 
 
 
-# politics, sensitive_words_string, domain, topic_string, hashtag_string, activity_geo,keywords_string
+# politics, sensitive_words_string, domain, topic_string, hashtag_string, activity_geo,keywords_string, tag
 @mod.route('/imagine/')
 def ajax_imagine():
     uid = request.args.get('uid', '') # uid
     query_keywords = request.args.get('keywords','') # query dict and corresponding weight
     query_weight = request.args.get('weight','')
     size = request.args.get('size', 100)
-    order = request.args.get('order', "fansnum")
     keywords_list = query_keywords.split(',')
     weight_list = query_weight.split(',')
 
@@ -99,7 +98,8 @@ def ajax_imagine():
 
     query_fields_dict = {}
     for i in range(len(keywords_list)):
-        query_fields_dict[keywords_list[i]] = int(weight_list[i])
+        if weight_list[i]:
+            query_fields_dict[keywords_list[i]] = int(weight_list[i])
 
     query_fields_dict['size'] = int(size)
     if uid and query_fields_dict:

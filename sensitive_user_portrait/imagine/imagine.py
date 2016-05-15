@@ -11,7 +11,7 @@ from sensitive_user_portrait.global_utils import R_ADMIN
 #use to get evaluate max
 def get_evaluate_max():
     max_result = {}
-    evaluate_index = ['influence', 'activeness', 'importance']
+    evaluate_index = ['influence', 'activeness', 'importance', 'sensitive']
     for evaluate in evaluate_index:
         query_body = {
             'query':{
@@ -31,28 +31,31 @@ def get_evaluate_max():
 
 def imagine(uid, query_fields_dict,index_name=portrait_index_name, doctype=portrait_index_type):
     default_setting_dict = query_fields_dict
+    print query_fields_dict
 
     personal_info = es.get(index=portrait_index_name, doc_type=portrait_index_type, id=uid, _source=True)['_source']
 
-    user_tag = submit_user + "-tag"
-    user_tag_string = personal_info.get(user_tag, "")
-    if user_tag_string:
-        tag_pairs_list = user_tag_string.split('&')
-    else:
-        tag_pairs_list = []
+    # tag
     tag_dict = dict()
-    if tag_pairs_list:
-        for item in tag_pairs_list:
-            iter_pair = item.split('-')
-            tag_dict[iter_pair[0]] = iter_pair[1]
+    tag_dict_value = 0
+    if "tag" in query_fields_dict:
+        tag_dict_value = query_fields_dict["tag"]
+        query_fields_dict.pop("tag")
+        for key,value in personal_info.iteritems():
+            if "tag-" in key:
+                tag_dict[key] = value
+    print tag_dict, tag_dict_value
+
+    # size
+    sort_size = query_fields_dict["size"]
+    query_fields_dict.pop("size")
 
     keys_list = []
     for k, v in query_fields_dict.iteritems():
         if v:
             keys_list.append(k) #需要进行关联的键
-    keys_list.remove('size')
 
-    search_dict = {}
+    search_dict = {} # 检索的属性字典
     iter_list = []
     tag_attri_vaule = []
 
@@ -67,14 +70,15 @@ def imagine(uid, query_fields_dict,index_name=portrait_index_name, doctype=portr
                 temp = personal_info[iter_key]
                 search_dict[iter_key] = temp.split('&')
 
-        else:
+            """
             query_fields_dict.pop(iter_key)
             if tag_dict.get(iter_key,''):
                 tag_attri_vaule.append(iter_key+"-"+tag_dict[iter_key])
-                
+            """
 
-    if len(iter_list) == 0 and len(tag_attri_vaule) == 0:
+    if len(iter_list) == 0 and len(tag_dict) == 0:
         return []
+
     query_body = {
         'query':{
             'function_score':{
@@ -87,17 +91,11 @@ def imagine(uid, query_fields_dict,index_name=portrait_index_name, doctype=portr
             }
         }
     }
+
     number = es.count(index=index_name, doc_type=doctype, body=query_body)['count']
-
-    query_body['size'] = 150 # default number
-    query_number = query_fields_dict['size'] #  required number
-    query_fields_dict.pop('size')
-
-    if tag_attri_vaule:
-        query_body['query']['function_score']['query']['bool']['must'].append({"terms":{user_tag:tag_attri_vaule}})
+    query_body["size"] = sort_size+100
 
     for (k,v) in query_fields_dict.items():
-
         temp = {}
         temp_list = []
         if k in personal_info and v != 0:
@@ -106,10 +104,16 @@ def imagine(uid, query_fields_dict,index_name=portrait_index_name, doctype=portr
 
             query_body['query']['function_score']['query']['bool']['must'].append({'bool':{'should':temp_list}})
 
-    #filter_uid = all_delete_uid()
+    if tag_dict and tag_dict_value:
+        temp_list = []
+        for k,v in tag_dict.iteritems():
+            temp = {"term":{k:v}}
+            temp_list.append(temp)
+        query_body['query']['function_score']['query']['bool']['must'].append({'bool':{'should':temp_list}})
+
     result = es.search(index=index_name, doc_type=doctype, body=query_body)['hits']['hits']
-    field_list = ['uid','uname', 'activeness','importance', 'influence']
-    evaluate_index_list = ['activeness', 'importance', 'influence']
+    field_list = ['uid','uname', 'activeness','importance', 'influence', 'sensitive']
+    evaluate_index_list = ['activeness', 'importance', 'influence', 'sensitive']
     return_list = []
     count = 0
 
@@ -139,7 +143,7 @@ def imagine(uid, query_fields_dict,index_name=portrait_index_name, doctype=portr
         return_list.append(info)
         count += 1
 
-        if count == query_number:
+        if count == sort_size:
             break
 
     return_list.append(number)
@@ -156,7 +160,6 @@ def imagine(uid, query_fields_dict,index_name=portrait_index_name, doctype=portr
     results = []
     results.append(temp_list)
     results.extend(return_list)
-    results.append(default_setting_dict)
 
 
     return results
