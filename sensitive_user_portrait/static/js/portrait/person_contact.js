@@ -279,18 +279,18 @@ var Search_weibo = new Search_weibo();
 //var user_tag = '/tag/show_user_attribute_name/?uid='+ uid;
 //Search_weibo.call_sync_ajax_request(user_tag, Search_weibo.ajax_method, Show_tag);
 
-Search_weibo.call_sync_ajax_request(get_choose_data(uid), Search_weibo.ajax_method, Search_weibo.Draw_table);
-Search_weibo.Draw_picture(Search_weibo.data);
-var show_user_tag_url = '/tag/show_user_tag/?uid_list=' + id_string;
-Search_weibo.call_sync_ajax_request(show_user_tag_url, Search_weibo.ajax_method, Search_weibo.Draw_user_tag);
-var tag_url = "/tag/show_attribute_name/";
-Search_weibo.call_sync_ajax_request(tag_url, Search_weibo.ajax_method, Search_weibo.Draw_attribute_name);
-var select_attribute_name = $("#select_attribute_name").val()
-var attribute_value_url = '';
-attribute_value_url = '/tag/show_attribute_value/?attribute_name=' + select_attribute_name;
-Search_weibo.call_sync_ajax_request(attribute_value_url, Search_weibo.ajax_method, Search_weibo.Draw_attribute_value);
+// Search_weibo.call_sync_ajax_request(get_choose_data(uid), Search_weibo.ajax_method, Search_weibo.Draw_table);
+// Search_weibo.Draw_picture(Search_weibo.data);
+// var show_user_tag_url = '/tag/show_user_tag/?uid_list=' + id_string;
+// Search_weibo.call_sync_ajax_request(show_user_tag_url, Search_weibo.ajax_method, Search_weibo.Draw_user_tag);
+// var tag_url = "/tag/show_attribute_name/";
+// Search_weibo.call_sync_ajax_request(tag_url, Search_weibo.ajax_method, Search_weibo.Draw_attribute_name);
+// var select_attribute_name = $("#select_attribute_name").val()
+// var attribute_value_url = '';
+// attribute_value_url = '/tag/show_attribute_value/?attribute_name=' + select_attribute_name;
+// Search_weibo.call_sync_ajax_request(attribute_value_url, Search_weibo.ajax_method, Search_weibo.Draw_attribute_value);
 
-var global_data = Search_weibo.data;
+// var global_data = Search_weibo.data;
 
 
 var attr_url='/imagine/portrait_related/?uid='+uid;
@@ -422,7 +422,6 @@ function get_choose_data(uid){
     var field ;
     var isflag = 1;
     $('.input-group-addon').each(function(){
-        console.log('dddd');
         if ($(this).attr('id') != ''){ 
         keywords.push($(this).attr('id'));
         var value = $(this).next().val();

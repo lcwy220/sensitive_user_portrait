@@ -28,7 +28,7 @@ def ajax_portrait_related():
             if "tag-" in key:
                 tag_value = portrait_result[key]
                 temp_list = key.split("-")
-                key = temp_list[1:]
+                key = "-".join(temp_list[1:])
                 custom_string = key + "-" + tag_value
                 custom_tag.append([key, tag_value])
         if custom_tag:

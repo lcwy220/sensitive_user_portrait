@@ -33,11 +33,11 @@ Draw_resultTable: function(data){
 		html += '<td>'+item[i][2]+'</td>';
 		html += '<td>'+item[i][3]+'</td>';
 		if(item[i][4]==1){
-			html += '<td><a style="cursor:hand;" href="/index/group_analysis/?name=' + item[i][0]+ '">已完成</a></td>';
+			html += '<td><a style="cursor:hand;" href="/index/group_analysis/?name=' + item[i][0]+ '">已完成</a></td><td><a href="javascript:void(0)" id="detail_analysis">查看详情</a>&nbsp;&nbsp;&nbsp;';
 		}else{
-			html += '<td>正在计算</td>';
+			html += '<td>正在计算</td><td>';
 		}
-		html +='<td><a href="javascript:void(0)" id="detail_analysis">查看详情</a>&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" id="analyze_del">删除</a></td>';
+		html +='<a href="javascript:void(0)" id="analyze_del">删除</a></td>';
 		html += '</tr>';
 	}
 	html += '</tbody>';
