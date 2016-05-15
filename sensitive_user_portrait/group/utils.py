@@ -207,6 +207,7 @@ def search_group_results(task_name, submit_user, module):
         result['influence_star'] = source['influence_star']
         result['importance_star'] = source['importance_star']
         result['tag_vector'] = json.loads(source['tag_vector'])
+        result['count'] = source['count']
     elif module == 'basic':
         result['politics'] = json.loads(source['politics'])
         result['domain'] = json.loads(source['domain'])
@@ -217,7 +218,6 @@ def search_group_results(task_name, submit_user, module):
         result['sensitive_words'] = json.loads(source['sensitive_words'])
         result['influence_his'] = json.loads(source['influence_his'])
         result['sensitive_his'] = json.loads(source['sensitive_his'])
-        result['count'] = source['count']
     elif module == 'activity':
         result['activity_trend'] = json.loads(source['activity_trend'])
         result['activity_time'] = json.loads(source['activity_time'])

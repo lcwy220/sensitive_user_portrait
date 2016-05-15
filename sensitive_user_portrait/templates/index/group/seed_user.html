@@ -223,14 +223,26 @@ $("#search_user_info").click(function(){
           if (data == null){
               alert("未查询到该用户");
           }else{
-              $('#location_val').html(data[4]);
-              $('#domain_val').html(data[2]);
-              $('#topic_string_val').html(data[3]);
-              $('#activity_geo_val').html(data[6]);
-              $('#hashtag_val').html(data[5]);
-              $('#keywords_string_val').html(data[7]);
+              draw_attr(data);
           }
       }
     });
 });
+
+function draw_attr(data){
+    for(var i=0;i<data.length; i++){
+        if(data[i]=='unknown'||data[i].length==0){
+            data[i]='暂无'
+        }
+      //console.log(data[i].split('&'),i);
+      data[i]=data[i].split('&').join(' ');
+      $('#location_val').html(data[4]);
+      $('#domain_val').html(data[2]);
+      $('#topic_string_val').html(data[3]);
+      $('#activity_geo_val').html(data[6]);
+      $('#hashtag_val').html(data[5]);
+      $('#keywords_string_val').html(data[7]);        
+    }
+}
+
 </script>

@@ -65,13 +65,13 @@ def get_user_portrait_byidname(uid, isuid=True, specify_field=[]):
     uid_list = [uid]
     results = []
     max_result = get_evaluate_max()
-    fields_list = ['uname','domain','topic_string','politics','fansnum','statusnum','friendsnum','location', 'hashtag', 'activity_geo', 'keywords_string']
+    fields_list = ['uname','domain','topic_string','politics','fansnum','statusnum','friendsnum','location', 'hashtag', 'activity_geo', 'keywords_dict']
     if specify_field:
         fields_list = specify_field
 
     if isuid:
         search_results = es.mget(index=portrait_index_name,doc_type=portrait_index_type,body={"ids":uid_list}, _source=False, \
-            fields=['uname','domain','topic_string','politics','fansnum','statusnum', 'hashtag_string', 'activity_geo', 'friendsnum','location','activeness','importance','influence','sensitive', 'keywords_string'])["docs"]
+            fields=['uname','domain','topic_string','politics','fansnum','statusnum', 'hashtag_string', 'activity_geo', 'friendsnum','location','activeness','importance','influence','sensitive', 'keywords_dict'])["docs"]
         for item in search_results:
             iter_result = []
             iter_result.append(item['_id'])
@@ -80,6 +80,8 @@ def get_user_portrait_byidname(uid, isuid=True, specify_field=[]):
                     if iter_field == "topic_string":
                         iter_result.append(item['fields'][iter_field][0])
                         #iter_result.append(item['fields'][iter_field][0].split('&'))
+                    elif iter_field == "keywords_dict":
+                        iter_result.append(json.loads(item['fields'][iter_field][0]))
                     else:
                         iter_result.append(item['fields'][iter_field][0])
 
@@ -108,6 +110,8 @@ def get_user_portrait_byidname(uid, isuid=True, specify_field=[]):
                 if iter_field == "topic_string":
                     iter_result.append(item['fields'][iter_field][0])
                     #iter_result.append(item['fields'][iter_field][0].split('&'))
+                elif iter_field == "keywords_dict":
+                    iter_result.append(json.loads(item['fields'][iter_field][0]))
                 else:
                     iter_result.append(item['fields'][iter_field][0])
 

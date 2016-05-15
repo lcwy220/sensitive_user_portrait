@@ -1,5 +1,6 @@
 function month_process(data){
-    console.log(data);
+    console.log(data,'eee');
+
     $('#active_geo').append("<div>");
     for(var i in data){
         $('#active_geo').append("日期：" + data[i][0] + "，位置：" + data[i][1]);
@@ -7,27 +8,54 @@ function month_process(data){
     $('#active_geo').append("</div>");
 }
 function show_geo_track(data){
+    console.log(data,'ddd');
+
+
+var myDate = new Date(); //获取今天日期
+myDate.setDate(myDate.getDate() - 7);
+var dateArray = []; 
+var dateTemp; 
+var flag = 1; 
+for (var i = 0; i < 7; i++) {
+    dateTemp = (myDate.getFullYear()-1)+'-'+(myDate.getMonth()+1)+"-"+myDate.getDate();
+    dateArray.push(dateTemp);
+    myDate.setDate(myDate.getDate() + flag);
+}
+console.log(dateArray);
+
     $('#active_geo').empty();
     var html = '';
-    html += '<div id="select_track_weibo_user" style="">';
-    for (var i = 0; i < data.length; i++) {
-        if(data[i][1]=='unknown'){
-            data[i][1] = '未知('+ data[i][0] +')';
-		}
-        html += '<div value="' + data[i][0] + '">' + data[i][1] + ' 注册地：' + data[i][3] + '</div>';
-        var group_track_url = '/group/show_group_member_track/?uid=' + data[i][0];
-        call_sync_ajax_request(group_track_url, ajax_method, month_process);
+    html += '<table id="select_track_weibo_user" class="table table-bordered table-striped table-condensed datatable" >';
+    html += '<thead><tr style="text-align:center;"> ';
+    html += '<th style="width:160px;">用户ID</th>';
+    html += '<th style="width:170px;">昵称</th><th>注册地</th>';
+    for(j=0;j<dateArray.length;j++){
+        html +='<th style="width:170px;">'+dateArray[j]+'</th>';
     }
-    html += '</div>';
+    html += '</thead>';
+    html += '<tbody>';
+    for (i=0;i<data.length;i++){
+        html += '<tr>';
+        //var time0 = new Date(item[i][1]*1000).format('yyyy/MM/dd hh:mm')
+        if(data[i][1]=='unknown'){
+            data[i][1] = '未知';
+        }
+        html += '<td >'+data[i][0]+'</td>';
+        html += '<td>'+data[i][1]+'</td>';
+        html += '<td>'+data[i][3]+'</td>';
+        var group_track_url = '/group/show_group_member_track/?uid=' + data[i][0];
+        call_sync_ajax_request(group_track_url, ajax_method, $(function(data0){
+            for(var a=0;a<data0.legnth;a++){
+                html +='<td>'+data0[a][1]+'</td>';
+            }
+        })); 
+        html += '</tr>';
+    }
+    html += '</tbody>';
+    html += '</table>';
+
     $('#active_geo').append(html);
-    /*
-    $('#track_user_commit').click(function(){
-        var track_user_id = $('#select_track_weibo_user').val();
-        var group_track_url = '/group/show_group_member_track/?uid=' + track_user_id;
-        call_sync_ajax_request(group_track_url,ajax_method, month_process);
-    });
-    */
-    //track_init();
+
 }
 /*
 function track_init(){
@@ -268,8 +296,10 @@ function show_geo(data){
 }
 
 function geo_load(){
-    var group_geo_url = '/group/show_group_result/?module=geo&task_name=' + name + '&submit_user=' + submit_user;
+    var group_geo_url = '/group/show_group_result/?module=geo&task_name=' + task_name + '&submit_user=' + submit_user;
     call_sync_ajax_request(group_geo_url,ajax_method, show_geo);
-    var group_user_url = "/group/show_group_list/?task_name=" + name + "&submit_user=" + submit_user;
+    //var group_user_url = "/group/show_group_list/?task_name=" + task_name + "&submit_user=" + submit_user;
+    //call_sync_ajax_request(group_user_url,ajax_method, show_geo_track);
+    var group_user_url = "/group/show_group_member_track/?task_name=" + task_name + "&submit_user=" + submit_user;
     call_sync_ajax_request(group_user_url,ajax_method, show_geo_track);
 }

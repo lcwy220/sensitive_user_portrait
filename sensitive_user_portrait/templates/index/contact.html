@@ -20,6 +20,7 @@
     #basicInfo .li_1 {margin-left:60px;}
     #basicInfo .pt_title {width:80px;}
     #basicInfo .pt_detail {padding-left:55px;}
+        #myTabContent{overflow:hidden;}
     .col-lg-2 {width:30%;}
 </style>
 
@@ -38,7 +39,7 @@
     <div class="PortraitImg" ><img id="portraitImg" src="" alt="" class="img-circle"></div>
     <div class="nickname" id="nickname"></div>
 </div>
-<div id="float-wrap" class="hidden"></div>
+<!-- <div id="float-wrap" class="hidden"></div> -->
 <div class='row'>
 <div class="box col-md-12" >
     <div class="box-inner" id = 'box-height' style="float:left">
@@ -96,12 +97,44 @@
 </div>
  
 </div>
-<div id="wrapper" style="padding-left:0px; overflow:visible">
+<!-- <div id="wrapper" style="padding-left:0px; overflow:visible"> -->
         <span  type="button" id="compare_button"  style="float:right;font-size:16px;cursor: pointer" onclick="diy_button();">
            <span class="label label-success" style="background-color:rgba(69, 133, 195, 0.89);color:white;padding:5px">添加用户标签</span>
         
         </span>
       <!-- <button class="btn btn-primary btn-sm" style="float:right;width:80px;height:40px;margin-right:5px"  id="group_button" onclick="diy_button();">添加用户标签</button>-->
+        
+
+    <ul class="nav nav-tabs" id="myTab">
+        <li class="active" title="列表视图"><a href="#inf_recom">列表视图</a></li>
+        <li title="图标视图"><a href="#sen_recom">图表视图</a></li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+      <div class="tab-pane active" id="inf_recom" style="margin-top:10px">
+                <div class="main col-sm-9 col-md-10">
+                    <div class="col-sm-12">
+                        <div class="panel panel-default" style="max-height:500px;overflow-y:auto;width:945px;margin-left:-30px" id='table'>
+                        </div>
+                    </div>
+            <div style="float:left; line-height:40px;">关联用户总共有<span id="relatednum"></span>人</div>
+
+                    <div style=" margin-left:730px">
+                        <button class="btn btn-primary btn-sm" style="width:80px;height:40px;margin-right:5px" name="compare_button" id="compare_button" title="选择2至3个用户对比"  onclick="compare_button();">个体对比</button>
+                        <button class="btn btn-primary btn-sm" style="width:80px;height:40px;margin-right:5px" name="group_button" id="group_button" onclick="group_button();">群体分析</button>
+                    </div>
+                </div>      
+      </div>  
+      <div class="tab-pane " id="sen_recom" style="margin-top:10px">
+                <div class="main col-sm-9 col-md-10">
+                    <div class="col-sm-12">
+                        <div class="panel panel-default" style="width:945px; height:500px;margin-left:-30px" id='echart'>
+                        </div>
+                    </div>
+                </div>      
+      </div>  
+    </div>
+
+<!-- 
         <div id='pager' style='text-align:right;'></div>
         <div id='tabs' style='width:945px;'>
             <div id='txt'>
@@ -127,7 +160,7 @@
                     </div>
                 </div>
             </div> 
-        </div>
+        </div> -->
 </div>
 
 
@@ -242,30 +275,34 @@
 </div>
 
 <script>
-    $(function() {
-        $('#tabs').carouFredSel({
-            circular: false,
-            items: 1,
-            width: '100%',
-            height:'700px',
-            auto: false,
-            pagination: {
-                container: '#pager',
-                anchorBuilder: function( nr ) {
-                    if($(this).attr('id')== 'txt'){
-                        return '<a href="#">列表视图</a>';
-                    }
-                    else{
-                        return '<a href="#" style="margin-right:283px">图表视图</a>';
-                    }
-                    // return '<a href="#">' + $(this).find('h3').text() + '</a>';
-                }
-            }
-        });
-        $('.caroufredsel_wrapper').css('height', '700px');
-        $('#txt').css('height', '700px');
-        $('#photo').css('height', '700px');
-    });
+    // $(function() {
+    //     $('#tabs').carouFredSel({
+    //         circular: false,
+    //         items: 1,
+    //         width: '100%',
+    //         height:'700px',
+    //         auto: false,
+    //         pagination: {
+    //             container: '#pager',
+    //             anchorBuilder: function( nr ) {
+    //                 if($(this).attr('id')== 'txt'){
+    //                     return '<a href="#">列表视图</a>';
+    //                 }
+    //                 else{
+    //                     return '<a href="#" style="margin-right:283px">图表视图</a>';
+    //                 }
+    //                 // return '<a href="#">' + $(this).find('h3').text() + '</a>';
+    //             }
+    //         }
+    //     });
+    //     $('.caroufredsel_wrapper').css('height', '300px');
+    //     $('#txt').css('height', '600px');
+    //     $('#photo').css('height', '600px');
+    // });
+         $('#myTab a').click(function (e) { 
+      e.preventDefault();//阻止a链接的跳转行为 
+      $(this).tab('show');//显示当前选中的链接及关联的content 
+    }) 
     var uid = "{{ uid }}";
     var task_max_count = "{{g.user.analysisnum}}" ;
     function Personal(){
