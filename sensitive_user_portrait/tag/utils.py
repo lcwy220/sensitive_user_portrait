@@ -1,11 +1,11 @@
 #*- coding:utf-8 -*-
 import json
 import time
-from sensitive_user_portrait.global_utils import es_sensitive_user_portrait as es
+from sensitive_user_portrait.global_utils import es_tag as es
+from sensitive_user_portrait.global_utils import es_user_portrait
+from sensitive_user_portrait.global_utils import attribute_index_name, attribute_index_type
 from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts
 
-attribute_index_name = 'custom_attribute'
-attribute_index_type = 'attribute'
 
 user_index_name = 'sensitive_user_portrait'
 user_index_type = 'user'
@@ -20,13 +20,10 @@ attribute_dict_key = ['attribute_value', 'attribute_user', 'date', 'user']
 def submit_attribute(attribute_name, attribute_value, submit_user, submit_date):
     status = False
     #maybe there have to identify the user admitted to submit attribute
-    try:
-        attribute_exist = es.get(index=attribute_index_name, doc_type=attribute_index_type, id=attribute_name)['docs']
-    except:
-        attribute_exist = {}
-    try:
-        source = attribute_exist['_source']
-    except:
+    exist_bool = es.exists(index=attribute_index_name, doc_type=attribute_index_type, id=attribute_name)
+    if exist_bool:
+        return "tag exists"
+    else:
         input_data = dict()
         now_ts = time.time()
         date = ts2datetime(now_ts)
@@ -35,7 +32,13 @@ def submit_attribute(attribute_name, attribute_value, submit_user, submit_date):
         input_data['user'] = submit_user
         input_data['date'] = submit_date
         es.index(index=attribute_index_name, doc_type=attribute_index_type, id=attribute_name, body=input_data)
+
+        submit_tag = "tag-" + attribute_name
+        exist_field = es_user_portrait.indices.get_field_mapping(index=user_index_name, doc_type=user_index_type, field=submit_tag)
+        if not exist_field:
+            print es_user_portrait.indices.put_mapping(index=user_index_name, doc_type=user_index_type,body={'properties':{submit_tag:{'type':'string', 'analyzer':'my_analyzer'}}}, ignore=400)
         status = True
+    print status
     return status
 
 # use to search attribute table
@@ -56,7 +59,6 @@ def search_attribute(query_body, condition_num):
             raise e
     if result:
         for item in result:
-            print 'item:', item
             source = item['_source']
             item_list.append(source)
     return item_list
@@ -86,20 +88,18 @@ def delete_attribute(attribute_name):
     status = False
     try:
         result = es.get(index=attribute_index_name, doc_type=attribute_index_type, id=attribute_name)['_source']
-        print 'result:', result
     except Exception, e:
         raise e
         return status
     es.delete(index=attribute_index_name, doc_type=attribute_index_type, id=attribute_name)
-    print 'yes delete attribute'
     # delete attribute in user_portrait
     query = []
     attribute_value = result['attribute_value'].split('&')
-    attribute_name = "tag-" + str(attribute_name)
+    attribute_name = "tag-" + attribute_name
     for value in attribute_value:
         query.append({'match':{attribute_name: value}})
     try:
-        attribute_user_result = es.search(index=user_index_name, doc_type=user_index_type, \
+        attribute_user_result = es_user_portrait.search(index=user_index_name, doc_type=user_index_type, \
                                          body={'query':{'bool':{'must':query}}})['hits']['hits']
     except:
         attribute_user_result = []
@@ -116,7 +116,7 @@ def delete_attribute(attribute_name):
         user = user_item['uid']
         action = {'index':{'_id':str(user)}}
         bulk_action.extend([action, user_item])
-    es.bulk(bulk_action, index=user_index_name, doc_type=index_type)
+    es_user_portrait.bulk(bulk_action, index=user_index_name, doc_type=user_index_type)
     
     status = True
     return status
@@ -140,7 +140,7 @@ def add_attribute_portrait(uid, attribute_name, attribute_value, submit_user):
     attribute_value_list = attribute_result['attribute_value'].split('&')
     if attribute_value not in attribute_value_list:
         return 'no attribute value'
-    attribute_name = "tag-" + str(attribute_name)
+    attribute_name = "tag-" + attribute_name
     if attribute_name in user_result:
         return 'attribute exist'
     add_attribute_dict = {attribute_name: attribute_value}
@@ -167,7 +167,7 @@ def change_attribute_portrait(uid, attribute_name, attribute_value, submit_user)
     value_list = attribute_result['attribute_value'].split('&')
     if attribute_value not in value_list:
         return 'no attribute value'
-    attribute_name = "tag-" + str(attribute_name)
+    attribute_name = "tag-" + attribute_name
     change_attribute_dict = {attribute_name: attribute_value}
     es.update(index=user_index_name, doc_type=user_index_type, id=uid, body={'doc': change_attribute_dict})
     status = True
@@ -183,7 +183,7 @@ def delete_attribute_portrait(uid, attribute_name, submit_user):
         user_exist = es.get(index=user_index_name, doc_type=user_index_type, id=uid)['_source']
     except:
         return 'no user'
-    attribute_name = "tag-"+str(attribute_name)
+    attribute_name = "tag-"+attribute_name
     if attribute_name not in user_exist:
         return 'user have no attribtue'
     try:
@@ -195,22 +195,12 @@ def delete_attribute_portrait(uid, attribute_name, submit_user):
 
     return status
 
-identify_attribute_list = ['emotion','domain', 'psycho_status_string', 'uid', 'hashtag_dict', \
-                           'importance', 'online_pattern', 'influence', 'keywords_string', 'topic', \
-                           'geo_activity', 'link', 'hashtag', 'keywords', 'fansnum', 'psycho_status', \
-                           'text_len', 'photo_url', 'verified', 'uname', 'statusnum', 'gender', \
-                           'topic_string', 'activeness', 'location', 'activity_geo_dict', \
-                           'emotion_words', 'psycho_feature', 'friendsnum', \
-                           'sensitive', 'sensitive_geo_string', 'sensitive_hashtag_string', 'type', \
-                           'geo_string', 'sensitive_words_string', 'hashtag_string', 'sensitive_geo_activity', \
-                           'sensitive_hashtag_dict', 'sensitive_words_dict']
 
 # use to get user custom tag
 # return {uid:['attribute_name1:attribute_value1', 'attribute_name2:attribtue_value2']}
 def get_user_tag(uid_list):
     result = {}
     user_result = es.mget(index=user_index_name, doc_type=user_index_type, body={'ids':uid_list})['docs']
-    print 'user_result:', user_result
     for user_item in user_result:
         uid = user_item['_id']
         result[uid] = []
@@ -247,7 +237,7 @@ def add_tag2group(uid_list, attribute_name, attribute_value):
             user_exist = es.get(index=user_index_name, doc_type=user_index_type, id=uid)['_source']
         except:
             user_exist = {}
-        attribute_name = "tag-" + str(attribute_name)
+        attribute_name = "tag-" + attribute_name
         if user_exist and attribute_name not in user_exist:
             add_attribute_dict = {attribute_name: attribute_value}
             es.update(index=user_index_name, doc_type=user_index_type, id=uid, body={'doc':add_attribute_dict})
@@ -306,7 +296,7 @@ def get_group_tag(group_name):
         else:
             source = {}
         for key in source:
-            if "tag_" in key:
+            if "tag-" in key:
                 value = source[key]
                 tmp_list = key.split("-")
                 key = "-".join(tmp_list[1:])

@@ -130,6 +130,8 @@ sensitive_be_comment_index_name_pre = 'sensitive_be_comment_'
 sensitive_be_comment_index_type = 'user'
 copy_portrait_index_name = 'copy_sensitive_user_portrait'
 copy_portrait_index_type = 'manage'
+attribute_index_name = 'custom_attribute'
+attribute_index_type = 'attribute'
 
 BLACK_WORDS_PATH = '/home/ubuntu8/yuankun/sensitive_user_portrait/sensitive_user_portrait/cron/text_attribute/black.txt'
 

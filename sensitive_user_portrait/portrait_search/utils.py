@@ -57,6 +57,7 @@ def search_portrait(condition_num, query, sort, size):
         body={'query':{'match_all':{}}, 'sort':[{sort:{"order":"desc"}}], 'size':size})['hits']['hits']
 
     if result:
+        max_score = result[0]['_score']
         for item in result:
             user_dict = item['_source']
             score = item['_score']
@@ -68,8 +69,9 @@ def search_portrait(condition_num, query, sort, size):
             user_dict['importance'] = result_normal_importance*100
             user_dict['influence'] = result_normal_influence*100
             user_dict['sensitive'] = result_normal_sensitive*100
+            user_dict['score'] = math.log(score/float(max_score)*9+1, 10)*100
             user_result.append([user_dict['uid'], user_dict['uname'], user_dict['location'], user_dict['activeness'],\
-                user_dict['importance'], user_dict['influence'], user_dict['sensitive'], score])
+                user_dict['importance'], user_dict['influence'], user_dict['sensitive'], user_dict['score']])
 
     return user_result
 
