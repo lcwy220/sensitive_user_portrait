@@ -9,6 +9,7 @@ import time
 import json
 import math
 import redis
+from elasticsearch.helpers import scan
 from description import active_geo_description, active_time_description, hashtag_description
 
 from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts, ts2date, datetimestr2ts
@@ -24,11 +25,11 @@ from sensitive_user_portrait.global_utils import comment_index_name_pre, comment
 from sensitive_user_portrait.global_utils import be_comment_index_name_pre, be_comment_index_type,sensitive_be_comment_index_name_pre, sensitive_be_comment_index_type
 from sensitive_user_portrait.global_utils import COPY_USER_PORTRAIT_INFLUENCE,COPY_USER_PORTRAIT_ACTIVENESS, copy_portrait_index_type
 from sensitive_user_portrait.global_utils import R_RECOMMENTATION as r_recomment
+from sensitive_user_portrait.global_utils import es_group_result, group_index_name, group_index_type
 from sensitive_user_portrait.global_utils import ES_CLUSTER_FLOW2 as es_cluster2
 from sensitive_user_portrait.global_config import R_BEGIN_TIME
 from sensitive_user_portrait.parameter import DAY, WEEK, MAX_VALUE, HALF_HOUR, FOUR_HOUR, GEO_COUNT_THRESHOLD, PATTERN_THRESHOLD
 from sensitive_user_portrait.search_user_profile import search_uid2uname
-#from sensitive_user_portrait.filter_uid import all_delete_uid
 from sensitive_user_portrait.parameter import IP_TIME_SEGMENT, IP_TOP, DAY, IP_CONCLUSION_TOP, domain_en2ch_dict, topic_en2ch_dict
 from sensitive_user_portrait.parameter import INFLUENCE_TREND_SPAN_THRESHOLD, INFLUENCE_TREND_AVE_MIN_THRESHOLD,\
                                     INFLUENCE_TREND_AVE_MAX_THRESHOLD, INFLUENCE_TREND_DESCRIPTION_TEXT
@@ -1838,7 +1839,7 @@ def search_ip(now_ts, uid):
     if sensitive_ip_time_dict:
         sorted_today_sensitive_ip = sorted(sensitive_ip_time_dict.iteritems(), key=lambda x:x[1], reverse=True)
         results['today_top_sensitive_ip'] = sorted_today_sensitive_ip[0][0]
-        results['today_sensitive_ip_list'] = sorted_today_ip
+        results['today_sensitive_ip_list'] = sorted_today_sensitive_ip
         city_dict = dict()
         for ip, count in sensitive_ip_time_dict.iteritems():
             geo = ip2city(ip)
@@ -2733,7 +2734,7 @@ def search_sentiment_trend(uid, time_type, now_ts):
         total_count = sum(trend_results['2']) + sum(trend_results['1']) +sum(trend_results['2'])
         if total_count == 0:
             negetive_index = 0
-            negtive_influence = 0
+            negetive_influence = 0
         else:
             negetive_index = negtive_count/float(total_count)
             negetive_influence = neutral_count/float(total_count)
@@ -2783,7 +2784,7 @@ def search_sentiment_trend(uid, time_type, now_ts):
         total_count = sum(trend_results['2']) + sum(trend_results['1']) +sum(trend_results['2'])
         if total_count == 0:
             negetive_index = 0
-            negtive_influence = 0
+            negetive_influence = 0
         else:
             negetive_index = negtive_count/float(total_count)
             negetive_influence = neutral_count/float(total_count)
@@ -3317,6 +3318,25 @@ def get_influence_trend(uid, day_count):
     results["time_list"] = sorted_results
 
     return results
+
+
+def search_user_group(uid):
+    s_re = scan(es_group_result,query={"query":{"match_all":{}}, "size":100}, \
+            index=group_index_name, doc_type=group_index_type)
+    group_list = []
+    while 1:
+        try:
+            scan_re = s_re.next()['_source']
+            uid_list = scan_re['uid_list']
+            user_set = set(uid_list)
+            if uid in user_set:
+                group_list.append(scan_re['task_name'])
+        except StopIteration:
+            break
+        except Exception, r:
+            print Exception,r
+
+    return group_list
 
 
 if __name__=='__main__':
