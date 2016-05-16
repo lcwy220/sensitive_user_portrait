@@ -11,7 +11,8 @@ from time_utils import ts2datetime, datetime2ts, ts2date
 from global_utils import redis_ip, redis_activity, redis_cluster
 from global_utils import R_RECOMMENTATION as r
 from global_utils import es_flow_text, flow_text_index_name_pre, flow_text_index_type, es_user_portrait, ES_CLUSTER_FLOW1
-from parameter import EXPIRE_TIME, MONTH_TIME
+from parameter import EXPIRE_TIME, MONTH_TIME, WORK_TYPE
+from global_utils import ES_CLUSTER_FLOW2 as es_cluster
 
 def main():
     now_ts = time.time()
@@ -35,11 +36,27 @@ def main():
 
     #delete ip
     redis_ip.delete('ip_'+str(delete_ts))
+    if WORK_TYPE == 0:
+        exist_ip = es_cluster.indices.exists(index="ip_"+delete_date)
+        if exist_ip:
+            es_cluster.indices.delete(index="ip_"+delete_date)
     redis_ip.delete('sensitive_ip_'+str(delete_ts))
+    if WORK_TYPE == 0:
+        exist_ip = es_cluster.indices.exists(index="sensitive_ip_"+delete_date)
+        if exist_ip:
+            es_cluster.indices.delete(index="sensitive_ip_"+delete_date)
 
     #delete activity
     redis_activity.delete('activity_'+str(delete_ts))
+    if WORK_TYPE == 0:
+        exist_activity = es_cluster.indices.exists(index="activity_"+delete_date)
+        if exist_activity:
+            es_cluster.indices.delete(index="activity_"+delete_date)
     redis_activity.delete('sensitive_activity_'+str(delete_ts))
+    if WORK_TYPE == 0:
+        exist_activity = es_cluster.indices.exists(index="sensitive_activity_"+delete_date)
+        if exist_activity:
+            es_cluster.indices.delete(index="sensitive_activity_"+delete_date)
 
     #delete hashtag
     redis_cluster.delete('hashtag_'+str(delete_ts))
@@ -49,7 +66,10 @@ def main():
     redis_cluster.delete('sensitive_'+str(delete_ts))
 
     #delete recommendation
-    r.delete('recomment_'+str(delete_date))
+    r.delete('recomment_'+str(delete_date)+"_influence")
+    r.delete('recomment_'+str(delete_date)+"_sensitive")
+    r.delete("identify_in_sensitive_" + str(delete_date))
+    r.delete("identify_in_influence_" + str(delete_date)))
 
 if __name__ == "__main__":
     now_ts = time.time()
