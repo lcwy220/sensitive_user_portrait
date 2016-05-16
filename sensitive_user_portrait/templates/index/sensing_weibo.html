@@ -10,6 +10,7 @@
               -moz-box-shadow:5px 6px 3px #ABA8A8;
               box-shadow:5px 6px 3px #ABA8A8;
             }
+           /* #modal_show_key td{float:left;min-width: 140px;list-style: none;}*/
         </style>
         <link rel="stylesheet" type="text/css" href="/static/css/jquery.datetimepicker.css"/>
              <link rel="stylesheet" href="/static/custom/css/overview.css" media="screen" />
@@ -22,10 +23,13 @@
 
     {% block ex_link %}/index/nouns_explain/#social_sensing{% endblock %}
     {% block body %}
-    <div id="page" style="width:1000px">
-    <div id='content'>
-    <h2>敏感微博监控</h2>
-    <div id="so_useremail" hidden>test@qq.com</div>
+	<link rel="stylesheet" href="/static/custom/css/overview.css" media="screen" />
+    <link  type="text/css" href="/static/personal/css/style.css" rel="stylesheet"/>
+	
+    <div id="page" >
+	<div id='content'>
+	<h2>敏感微博监控</h2>
+    <div id="so_useremail" hidden>{{g.user}}</div>
     <table class="shadow" style="width:100%; height:150px;border: 2px solid #cccccc;">
       <tr style="border-bottom: 1px solid #cccccc;">
         <th style="width:150px;height:50px;background-color: #E4E4E4;text-align: center;">任务名称</th>
@@ -51,7 +55,9 @@
         <th  style="width:150px;height:50px;background-color: #E4E4E4;text-align: center;">关键词</th>
         <td>
              <!--<div id='so_group_task'  style="overflow-y:auto;max-height:300px;padding: 0px;width: 100%;margin-top: 5px;"></div>-->
-             <input id="so_keywords" type='text' class="form-control" style='width: 580px;padding:0px; /* font-size:8px; */margin-top:5px;display:inline-block;height:25px' placeholder='（必填）仅包含汉字、英文、数字和下划线,多个关键词以空格分隔'><span style="color:red"> *</span>
+             <input id="so_keywords" type='text' class="form-control" style='width: 435px;padding:0px; /* font-size:8px; */margin-top:5px;display:inline-block;height:25px' placeholder='（必填）仅包含汉字、英文、数字和下划线,多个关键词以空格分隔'>
+             <span id="so_keywords_input" style="cursor:pointer;">选择已有敏感词</span>
+             <span style="color:red"> *</span>
         </td>
       </tr>    
     </table>
@@ -145,6 +151,29 @@
       </div>
     </div>
 
+    <div class="modal fade" id="so_deit_words" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document" style="width:900px;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><!-- <span aria-hidden="true">&times;</span> --></button>
+            <h4 class="modal-title" id="myModalLabel">选择关键词</h4>
+          </div>
+          <div class="modal-body">
+            <div id="modal_show_key">
+            </div>
+<!--             <span>群体名称：</span>
+            <span id="so_re_group_name" style="margin-left:10px;margin-right:20px;"></span>
+            <span style="margin-left:10px;">终止时间：</span>
+            <input id="so_re_end_time" type='text' style='width:145px; display:inline-block;height:25px'> -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="choose_key_button()">确认</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="modal fade" id="so_more_block" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog" role="document" style="width:850px;">
         <div class="modal-content">
@@ -165,19 +194,14 @@
       </div>
     </div>
     </div>
+	</div>
     {% endblock  %}
     {% block end_js %}
         {{ super() }}
 
     <script type='text/javascript' src='/static/js/portrait/social_sensing.js'></script>
     <script>
-     Social_sense.call_sync_ajax_request("/social_sensing/get_admin_sensi_words/", Social_sense.ajax_method, function(data){
-     	var text_kws = "";
-     	for(var d in data){
-     		text_kws += " " + data[d];
-     	}
-     	$("#so_keywords").val(text_kws);
-     });
+      var check_words = [];
     </script>
 
     {% endblock end_js %}

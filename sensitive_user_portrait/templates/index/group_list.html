@@ -1,4 +1,4 @@
-{% extends "index/base.html" %}
+﻿{% extends "index/base.html" %}
 {% block title %}群体分析{% endblock title %}
 {% block custom_css %}
     {{ super() }}
@@ -20,15 +20,19 @@
 {% block body %}
 	       <script type="text/javascript" src="/static/js/jquery.datetimepicker.js"></script>
         <script type="text/javascript" src="/static/js/portrait/identify_table.js"></script>
- <div id="page" >
-<div id='content'>
-<h2 >群体分析</h2>       
-    <!-- <div class="box-content"> -->
+	<link rel="stylesheet" href="/static/custom/css/overview.css" media="screen" />
+    
+	<link  type="text/css" href="/static/personal/css/style.css" rel="stylesheet"/>
+<div id="page" >
 
-        <div id="content_manage" style="width:1000px;margin-top:10px">
+<div id='content'>
+<h2>群体分析</h2>
+    <div class="box-content">
+
+        <div id="content_manage" style="margin-left:0px;width:1000px;margin-top:10px">
 
         </div>
-    <!-- </div> -->
+    </div>
 </div>
 </div>
     <div class="modal fade" id="group_control" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
