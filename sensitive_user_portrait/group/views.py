@@ -201,12 +201,12 @@ def ajax_delete_group_task():
 def get_user_pinfo():
     result = dict()
     uid_uname = request.args.get('uid_uname', '')
-    temp = get_user_portrait_byidname(uid_uname, isuid=True, specify_field=['uname', 'domain', 'topic_string', 'location', 'hashtag_string', 'activity_geo', 'keywords_dict'])[0]
+    temp = get_user_portrait_byidname(uid_uname, isuid=True, specify_field=['uname', 'domain', 'topic_string', 'location', 'hashtag_string', 'activity_geo', 'politics', 'keywords_dict'])[0]
     if not temp:
-        temp = get_user_portrait_byidname(uid_uname, isuid=False, specify_field=['uname', 'domain', 'topic_string', 'location', 'hashtag_string', 'activity_geo', 'keywords_dict'])[0]
+        temp = get_user_portrait_byidname(uid_uname, isuid=False, specify_field=['uname', 'domain', 'topic_string', 'location', 'hashtag_string', 'activity_geo', 'politics', 'keywords_dict'])[0]
 
     if temp:
-        temp.append(temp[7])
-        temp[7] = sorted(temp[7], key=lambda (k, v): v, reverse=False)[-3:]
+        temp.append(temp[8])
+        temp[8] = sorted(temp[8], key=lambda (k, v): v, reverse=False)[-3:]
 
     return json.dumps(temp)

@@ -1,18 +1,17 @@
 <div id="seed_user">
     <div class="box col-md-12" style="padding:0px;margin:0px;">
         <div class="box-inner" id = 'box-height'>
-            <div class='col-md-12' style="margin-bottom:4px">
+            <div class='col-md-12' style="margin-bottom:4px" hidden>
                 <div class='col-lg-6' style='margin-left:195px;font-size:32px;'>
                     <input type='checkbox' name="mode_choose" value='single_user' checked='checked' hidden>
                     <span class="input-group-addon" style="width:140px;border:1px solid white;font-weight:bold; background-color:white;display:inline-block" >种子用户</span>
-                    <!--
-                    <input type='checkbox' name="mode_choose" value='multi_user'>
-                    <span class="input-group-addon" style="width:140px;border:1px solid white;font-weight:bold; background-color:white;display:inline-block" >多个种子用户</span>
-                    -->
                 </div>
             </div>
-            <hr style='width:800px;margin-bottom:0px;margin-left:10px;'>
+            <hr style='width:800px;margin-bottom:0px;margin-left:10px;' hidden>
+            <label class='control-label' style='padding-top:5px;margin-left: 25px'>种子用户：
+            </label>
             <div id='single_user_ext' class="box-content" style="height:500px;padding-top:0px;">
+                        
                 <div class='col-lg-8' style='padding:0px;'>
                     <span style='float:left;color:#c00;font-size:15px;margin-left:15px;margin-top:15px;'>*</span>
                      <span class="input-group-addon" style="margin-top:10px;width:110px;border:1px solid white;float:left;background-color:white;display:inline-block">用户ID或昵称</span>
@@ -108,7 +107,8 @@
                     </div>
                     <div class='col-lg-2' >
                         <input type='checkbox' class='inline-checkbox' value='option1'>
-                        <span class="input-group-addon" style="width:75px;border:1px solid white; background-color:white;display:inline-block" id="remark">备注</span>
+                        <span class="input-group-addon" style="width:75px;border:1px solid white; background-color:white;display:inline-block" id="politics">政治倾向 </span><span id="politic_val"></span>
+
                     </div>
                 </div>
             </div>
@@ -285,13 +285,13 @@ function draw_attr(data){
 	  }else{
 		 $('#hashtag_val').html('暂无数据');
 	  }
-	  
+	  $('#politic_val').html(data[7]);
 	  var keywords = [];
-	  for(var j=0;j<data[7].length;j++){
-		keywords.push(data[7][j][0]+" ");
+	  for(var j=0;j<data[8].length;j++){
+		keywords.push(data[8][j][0]+" ");
 	  }
       $('#keywords_string_val').html('<span data-toggle="modal" data-target="#morekeywords" style="cursor:pointer;">'+keywords+'</span>'); 
-	  Draw_more_keywords(data[8],'keyword_list');
+	  Draw_more_keywords(data[9],'keyword_list');
     }
 function Draw_more(data,div){
 	$('#'+div).empty();
