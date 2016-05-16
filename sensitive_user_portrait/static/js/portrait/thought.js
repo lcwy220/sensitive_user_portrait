@@ -3,6 +3,8 @@ function Thought(){
 Thought.prototype = {   //获取数据，重新画表
     Draw_emotion:function(data){
 		//console.log(data);
+		$('#negetive_index').html(data.negetive_index.toFixed(2));
+		$('#negetive_influence').html(data.negetive_influence.toFixed(2));
         var items = data;
         if(items['time_list'].length==0){
             var say = document.getElementById('emotion');
