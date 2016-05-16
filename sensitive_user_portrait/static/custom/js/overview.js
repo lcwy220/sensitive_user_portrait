@@ -397,9 +397,10 @@ function draw(data){
     $('#sensitiveN').html(global_overview_data.sensitive_number);
     $('#hinfluence').html(global_overview_data.influence_number);
     $('#storeNumber').html(global_overview_data.recommend_in);
-    $('#groupN').html(global_overview_data.monitor_number[0]);
-    $('#gtotal').html(global_overview_data.monitor_number[1]);
-    $('#wordsN').html(global_overview_data.new_sensitive_words);
+    //$('#groupN').html(global_overview_data.monitor_number[0]);
+    $('#gtotal').html(global_overview_data.group_detect_number);
+	$('#groupN').html(global_overview_data.group_analysis_number);
+	$('#wordsN').html(global_overview_data.sensitive_number);
 
     var div_name = 'sensitiveCloud';
     var c_title = '敏感词';
@@ -586,20 +587,29 @@ function page_group_influ_weibo(start_row,end_row,data, sub_div_name){
 		var uid = data[s][7];
 		var uname = data[s][8];
         //var location = data[s][2];
-        
+		//console.log(keyword);
+        //console.log(keyword.length);
         var tweet_ulr = data[s][10];
         //date = new Date(parseInt(timestamp)*1000).format("yyyy-MM-dd hh:mm:ss");
         if (i%2 ==0){
             html += '<div style="padding:5px;background:rgba(238, 238, 238, 0.56);">';
             html += '<p style="margin-left:10px;"><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;'+date+'&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
-            html += '<p style="margin-top:-5px;margin-left:10px;"><span style="width: 700px;float: left;">敏感词：<span style="red">' + keyword + '</span></a></span>';
+			if(key.length==0){
+				html += '<p style="margin-top:-5px;margin-left:10px;"><span style="width: 700px;float: left;"><span style="color:red">' + keyword + '</span></a></span>';
+			}else{
+				html += '<p style="margin-top:-5px;margin-left:10px;"><span style="width: 700px;float: left;">敏感词：<span style="color:red">' + keyword + '</span></a></span>';
+			}   
             html += '<span style="width:40%;"><a>转发数（'+ retweet_count +'）</a><a>评论数（'+ comment_count +'）</a></span></p>';
 			html += '</div>'
     }
         else{
             html += '<div style="padding:5px;">';
             html += '<p style="margin-left:10px;"><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;'+date+'&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';    
-            html += '<p style="margin-top:-5px;margin-left:10px;"><span style="width: 700px;float: left;">敏感词：<span style="red">' + keyword + '</span></a></span>';
+            if(key.length==0){
+				html += '<p style="margin-top:-5px;margin-left:10px;"><span style="width: 700px;float: left;"><span style="color:red">' + keyword + '</span></a></span>';
+			}else{
+				html += '<p style="margin-top:-5px;margin-left:10px;"><span style="width: 700px;float: left;">敏感词：<span style="color:red">' + keyword + '</span></a></span>';
+			}
             html += '<span style="width:40%;"><a>转发数（'+ retweet_count +'）</a><a>评论数（'+ comment_count +'）</a></span></p>';
 			html += '</div>';
         }

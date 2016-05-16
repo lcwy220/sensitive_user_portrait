@@ -32,7 +32,7 @@ function draw_search_results(data){
       html += '<td class="center" style="width:100px;">'+ item[i][5].toFixed(2) +'</td>';
 	  html += '<td class="center" style="width:100px;">'+ item[i][6].toFixed(2) +'</td>';
       html += '<td class="center" style="width:100px;">'+ item[i][7] +'</td>';
-      html += '<td class="center" style="width:120px;"><a class="portrait_href" href=' + user_url + ' target="_blank">查看人物属性页</a></td>';
+      html += '<td class="center" style="width:120px;"><a class="portrait_href" href=' + user_url + ' target="_blank">查看人物属性</a></td>';
       html += '</tr>';
     }
     html += '</tbody>';

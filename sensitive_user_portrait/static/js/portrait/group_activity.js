@@ -99,7 +99,7 @@ function point2weibo(xnum, ts){
     if(xnum == -1){
         delta = "00:00-24:00";
         $('#date_zh').html(getYearDate(ts) + "至" +  getYearDate(ts + 7 * 24 * 3600));
-        var activity_weibo_url = '/group/activity_weibo/?task_name='+ name +'&start_ts=' + ts + '&submit_user=' + submit_user + '&during=' + 7 * 24 * 3600;
+        var activity_weibo_url = '/group/activity_weibo/?task_name='+ task_name +'&start_ts=' + ts + '&submit_user=' + submit_user + '&during=' + 7 * 24 * 3600;
         call_sync_ajax_request(activity_weibo_url, ajax_method, draw_content);
     }
     else{
@@ -112,7 +112,7 @@ function point2weibo(xnum, ts){
             case 5: delta = "20:00-24:00";break;
         }
         $('#date_zh').html(getYearDate(ts));
-        var activity_weibo_url = '/group/activity_weibo/?task_name='+ name +'&start_ts=' + ts + '&submit_user=' + submit_user;
+        var activity_weibo_url = '/group/activity_weibo/?task_name='+ task_name +'&start_ts=' + ts + '&submit_user=' + submit_user;
         call_sync_ajax_request(activity_weibo_url, ajax_method, draw_content);
     }
     $('#time_zh').html(delta);
@@ -122,7 +122,7 @@ function getYearDate(tm){
     return tt;
 }
 function draw_content(data){
-    //console.log(data);
+    console.log('d',data);
     var html = '';
     $('#line_content').empty();
     if(data.length==0){
@@ -359,6 +359,7 @@ function show_active_users(data, div_name){
         var name_list = data[i][0].split('&');
         var user_id = name_list[0];
         var name = name_list[1];
+        console.log(name);
         var s = i.toString();
         var m = i + 1;
         if(name=='unknown'){
@@ -692,7 +693,7 @@ function month_process(data){
 }
 
 function  activity_load(){
-    var group_activity_url = '/group/show_group_result/?module=activity&task_name=' + name + '&submit_user=' + submit_user;
+    var group_activity_url = '/group/show_group_result/?module=activity&task_name=' + task_name + '&submit_user=' + submit_user;
     call_sync_ajax_request(group_activity_url,ajax_method, show_activity);
 }
 

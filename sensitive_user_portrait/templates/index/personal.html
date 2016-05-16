@@ -25,10 +25,10 @@
 	<div id="basicpage-bgtop">
     <div id="basicpage-bgbtm">
         <div class="framepost" id="frametopbar" style="height:250px;">
-            <h3 class='title' style="background:#77ACF4;color:#fff;padding:5px;">个人注册信息</h3>
-            <div style="width:180px; float:left;margin:10px;margin-left:40px;"><span class="img-photo"><img id="portraitImg" src="http://tp2.sinaimg.cn/1878376757/50/0/1" alt="Photo" width="170" height="170" /></span></div>
+            <h3 class='title' style="background:#f5f5f5;padding:5px;">个人注册信息</h3>
+            <div style="width:180px; float:left;margin:10px;margin-left:40px;padding-left:40px;padding-top:10px;"><span class="img-photo"><img id="portraitImg" src="http://tp2.sinaimg.cn/1878376757/50/0/1" alt="Photo" width="170" height="170" /></span></div>
             <div style="width:750px; float:left;padding-top:10px;padding-right:10px;margin-left:10px;">
-                <div style="height:70px; margin-bottom: 8px;">
+                <div style="margin-left:80px;height:70px; margin-bottom: 8px;">
                   <div style="width:640px; float:left;">
                       <span class="nickname" id="nickname"></span>
                     <a style="font-size:15px;margin-left:15px;cursor:pointer;" onclick="detail_load();">查看详细属性</a>
@@ -50,7 +50,7 @@
                 </div>
               </div>
               <div style="width:750px; float:left;margin-left:10px;">
-                <div style="height:90px;font-weight:bold;font-size:14px;margin-right:10px;border-style:solid;border-width: 1px; padding: 5px; border-color: #CCCCCC; background-color: #FFFFFF;">
+                <div style="margin-left:80px;height:90px;font-weight:bold;font-size:14px;margin-right:10px;border-style:solid;border-width: 1px; padding: 5px; border-color: #CCCCCC; background-color: #f5f5f5;">
                     <div class="cols" style="width:700px;margin-top:0px;">
                         <div style="width:230px;height:40px;float:left;">
                             <span class="lightw fleft lineh42 mright38">用户ID:</span>
@@ -90,16 +90,16 @@
                 </div>
             </div>
         </div>
-        <div id="framesidebar" style="float:left;width:28%;height:auto;border:#77ACF4 solid 1px;">
+        <div id="framesidebar" style="float:left;width:28%;height:auto;border:#555 solid 1px;background:#f5f5f5">
 			<ul style="margin-left:0px;">
 				<li>
-                    <h3 style="padding:5px;background:#77ACF4;color:#fff;" class="title">业务备注信息</h3>
+                    <h3 style="padding:5px;background:#f5f5f5;" class="title">业务备注信息</h3>
                     <ul style="padding:0px;">
                         <div id="ptag" class="fleft" style="font-size:14px;width:240px;margin-top:20px;">
-                            
+                            <!--
                             <div class="tagClo fleft" ><span style="color:red;">test1</span>:<span class="tagbg"><span>tag1<span><a id="delIcon"></a></span></div>
                             <div class="tagClo fleft" ><span style="color:red;">test1</span>:<span class="tagbg"><span>tag1<span><a id="delIcon"></a></span></div>
-                                     
+                            -->     
                         </div>
                         <div id="addM" style="font-size:14px;border-bottom:solid 1px lightgrey;border-top:solid 1px lightgrey;width:240px;padding-top:20px;padding-bottom:20px;padding-right:25px;" class="fleft">
                             <div >
@@ -116,8 +116,13 @@
                             </div>
                             <span style=""><button class="btn btn-primary btn-sm" style="width:80px;height:30px;margin-top:30px;margin-left:30px;float:right;" id="add_person_tag_button" title="确定选择" onclick="add_person_tag()">添加</button></span>
                         </div>
+						<div  style="margin-top:0px;padding:0px;float:left;">
+						 <span style="width:100%;margin-left:30px;font-size:14px;">群组标签：</span>
+						<ul style="float:left;width:245px;padding-top:20px;" id="group_tag">
+						</ul>
+						</div>
                         <div class="PersonPre" style="margin-top:0px;padding:10px;float:left;"><span class="lightw">备注：</span>
-                            <span style="font-family: '宋体';"id="extraDetail">暂无</span>
+                            <span style="font-family: '宋体';"id="extraDetail"></span>
                         </div>
                     </ul>
                 </li>
@@ -125,7 +130,7 @@
 		</div>
 		<div id="framecontent" style="float:right;width:70%;">
             <div class="framepost">
-                <h3 class="title" style="background:#77ACF4;color:#fff;padding:5px;">系统画像信息</h3>
+                <h3 class="title" style="background:#f5f5f5;padding:5px;">系统画像信息</h3>
                 <div class="entry">
                     <div style="height:160px;width:100%;" id='overview'>
 					    <!--
@@ -138,10 +143,10 @@
 						-->
                         <table style="height:150px;width:90%;">
                             <tr>
-                                <td style="text-align:center;vertical-align:middle;width:25%;"><img src="/static/img/activeness.png" style="height:80px"></td>
-                                <td style="text-align:center;vertical-align:middle;width:25%;"><img src="/static/img/importance.png" style="height:80px"></td>
+                                <td style="text-align:center;vertical-align:middle;width:25%;"><img src="/static/img/active.png" style="height:80px"></td>
+                                <td style="text-align:center;vertical-align:middle;width:25%;"><img src="/static/img/important.png" style="height:80px"></td>
                                 <td style="text-align:center;vertical-align:middle;width:25%;"><img src="/static/img/influence.png" style="height:80px"></td>
-								<td style="text-align:center;vertical-align:middle;width:25%;"><img src="/static/img/influence.png" style="height:80px"></td>
+								<td style="text-align:center;vertical-align:middle;width:25%;"><img src="/static/img/sensitive.png" style="height:80px"></td>
                             </tr>
                             <tr style='font-size:14px;'>
                                 <td style="text-align:center;vertical-align:middle">
@@ -410,8 +415,8 @@ var url = "/attribute/portrait_attribute/?uid=" + uid;
 Personal.call_sync_ajax_request(url, Personal.ajax_method, Personal.personData);
 var url = "/attribute/get_remark/?uid=" + uid;
 Personal.call_sync_ajax_request(url, Personal.ajax_method, Personal.remarkData);
-var url = "/attribute/history_activeness_influence/?uid=" + uid;
-Personal.call_sync_ajax_request(url, Personal.ajax_method, Personal.historyData);
+//var url = "/attribute/history_activeness_influence/?uid=" + uid;
+//Personal.call_sync_ajax_request(url, Personal.ajax_method, Personal.historyData);
 var url = "/attribute/current_tag_vector/?uid=" + uid;
 Personal.call_sync_ajax_request(url, Personal.ajax_method, currentData);
 
@@ -679,21 +684,44 @@ $(function(){
 	
 });
 </script>
+<script type="text/javascript" src="/static/js/portrait/show_tag.js"></script> 
 <script>
     $('#vector_table').empty();
     var html = '';
 	//console.log(global_tag_vector);
-	html += '<li class="li_1"><span class="pt_title">政治倾向性</span><span class="pt_detail">'+global_tag_vector[4][1]+'</span></li>';
-	html += '<li class="li_1"><span class="pt_title">领域</span><span class="pt_detail">'+global_tag_vector[1][1]+'</span></li>';
-	html += '<li class="li_1"><span class="pt_title">话题</span><span class="pt_detail">'+global_tag_vector[2][1]+'</span></li>';
+	if(global_tag_vector[4][1]){
+		html += '<li class="li_1"><span class="pt_title">政治倾向</span><span class="pt_detail">'+global_tag_vector[4][1]+'</span></li>';
+	}else{
+		html += '<li class="li_1"><span class="pt_title">政治倾向</span><span class="pt_detail">暂无数据</span></li>';
+	}
+	if(global_tag_vector[1][1]){
+		html += '<li class="li_1"><span class="pt_title">领域</span><span class="pt_detail">'+global_tag_vector[1][1]+'</span></li>';
+	}else{
+		html += '<li class="li_1"><span class="pt_title">领域</span><span class="pt_detail">暂无数据</span></li>';
+	}
+	if(global_tag_vector[2][1]){
+		html += '<li class="li_1"><span class="pt_title">话题</span><span class="pt_detail">'+global_tag_vector[2][1]+'</span></li>';
+	}else{
+		html += '<li class="li_1"><span class="pt_title">话题</span><span class="pt_detail">暂无数据</span></li>';
+	}
 	//var active_geo = personalData.activity_geo;
 	//active_geo = active_geo.replace('&',' ');
-	html += '<li class="li_1"><span class="pt_title">活跃时间</span><span class="pt_detail">'+personalData.活跃时间+'</span></li>';
-	html += '<li class="li_1"><span class="pt_title">活跃地方</span><span class="pt_detail">'+personalData.activity_geo_aggs+'</span></li>';
-	html += '<li class="li_1"><span class="pt_title">敏感词</span><span class="pt_detail">'+personalData.sensitive_words_string.split('&').join(' ')+'</span></li>';
+	if(personalData.活跃时间){
+		html += '<li class="li_1"><span class="pt_title">活跃时间</span><span class="pt_detail">'+personalData.活跃时间+'</span></li>';
+	}else{
+		html += '<li class="li_1"><span class="pt_title">活跃地方</span><span class="pt_detail">暂无数据</span></li>';
+	}
+	if(personalData.sensitive_words_string){
+		html += '<li class="li_1"><span class="pt_title">敏感词</span><span class="pt_detail">'+personalData.sensitive_words_string.split('&').join(' ')+'</span></li>';
+	}else{
+		html += '<li class="li_1"><span class="pt_title">敏感词</span><span class="pt_detail">暂无数据</span></li>';
+	}
 	//html += '<li class="li_1"><span class="pt_title">敏感微话题</span><span class="pt_detail">'+global_tag_vector[3][1]+'</span></li>';
-	html += '<li class="li_1"><span class="pt_title">微话题</span><span class="pt_detail">'+global_tag_vector[0][1]+'</span></li>';
-	
+	if(global_tag_vector[0][1]){
+		html += '<li class="li_1"><span class="pt_title">微话题</span><span class="pt_detail">'+global_tag_vector[0][1]+'</span></li>';
+	}else{
+		html += '<li class="li_1"><span class="pt_title">微话题</span><span class="pt_detail">暂无数据</span></li>';
+	}
     /*
 	for (var i = 0;i < global_tag_vector.length; i++){
         var unit = global_tag_vector[i];

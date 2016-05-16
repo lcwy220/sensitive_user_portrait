@@ -210,6 +210,40 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="moretopic" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">话题</h4>
+      </div>
+	  <div class="modal-body" id="topic_list" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="morehashtag" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">微话题</h4>
+      </div>
+	  <div class="modal-body" id="hashtag_list" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="morekeywords" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">关键词</h4>
+      </div>
+	  <div class="modal-body" id="keyword_list" style="width:100%"></div>
+    </div>
+  </div>
+</div>
 <script type='text/javascript' src='/static/js/portrait/group_seed_user.js'></script>
 <script>
 $("#search_user_info").click(function(){
@@ -223,14 +257,70 @@ $("#search_user_info").click(function(){
           if (data == null){
               alert("未查询到该用户");
           }else{
-              $('#location_val').html(data[4]);
-              $('#domain_val').html(data[2]);
-              $('#topic_string_val').html(data[3]);
-              $('#activity_geo_val').html(data[6]);
-              $('#hashtag_val').html(data[5]);
-              $('#keywords_string_val').html(data[7]);
+              draw_attr(data);
           }
       }
     });
 });
+
+function draw_attr(data){
+	  if(data[4]=='unknown'){
+            data[4]='暂无'
+        }
+      $('#location_val').html(data[4]);
+      $('#domain_val').html(data[2]);
+      var topics = data[3].split('&');
+	  topic = topics[0];
+      $('#topic_string_val').html('<span data-toggle="modal" data-target="#moretopic" style="cursor:pointer;">'+topic+'</span>');
+	  Draw_more(topics,'topic_list');
+	  var geo = data[6].split('&');
+	  geo = geo[geo.length-1];
+      $('#activity_geo_val').html(geo);
+	  
+	  if(data[5].length>0){
+		var hastags = data[5].split('&');
+		hashtag = hastags[0];
+        $('#hashtag_val').html('<span data-toggle="modal" data-target="#morehashtag" style="cursor:pointer;">'+hashtag+'</span>');
+		Draw_more(hastags,'hashtag_list');
+	  }else{
+		 $('#hashtag_val').html('暂无数据');
+	  }
+	  
+	  var keywords = [];
+	  for(var j=0;j<data[7].length;j++){
+		keywords.push(data[7][j][0]+" ");
+	  }
+      $('#keywords_string_val').html('<span data-toggle="modal" data-target="#morekeywords" style="cursor:pointer;">'+keywords+'</span>'); 
+	  Draw_more_keywords(data[8],'keyword_list');
+    }
+function Draw_more(data,div){
+	$('#'+div).empty();
+	//console.log(data);
+	//console.log(data.length);
+	var html = '';
+	html += '<table class="table table-striped table-bordered" >';
+    html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">话题</th></tr>';
+    for (var i = 0; i < data.length; i++) {
+        var s = i.toString();
+        var m = i + 1;
+        html += '<tr style=""><th style="text-align:center">' + m + '</th><th style="text-align:center">' + data[i] +  '</th></tr>';
+    };
+    html += '</table>'; 
+    $('#'+ div).append(html);
+}
+function Draw_more_keywords(data,div){
+	$('#'+div).empty();
+	//console.log(data);
+	//console.log(data.length);
+	var html = '';
+	html += '<table class="table table-striped table-bordered" >';
+    html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">关键词</th><th style="text-align:center">频数</th></tr>';
+    for (var i = 0; i < data.length; i++) {
+        var s = i.toString();
+        var m = i + 1;
+        html += '<tr style=""><th style="text-align:center">' + m + '</th><th style="text-align:center">' + data[i][0] +  '</th><th style="text-align:center">' + data[i][1] +  '</th></tr>';
+    };
+    html += '</table>'; 
+    $('#'+ div).append(html);
+}
 </script>

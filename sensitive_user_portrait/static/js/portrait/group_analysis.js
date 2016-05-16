@@ -70,6 +70,7 @@ Search_weibo.prototype = {
 
 Draw_overview: function(data){
     //画星星
+    console.log('dd',data);
     var importance_star = '';
     for(var i=0;i<data.importance_star;i++){
         importance_star += '<img src="/static/img/star-yellow.png" style="width:25px">'
@@ -111,9 +112,10 @@ Draw_overview: function(data){
     };
     $('#overview').empty();
     html = '';
-    html += '<div id="stickynote" style="height:180px;width:250px;float:left"><ul class="gs_ul" style="margin-top:-65px"><li><a>';
-    html += '<p style="font-size:16px">' + name +'</p><p style="font-size:16px">' + submit_date +'</p><p style="font-size:16px">' + state +'</p><p style="font-size:16px">' + submit_user +'</p>';
-    html += '<p><span style="font-size:16px;cursor:pointer;text-decoration:underline" onclick="show_members();">群组成员</span>&nbsp;&nbsp;';
+    html += '<div id="stickynote" style="height:180px;width:250px;float:left"><ul class="gs_ul" style="margin-top:0px"><li>';
+    html += '<p style="font-size:16px">' + task_name +'</p><p style="font-size:16px">' + submit_date +'</p><p style="font-size:16px">' + state +'</p><p style="font-size:16px">' + submit_user +'</p>';
+    html += '<p style="font-size:16px">群组总人数：'+data.count+'</p>'
+    html += '<p><a><span style="font-size:16px;cursor:pointer;text-decoration:underline" onclick="show_members();">群组成员</span>&nbsp;&nbsp;';
     html += '<span style="float:right;cursor:pointer;font-size:16px;" type="button"data-toggle="modal" data-target="#group_tag2"><u>群组标签</u></span></p>';
     html += '</a></li></ul></div>';
     html += '<table style="height:150px;width:750px;float:right">';
@@ -291,9 +293,8 @@ function add_group_tag(){
 
 }
 
-
 function show_members(){
-    var model_url =   "/group/show_group_list/?task_name=" + name + "&submit_user=" + submit_user;
+    var model_url =   "/group/show_group_list/?task_name=" + task_name + "&submit_user=" + submit_user;
     base_call_ajax_request(model_url, Draw_model);
     $("#myModal_group").modal();
     function Draw_model(data){
@@ -367,11 +368,17 @@ function group_tag_vector(data){
     $('#group_tag_vector').html(html);
 }
 
+
 var global_pre_page = 1;
 var global_choose_uids = new Array();
 var Search_weibo = new Search_weibo(); 
+
 $(document).ready(function(){
-    var group_overview_url = '/group/show_group_result/?module=overview&task_name=' + name + '&submit_user=' + submit_user;
+    var name=task_name;
+    console.log(name,'ddd');
+    var group_overview_url = '/group/show_group_result/?module=overview&task_name=' + task_name + '&submit_user=' + submit_user;
+    
+    console.log(group_overview_url);
      Search_weibo.call_sync_ajax_request(group_overview_url, Search_weibo.ajax_method, Search_weibo.Draw_overview);
     var tag_url =  "/tag/show_attribute_name/";
     Search_weibo.call_sync_ajax_request(tag_url, Search_weibo.ajax_method, Search_weibo.Draw_attribute_name);

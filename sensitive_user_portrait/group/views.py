@@ -88,9 +88,15 @@ def ajax_show_group_result_basic():
 @mod.route('/show_group_member_track/')
 def ajax_show_group_menber_track():
     results = {}
-    uid = request.args.get('uid', '')
-    results = get_group_user_track(uid)
-    return json.dumps(results)
+    task_name = request.args.get('task_name', '')
+    submit_user = request.args.get('submit_user', '')
+    list_results = get_group_list(task_name, submit_user)
+    for r in list_results:
+        uid = r[0]
+        track_results = get_group_user_track(uid)
+        r.append(track_results)
+
+    return json.dumps(list_results)
 
 # get group member uid_uname dict
 # input: task_name
@@ -189,15 +195,18 @@ def ajax_delete_group_task():
     task_name = request.args.get('task_name', '')
     submit_user = request.args.get('submit_user', '')
     results = delete_group_results(task_name, submit_user)
-    print results
     return json.dumps(results)
 
 @mod.route('/get_user_pinfo/')
 def get_user_pinfo():
     result = dict()
     uid_uname = request.args.get('uid_uname', '')
-    temp = get_user_portrait_byidname(uid_uname, isuid=True, specify_field=['uname', 'domain', 'topic_string', 'location', 'hashtag_string', 'activity_geo', 'keywords_string'])[0]
+    temp = get_user_portrait_byidname(uid_uname, isuid=True, specify_field=['uname', 'domain', 'topic_string', 'location', 'hashtag_string', 'activity_geo', 'keywords_dict'])[0]
     if not temp:
-        temp = get_user_portrait_byidname(uid_uname, isuid=False, specify_field=['uname', 'domain', 'topic_string', 'location', 'hashtag_string', 'activity_geo', 'keywords_string'])[0]
+        temp = get_user_portrait_byidname(uid_uname, isuid=False, specify_field=['uname', 'domain', 'topic_string', 'location', 'hashtag_string', 'activity_geo', 'keywords_dict'])[0]
+
+    if temp:
+        temp.append(temp[7])
+        temp[7] = sorted(temp[7], key=lambda (k, v): v, reverse=False)[-3:]
 
     return json.dumps(temp)
