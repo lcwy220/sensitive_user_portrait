@@ -10,7 +10,7 @@ reload(sys)
 sys.path.append('../../')
 from global_utils import R_RECOMMENTATION as r
 from global_utils import es_sensitive_user_portrait as es
-from global_utils import es_user_profile, es_flow_text
+from global_utils import es_user_profile, es_flow_text, group_index_name, group_index_type
 from time_utils import datetime2ts, ts2datetime
 from parameter import RUN_TYPE
 
@@ -95,6 +95,31 @@ def get_attr(date):
 
     # 群体分析任务
     results['monitor_number'] = [4, 83] # test
+    query_body = {
+        "query":{
+            "bool":{
+                "must":[
+                    {"term":{'task_type':"detect"}},
+                    {"term":{"state":0}}
+                ]
+            }
+        }
+    }
+    group_detect_number = es.count(index=group_index_name, doc_type=group_index_type, body=query_body)["count"]
+    query_body = {
+        "query":{
+            "bool":{
+                "must":[
+                    {"term":{'task_type':"analysis"}},
+                    {"term":{"state":0}}
+                ]
+            }
+        }
+    }
+    group_analysis_number = es.count(index=group_index_name, doc_type=group_index_type, body=query_body)["count"]
+    results["group_detect_number"] = group_detect_number
+    results["group_analysis_number"] = group_analysis_number
+
 
     # 敏感词
     query_body = query_body_module('sensitive_words_string')
