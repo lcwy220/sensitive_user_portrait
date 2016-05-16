@@ -279,34 +279,38 @@ function draw_content(data){
 
 
 function draw_daily_ip_table(ip_data){
-    //console.log(ip_data);
+    console.log(ip_data);
 	var today_ip = document.getElementById('today_ip');
 	if(ip_data.today_top_ip){
 		today_ip.innerHTML = ip_data.today_top_ip;
-		Draw_more(ip_data.today_top_ip,'more_today_ip');
+		Draw_more_today(ip_data.today_ip_list,'more_today_ip');
 	}else{
 		today_ip.innerHTML = '暂无今日IP信息';
+		$('#moreip').css('display','none');
 	}
 	var today_geo = document.getElementById('today_geo');
 	if(ip_data.today_top_city){
 		today_geo.innerHTML = ip_data.today_top_city;
-		Draw_more(ip_data.today_top_city,'more_today_geo');
+		Draw_more_today(ip_data.today_geo_list,'more_today_geo');
 	}else{
 		today_geo.innerHTML = '暂无今日地点信息';
+		$('#moregeo').css('display','none');
 	}
 	var today_sensitive_ip = document.getElementById('today_sensitive_ip');
 	if(ip_data.today_top_sensitive_ip){
 		today_sensitive_ip.innerHTML = ip_data.today_top_sensitive_ip;
-		Draw_more(ip_data.today_top_sensitive_ip,'more_today_s_ip');
+		Draw_more_today(ip_data.today_sensitive_ip_list,'more_today_s_ip');
 	}else{
 		today_sensitive_ip.innerHTML = '暂无敏感IP信息';
+		$('#moreSip').css('display','none');
 	}
 	var today_sensitive_geo = document.getElementById('today_sensitive_geo');
 	if(ip_data.today_sensitive_top_city){
 		today_sensitive_geo.innerHTML = ip_data.today_sensitive_top_city;
-		Draw_more(ip_data.today_sensitive_top_city,'more_today_s_geo');
+		Draw_more_today(ip_data.today_sensitive_geo_list,'more_today_s_geo');
 	}else{
 		today_sensitive_geo.innerHTML = '暂无敏感地点信息';
+		$('#moreSgeo').css('display','none');
 	}
 	/*
     var tag_vector = ip_data.tag_vector;
@@ -578,11 +582,14 @@ function activity_load(){
 
 function Draw_more(data,div){
 	$('#'+div).empty();
-	//console.log(data);
-	//console.log(data.length);
+	if(div=='daily_ip0'||div=='daily_ip1'||div=='daily_ip2'||div=='daily_ip3'||div=='daily_ip4'||div=='daily_ip5'||div=='daily_ip6'||div=='daily_s_ip0'||div=='daily_s_ip1'||div=='daily_s_ip2'||div=='daily_s_ip3'||div=='daily_s_ip4'||div=='daily_s_ip5'||div=='daily_s_ip6'){
+		var words ='IP';
+	}else{
+		var words = '位置';
+	}
 	var html = '';
 	html += '<table class="table table-striped table-bordered" >';
-    html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">关键词</th><th style="text-align:center">频数</th></tr>';
+    html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">'+words+'</th><th style="text-align:center">频数</th></tr>';
     for (var i = 0; i < data.length; i++) {
         var s = i.toString();
         var m = i + 1;
@@ -590,6 +597,28 @@ function Draw_more(data,div){
     };
     html += '</table>'; 
     $('#'+ div).append(html);
+}
+function Draw_more_today(data,div){
+	$('#'+div).empty();
+	if(div =='more_today_ip'|| div =='more_today_s_ip'){
+		var words = 'IP';
+	}else{
+		var words = '位置';
+	}
+	var html = '';
+	if(data.length==0){
+		$('#'+ div).append("暂无数据");
+	}else{
+	html += '<table class="table table-striped table-bordered" >';
+    html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">'+words+'</th><th style="text-align:center">频数</th></tr>';
+    for (var i = 0; i < data.length; i++) {
+        var s = i.toString();
+        var m = i + 1;
+        html += '<tr style=""><th style="text-align:center">' + m + '</th><th style="text-align:center">' + data[i][0] +  '</th><th style="text-align:center">' + data[i][1] + '</th></tr>';
+    };
+    html += '</table>'; 
+    $('#'+ div).append(html);
+	}
 }
 
 
