@@ -11,7 +11,7 @@ from search import sensitive_search_mention, sensitive_search_attention, sensiti
 from search import delete_action, search_identify_uid, get_activeness_trend
 from search import get_activity_weibo, search_comment, search_be_comment, sensitive_search_comment
 from search import search_bidirect_interaction, search_preference_attribute, search_sentiment_trend
-from search import search_sentiment_weibo, get_influence_trend, search_remark, edit_remark
+from search import search_sentiment_weibo, get_influence_trend, search_remark, edit_remark, search_user_group
 from sensitive_user_portrait.search_user_profile import es_get_source
 from sensitive_user_portrait.global_utils import es_user_portrait as es
 from sensitive_user_portrait.parameter import SOCIAL_DEFAULT_COUNT, SENTIMENT_TREND_DEFAULT_TYPE
@@ -29,6 +29,13 @@ attribute_index_name = 'custom_attribute'
 attribute_index_type = 'attribute'
 
 mod = Blueprint('attribute', __name__, url_prefix='/attribute')
+
+@mod.route('/search_user_group/')
+def ajax_search_user_group():
+    uid = request.args.get('uid', '')
+    results = search_user_group(uid)
+
+    return json.dumps(results)
 
 @mod.route('/portrait_attribute/')
 def ajax_portrait_attribute():
