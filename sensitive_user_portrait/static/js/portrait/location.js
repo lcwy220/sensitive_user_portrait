@@ -283,24 +283,28 @@ function draw_daily_ip_table(ip_data){
 	var today_ip = document.getElementById('today_ip');
 	if(ip_data.today_top_ip){
 		today_ip.innerHTML = ip_data.today_top_ip;
+		Draw_more(ip_data.today_top_ip,'more_today_ip');
 	}else{
 		today_ip.innerHTML = '暂无今日IP信息';
 	}
 	var today_geo = document.getElementById('today_geo');
 	if(ip_data.today_top_city){
 		today_geo.innerHTML = ip_data.today_top_city;
+		Draw_more(ip_data.today_top_city,'more_today_geo');
 	}else{
 		today_geo.innerHTML = '暂无今日地点信息';
 	}
 	var today_sensitive_ip = document.getElementById('today_sensitive_ip');
 	if(ip_data.today_top_sensitive_ip){
 		today_sensitive_ip.innerHTML = ip_data.today_top_sensitive_ip;
+		Draw_more(ip_data.today_top_sensitive_ip,'more_today_s_ip');
 	}else{
 		today_sensitive_ip.innerHTML = '暂无敏感IP信息';
 	}
 	var today_sensitive_geo = document.getElementById('today_sensitive_geo');
 	if(ip_data.today_sensitive_top_city){
 		today_sensitive_geo.innerHTML = ip_data.today_sensitive_top_city;
+		Draw_more(ip_data.today_sensitive_top_city,'more_today_s_geo');
 	}else{
 		today_sensitive_geo.innerHTML = '暂无敏感地点信息';
 	}
@@ -364,7 +368,8 @@ function draw_daily_ip_table(ip_data){
     html += '<tr><th style="text-align:center">一周IP</th>';
     for(var i=0;i<ip_data.ip_week_list.length;i++){
 		if(ip_data.ip_week_list[i][0]){
-			html += '<th style="text-align:center">'+ip_data.ip_week_list[i][0][0]+'</th>';
+			html += '<th style="text-align:center"><a style="cursor:pointer;" data-toggle="modal" data-target="#moredailyip'+i+'" >'+ip_data.ip_week_list[i][0][0]+'</a></th>';
+			Draw_more(ip_data.ip_week_list[i][0],'daily_ip'+i);
 		}else{
 			html += '<th style="text-align:center">-</th>';
 		}
@@ -372,7 +377,8 @@ function draw_daily_ip_table(ip_data){
 	html += '<tr><th style="text-align:center">一周位置</th>';
     for(var i=0;i<ip_data.geo_week_list.length;i++){
 		if(ip_data.geo_week_list[i][0]){
-			html += '<th style="text-align:center">'+ip_data.geo_week_list[i][0][0]+'</th>';
+			html += '<th style="text-align:center"><a style="cursor:pointer;" data-toggle="modal" data-target="#moredailygeo'+i+'" >'+ip_data.geo_week_list[i][0][0]+'</a></th>';
+			Draw_more(ip_data.geo_week_list[i][0],'daily_geo'+i);
 		}else{
 			html += '<th style="text-align:center">-</th>';
 		}
@@ -380,7 +386,8 @@ function draw_daily_ip_table(ip_data){
 	html += '<tr><th style="text-align:center">敏感IP</th>';
     for(var i=0;i<ip_data.sensitive_ip_week_list.length;i++){
 		if(ip_data.sensitive_ip_week_list[i][0]){
-			html += '<th style="text-align:center">'+ip_data.sensitive_ip_week_list[i][0][0]+'</th>';
+			html += '<th style="text-align:center"><a style="cursor:pointer;" data-toggle="modal" data-target="#moredailyip'+i+'" >'+ip_data.sensitive_ip_week_list[i][0][0]+'</a></th>';
+			Draw_more(ip_data.sensitive_ip_week_list[i][0],'daily_s_ip'+i);
 		}else{
 			html += '<th style="text-align:center">-</th>';
 		}
@@ -388,7 +395,8 @@ function draw_daily_ip_table(ip_data){
 	html += '<tr><th style="text-align:center">敏感位置</th>';
     for(var i=0;i<ip_data.sensitive_geo_week_list.length;i++){
 		if(ip_data.sensitive_geo_week_list[i][0]){
-			html += '<th style="text-align:center">'+ip_data.sensitive_geo_week_list[i][0][0]+'</th>';
+			html += '<th style="text-align:center"><a style="cursor:pointer;" data-toggle="modal" data-target="#moredailygeo'+i+'" >'+ip_data.sensitive_geo_week_list[i][0][0]+'</a></th>';
+			Draw_more(ip_data.sensitive_geo_week_list[i][0],"daily_s_geo" + i);
 		}else{
 			html += '<th style="text-align:center">-</th>';
 		}
@@ -566,6 +574,24 @@ function activity_load(){
     var url = '/attribute/activeness_trend/?uid=' + uid;
     person_call_ajax_request(url, draw_activeness_chart);
 }
+
+
+function Draw_more(data,div){
+	$('#'+div).empty();
+	//console.log(data);
+	//console.log(data.length);
+	var html = '';
+	html += '<table class="table table-striped table-bordered" >';
+    html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">关键词</th><th style="text-align:center">频数</th></tr>';
+    for (var i = 0; i < data.length; i++) {
+        var s = i.toString();
+        var m = i + 1;
+        html += '<tr style=""><th style="text-align:center">' + m + '</th><th style="text-align:center">' + data[0] +  '</th><th style="text-align:center">' + data[1] + '</th></tr>';
+    };
+    html += '</table>'; 
+    $('#'+ div).append(html);
+}
+
 
 var global_time_type = 'day';
 var pre_time = choose_time_for_mode();

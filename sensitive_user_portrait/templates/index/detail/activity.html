@@ -88,8 +88,8 @@ body{font:12px/180% Arial, Helvetica, sans-serif, "新宋体";}
     <hr style="width:1000px;">
     <div style="width:100%;">
 	    <h4 style="width:100%;">今日信息</h4>
-		<h5 style="width:100%;">主要IP：<span id="today_ip" style="margin-right:40px;"></span>主要位置：<span id="today_geo" ></span></h5>
-		<h5 style="width:100%;">敏感IP：<span id="today_sensitive_ip" style="margin-right:40px;"></span>敏感位置：<span id="today_sensitive_geo"></span></h5>
+		<h5 style="width:100%;">主要IP：<a id="today_ip" data-toggle="modal" data-target="#moreip" style="margin-right:40px;cursor:pointer;"></a>主要位置：<a id="today_geo" data-toggle="modal" data-target="#moregeo" style="margin-right:40px;cursor:pointer;"></a></h5>
+		<h5 style="width:100%;">敏感IP：<a id="today_sensitive_ip" data-toggle="modal" data-target="#moreSip" style="margin-right:40px;cursor:pointer;"></a>敏感位置：<a id="today_sensitive_geo" data-toggle="modal" data-target="#moreSgeo" style="margin-right:40px;cursor:pointer;"></a></h5>
 		<!--
         <div><span style='font-size:16px;color:#777'>分时段IP排名</span></div>
          <div class="table-responsive"id='span_ip' style='overflow-x:hidden;width:100%;height:157px;float:left;'>
@@ -102,7 +102,7 @@ body{font:12px/180% Arial, Helvetica, sans-serif, "新宋体";}
     </div>
 	-->
     <div style="width:100%;">
-        <div><h4 style='color:#777'>一周信息汇总</h4></div>
+        <div><h4>一周信息汇总</h4></div>
          <div class="table-responsive"id='total_IP_rank' style='overflow-x:hidden;width:100%;float:left;'>
         </div>
     </div>
@@ -157,12 +157,376 @@ body{font:12px/180% Arial, Helvetica, sans-serif, "新宋体";}
     </div>
 </div>
 
+<!--模态框-->
+<div class="modal fade" id="moreip" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">今日主要IP</h4>
+      </div>
+      <div class="modal-body" id="more_today_ip" style="width:100%">
+        
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moregeo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">今日主要位置</h4>
+      </div>
+      <div class="modal-body" id="more_today_geo" style="width:100%">
+        
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moreSip" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">今日敏感IP</h4>
+      </div>
+      <div class="modal-body" id="more_today_s_ip" style="width:100%">
+        
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moreSgeo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">今日敏感位置</h4>
+      </div>
+      <div class="modal-body" id="more_today_s_geo" style="width:100%">
+        
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailyip0" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">IP</h4>
+      </div>
+      <div class="modal-body" id="daily_ip0" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailyip1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">IP</h4>
+      </div>
+	  <div class="modal-body" id="daily_ip1" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailyip2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">IP</h4>
+      </div>
+	  <div class="modal-body" id="daily_ip2" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailyip3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">IP</h4>
+      </div>
+	  <div class="modal-body" id="daily_ip3" style="width:100%"></div>
+
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailyip4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">IP</h4>
+      </div>
+	  <div class="modal-body" id="daily_ip4" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailyip5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">IP</h4>
+      </div>
+	  <div class="modal-body" id="daily_ip5" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailyip6" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">IP</h4>
+      </div>
+	  <div class="modal-body" id="daily_ip6" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailygeo0" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">位置</h4>
+      </div>
+	  <div class="modal-body" id="daily_geo0" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailygeo1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">位置</h4>
+      </div>
+	  <div class="modal-body" id="daily_geo1" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailygeo2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">位置</h4>
+      </div>
+	  <div class="modal-body" id="daily_geo2" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailygeo3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">位置</h4>
+      </div>
+	  <div class="modal-body" id="daily_geo3" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailygeo4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">位置</h4>
+      </div>
+	  <div class="modal-body" id="daily_geo4" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailygeo5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">位置</h4>
+      </div>
+	  <div class="modal-body" id="daily_geo5" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailygeo6" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">位置</h4>
+      </div>
+	  <div class="modal-body" id="daily_geo6" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailyip0" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">IP</h4>
+      </div>
+      <div class="modal-body" id="daily_s_ip0" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailyip1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">IP</h4>
+      </div>
+	  <div class="modal-body" id="daily_s_ip1" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailyip2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">IP</h4>
+      </div>
+	  <div class="modal-body" id="daily_s_ip2" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailyip3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">IP</h4>
+      </div>
+	  <div class="modal-body" id="daily_s_ip3" style="width:100%"></div>
+
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailyip4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">IP</h4>
+      </div>
+	  <div class="modal-body" id="daily_s_ip4" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailyip5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">IP</h4>
+      </div>
+	  <div class="modal-body" id="daily_s_ip5" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailyip6" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">IP</h4>
+      </div>
+	  <div class="modal-body" id="daily_s_ip6" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailygeo0" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">位置</h4>
+      </div>
+	  <div class="modal-body" id="daily_s_geo0" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailygeo1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">位置</h4>
+      </div>
+	  <div class="modal-body" id="daily_s_geo1" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailygeo2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">位置</h4>
+      </div>
+	  <div class="modal-body" id="daily_s_geo2" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailygeo3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">位置</h4>
+      </div>
+	  <div class="modal-body" id="daily_s_geo3" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailygeo4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">位置</h4>
+      </div>
+	  <div class="modal-body" id="daily_s_geo4" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailygeo5" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">位置</h4>
+      </div>
+	  <div class="modal-body" id="daily_s_geo5" style="width:100%"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="moredailygeo6" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="left:80%">
+      <div class="modal-header" style="width:100%">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
+        <h4 class="modal-title" id="myModalLabel">位置</h4>
+      </div>
+	  <div class="modal-body" id="daily_s_geo6" style="width:100%"></div>
+    </div>
+  </div>
+</div>
 <script src="/static/js/highstock.js" charset="utf-8"></script>
 <script src="/static/js/exporting.js" charset="utf-8"></script>
 <script src="/static/js/portrait/location.js" charset="utf-8"></script>
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=aBrX8X2tEjcqiKwL78DLmanZ"></script>
 <script src="/static/js/portrait/geo.js"></script>
 <script src="/static/js/portrait/activemap.js"></script>
+
 
 
 
