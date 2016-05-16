@@ -15,14 +15,15 @@ mod = Blueprint('search', __name__, url_prefix='/search')
 
 @mod.route('/portrait_search/')
 def ajax_portrait_search():
-    stype = request.args.get('stype', '')
+    stype = request.args.get('stype', 2)
+    stype = int(stype)
     result = {}
     query_data = {}
     query = []
     query_list = []
     condition_num = 0
 
-    if stype:
+    if stype == 1:
         fuzz_item = ['uid', 'uname']
         item_data = request.args.get('term', '')
         for item in fuzz_item:
