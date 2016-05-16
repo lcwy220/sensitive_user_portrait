@@ -300,7 +300,7 @@ function show_members(){
     function Draw_model(data){
         $('#group_member_user').empty();
         html = '';
-        html += '<table id="modal_table" class="table table-striped table-bordered bootstrap-datatable datatype responsive">';
+        html += '<table id="modal_table" style=" table-layout: auto;" class="table table-striped table-bordered bootstrap-datatable datatype responsive">';
         html += '<thead><tr><th class="center" style="text-align:center">用户ID</th><th class="center" style="text-align:center">昵称</th><th class="center" style="text-align:center;width：auto;">性别</th>';
         html += '<th class="center" style="text-align:center">注册地</th><th class="center" style="text-align:center">重要度</th><th class="center" style="text-align:center;width:72px">影响力</th>';
         html += '<th class="center" style="text-align:center"><input name="recommend_all" id="recommend_all" type="checkbox" value="" onclick="recommend_all()"></th>';
