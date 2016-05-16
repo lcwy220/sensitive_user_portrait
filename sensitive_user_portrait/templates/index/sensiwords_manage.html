@@ -74,8 +74,12 @@ tbody td{text-align:center;}
   {% endblock custom_css %}
 
     {% block body %}
-
-<div class="ch-container" style="padding-left:50px;padding-right:50px;width:1000px;">
+<link rel="stylesheet" href="/static/custom/css/overview.css" media="screen" />
+<link  type="text/css" href="/static/personal/css/style.css" rel="stylesheet"/>
+<div id="page" >
+<div id='content'>
+<h2>敏感词管理</h2>
+<div class="ch-container" style="padding-left:0px;padding-right:50px;width:1000px;">
 
     <div class="row">
       <div id="content" class="col-lg-10 col-sm-10">
@@ -121,7 +125,8 @@ tbody td{text-align:center;}
 
 
 </div><!--/.fluid-container-->
-
+</div>
+</div>
 <div class="modal fade" id="free_add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
