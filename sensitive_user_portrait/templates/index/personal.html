@@ -92,14 +92,14 @@
         </div>
         <div id="framesidebar" style="float:left;width:28%;height:auto;border:#555 solid 1px;background:#f5f5f5">
 			<ul style="margin-left:0px;">
-				<li style="border:#fff solid 1px">
+				<li>
                     <h3 style="padding:5px;background:#f5f5f5;" class="title">业务备注信息</h3>
                     <ul style="padding:0px;">
                         <div id="ptag" class="fleft" style="font-size:14px;width:240px;margin-top:20px;">
-                            
+                            <!--
                             <div class="tagClo fleft" ><span style="color:red;">test1</span>:<span class="tagbg"><span>tag1<span><a id="delIcon"></a></span></div>
                             <div class="tagClo fleft" ><span style="color:red;">test1</span>:<span class="tagbg"><span>tag1<span><a id="delIcon"></a></span></div>
-                                     
+                            -->     
                         </div>
                         <div id="addM" style="font-size:14px;border-bottom:solid 1px lightgrey;border-top:solid 1px lightgrey;width:240px;padding-top:20px;padding-bottom:20px;padding-right:25px;" class="fleft">
                             <div >
@@ -116,8 +116,13 @@
                             </div>
                             <span style=""><button class="btn btn-primary btn-sm" style="width:80px;height:30px;margin-top:30px;margin-left:30px;float:right;" id="add_person_tag_button" title="确定选择" onclick="add_person_tag()">添加</button></span>
                         </div>
+						<div  style="margin-top:0px;padding:0px;float:left;">
+						 <span style="width:100%;margin-left:30px;font-size:14px;">群组标签：</span>
+						<ul style="float:left;width:245px;padding-top:20px;" id="group_tag">
+						</ul>
+						</div>
                         <div class="PersonPre" style="margin-top:0px;padding:10px;float:left;"><span class="lightw">备注：</span>
-                            <span style="font-family: '宋体';"id="extraDetail">暂无</span>
+                            <span style="font-family: '宋体';"id="extraDetail"></span>
                         </div>
                     </ul>
                 </li>
@@ -679,21 +684,44 @@ $(function(){
 	
 });
 </script>
+<script type="text/javascript" src="/static/js/portrait/show_tag.js"></script> 
 <script>
     $('#vector_table').empty();
     var html = '';
 	//console.log(global_tag_vector);
-	html += '<li class="li_1"><span class="pt_title">政治倾向</span><span class="pt_detail">'+global_tag_vector[4][1]+'</span></li>';
-	html += '<li class="li_1"><span class="pt_title">领域</span><span class="pt_detail">'+global_tag_vector[1][1]+'</span></li>';
-	html += '<li class="li_1"><span class="pt_title">话题</span><span class="pt_detail">'+global_tag_vector[2][1]+'</span></li>';
+	if(global_tag_vector[4][1]){
+		html += '<li class="li_1"><span class="pt_title">政治倾向</span><span class="pt_detail">'+global_tag_vector[4][1]+'</span></li>';
+	}else{
+		html += '<li class="li_1"><span class="pt_title">政治倾向</span><span class="pt_detail">暂无数据</span></li>';
+	}
+	if(global_tag_vector[1][1]){
+		html += '<li class="li_1"><span class="pt_title">领域</span><span class="pt_detail">'+global_tag_vector[1][1]+'</span></li>';
+	}else{
+		html += '<li class="li_1"><span class="pt_title">领域</span><span class="pt_detail">暂无数据</span></li>';
+	}
+	if(global_tag_vector[2][1]){
+		html += '<li class="li_1"><span class="pt_title">话题</span><span class="pt_detail">'+global_tag_vector[2][1]+'</span></li>';
+	}else{
+		html += '<li class="li_1"><span class="pt_title">话题</span><span class="pt_detail">暂无数据</span></li>';
+	}
 	//var active_geo = personalData.activity_geo;
 	//active_geo = active_geo.replace('&',' ');
-	html += '<li class="li_1"><span class="pt_title">活跃时间</span><span class="pt_detail">'+personalData.活跃时间+'</span></li>';
-	html += '<li class="li_1"><span class="pt_title">活跃地方</span><span class="pt_detail">'+personalData.activity_geo_aggs+'</span></li>';
-	html += '<li class="li_1"><span class="pt_title">敏感词</span><span class="pt_detail">'+personalData.sensitive_words_string.split('&').join(' ')+'</span></li>';
+	if(personalData.活跃时间){
+		html += '<li class="li_1"><span class="pt_title">活跃时间</span><span class="pt_detail">'+personalData.活跃时间+'</span></li>';
+	}else{
+		html += '<li class="li_1"><span class="pt_title">活跃地方</span><span class="pt_detail">暂无数据</span></li>';
+	}
+	if(personalData.sensitive_words_string){
+		html += '<li class="li_1"><span class="pt_title">敏感词</span><span class="pt_detail">'+personalData.sensitive_words_string.split('&').join(' ')+'</span></li>';
+	}else{
+		html += '<li class="li_1"><span class="pt_title">敏感词</span><span class="pt_detail">暂无数据</span></li>';
+	}
 	//html += '<li class="li_1"><span class="pt_title">敏感微话题</span><span class="pt_detail">'+global_tag_vector[3][1]+'</span></li>';
-	html += '<li class="li_1"><span class="pt_title">微话题</span><span class="pt_detail">'+global_tag_vector[0][1]+'</span></li>';
-	
+	if(global_tag_vector[0][1]){
+		html += '<li class="li_1"><span class="pt_title">微话题</span><span class="pt_detail">'+global_tag_vector[0][1]+'</span></li>';
+	}else{
+		html += '<li class="li_1"><span class="pt_title">微话题</span><span class="pt_detail">暂无数据</span></li>';
+	}
     /*
 	for (var i = 0;i < global_tag_vector.length; i++){
         var unit = global_tag_vector[i];
