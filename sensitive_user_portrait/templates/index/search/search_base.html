@@ -60,7 +60,10 @@
                     <option>右派</option>
                 </select>
                 <span class="fleft lineh42 mright5 ">敏感词</span>
-                <select style='margin-left:22px;'name="sensi_word" class="fleft select-box"></select>
+                <input id="sensi_word" type='text' class="form-control" style='width: 235px;padding:0px; /* font-size:8px; */margin-top:5px;display:inline-block;height:25px' placeholder='多个关键词以空格分隔'>
+                <span id="search_keywords_input" style="cursor:pointer;">选择已有敏感词</span>
+
+                <!-- <select style='margin-left:22px;'name="sensi_word" class="fleft select-box"></select> -->
             </td>
         </tr>
         <tr>
@@ -113,7 +116,103 @@
     </div>
     <div id="search_result" style="margin-top:0px;"></div>
 </div>
+
+
+    <div class="modal fade" id="search_deit_words" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document" style="width:900px;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><!-- <span aria-hidden="true">&times;</span> --></button>
+            <h4 class="modal-title" id="myModalLabel">选择敏感词</h4>
+          </div>
+          <div class="modal-body">
+            <div id="modal_search_show_key">
+            </div>
+<!--             <span>群体名称：</span>
+            <span id="so_re_group_name" style="margin-left:10px;margin-right:20px;"></span>
+            <span style="margin-left:10px;">终止时间：</span>
+            <input id="so_re_end_time" type='text' style='width:145px; display:inline-block;height:25px'> -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="choose_key_button()">确认</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 <script src= '/static/custom/js/tbase.js'></script>
+<script >
+$('#search_keywords_input').click(function(e){
+          $('#search_deit_words').modal();
+});
+function draw_modal(data){
+      console.log(data.length)
+      var i=0;
+      var html = '';
+      html += '<table id="search_sensiwords_table" >';
+      html += '<thead><th>111</th><th>111</th><th>111</th><th>111</th><th>111</th><th>111</th></thead><tbody>';
+      html += '<tr>'
+      for(var d in data){
+        i=i+1;
+        if(data[d].length>6){
+          //html += '<td title='+data[d]+'>'+'<input type="checkbox" name="check_words">'+data[d].substr(0,6)+'...</td>'
+          html += '<td title='+data[d]+'>'+'<input type="checkbox" name="check_words">'+data[d].substr(0,6)+'...</td>'
+        }else{
+          html += '<td title='+data[d]+'>'+'<input type="checkbox" name="check_words">'+data[d]+'</td>'
+        }
+        if((i%6 == 0 ) && (i != data.length)){
+          html += '</tr><tr>'
+        }
+      }
+      html += '<td>dd</td></tr></tbody></table>';
+      $("#modal_search_show_key").append(html);
+      $('#search_sensiwords_table').dataTable({
+        "sDom": "<'row'<'col-md-12'f>r>t",
+       "sPaginationType": "bootstrap",
+       "bSort": false,
+       "oLanguage": {
+           "sLengthMenu": "_MENU_ 每页"
+       }
+
+      });
+      $('#search_sensiwords_table th ').css('display', 'none')
+}
+function choose_key_button(){
+  var words_origin = $('#sensi_word').val();
+  // if(check_words.length != 0){
+  //   console.log(check_words)
+  //   var already_words = $('#so_keywords').val().toString().split(" ");
+  //   already_words.splice(jQuery.inArray(check_words,already_words),1); 
+  //   var words = already_words.splice(jQuery.inArray(check_words,already_words),1); 
+
+  //   //var words = $('#so_keywords').val().toString().split(" ")- check_words;
+  // }else{
+  //   var words = words_origin;
+  // }
+  check_words = [];
+  $('[name="check_words"]:checked').each(function(){
+    var key = $(this).parent().attr("title");
+    check_words.push(key);
+  });
+ var words = $('#sensi_word').val();
+ if(words != ''){words += ' ';}
+ words += check_words.join(" ");
+ $('#sensi_word').val(words)
+}
+  function call_sync_ajax_request(url, method, callback){
+    $.ajax({
+      url: url,
+      type: method,
+      dataType: 'json',
+      async: false,
+      success:callback
+    });
+  }
+      call_sync_ajax_request("/social_sensing/get_admin_sensi_words/", 'GET', draw_modal);
+
+
+</script>
 
 
 
