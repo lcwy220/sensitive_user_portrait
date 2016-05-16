@@ -1,5 +1,5 @@
 function draw_search_results(data){
-    //console.log(data);
+    console.log(data);
     $('#search_result').empty();
     var user_url ;
     //console.log(user_url);
