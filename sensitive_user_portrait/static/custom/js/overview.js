@@ -587,15 +587,15 @@ function page_group_influ_weibo(start_row,end_row,data, sub_div_name){
 		var uid = data[s][7];
 		var uname = data[s][8];
         //var location = data[s][2];
-		//console.log(keyword);
-        //console.log(keyword.length);
+		console.log(keyword);
+        console.log(keyword.length);
         var tweet_ulr = data[s][10];
         //date = new Date(parseInt(timestamp)*1000).format("yyyy-MM-dd hh:mm:ss");
         if (i%2 ==0){
             html += '<div style="padding:5px;background:rgba(238, 238, 238, 0.56);">';
             html += '<p style="margin-left:10px;"><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;'+date+'&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';
-			if(key.length==0){
-				html += '<p style="margin-top:-5px;margin-left:10px;"><span style="width: 700px;float: left;"><span style="color:red">' + keyword + '</span></a></span>';
+			if(keyword.length==0){
+				html += '<p style="margin-top:-5px;margin-left:10px;"><span style="width: 700px;float: left;"><span style="color:red"> &nbsp;</span></a></span>';
 			}else{
 				html += '<p style="margin-top:-5px;margin-left:10px;"><span style="width: 700px;float: left;">敏感词：<span style="color:red">' + keyword + '</span></a></span>';
 			}   
@@ -605,8 +605,8 @@ function page_group_influ_weibo(start_row,end_row,data, sub_div_name){
         else{
             html += '<div style="padding:5px;">';
             html += '<p style="margin-left:10px;"><a target="_blank" href="/index/personal/?uid=' + uid + '">' + uname + '</a>&nbsp;&nbsp;'+date+'&nbsp;&nbsp;发布:<font color=black>' + text + '</font></p>';    
-            if(key.length==0){
-				html += '<p style="margin-top:-5px;margin-left:10px;"><span style="width: 700px;float: left;"><span style="color:red">' + keyword + '</span></a></span>';
+            if(keyword.length==0){
+				html += '<p style="margin-top:-5px;margin-left:10px;"><span style="width: 700px;float: left;"><span style="color:red">&nbsp; </span></a></span>';
 			}else{
 				html += '<p style="margin-top:-5px;margin-left:10px;"><span style="width: 700px;float: left;">敏感词：<span style="color:red">' + keyword + '</span></a></span>';
 			}

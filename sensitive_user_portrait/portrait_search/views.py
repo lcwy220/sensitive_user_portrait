@@ -60,7 +60,7 @@ def ajax_portrait_search():
                 attribute_name = attribute_name_value[0]
                 attribute_value = attribute_name_value[1]
                 if attribute_name and attribute_value:
-                    query.append({"term":{attribute_name:attribute_value}})
+                    query.append({"term":{"tag-"+attribute_name:attribute_value}})
                     condition_num += 1
 
     size = 1000
