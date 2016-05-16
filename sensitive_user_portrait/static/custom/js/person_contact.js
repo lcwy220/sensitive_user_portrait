@@ -14,25 +14,24 @@ Search_weibo.prototype = {
           success:callback
         });
     },
-
-    
     Return_data: function(data){
         return data;
     },
-
     Draw_user_tag: function(data){
-      console.log(data);
+      //console.log(data);
       $('#user_lable').empty();
       user_lable_html = '';
       user_lable_html += '<table id="" class="table table-striped table-bordered bootstrap-datatable datatype responsive">';
-      user_lable_html += '<thead><tr><th class="center" style="text-align:center;vertical-align:middle">用户ID</th>';
-      user_lable_html += '<th class="center" style="text-align:center;vertical-align:middle;">用户标签</th>';
-      user_lable_html += '<th class="center" style="text-align:center;vertical-align:middle;">全选<input name="recommend_all" id="recommend_all" type="checkbox" value="" onclick="recommend_all()"></th>';
+      user_lable_html += '<thead><tr><th class="center" style="text-align:center">用户ID</th>';
+      //user_lable_html += '<th class="center" style="text-align:center">昵称</th>';
+      user_lable_html += '<th class="center" style="text-align:center">用户标签</th>';
+      user_lable_html += '<th class="center" style="text-align:center">全选<input name="recommend_all" id="recommend_all" type="checkbox" value="" onclick="recommend_all()"></th>';
       user_lable_html += '</tr></thead>';
       user_lable_html += '<tbody>';
       for (key in data){
        user_lable_html += '<tr>';
        user_lable_html += '<th class="center" style="text-align:center"><a target="_blank" href="/index/personal/?uid=' + key + '">' + key +'</a></th>'; 
+       //user_lable_html += '<th class="center" style="text-align:center">' + data[key] + '</th>';
        user_lable_html += '<th class="center" style="text-align:center">' + data[key] + '</th>';
        user_lable_html += '<th class="center" style="text-align:center"><input name="in_status" class="in_status" type="checkbox" value="' + key + '"/></th>';
        user_lable_html += '</tr>';   
@@ -49,21 +48,20 @@ Search_weibo.prototype = {
     },
 
     Draw_table: function(data){
-        console.log(data);
+        console.log('Draw_table',data);
         that.data = data;
-        if(data=='0'){
+        if(data.length == 2||data.length==0){
             alert("没有相关人物推荐");
+            $('#table').empty();
+            $('#table').append('<div><center>暂无数据</center></div>')
+            document.getElementById('relatednum').innerHTML = '0';
             return false;
         }
         $('#table').empty();
         var html = '';
         var height = 39 * (data.length-1);
-        html += '<table class="table table-striped table-bordered bootstrap-datatable datatype responsive" style="table-layout:fixed">';
-        html += '<thead><tr><th class="center" style="text-align:center">昵称</th>';
-        html += '<th class="center" style="text-align:center; ">活跃度</th><th class="center" style="text-align:center;">重要度</th>';
-        html += '<th class="center" style="text-align:center">影响力</th><th class="center" style="text-align:center">敏感性</th><th class="center" style="text-align:center">得分</th>';
-        html += '<th class="center" style="text-align:center">关联维度</th>';
-        html += '<th style="width:40px"><input name="choose_all" id="choose_all" type="checkbox" value="" onclick="choose_all()" /></th></tr></thead>';
+        html += '<table  id="recom_table" class="table table-striped table-bordered bootstrap-datatable datatable responsive" style="table-layout:fixed">';
+        html += '<thead><tr><th class="center" style="text-align:center">用户ID</th><th class="center" style="text-align:center">昵称</th><th class="center" style="text-align:center; ">活跃度</th><th class="center" style="text-align:center;">身份敏感度</th><th class="center" style="text-align:center">影响力</th><th class="center" style="text-align:center">言论敏感度</th><th class="center" style="text-align:center">相关度</th><th style="width:40px"><input name="choose_all" id="choose_all" type="checkbox" value="" onclick="choose_all()" /></th></tr></thead>';
         html += '<tbody>';
         for(var item = 1; item < data.length-1; item++){
             html += '<tr style="border-bottom:1px solid #ddd">';
@@ -72,31 +70,29 @@ Search_weibo.prototype = {
                 if(data[item][i] == 'unknown'){
                     data[item][i] = '未知'
                 }
-                if((i >= 2) && (i <= 6)) {
+                if (data[item][1] == '未知'){
+                    data[item][1] = data[item][0];
+                }
+                if(i >= 2) {
                     html += '<td class="center" style="text-align:center;vertical-align:middle">'+ data[item][i].toFixed(2) +'</td>';
                 }
-                else if (i == 0){
-                   var user_url = personal_url + data[item][0];
-                   save_id.push(data[item][0]);
-                   //html += '<td class="center" style="text-align:center;vertical-align:middle"><a href='+user_url +' target="_blank">'+ data[item][i] +'</a></td>';
-                }
-                else if (i == 1) {
-                   html += '<td class="center" style="text-align:center;vertical-align:middle"><a href=' + user_url + ' target="_blank">' + data[item][i] +'</a></td>'; 
-                }
-                else {
-                    var relation = new Array();
-                    var rel_obj = data[item][i];
-                    for (var key in rel_obj){
-                        relation.push(key);
-                    }
-                   html += '<td class="center" style="text-align:center;vertical-align:middle">'+ relation.join(',') +'</td>'; 
-                }
+                else{
+            if(i == 0){
+               var user_url = personal_url + data[item][0];
+               save_id.push(data[item][0]);
+                html += '<td class="center" style="text-align:center;vertical-align:middle"><a href='+user_url +' target="_blank">'+ data[item][i] +'</a></td>';
+            }else{
+               html += '<td class="center" style="text-align:center;vertical-align:middle">'+ data[item][i] +'</td>'; 
+            }
+                }            
             }
             html += '<td class="center"><input name="search_result_option" class="search_result_option" type="checkbox" value="' + item + '" /></td>';
             html += '</tr>';
         }
         html += '</tbody>';
         html += '</table>';
+        //console.log(data.length)
+        document.getElementById('relatednum').innerHTML = data.length-2;
         $('#table').css('height',height);
         $('#table').append(html);
         for (var i = 0; i < save_id.length; i++) {
@@ -104,6 +100,15 @@ Search_weibo.prototype = {
             id_string += save_id[s] + ',';
         };
         id_string=id_string.substring(0,id_string.length-1)
+//        $('#recom_table').dataTable({
+//        "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
+//        "sPaginationType": "custom_bootstrap",
+//        "aaSorting":[[4,"desc"]],
+//        "aoColumnDefs":[ {"bSortable": false, "aTargets":[8]}],
+//       // "oLanguage": {
+//       // "sLengthMenu": "_MENU_ 每页",
+//       // }
+//        });
     },
 
   Draw_attribute_name: function(data){
@@ -135,29 +140,32 @@ Search_weibo.prototype = {
   },
 
     Draw_picture: function(data){
-        if(data==0){
-            alert("");
+		console.log(data);
+        if(data.length == 2){
+            alert("暂无相关人物！");
             return false;
         }
         var Related_Node = new Array();
         var Related_Link = new Array();
-        Related_Node.push({'name':data[0][0],'value':data[0][5],'label':data[0][1],'category':0,'symbolSize':20*Math.sqrt(data[0][5]),'itemStyle':{'normal':{'color':'rgba(255,215,0,0.4)'}}});
+        var main_name = data[0][1];
+        if(main_name == 'unknown'){
+            main_name = '未知';
+        }
+        var user_value = 100;
+        Related_Node.push({'name':data[0][0],'value':user_value,'label':main_name,'category':0,'symbolSize':2*Math.sqrt(user_value),'itemStyle':{'normal':{'color':'rgba(255,215,0,0.4)'}}});
         var user_name = data[0][0];
          var personal_url = 'http://'+ window.location.host + '/index/personal/?uid=';
         for(var item =1; item < data.length-1; item++){
-            var node_weight = Math.ceil(data[item][5] / 2) * 10;
-            var link_weight = data[item][5] * 2;
             if(data[item][1]=='unknown'){
                 data[item][1] = '未知';
-                Related_Node.push({'name':data[item][0], 'value':data[item][5], 'label':data[item][1],'category':1,'symbolSize':node_weight});
-                Related_Link.push({'source':user_name, 'target':data[item][0], 'weight':data[item][5],'itemStyle':{'normal':{'width':link_weight}}});
+                Related_Node.push({'name':data[item][0], 'value':data[item][5], 'label':data[item][1],'category':1,'symbolSize':2*Math.sqrt(data[item][5])});
+                Related_Link.push({'source':user_name, 'target':data[item][0], 'weight':data[item][5],'itemStyle':{'normal':{'width':Math.sqrt(data[item][5])}}});
             }
             else{
-                Related_Node.push({'name':data[item][0], 'value':data[item][5], 'label':data[item][1],'category':1,'symbolSize':node_weight});
-                Related_Link.push({'source':user_name, 'target':data[item][0], 'weight':data[item][5],'itemStyle':{'normal':{'width':link_weight}}});
+                Related_Node.push({'name':data[item][0], 'value':data[item][5], 'label':data[item][1],'category':1,'symbolSize':2*Math.sqrt(data[item][5])});
+                Related_Link.push({'source':user_name, 'target':data[item][0], 'weight':data[item][5],'itemStyle':{'normal':{'width':Math.sqrt(data[item][5])}}});
             }
         }
-        console.log(Related_Link);
         var option = {
                 title : {
                     text: '',
@@ -267,81 +275,124 @@ Search_weibo.prototype = {
 }
 var save_id = [];
 var id_string = '';
-var test_uids = [];
-var test_uids_string = '';
 var Search_weibo = new Search_weibo();
+
+
+
+
+ Search_weibo.call_sync_ajax_request(get_choose_data(uid), Search_weibo.ajax_method, Search_weibo.Draw_table);
+
 //get tag
-var user_tag = '/tag/show_user_attribute_name/?uid='+ uid;
-Search_weibo.call_sync_ajax_request(user_tag, Search_weibo.ajax_method, Show_tag);
+//var user_tag = '/tag/show_user_attribute_name/?uid='+ uid;
+//Search_weibo.call_sync_ajax_request(user_tag, Search_weibo.ajax_method, Show_tag);
 
-Search_weibo.call_sync_ajax_request(get_choose_data(uid), Search_weibo.ajax_method, Search_weibo.Draw_table);
+// Search_weibo.call_sync_ajax_request(get_choose_data(uid), Search_weibo.ajax_method, Search_weibo.Draw_table);
 Search_weibo.Draw_picture(Search_weibo.data);
-var show_user_tag_url = '/tag/show_user_tag/?uid_list=' + id_string;
-Search_weibo.call_sync_ajax_request(show_user_tag_url, Search_weibo.ajax_method, Search_weibo.Draw_user_tag);
-var tag_url = "/tag/show_attribute_name/";
-Search_weibo.call_sync_ajax_request(tag_url, Search_weibo.ajax_method, Search_weibo.Draw_attribute_name);
-var select_attribute_name = $("#select_attribute_name").val()
-var attribute_value_url = '';
-attribute_value_url = '/tag/show_attribute_value/?attribute_name=' + select_attribute_name;
-Search_weibo.call_sync_ajax_request(attribute_value_url, Search_weibo.ajax_method, Search_weibo.Draw_attribute_value);
+// var show_user_tag_url = '/tag/show_user_tag/?uid_list=' + id_string;
+// Search_weibo.call_sync_ajax_request(show_user_tag_url, Search_weibo.ajax_method, Search_weibo.Draw_user_tag);
+// var tag_url = "/tag/show_attribute_name/";
+// Search_weibo.call_sync_ajax_request(tag_url, Search_weibo.ajax_method, Search_weibo.Draw_attribute_name);
+// var select_attribute_name = $("#select_attribute_name").val()
+// var attribute_value_url = '';
+// attribute_value_url = '/tag/show_attribute_value/?attribute_name=' + select_attribute_name;
+// Search_weibo.call_sync_ajax_request(attribute_value_url, Search_weibo.ajax_method, Search_weibo.Draw_attribute_value);
 
-var global_data = Search_weibo.data;
+// var global_data = Search_weibo.data;
+
+
+var attr_url='/imagine/portrait_related/?uid='+uid;
+console.log(attr_url);
+Search_weibo.call_sync_ajax_request(attr_url, Search_weibo.ajax_method, draw_attribute);
+
+function draw_attribute(data){
+    console.log(data);
+    $('#politics').html(data.politics);
+    $('#sensitive_words_string').html(data.sensitive_words_string);
+    $('#domain').html(data.domain);    
+    if(data.topic.length>10){
+        $('#topic').html(data.topic.substr(0,8)+'...');
+        $('#topic').attr('title',data.topic);
+    }else{
+        $('#topic').html(data.topic);
+    }
+    $('#hashtag').html(data.hashtag);
+    $('#geo_activity').html(data.geo_activity);
+    $('#keywords_string').html(data.keywords_string);
+    draw_list(data.keywords_detail,'key_WordList','关键词');
+    draw_list(data.geo_activity_detail,'location_WordList','地理位置');
+    draw_list(data.hashtag_detail,'hashtag_WordList','微话题');
+    draw_list(data.sensitive_words_detail,'sensitive_WordList','敏感词');
+  //  $('#sensitive_words_string').html(data.sensitive_words_string);        
+}
+
+function draw_list(data,div,title0){
+    var html = '';
+    $('#'+div).empty();
+    html += '<table class="table table-striped table-bordered" style="width:450px;">';
+    html += '<tr><th style="text-align:center">排名</th><th style="text-align:center">'+title0+'</th><th style="text-align:center">频数</th></tr>';
+    for (var i = 0; i < data.length; i++) {
+        var s = i.toString();
+        var m = i + 1;
+        if(data[i][0]=='m'){
+            data[i][0] = '暂无数据';
+        }
+        html += '<tr style=""><th style="text-align:center">' + m + '</th><th style="text-align:center">' + data[i][0] +  '</th><th style="text-align:center">' + data[i][1]+ '</th></tr>';
+    };
+    html += '</table>'; 
+    $('#'+ div).append(html);
+}
 
 function recommend_all(){
   $('input[name="in_status"]:not(:disabled)').prop('checked', $("#recommend_all").prop('checked'));
 }
 
 function Show_tag(data){
-    var height = $('#box-height').height();
-    if(data.length <=4 && data.length > 0 ){
-        console.log('aaaaa');
-        $('#box-height').css('height',height+20);
-    }
-    else if(data.length >4 && data.length <=8){
-        $('#box-height').css('height',height+20*2);
-    }
-    else{
-        $('#box-height').css('height',height+20*3);
-    }
-    html = '';
+    // var height = $('#box-height').height();
+    // if(data.length <=4 && data.length > 0 ){
+    //     console.log('aaaaa');
+    //     $('#box-height').css('height',height+20);
+    // }
+    // else if(data.length >4 && data.length <=8){
+    //     $('#box-height').css('height',height+20*2);
+    // }
+    // else{
+    //     $('#box-height').css('height',height+20*3);
+    // }
+    var html = '';
     if(data.length == 0){
       return false;
     }
     else{
       for(var i = 0; i < data.length; i++){
-        html += '<div class="col-lg-3" >';
-        html += '<input type="checkbox" class="inline-checkbox" value="option1">';
-        html += '<span class="input-group-addon" style="width:96px;border:1px solid white; background-color:white;display:inline-block" id="'+ data[i] +'">'+ data[i] +'</span>';
-        html += '<input type="text" class="form-control" style="width:35%; display:inline;height:25px;margin-left:7px" disabled>';
+        html += '<div class="col-lg-3" style="margin-bottom:4px">';
+        // html += '<input type="checkbox" class="inline-checkbox" value="option1">';
+        html += '<span class="input-group-addon" style="width:96px;border:1px solid white; background-color:white;display:inline-block" id="'+ data[i] +'">'+ data[i] +' *</span>';
+        html += '<input type="text" class="form-control" style="width:40%; display:inline;height:25px;margin-left:7px" disabled>';
         html += '</div>';
       }
+      html +='<div style="font-size:12px;line-height:28px;margin-left:20px;">注：带*表明此属性为自定义属性</div>'
       $('#tag').append(html);
+      var each_height =  Math.ceil(data.length/4)*30 + 200;
+      var height = each_height.toString() + 'px';
+      $('#contact_select').css('height', height);
     }
 }
 
 function add_group_tag(){
-    select_uids = [];
-    select_uids_string = '';
+    var select_uids = [];
+    var select_uids_string = '';
     $('input[name="in_status"]:checked').each(function(){
         select_uids.push($(this).attr('value'));
     })
-    console.log(select_uids);
+    //console.log(select_uids);
 
-    for (var i = 0; i < test_uids.length; i++) {
-        t=i.toString();
-        test_uids_string += test_uids + ',';
-    };
-    console.log(test_uids);
     for (var i = 0; i < select_uids.length; i++) {
-        s=i.toString();
+        var s=i.toString();
         select_uids_string += select_uids[s] + ',';
     };
-    total_uids = select_uids_string + test_uids_string;
-    total_uids = total_uids.substring(0,total_uids.length-1);
-    console.log(total_uids);
-    add_tag_attribute_name = $("#select_attribute_name").val();
-    add_tag_attribute_value = $("#select_attribute_value").val();
-    add_group_tag_url = '/tag/add_group_tag/?uid_list=' + select_uids_string + "&attribute_name=" + add_tag_attribute_name + "&attribute_value=" + add_tag_attribute_value;
+    var add_tag_attribute_name = $("#select_attribute_name").val();
+    var add_tag_attribute_value = $("#select_attribute_value").val();
+    var add_group_tag_url = '/tag/add_group_tag/?uid_list=' + select_uids_string + "&attribute_name=" + add_tag_attribute_name + "&attribute_value=" + add_tag_attribute_value;
     Search_weibo.call_sync_ajax_request(add_group_tag_url, Search_weibo.ajax_method, Search_weibo.Draw_add_group_tag);
 }
 
@@ -353,48 +404,52 @@ $('.label-success').click(function(){
     }
     else{
     Search_weibo.call_sync_ajax_request(url, Search_weibo.ajax_method, Search_weibo.Draw_table);
+	console.log(Search_weibo.data);
     Search_weibo.Draw_picture(Search_weibo.data);
-    //Search_weibo.call_sync_ajax_request(url, Search_weibo.ajax_method, Search_weibo.Draw_picture);
+    
+    Search_weibo.call_sync_ajax_request(url, Search_weibo.ajax_method, Search_weibo.Draw_picture);
     }
 });
 
-$('.inline-checkbox').click(function(){
-    console.log('dddd');
-    if($(this).is(':checked')){
-        $(this).next().next().val('1');
-        $(this).next().next().attr('disabled',false);
-    }
-    else{
-        $(this).next().next().val('');
-        $(this).next().next().attr('disabled',true);
-    }
-});
+// $('.inline-checkbox').click(function(){
+//     if($(this).is(':checked')){
+//         $(this).next().next().val('1');
+//         $(this).next().next().attr('disabled',false);
+//     }
+//     else{
+//         $(this).next().next().val('');
+//         $(this).next().next().attr('disabled',true);
+//     }
+// });
 
 //获取选择的条件，把参数传出获取返回值
 function get_choose_data(uid){
-    var url = '/imagine/?uid=' + uid + '&keywords=';
+    var url = '/imagine/imagine/?uid=' + uid + '&keywords=';
     var keywords = new Array();
     var weight = new Array();
     var field ;
     var isflag = 1;
-    $('.inline-checkbox').each(function(){
-        if($(this).is(':checked')){
-            keywords.push($(this).next().attr('id'));
-            if($(this).next().next().val() > 10 || $(this).next().next().val < 1 ){
-                alert("请输入1到10之间的权重");
-                isflag = 0;
-            }else{
-                weight.push($(this).next().next().val());
-            }
+    $('.input-group-addon').each(function(){
+        if ($(this).attr('id') != ''){ 
+        keywords.push($(this).children().attr('id'));
+        var value = $(this).next().val();
+        if((parseInt(value) != value) || (value > 10) || (value < 0 )){
+            alert("请输入0-10的整数");
+            isflag = 0;
+            return false;
+        }else{
+            weight.push(value);
+        }
         }
     });
-    $('[type="radio"]').each(function(){
-        if($(this).is(':checked')){
-            filed = $(this).attr('id');
-        }
-    });
+    // $('[type="radio"]').each(function(){
+    //     if($(this).is(':checked')){
+    //         field = $(this).attr('id');
+    //     }
+    // });
     if(isflag == 1){
-    url = url + keywords.join(',') + '&weight=' + weight.join(',') + '&field=' +filed ;
+        url = url + keywords.join(',') + '&weight=' + weight.join(',');
+
     }
     else{
         url = '';
@@ -404,7 +459,7 @@ function get_choose_data(uid){
 }
 
 // 保留原有的html代码
-var origin_html = $('#ADD').html();
+//var origin_html = $('#ADD').html();
 
 function diy_button(){
  // $('#ADD').html(origin_html);
@@ -416,31 +471,17 @@ function diy_button(){
   //   alert('请选择至少1个用户');
   // }
   // else{
-      $('#Diymodal').modal();
+  //  $('#Diymodal').modal();
   // }
-  $(".addIcon").off("click").click(function(){
-    var html = '';
-    html += '<div class="tagCols"><span >标签名</span><input name="tagname" class="inputbox " type="text" value="" style="margin-left:35px;line-height:36px;"></div>';
-    $('#ADD').append(html);
-  });
-
+  $('#Diymodal').modal();
 }
 
 
 function compare_button(){
-  var cur_uids = []
+  var compare_uids = []
   $('input[name="search_result_option"]:checked').each(function(){
-      cur_uids.push($(this).attr('value'));
+      compare_uids.push($(this).attr('value'));
   });
-  // global_choose_uids[global_pre_page] = cur_uids;
-  var compare_uids = [];
-  // for (var key in cur_uids){
-      // var temp_list = global_choose_uids[key];
-  for (var i = 0; i < cur_uids.length; i++){
-    compare_uids.push(cur_uids[i]);
-  }
-  // }
-  console.log(compare_uids);
   var len = compare_uids.length;
   if(len>3 || len<2){
     alert("请选择2至3个用户！");
@@ -452,22 +493,10 @@ function compare_button(){
 }
 
 function group_button(){
-  var cur_uids = []
+  var group_uids = []
   $('input[name="search_result_option"]:checked').each(function(){
-      cur_uids.push($(this).attr('value'));
+      group_uids.push($(this).attr('value'));
   });
-  // global_choose_uids[global_pre_page] = cur_uids;
-  var group_uids = [];
-for (var i = 0; i < cur_uids.length; i++){
-    group_uids.push(cur_uids[i]);
-  }
-  // for (var key in global_choose_uids){
-  //     var temp_list = global_choose_uids[key];
-  //     for (var i = 0; i < temp_list.length; i++){
-  //       group_uids.push(temp_list[i]);
-  //     }
-  // }
-  console.log(group_uids);
   var len = group_uids.length;
   if (len < 1){
       alert("请选择至少1个用户!");
@@ -475,30 +504,6 @@ for (var i = 0; i < cur_uids.length; i++){
   else{
       draw_table_group_confirm(group_uids, "#group_comfirm");
       $("#group").modal();
-  }
-}
-
-function delete_button(){
-  var cur_uids = []
-  $('input[name="search_result_option"]:checked').each(function(){
-      cur_uids.push($(this).attr('value'));
-  });
-  global_choose_uids[global_pre_page] = cur_uids;
-  var delete_uids = [];
-  for (var key in global_choose_uids){
-      var temp_list = global_choose_uids[key];
-      for (var i = 0; i < temp_list.length; i++){
-        delete_uids.push(temp_list[i]);
-      }
-  }
-  console.log(delete_uids);
-  var len = delete_uids.length;
-  if (len < 1){
-      alert("请选择至少1个用户!");
-  }
-  else{
-      draw_table_delete_confirm(delete_uids, "#delete_comfirm");
-      $('#delete').modal();
   }
 }
 
@@ -520,7 +525,7 @@ function draw_table_compare_confirm(uids, div){
       html += '<td class="center">'+ item[2].toFixed(2) + '</td>';
       html += '<td class="center" style="width:100px;">'+ item[3].toFixed(2) + '</td>';
       html += '<td class="center" style="width:100px;">'+ item[4].toFixed(2) + '</td>';
-      html += '<td class="center" style="width:100px;">'+ item[5].toFixed(2) + '</td>';
+      html += '<td class="center" style="width:100px;">'+ item[5] + '</td>';
       html += '<td class="center" style="width:80px;"><button class="btn btn-primary btn-sm" style="width:60px;height:30px" onclick="delRow(this)">移除</button></td>';
       html += '</tr>';
     }
@@ -533,49 +538,17 @@ function draw_table_group_confirm(uids, div){
   $(div).empty();
     var html = '';
     html += '<table id="group_confirm_table" class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
-    html += '<thead><tr><th class="center" style="text-align:center">昵称</th><th class="center" style="text-align:center">活跃度</th>';
-    html += '<th class="center" style="text-align:center;width:72px">重要度</th><th class="center" style="text-align:center">影响力</th>';
-    html += '<th class="center" style="text-align:center">得分</th>';
-    html += '<th class="center" style="text-align:center;">关联维度</th><th></th></tr></thead>';
+    html += '<thead><tr><th class="center" style="text-align:center">用户id</th><th class="center" style="text-align:center">昵称</th><th class="center" style="text-align:center">活跃度</th><th class="center" style="text-align:center;width:72px">重要度</th><th class="center" style="text-align:center">影响力</th><th class="center" style="text-align:center">得分</th><th></th></tr></thead>';
     html += '<tbody>';
     for(var i in uids){
       var item = global_data[uids[i]];
       html += '<tr">';
-      // html += '<td class="center" name="group_confirm_uids">'+ item[0] +'</td>';
-      html += '<td class="center" style="text-align:center;">'+ item[1] + '</td>';
-      html += '<td class="center" style="text-align:center;">'+ item[2].toFixed(2) + '</td>';
-      html += '<td class="center" style="text-align:center;width:100px;">'+ item[3].toFixed(2) + '</td>';
-      html += '<td class="center" style="text-align:center;width:100px;">'+ item[4].toFixed(2) + '</td>';
-      html += '<td class="center" style="text-align:center;width:100px;">'+ item[5].toFixed(2) + '</td>';
-      var relation = new Array();
-      for (var j in item[7]){
-          relation.push(j);
-      }
-      html += '<td class="center" style="text-align:center;width:100px;">'+ relation.join(',') + '</td>';
-      html += '<td class="center" style="text-align:center;width:80px;"><button class="btn btn-primary btn-sm" style="width:60px;height:30px" onclick="delRow(this)">移除</button></td>';
-      html += '</tr>';
-    }
-    html += '</tbody>';
-    html += '</table>';
-    $(div).append(html);
-}
-
-function draw_table_delete_confirm(uids, div){
-  $(div).empty();
-    var html = '';
-    html += '<table id="delete_confirm_table" class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
-    html += '<thead><tr><th>用户ID</th><th>用户名</th><th>注册地</th><th>活跃度</th><th>重要度</th><th>影响力</th><th>得分</th><th></th></tr></thead>';
-    html += '<tbody>';
-    for(var i in uids){
-      var item = global_data[uids[i]];
-      html += '<tr id=' + uids[1] +'>';
-      html += '<td class="center" name="delete_confirm_uids">'+ uids[i] +'</td>';
+      html += '<td class="center" name="group_confirm_uids">'+ item[0] +'</td>';
       html += '<td class="center">'+ item[1] + '</td>';
-      html += '<td class="center">'+ item[2] + '</td>';
-      html += '<td class="center" style="width:100px;">'+ item[3] + '</td>';
-      html += '<td class="center" style="width:100px;">'+ item[4] + '</td>';
+      html += '<td class="center">'+ item[2].toFixed(2) + '</td>';
+      html += '<td class="center" style="width:100px;">'+ item[3].toFixed(2) + '</td>';
+      html += '<td class="center" style="width:100px;">'+ item[4].toFixed(2) + '</td>';
       html += '<td class="center" style="width:100px;">'+ item[5] + '</td>';
-      html += '<td class="center" style="width:100px;">'+ item[6] + '</td>';
       html += '<td class="center" style="width:80px;"><button class="btn btn-primary btn-sm" style="width:60px;height:30px" onclick="delRow(this)">移除</button></td>';
       html += '</tr>';
     }
@@ -602,7 +575,7 @@ function compare_confirm_button(){
       return;
   }
   var compare_url = '/index/contrast/?uid_list='+ compare_confirm_uids.join(',');
-  console.log(compare_url);
+  //console.log(compare_url);
   window.open(compare_url);
 }
 
@@ -611,18 +584,17 @@ function group_confirm_button(){
   $('[name="group_confirm_uids"]').each(function(){
       group_confirm_uids.push($(this).text());
   })
-  console.log(group_confirm_uids);
+  //console.log(group_confirm_uids);
   var group_ajax_url = '/group/submit_task/';
-  var group_url = '/index/group_result/';
+  var group_url = '/index/group/';
   var group_name = $('input[name="group_name"]').val();
   var remark = $('input[name="remark"]').val();
-  console.log(group_name, remark);
+  //console.log(group_name, remark);
   if (group_name.length == 0){
       alert('群体名称不能为空');
       return;
   }
-
-
+  //console.log(group_url);
   var reg = "^[a-zA-Z0-9_\u4e00-\u9fa5\uf900-\ufa2d]+$";
   if (!group_name.match(reg)){
     alert('群体名称只能包含英文、汉字、数字和下划线,请重新输入!');
@@ -646,8 +618,9 @@ function group_confirm_button(){
       success: callback
   });
   function callback(data){
-      console.log(data);
+      //console.log(data);
       if (data == '1'){
+          //console.log('seceed',group_ajax_url)
           window.location.href = group_url;
       }
       else{
@@ -656,50 +629,3 @@ function group_confirm_button(){
   }
 }
 
-function delete_confirm_button(){
-  var now_date = new Date();
-  var now = now_date.getFullYear()+"-"+((now_date.getMonth()+1)<10?"0":"")+(now_date.getMonth()+1)+"-"+((now_date.getDate())<10?"0":"")+(now_date.getDate());
-  var delete_confirm_uids = [];
-  $('[name="delete_confirm_uids"]').each(function(){
-      delete_confirm_uids.push($(this).text());
-  })
-  console.log(delete_confirm_uids);
-  var delete_uid_list = '';
-  for(var i in delete_confirm_uids){
-      delete_uid_list += delete_confirm_uids[i];
-      if(i<(delete_confirm_uids.length-1))
-        delete_uid_list += ',';
-  }
-  if(confirm("确认要删除吗?")){
-      var delete_url = '/recommentation/search_delete/?date=' + now + '&uid_list=' + delete_uid_list;
-      console.log(delete_url);
-      $.ajax({
-          type:'get',
-          url: delete_url,
-          dataType: "json",
-          success: callback
-      });
-      function callback(data){
-           console.log(data);
-           if (data == '1'){
-               for (var i = 0; i < delete_confirm_uids.length; i++){
-                   global_data[delete_confirm_uids[i]] = '';
-               }
-               alert('出库成功！');
-               draw_table_search_result.Re_Draw_table(global_data);
-           }
-           else{
-               alert('fail');
-           }
-      }
-  }
-}
-
-function replace_space(data){
-  for(var i in data){
-    if(data[i]===""||data[i]==="unknown"){
-      data[i] = "未知";
-    }
-  }
-  return data;
-}
