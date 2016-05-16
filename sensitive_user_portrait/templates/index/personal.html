@@ -3,28 +3,9 @@
 
 {% block custom_css %}
 {{ super() }}
- <!-- <link href="/static/bootstrap/css/bootstrap-cerulean.min.css" rel="stylesheet"> -->
 <link  type="text/css" href="/static/personal/css/style.css" rel="stylesheet"/>
 <link  type="text/css" href="/static/personal/css/basic.css" rel="stylesheet"/>
-<!-- <link  type="text/css" href="/static/personal/css/framestyle.css" rel="stylesheet"/> -->
-<style type="text/css">
-    .panel-default{
-        border-color: #dddddd;
-    }
-    .panel{
-        margin-bottom: 20px;
-        background-color: #ffffff;
-        border:1px solid transparent;
-        border-radius: 4px;
-        box-shadow: 0 1px 1px rgba(0,0,0,0.05);
-        border-color: #dddddd;
-    }
-    .panel-heading{
-        color:#555555;
-        background-color:#f5f5f5;
-        border-color: #dddddd; 
-    }
-</style>
+<link  type="text/css" href="/static/personal/css/framestyle.css" rel="stylesheet"/>
 
 {% endblock custom_css %}
 
@@ -43,8 +24,8 @@
 	<div id="basicpage">
 	<div id="basicpage-bgtop">
     <div id="basicpage-bgbtm">
-        <div class=" panel panel-default framepost" id="frametopbar" style="height:250px;">
-            <h3 class='panel-heading title' style="margin:0px">个人注册信息</h3>
+        <div class="framepost" id="frametopbar" style="height:250px;">
+            <h3 class='title' style="background:#f5f5f5;padding:5px;">个人注册信息</h3>
             <div style="width:180px; float:left;margin:10px;margin-left:40px;"><span class="img-photo"><img id="portraitImg" src="http://tp2.sinaimg.cn/1878376757/50/0/1" alt="Photo" width="170" height="170" /></span></div>
             <div style="width:750px; float:left;padding-top:10px;padding-right:10px;margin-left:10px;">
                 <div style="height:70px; margin-bottom: 8px;">
@@ -69,7 +50,7 @@
                 </div>
               </div>
               <div style="width:750px; float:left;margin-left:10px;">
-                <div style="height:90px;font-weight:bold;font-size:14px;margin-right:10px;border-style:solid;border-width: 1px; padding: 5px; border-color: #CCCCCC; background-color: #FFFFFF;">
+                <div style="height:90px;font-weight:bold;font-size:14px;margin-right:10px;border-style:solid;border-width: 1px; padding: 5px; border-color: #CCCCCC; background-color: #f5f5f5;">
                     <div class="cols" style="width:700px;margin-top:0px;">
                         <div style="width:230px;height:40px;float:left;">
                             <span class="lightw fleft lineh42 mright38">用户ID:</span>
@@ -109,10 +90,10 @@
                 </div>
             </div>
         </div>
-        <div id="framesidebar" class=" panel panel-default " style="float:left;width:28%;height:auto;">
-			<h3 style="margin:0px" class="title panel-heading">业务备注信息</h3>
-            <ul style="margin-left:0px;">
-				<li>
+        <div id="framesidebar" style="float:left;width:28%;height:auto;border:#555 solid 1px;background:#f5f5f5">
+			<ul style="margin-left:0px;">
+				<li style="border:#fff solid 1px">
+                    <h3 style="padding:5px;background:#f5f5f5;" class="title">业务备注信息</h3>
                     <ul style="padding:0px;">
                         <div id="ptag" class="fleft" style="font-size:14px;width:240px;margin-top:20px;">
                             
@@ -143,8 +124,8 @@
 			</ul>
 		</div>
 		<div id="framecontent" style="float:right;width:70%;">
-            <div class="panel panel-default  framepost">
-                <h3 class="panel-heading title" style="margin:0px">系统画像信息</h3>
+            <div class="framepost">
+                <h3 class="title" style="background:#f5f5f5;padding:5px;">系统画像信息</h3>
                 <div class="entry">
                     <div style="height:160px;width:100%;" id='overview'>
 					    <!--
@@ -429,8 +410,8 @@ var url = "/attribute/portrait_attribute/?uid=" + uid;
 Personal.call_sync_ajax_request(url, Personal.ajax_method, Personal.personData);
 var url = "/attribute/get_remark/?uid=" + uid;
 Personal.call_sync_ajax_request(url, Personal.ajax_method, Personal.remarkData);
-var url = "/attribute/history_activeness_influence/?uid=" + uid;
-Personal.call_sync_ajax_request(url, Personal.ajax_method, Personal.historyData);
+//var url = "/attribute/history_activeness_influence/?uid=" + uid;
+//Personal.call_sync_ajax_request(url, Personal.ajax_method, Personal.historyData);
 var url = "/attribute/current_tag_vector/?uid=" + uid;
 Personal.call_sync_ajax_request(url, Personal.ajax_method, currentData);
 
@@ -702,7 +683,7 @@ $(function(){
     $('#vector_table').empty();
     var html = '';
 	//console.log(global_tag_vector);
-	html += '<li class="li_1"><span class="pt_title">政治倾向性</span><span class="pt_detail">'+global_tag_vector[4][1]+'</span></li>';
+	html += '<li class="li_1"><span class="pt_title">政治倾向</span><span class="pt_detail">'+global_tag_vector[4][1]+'</span></li>';
 	html += '<li class="li_1"><span class="pt_title">领域</span><span class="pt_detail">'+global_tag_vector[1][1]+'</span></li>';
 	html += '<li class="li_1"><span class="pt_title">话题</span><span class="pt_detail">'+global_tag_vector[2][1]+'</span></li>';
 	//var active_geo = personalData.activity_geo;

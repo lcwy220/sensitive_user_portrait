@@ -140,6 +140,7 @@ Search_weibo.prototype = {
   },
 
     Draw_picture: function(data){
+		console.log(data);
         if(data.length == 2){
             alert("暂无相关人物！");
             return false;
@@ -286,7 +287,7 @@ var Search_weibo = new Search_weibo();
 //Search_weibo.call_sync_ajax_request(user_tag, Search_weibo.ajax_method, Show_tag);
 
 // Search_weibo.call_sync_ajax_request(get_choose_data(uid), Search_weibo.ajax_method, Search_weibo.Draw_table);
-// Search_weibo.Draw_picture(Search_weibo.data);
+Search_weibo.Draw_picture(Search_weibo.data);
 // var show_user_tag_url = '/tag/show_user_tag/?uid_list=' + id_string;
 // Search_weibo.call_sync_ajax_request(show_user_tag_url, Search_weibo.ajax_method, Search_weibo.Draw_user_tag);
 // var tag_url = "/tag/show_attribute_name/";
@@ -397,15 +398,16 @@ function add_group_tag(){
 
 $('.label-success').click(function(){
     var url = get_choose_data(uid);
-    //console.log(url);
+    console.log(url);
     if(url == ''){
         return false;
     }
     else{
     Search_weibo.call_sync_ajax_request(url, Search_weibo.ajax_method, Search_weibo.Draw_table);
+	console.log(Search_weibo.data);
     Search_weibo.Draw_picture(Search_weibo.data);
     
-    ////Search_weibo.call_sync_ajax_request(url, Search_weibo.ajax_method, Search_weibo.Draw_picture);
+    Search_weibo.call_sync_ajax_request(url, Search_weibo.ajax_method, Search_weibo.Draw_picture);
     }
 });
 
