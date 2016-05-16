@@ -11,9 +11,9 @@ from flask.ext.security import login_required
 mod = Blueprint('sensitive', __name__, url_prefix='/index')
 
 
-@mod.route('/')
-def loading():
-    return render_template('index.html')
+# @mod.route('/')
+# def loading():
+#     return render_template('index.html')
 
 @mod.route('/overview/')
 @login_required

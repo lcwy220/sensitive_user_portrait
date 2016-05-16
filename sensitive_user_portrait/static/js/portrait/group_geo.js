@@ -1,12 +1,12 @@
-function month_process(data){
-    console.log(data,'eee');
+// function month_process(data){
+//     console.log(data,'eee');
 
-    $('#active_geo').append("<div>");
-    for(var i in data){
-        $('#active_geo').append("日期：" + data[i][0] + "，位置：" + data[i][1]);
-    }
-    $('#active_geo').append("</div>");
-}
+//     $('#active_geo').append("<div>");
+//     for(var i in data){
+//         $('#active_geo').append("日期：" + data[i][0] + "，位置：" + data[i][1]);
+//     }
+//     $('#active_geo').append("</div>");
+// }
 function show_geo_track(data){
     console.log(data,'ddd');
 
@@ -25,7 +25,7 @@ console.log(dateArray);
 
     $('#active_geo').empty();
     var html = '';
-    html += '<table id="select_track_weibo_user" class="table table-bordered table-striped table-condensed datatable" >';
+    html += '<table id="select_track_weibo_user" style="table-layout:auto" class="table table-bordered table-striped table-condensed datatable" >';
     html += '<thead><tr style="text-align:center;"> ';
     html += '<th style="width:160px;">用户ID</th>';
     html += '<th style="width:170px;">昵称</th><th>注册地</th>';
@@ -43,19 +43,24 @@ console.log(dateArray);
         html += '<td >'+data[i][0]+'</td>';
         html += '<td>'+data[i][1]+'</td>';
         html += '<td>'+data[i][3]+'</td>';
-        var group_track_url = '/group/show_group_member_track/?uid=' + data[i][0];
-        call_sync_ajax_request(group_track_url, ajax_method, $(function(data0){
-            for(var a=0;a<data0.legnth;a++){
-                html +='<td>'+data0[a][1]+'</td>';
-            }
-        })); 
+        for(var k=0;k<data[i][6].length;k++){
+            html += '<td>'+data[i][6][k][1]+'</td>';
+        }
         html += '</tr>';
     }
     html += '</tbody>';
     html += '</table>';
 
     $('#active_geo').append(html);
-
+    $('#select_track_weibo_user').dataTable({
+       "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
+       "sPaginationType": "bootstrap",
+       "aaSorting": [[ 1, "desc" ]],
+        "aoColumnDefs":[ {"bSortable": false, "aTargets":[5]}],
+       "oLanguage": {
+           "sLengthMenu": "_MENU_ 每页"
+       }
+    });
 }
 /*
 function track_init(){
