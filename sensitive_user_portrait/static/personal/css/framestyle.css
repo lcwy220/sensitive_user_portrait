@@ -53,22 +53,22 @@ a {
     height:560px;
 	margin-bottom: 25px;
 	padding: 0px;
-	background: #FFFFFF;
-	border: 1px solid #77ACF4;
+	background: #f5f5f5;
+	border: 1px solid #555;
 }
 .framepost .title {
 	height: 38px;
 	margin-bottom: 10px;
 	padding: 12px 0 0 20px;
-	background: #77ACF4;
-	border: 1px solid #77ACF4;
+	background: #f5f5f5;
+	border-bottom: 1px solid #555;
 	letter-spacing: -.5px;
 	color: #FFFFFF;
     height: 38px;
     margin-bottom: 10px;
     /*padding: 12px 0 0 20px;*/
-    background: #77ACF4;
-    border: 1px solid #77ACF4;
+    background: #f5f5f5;
+    border-bottom: 1px solid #555;
     letter-spacing: -.5px;
     color: #FFFFFF;
 
@@ -114,10 +114,7 @@ a {
 #framesidebar li ul {
 	margin-bottom: 30px;
 	padding: 0px 20px 20px 20px;
-	background: #F4F7F7;
-	border-left: 1px solid #77ACF4;
-	border-right: 1px solid #77ACF4;
-	border-bottom: 1px solid #77ACF4;
+	background: #f5f5f5;
 }
 
 #framesidebar li li {
@@ -137,8 +134,8 @@ a {
 #framesidebar h3 {
 	height: 38px;
 	padding: 12px 0 0 20px;
-	background: #77ACF4;
-	border: 1px solid #77ACF4;
+	background: #f5f5f5;
+	border-bottom: 1px solid #555;
 	letter-spacing: -.5px;
 	/*color: #77ACF4;*/
 }
