@@ -86,6 +86,10 @@ function process_par(name, value){
         result[0] = '活跃地点';
         result[1] = value.split('/').join(' ');
     }
+    else if(name=='politics'){
+        result[0] = '政治倾向';
+        result[1] = value;
+    }
     else if(name=='keywords_string'){
         result[0] = '关键词';
         result[1] = value;
@@ -104,6 +108,10 @@ function process_par(name, value){
     }
     else if(name=='domain'){
         result[0] = '身份';
+        result[1] = value;
+    }
+    else if(name=='sensitive_words_string'){
+        result[0] = '敏感词';
         result[1] = value;
     }
     else if(name=='topic_string'){

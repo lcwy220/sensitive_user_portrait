@@ -77,6 +77,7 @@
             </td>
         </tr>  -->
     </table>
+     <div id="hot_words"></div>
 </div>
 <div>
     
@@ -97,6 +98,26 @@
 
   {% block end_js %}
     <script type="text/javascript">
+
+
+
+        var url = '/search/profile_search/?stype=1';
+        url += get_simple_par();
+        $('#al_choose').css('display','none');
+        base_call_ajax_request(url, draw_search_results);
+        var url0='/search/get_hot_keywords/'
+        base_call_ajax_request(url0, draw_hot_words);
+
+        function draw_hot_words(data){
+            console.log(data);
+            $('#hot_words').empty();
+            var html = '';
+            for(i=0;i<data.length;i++){
+                html += '<span>'+data[i][0]+'('+data[i][1]+')&nbsp;&nbsp;';
+            }
+            $('#hot_words').append(html);
+        }
+
         function bindAdvanced(){
             $("#show_advanced").off("click").click(function(){
                 if (($('#supersearch')).is(':hidden')){
@@ -309,7 +330,7 @@ function draw_search_results(data){
       html += '<td class="center" style="width:100px;">'+ item.statusnum +'</td>';
       html += '<td class="center" style="width:100px;">'+ item.friendsnum +'</td>';
       html += '<td class="center" style="width:100px;">'+ item.create_at+'</td>';
-      html += '<td class="center" style="width:120px;"><a class="portrait_href" href=' + user_url + ' target="_blank">查看人物属性页</a></td>';
+      html += '<td class="center" style="width:120px;"><a class="portrait_href" href=' + user_url + ' target="_blank">查看人物属性</a></td>';
       html += '</tr>';
     }
     html += '</tbody>';
@@ -319,7 +340,7 @@ function draw_search_results(data){
     $('.datatable').dataTable({
         "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
         "sPaginationType": "bootstrap",
-        "aaSorting":[[5, 'desc']],
+        //"aaSorting":[[5, 'desc']],
         //"aoColumnDefs":[ {"bSortable": false, "aTargets":[7]}],
         "oLanguage": {
             "sLengthMenu": "每页&nbsp; _MENU_ 条"
@@ -332,15 +353,5 @@ function draw_search_results(data){
     </script>
 
 
-    <script>
-        //var user_name = "{{g.user}}";
-        var url = '/search/profile_search/?stype=1';
-        url += get_simple_par();
-        $('#al_choose').css('display','none');
-        //url += '&submit_user='+user_name;
-        //console.log(url);
-        //draw_conditions(url);
-        //base_call_ajax_request(url, draw_search_results);
 
-    </script>
   {% endblock end_js %}
