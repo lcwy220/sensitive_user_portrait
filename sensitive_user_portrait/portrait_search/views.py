@@ -33,8 +33,8 @@ def ajax_portrait_search():
         query.append({'bool':{'should':query_list}})
     else:
         simple_item = ['uid', 'uname']
-        fuzz_item = ['activity_geo', 'politics','keywords_string', 'hashtag','sensitive_words_string' ]
-        multi_item = ['domain','topic_string']
+        fuzz_item = ['politics', 'hashtag']
+        multi_item = ['domain','topic_string', 'keywords_string','sensitive_words_string','activity_geo' ]
         for item in simple_item:
             item_data = request.args.get(item, '')
             if item_data:
@@ -48,22 +48,24 @@ def ajax_portrait_search():
         for item in multi_item:
             item_data = request.args.get(item, '')
             if item_data:
-                item_list = item_data.split(',')
-                for term in item_list:
-                    query.append({"terms":{term:item_list}})
+                if item == 'activity_geo':
+                    item_list = item_data.split('/')
+                else:
+                    item_list = item_data.split(',')
+                query.append({"terms":{item:item_list}})
                 condition_num += 1
         # custom_attribute
-        tag_items = request.args.get('tag', '')
-        if tag_items != '':
-            tag_item_list = tag_items.split(',')
-            for tag_item in tag_item_list:
-                attribute_name_value = tag_item.split(':')
-                attribute_name = attribute_name_value[0]
-                attribute_value = attribute_name_value[1]
-                if attribute_name and attribute_value:
-                    query.append({"term":{"tag-"+attribute_name:attribute_value}})
-                    condition_num += 1
+        tag_item = request.args.get('tag', '')
+        if tag_item:
+            tag_item_list = tag_item.split(':')
+            tag_name = tag_item_list[0]
+            tag_value = tag_item_list[1]
+            if tag_name and tag_value:
+                query.append({"term":{"tag-"+tag_name:tag_value}})
+                condition_num += 1
 
+    print condition_num
+    print query
     size = 1000
     sort = '_score'
     result = search_portrait(condition_num, query, sort, size)
@@ -85,9 +87,9 @@ def ajax_get_hot_keywords():
 
     sensitive_words = []
     search_results = es_sensitive_user_portrait.search(index=portrait_index_name, doc_type=portrait_index_type, body=query_body)['aggregations']["hot_words"]['buckets']
-    if results:
-        for item in results:
-            sensitive_words.append(item['key'])
+    if search_results:
+        for item in search_results:
+            sensitive_words.append([item['key'],item["doc_count"]])
 
     return json.dumps(sensitive_words)
 

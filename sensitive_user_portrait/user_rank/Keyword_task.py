@@ -21,7 +21,7 @@ USER_RANK_KEYWORD_TASK_INDEX = 'user_rank_keyword_task'
 USER_RANK_KEYWORD_TASK_TYPE = 'user_rank_task'
 
 
-MAX_ITEMS = 2**28
+MAX_ITEMS = 5000
 
 def key_words_search(task_id, search_type , pre , during , start_time , keyword_list , search_key = '' , sort_norm = '', sort_scope = ''  ,time = 1 , isall = False, number = 100):
     number = int(number)
@@ -45,6 +45,7 @@ def key_words_search(task_id, search_type , pre , during , start_time , keyword_
     print index_list
     uid_set = set()
     text_results = []
+    sorted_text_results = []
 
     query_body = {
         "query":{
@@ -55,7 +56,7 @@ def key_words_search(task_id, search_type , pre , during , start_time , keyword_
         "sort":{"user_fansnum":{"order":"desc"}},
         "size":5000
     }
-                    
+
     results = es_flow_text.search(index = index_list , doc_type = 'text' , body = query_body, _source=False, fields=["uid", "user_fansnum","text", "message_type", "sentiment","timestamp", "geo", "retweeted", "comment"])["hits"]["hits"]
 
     id_index = 0
@@ -77,7 +78,7 @@ def key_words_search(task_id, search_type , pre , during , start_time , keyword_
         portrait_results = es_user_portrait.mget(index=USER_INDEX_NAME, doc_type=USER_INDEX_TYPE, body={"ids":un_uid_list}, _source=False, fields=['uname'])["docs"]
         for item in portrait_results:
             if item["found"]:
-                portrait_list.append(item['_id'])    
+                portrait_list.append(item['_id'])
                 nick_name = item['fields']['uname'][0]
                 if nick_name == 'unknown':
                     nick_name = item['_id']
@@ -91,6 +92,10 @@ def key_words_search(task_id, search_type , pre , during , start_time , keyword_
             in_index += 1
         if portrait_list:
             uid_list = in_sort_filter(time,sort_norm ,sort_scope ,None , portrait_list , True, number) # sort
+            for iter_uid in uid_list:
+                iter_index = portrait_list.index(iter_uid)
+                sorted_text_results.append(text_results[i])
+
     elif un_uid_list:
         profile_result = es_user_profile.mget(index="weibo_user", doc_type="user", body={"ids":un_uid_list}, fields=['nick_name'])["docs"]
         for i in range(len(profile_result)):
@@ -105,6 +110,9 @@ def key_words_search(task_id, search_type , pre , during , start_time , keyword_
             if i == number:
                 break
         uid_list = all_sort_filter(un_uid_list[:number] , sort_norm , time ,True, number)
+        for iter_uid in uid_list:
+            iter_index = un_uid_list.index(iter_uid)
+            sorted_text_results.append(text_results[iter_index])
 
     print "filter_uid_list: ", len(uid_list)
     if uid_list:
@@ -117,7 +125,7 @@ def key_words_search(task_id, search_type , pre , during , start_time , keyword_
     item = task_detail['_source']
     item['status'] = 1
     item['result'] = json.dumps(results)
-    item['text_results'] = json.dumps(text_results)
+    item['text_results'] = json.dumps(sorted_text_results)
     item['number'] = len(results)
     es_user_portrait.index(index = USER_RANK_KEYWORD_TASK_INDEX , doc_type=USER_RANK_KEYWORD_TASK_TYPE , id=task_id,  body=item)
 
