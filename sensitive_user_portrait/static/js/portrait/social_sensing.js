@@ -500,11 +500,12 @@ function so_ready(){
 	});
 
 	$('a[id^="so_stop_task"]').click(function(e){
-		var temp = $(this).parent().prev().prev().prev().prev().prev().prev().prev().text();
+		var temp = $(this).parent().prev().prev().prev().prev().prev().prev().text();
 		var a = confirm('确定要终止任务吗？');
 		if (a== true){
 			url = "/social_sensing/stop_task/?task_name=" + temp+'&user='+user;
-			Social_sense.call_sync_ajax_request(url, Social_sense.ajax_method, callback);
+			console.log(url);
+      Social_sense.call_sync_ajax_request(url, Social_sense.ajax_method, callback);
 		}
 	});	
 

@@ -18,7 +18,7 @@ Search_weibo.prototype = {
         return data;
     },
     Draw_user_tag: function(data){
-      //console.log(data);
+      console.log(data);
       $('#user_lable').empty();
       user_lable_html = '';
       user_lable_html += '<table id="" class="table table-striped table-bordered bootstrap-datatable datatype responsive">';
@@ -44,6 +44,7 @@ Search_weibo.prototype = {
     Draw_add_group_tag: function(data){
       var downloadurl = window.location.host;
       show_group_tag_url = 'http://' + downloadurl + '/tag/show_user_tag/?uid_list=' + id_string;
+      console.log(show_group_tag_url);
       Search_weibo.call_sync_ajax_request(show_group_tag_url, Search_weibo.ajax_method, Search_weibo.Draw_user_tag);
     },
 
@@ -66,7 +67,7 @@ Search_weibo.prototype = {
         for(var item = 1; item < data.length-1; item++){
             html += '<tr style="border-bottom:1px solid #ddd">';
             var personal_url = 'http://'+ window.location.host + '/index/personal/?uid=';
-            for(var i =0; i < data[item].length; i++){  
+            for(var i =0; i < data[item].length; i++){   
                 if(data[item][i] == 'unknown'){
                     data[item][i] = '未知'
                 }
@@ -75,15 +76,15 @@ Search_weibo.prototype = {
                 }
                 if(i >= 2) {
                     html += '<td class="center" style="text-align:center;vertical-align:middle">'+ data[item][i].toFixed(2) +'</td>';
-                }
-                else{
-            if(i == 0){
-               var user_url = personal_url + data[item][0];
-               save_id.push(data[item][0]);
-                html += '<td class="center" style="text-align:center;vertical-align:middle"><a href='+user_url +' target="_blank">'+ data[item][i] +'</a></td>';
-            }else{
-               html += '<td class="center" style="text-align:center;vertical-align:middle">'+ data[item][i] +'</td>'; 
-            }
+                }else{
+                    if(i == 0){
+                        var user_url = personal_url + data[item][0];
+                        save_id.push(data[item][0]);
+                        console.log(save_id);
+                        html += '<td class="center" style="text-align:center;vertical-align:middle"><a href='+user_url +' target="_blank">'+ data[item][i] +'</a></td>';
+                    }else{
+                        html += '<td class="center" style="text-align:center;vertical-align:middle">'+ data[item][i] +'</td>'; 
+                    }
                 }            
             }
             html += '<td class="center"><input name="search_result_option" class="search_result_option" type="checkbox" value="' + item + '" /></td>';
@@ -98,6 +99,7 @@ Search_weibo.prototype = {
         for (var i = 0; i < save_id.length; i++) {
             s=i.toString();
             id_string += save_id[s] + ',';
+            // console.log(id_string);
         };
         id_string=id_string.substring(0,id_string.length-1)
 //        $('#recom_table').dataTable({
@@ -286,18 +288,19 @@ var Search_weibo = new Search_weibo();
 //var user_tag = '/tag/show_user_attribute_name/?uid='+ uid;
 //Search_weibo.call_sync_ajax_request(user_tag, Search_weibo.ajax_method, Show_tag);
 
-// Search_weibo.call_sync_ajax_request(get_choose_data(uid), Search_weibo.ajax_method, Search_weibo.Draw_table);
+Search_weibo.call_sync_ajax_request(get_choose_data(uid), Search_weibo.ajax_method, Search_weibo.Draw_table);
 Search_weibo.Draw_picture(Search_weibo.data);
-// var show_user_tag_url = '/tag/show_user_tag/?uid_list=' + id_string;
-// Search_weibo.call_sync_ajax_request(show_user_tag_url, Search_weibo.ajax_method, Search_weibo.Draw_user_tag);
-// var tag_url = "/tag/show_attribute_name/";
-// Search_weibo.call_sync_ajax_request(tag_url, Search_weibo.ajax_method, Search_weibo.Draw_attribute_name);
-// var select_attribute_name = $("#select_attribute_name").val()
-// var attribute_value_url = '';
-// attribute_value_url = '/tag/show_attribute_value/?attribute_name=' + select_attribute_name;
-// Search_weibo.call_sync_ajax_request(attribute_value_url, Search_weibo.ajax_method, Search_weibo.Draw_attribute_value);
+var show_user_tag_url = '/tag/show_user_tag/?uid_list=' + id_string;
+console.log(show_user_tag_url);
+Search_weibo.call_sync_ajax_request(show_user_tag_url, Search_weibo.ajax_method, Search_weibo.Draw_user_tag);
+var tag_url = "/tag/show_attribute_name/";
+Search_weibo.call_sync_ajax_request(tag_url, Search_weibo.ajax_method, Search_weibo.Draw_attribute_name);
+var select_attribute_name = $("#select_attribute_name").val()
+var attribute_value_url = '';
+attribute_value_url = '/tag/show_attribute_value/?attribute_name=' + select_attribute_name;
+Search_weibo.call_sync_ajax_request(attribute_value_url, Search_weibo.ajax_method, Search_weibo.Draw_attribute_value);
 
-// var global_data = Search_weibo.data;
+var global_data = Search_weibo.data;
 
 
 var attr_url='/imagine/portrait_related/?uid='+uid;
