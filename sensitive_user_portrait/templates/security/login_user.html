@@ -56,8 +56,12 @@
 	    {% endblock %}		
 	</head>
 
-	<body >
-      <div style="height:60px;margin-top: 100px;color:white;font-size:38px;line-height: 50px;"><center><b style="color:black">敏感人物系统</b></center></div>
+	<body  ><!--style="background:url(/static/img/background.png) no-repeat;color:#fff;background-size: 100%;"-->
+	<div id="Layer1" style="position:absolute; width:100%; height:100%; z-index:-1">  
+		<img src="/static/img/background.jpg" height="100%" width="100%"/>    
+	</div>
+	      <div style="height:60px;margin-top: 100px;float:left;margin-left:560px;color:white;font-size:38px;line-height: 50px;"><b style="color:white">敏感人物系统</b></div>
+<!--       <div style="height:60px;margin-top: 100px;color:white;font-size:38px;line-height: 50px;"><center><b style="color:black">敏感人物系统</b></center></div> -->
       {% from "security/_macros.html" import render_field_with_errors, render_field %}
         <form action="{{ url_for_security('login') }}" method="POST" name="login_user_form" class="box login" >
 		  <fieldset class="boxBody">
@@ -112,5 +116,8 @@
   $('#submit').attr('value','登陆')
   $('#submit').css('float','right')
   $('#submit').css('font-weight','bold')
-  
+  $(function(){
+    $('#Layer1').height($(window).height());
+    $('#Layer1').width($(window).width());
+});
   </script>

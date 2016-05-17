@@ -247,6 +247,7 @@ function choose_key_button(){
 }
 
 function draw_sensor(data){
+  console.log(data);
 	$('#so_sensor_content').empty();
 	if(data['remark']){
 		$('span[id^="so_remark0"]').html(data['remark']);
@@ -259,8 +260,8 @@ function draw_sensor(data){
 	var item_img = '';
 	var item_num = '';
 	var item_keys = data['keywords'];
-	var item_sen_keys = data['sensitive_words'];
-	var item_sensor = data['social_sensors'];
+	// var item_sen_keys = data['sensitive_words'];
+	// var item_sensor = data['social_sensors'];
  //    html += '<div style="width:100%"><div  style="float:left;display:inline-block">敏感传感词：</div>';
  //    if(item_keys.length > 0){
  //    	html += '<div style="margin-right: 9px;padding:0px;width: 83%;display:inline-block">';
@@ -278,35 +279,35 @@ function draw_sensor(data){
 	//     html += '</div>';  
  //    }else{html += '<span style="margin-right:20px;">无</span>'}
  //    html += '</div>';
-    if (item_sensor.length == 0){
-    	html += '<div style="margin-top:10px;">传感群：<span style="margin-left:28px;">全库用户</span></div>'
-    }else{
-    	html += '<div style="margin-top:10px;overflow-y:auto;height:300px;">';
-	    html += '<table style="margin-top:10px;font-weight:lighter;" class="table table-striped table-bordered bootstrap-datatable datatable responsive" >';
-	    html += '<tr><th style="text-align:center">头像</th><th style="text-align:center">昵称</th><th style="text-align:center">领域</th><th style="text-align:center">话题</th><th style="text-align:center">重要度</th></tr>';
-        for (var i=0;i<item.length;i++) {
-	    	if(item[i][1]=='unknown'){
-	    		item_name = '未知';
-	    	}else{
-	    		item_name = item[i][1];
-	    	}
-	    	if(item[i][2]=='unknown'){
-	    		item_img = 'http://tp2.sinaimg.cn/1878376757/50/0/1';
-	    	}else{
-	    		item_img = item[i][2];
-	    	}
-	    	if(item[i][5]==undefined){
-	    		item_num = '无';
-	    	}else{
-	    		item_num = item[i][5].toFixed(2);
-	    	}
-	        html += '<tr><td style="text-align:center"><img class="img-circle shadow-5"  style="height:30px;" title="'+item[i][0]+'"  src="' + item_img + '" ></td>';
-            html += '<td style="text-align:center">' + item_name + '</td><td style="text-align:center">' + item[i][3]+ '</td>';
-            html += '<td style="text-align:center">' + item[i][4] + '</td><td style="text-align:center">' + item_num + '</td></tr>';
-	 	}
-	 	html += '</div>';
-	    html += '</table>'; 
-    }
+   //  if (item_sensor.length == 0){
+   //  	html += '<div style="margin-top:10px;">传感群：<span style="margin-left:28px;">全库用户</span></div>'
+   //  }else{
+   //  	html += '<div style="margin-top:10px;overflow-y:auto;height:300px;">';
+	  //   html += '<table style="margin-top:10px;font-weight:lighter;" class="table table-striped table-bordered bootstrap-datatable datatable responsive" >';
+	  //   html += '<tr><th style="text-align:center">头像</th><th style="text-align:center">昵称</th><th style="text-align:center">领域</th><th style="text-align:center">话题</th><th style="text-align:center">重要度</th></tr>';
+   //      for (var i=0;i<item.length;i++) {
+	  //   	if(item[i][1]=='unknown'){
+	  //   		item_name = '未知';
+	  //   	}else{
+	  //   		item_name = item[i][1];
+	  //   	}
+	  //   	if(item[i][2]=='unknown'){
+	  //   		item_img = 'http://tp2.sinaimg.cn/1878376757/50/0/1';
+	  //   	}else{
+	  //   		item_img = item[i][2];
+	  //   	}
+	  //   	if(item[i][5]==undefined){
+	  //   		item_num = '无';
+	  //   	}else{
+	  //   		item_num = item[i][5].toFixed(2);
+	  //   	}
+	  //       html += '<tr><td style="text-align:center"><img class="img-circle shadow-5"  style="height:30px;" title="'+item[i][0]+'"  src="' + item_img + '" ></td>';
+   //          html += '<td style="text-align:center">' + item_name + '</td><td style="text-align:center">' + item[i][3]+ '</td>';
+   //          html += '<td style="text-align:center">' + item[i][4] + '</td><td style="text-align:center">' + item_num + '</td></tr>';
+	 	// }
+	 	// html += '</div>';
+	  //   html += '</table>'; 
+   //  }
     $('#so_sensor_content').append(html); 
 }
 
@@ -555,6 +556,7 @@ function callback(data){
 }
 
 function draw_href(data,that){
+  console.log(data);
     var time_s = data['history_status'][0];
     var href = '/index/sensing_analysis/?task_name='+data['task_name']+'&user='+user+'&ts='+time_s;
     window.open(href);
@@ -715,7 +717,7 @@ function so_callback(data){
 console.log(data);
 	if(data==1){
 		alert('操作成功！');
-		//window.location.href=window.location.href;
+		window.location.href=window.location.href;
 	}else if(data==0){
 		alert('已存在相同名称的监控任务，请重试！');
 	}else if(data =='more than limit'){
