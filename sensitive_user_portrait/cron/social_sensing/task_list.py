@@ -17,6 +17,7 @@ from global_utils import es_user_portrait as es
 from time_utils import ts2datetime, datetime2ts, ts2date, ts2date_hour, date_hour2ts
 from parameter import DOC_TYPE_MANAGE_SOCIAL_SENSING as task_doc_type
 from parameter import INDEX_MANAGE_SOCIAL_SENSING as index_name
+from parameter import RUN_TYPE
 
 def create_task_list():
     # 1. search from manage_sensing_task
@@ -25,8 +26,10 @@ def create_task_list():
     # print start info
     current_path = os.getcwd()
     file_path = os.path.join(current_path, 'task_list.py')
-    #now_ts = date_hour2ts(ts2date_hour(time.time()))
-    now_ts = 1378011600 # 1378008000
+    if RUN_TYPE == 0:
+        now_ts = 1378015200 # 1378008000
+    else:
+        now_ts = date_hour2ts(ts2date_hour(time.time()))
     print_log = "&".join([file_path, "start", ts2date(now_ts)])
     print print_log
     #ts = ts - 3600

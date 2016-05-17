@@ -461,6 +461,15 @@ def social_sensing(task_detail):
         datetime_2 = ts2datetime(ts-DAY)
         index_name_2 = flow_text_index_name_pre + datetime_2
         exist_es = es_text.indices.exists(index=index_name_2)
+        text_dict = dict() # 文本信息
+        mid_value = dict() # 文本赋值
+        duplicate_dict = dict() # 重合字典
+        portrait_dict = dict() # 背景信息
+        classify_text_dict = dict() # 分类文本
+        classify_uid_list = []
+        duplicate_text_list = []
+        sensitive_words_dict = dict()
+        sensitive_weibo_detail = {}
         if exist_es:
             index_list.append(index_name_2)
         if index_list and all_mid_list:
@@ -476,14 +485,6 @@ def social_sensing(task_detail):
             }
             search_results = es_text.search(index=index_list, doc_type="text", body=query_body)['hits']['hits']
             tmp_sensitive_warning = ""
-            text_dict = dict() # 文本信息
-            mid_value = dict() # 文本赋值
-            duplicate_dict = dict() # 重合字典
-            portrait_dict = dict() # 背景信息
-            classify_text_dict = dict() # 分类文本
-            classify_uid_list = []
-            duplicate_text_list = []
-            sensitive_words_dict = dict()
             if search_results:
                 for item in search_results:
                     iter_uid = item['_source']['uid']
@@ -520,7 +521,6 @@ def social_sensing(task_detail):
                      for k,v in classify_results.iteritems(): # mid:value
                         mid_value[k] = topic_value_dict[v[0]]
 
-            sensitive_weibo_detail = {}
             if sensitive_words_dict:
                 sensitive_mid_list = sensitive_words_dict.keys()
                 sensitivie_weibo_detail = query_hot_weibo(ts, sensitive_mid_list, time_interval)
