@@ -503,6 +503,7 @@ function date_init(){
         $('#time_choose #weibo_from').datetimepicker({value:from_date,step:1440,minDate:'-1970/01/30',format:'Y/m/d',timepicker:false,maxDate:'+1970/01/01'});
         $('#time_choose #weibo_to').datetimepicker({value:from_date,step:1440,minDate:'-1970/01/30',format:'Y/m/d',timepicker:false,maxDate:'+1970/01/01'});
     }
+<<<<<<< HEAD
 }
 function submit_offline(data){
 	console.log(data)
@@ -823,6 +824,114 @@ $('.show_key_result').live('click', function(){
 		call_sync_ajax_request(url, draw_in_key_rank_table);
 	}
 
+=======
+    html += '</tbody>';
+    html += '</table>';
+    $(div).append(html);
+    $('#total_table').dataTable({
+        "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
+        "sPaginationType": "bootstrap",
+        "oLanguage": {
+            "sLengthMenu": "_MENU_ 每页"
+        }
+    });
+  }
+
+function draw_graph(data){
+  var myChart = echarts.init(document.getElementById("distribute")); 
+  var item = data;
+  var total_date = [];
+      //var timestamp = Date.parse(new Date());
+  var timestamp = 1378483200000;
+  total_date[0] = new Date(parseInt(timestamp)).format("yyyy-MM-dd");    
+  for (var i = 1; i < 7; i++) {
+        timestamp = timestamp-24*3600*1000;
+        total_date[i] = new Date(parseInt(timestamp)).format("yyyy-MM-dd");
+  }
+
+  var option = {
+    tooltip : {
+        trigger: 'axis'
+    },
+    legend: {
+        data:[total_date[0],total_date[1],total_date[2],total_date[3],total_date[4],total_date[5],total_date[6]]
+    },
+    toolbox: {
+        show : false,
+        feature : {
+            mark : {show: true},
+            dataView : {show: true, readOnly: false},
+            magicType : {show: true, type: ['line', 'bar']},
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    calculable : true,
+    xAxis : [
+        {
+            name : '影响力',
+            type : 'category',
+            boundaryGap : false,
+            data : ['0-200','200-500','500-700','700-900','900-1100','1100-10000']
+        }
+    ],
+    yAxis : [
+        {
+            name : '人数',
+            type : 'value'
+        }
+    ],
+    series : [
+        {
+            name:total_date[0],
+            type:'line',
+            data:item[1][0]
+        },
+        {
+            name:total_date[1],
+            type:'line',
+            data:item[1][1]
+        },
+        {
+            name:total_date[2],
+            type:'line',
+            data:item[1][2]
+        },
+        {
+            name:total_date[3],
+            type:'line',
+            data:item[1][3]
+        },
+        {
+            name:total_date[4],
+            type:'line',
+            data:item[1][4]
+        },
+        {
+            name:total_date[5],
+            type:'line',
+            data:item[1][5]
+        },
+        {
+            name:total_date[6],
+            type:'line',
+            data:item[1][6]
+        }
+    ]
+};
+    myChart.setOption(option);   
+}
+
+date_initial();
+select_init();
+    var url2 = '/influence_application/influence_distribution';
+$('#rank_submit').click(function(){
+  var select_date = $('#total_date_select option:selected').val();
+  var domain_text = $('#domain_select option:selected').text();  
+  var select_index = $('input[name="index_select"]:checked').val();
+  var url1 = '/influence_application/search_domain_influence/?date='+select_date+'&domain='+domain_text+'&order='+select_index;
+  call_ajax_request(url1,draw_table);
+  //draw_table(data);
 });
 
 
