@@ -15,6 +15,8 @@ $('#logout').click(function (){
     }
 });
 
+
+
 function bindSearchFunc(that){ 
     $("#keyword").bind('keyup', function(e){
         var ev = document.all?window.event:e;
@@ -195,3 +197,5 @@ function advanced_attr_load(){
 var base = new Base();
 var global_attr_flag = false;
 bindSearchFunc(base);
+
+
