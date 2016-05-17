@@ -6,7 +6,7 @@ import json
 from flask import Blueprint, url_for, render_template, request, abort, flash, session, redirect
 from sensitive_user_portrait.global_utils import es_user_profile, es_sensitive_user_portrait, es_flow_text, es_tag
 from sensitive_user_portrait.global_utils import portrait_index_name, portrait_index_type, flow_text_index_name_pre, \
-                                                 flow_text_index_type, profile_index_name, profile_index_type
+                                                 flow_text_index_type, profile_index_name, profile_index_type, R_ADMIN
 from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts
 from sensitive_user_portrait.parameter import RUN_TYPE
 from utils import search_portrait,full_text_search
@@ -15,14 +15,15 @@ mod = Blueprint('search', __name__, url_prefix='/search')
 
 @mod.route('/portrait_search/')
 def ajax_portrait_search():
-    stype = request.args.get('stype', '')
+    stype = request.args.get('stype', 2)
+    stype = int(stype)
     result = {}
     query_data = {}
     query = []
     query_list = []
     condition_num = 0
 
-    if stype:
+    if stype == 1:
         fuzz_item = ['uid', 'uname']
         item_data = request.args.get('term', '')
         for item in fuzz_item:
@@ -60,7 +61,7 @@ def ajax_portrait_search():
                 attribute_name = attribute_name_value[0]
                 attribute_value = attribute_name_value[1]
                 if attribute_name and attribute_value:
-                    query.append({"term":{attribute_name:attribute_value}})
+                    query.append({"term":{"tag-"+attribute_name:attribute_value}})
                     condition_num += 1
 
     size = 1000
@@ -175,3 +176,8 @@ def ajax_profile_search():
         results.append(item['_source'])
 
     return json.dumps(results)
+
+@mod.route('/get_sensitive_words/')
+def ajax_get_sensitive_words():
+    sensitive_words = R_ADMIN.hkeys("sensitive_words")
+    return json.dumps(sensitive_words)

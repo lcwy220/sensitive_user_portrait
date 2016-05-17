@@ -270,7 +270,7 @@ function show_online_time(data){
     };
     html += '</tr></table>'; 
     $('#online_time_table').append(html);
-    $('#online_time_conclusion').append(data[1]+'。');
+    // $('#online_time_conclusion').append(data[1]+'。');
 }
 
 function get_max_data (data) {
