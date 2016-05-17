@@ -65,9 +65,9 @@
                 <span id="search_all_btn"  class="portrait_button " style='float:right;cursor:pointer;margin-right:20px;width: 45px;height: 25px;text-align: center;line-height: 25px;'>提交</span>    
             </td>
         </tr>
-
     </table>
 </div>
+         <div style="margin-top:20px"><div style="margin-left:0px;width:90px;float: left;height: 50px;">热门敏感词：</div><div style="width:920px" id="hot_words"></div></div>
 </div>
 </div>
 <!--         <div id="result_analysis" style="margin-top:20px;margin-left: 80px;padding:10px;background-color:#E1E6FF;width: 900px;font-size:14px;border:1px solid #B0CEFB">
@@ -85,7 +85,7 @@
             <button class="btn btn-primary btn-sm" style="width:80px;height:40px;margin-left:10px" name="recommend_button" id="recommend_button">选择入库</button>
         </div> -->
 <!--         <p><span onclick="user_recom_in_modal()" class="portrait_button" style="float:right;cursor:pointer;margin-right:68px;width: 60px;height: 25px;text-align: center;line-height: 25px;margin-top: -60px;" id="recom_in">推荐入库</span></p> -->
-        <div id="search_all_load" style="display:none;margin-left: 100px;margin-top: 40px;">正在加载，请稍候...</div>
+        <div id="search_all_load" style="display:none;margin-left: 490px;margin-top: 60px;">正在加载，请稍候...</div>
         <div id="result_rank_table" style="margin-top:20px;width: 980px;margin-left: 80px;
 ">
         </div>
@@ -100,6 +100,33 @@
 <script src='/static/custom/js/search_portrait.js'></script>
 
 <script type="text/javascript">
+        var url0='/search/get_hot_keywords/'
+        base_call_ajax_request(url0, draw_hot_words);
+
+        function draw_hot_words(data){
+            console.log(data);
+            $('#hot_words').empty();
+            var html = '';
+            for(i=0;i<data.length;i++){
+                html += '<span style="width: 83px;display: block;float: left;"><a href=javacript:void(0) name="search_sen">'+data[i][0]+'</a>('+data[i][1]+')</span>';
+            }
+            $('#hot_words').append(html);
+        }
+
+        $(function()
+            {$('a[name^="search_sen"]').live('click',function(){
+                var sen = $(this).html();   
+                var url_sen='/search/full_text_search/?keywords='+sen;
+                 $('#search_all_load').css('display','block');
+                $.ajax({
+                    url:url_sen,
+                    type:"GET",
+                    dataType:'json',
+                    success:draw_key_rank,
+                });        
+            });
+        });
+
     function date_init(){
         var date = choose_time_for_mode();
         //console.log(date)
