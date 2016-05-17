@@ -6,7 +6,7 @@ import json
 from flask import Blueprint, url_for, render_template, request, abort, flash, session, redirect
 from sensitive_user_portrait.global_utils import es_user_profile, es_sensitive_user_portrait, es_flow_text, es_tag
 from sensitive_user_portrait.global_utils import portrait_index_name, portrait_index_type, flow_text_index_name_pre, \
-                                                 flow_text_index_type, profile_index_name, profile_index_type
+                                                 flow_text_index_type, profile_index_name, profile_index_type, R_ADMIN
 from sensitive_user_portrait.time_utils import ts2datetime, datetime2ts
 from sensitive_user_portrait.parameter import RUN_TYPE
 from utils import search_portrait,full_text_search
@@ -176,3 +176,8 @@ def ajax_profile_search():
         results.append(item['_source'])
 
     return json.dumps(results)
+
+@mod.route('/get_sensitive_words/')
+def ajax_get_sensitive_words():
+    sensitive_words = R_ADMIN.hkeys("sensitive_words")
+    return json.dumps(sensitive_words)
