@@ -219,7 +219,7 @@ function draw_graph(data){
 date_initial();
 select_init();
     var url2 = '/influence_application/influence_distribution';
-$('#domain_button').click(function(){
+$('#rank_submit').click(function(){
   var select_date = $('#total_date_select option:selected').val();
   var domain_text = $('#domain_select option:selected').text();  
   var select_index = $('input[name="index_select"]:checked').val();
