@@ -21,7 +21,7 @@ function bindAdvanced(){
             url += get_advanced_par();
         }
         //url += '&submit_user=' + current_user;
-        //console.log(url);
+        console.log(url);
         draw_conditions(url);
         //var url = '/attribute/portrait_search/?stype=1';
         base_call_ajax_request(url, draw_search_results);
@@ -144,6 +144,7 @@ function get_advanced_par(){
         }
         temp += input_value;
     });
+    temp += '&politics='+$('[name="politics_val"]').val();
     /*
     var psycho_status_by_emotion = new Array();
     $("[name='psycho_status_by_emotion']:checked").each(function(){
@@ -244,3 +245,6 @@ $('.city-picker-dropdown').css('left','1000px');
 $('.city-picker-dropdown').css('top','405px');
 getAttributeName();
 bindAdvanced();
+
+
+

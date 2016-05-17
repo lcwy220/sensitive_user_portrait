@@ -7,8 +7,10 @@
         .dataTables_filter{text-align:right;margin-bottom:5px;}
         .dataTables_paginate{margin-top:-10px;margin-bottom:-20px;}
         .mouse {border:#d0d0d0 solid 1px;}
+        #rank_table{table-layout:auto;}
     </style>
     <link href="/static/custom/css/search.css" rel="stylesheet">
+      <link rel="stylesheet" href="/static/custom/css/overview.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="/static/content/css/jquery.datetimepicker.css"/>
 {% endblock custom_css %}
    {% block custom_js %}
@@ -17,6 +19,9 @@
    {% endblock custom_js %}
 
 {% block body %}
+<div id='page' >
+<div id="content">
+<h2 style="margin-bottom:50px">全文检索</h2>
 <!-- <div id="textsearch" style="margin-top:200px">
         <span style="float:left;line-height:30px;margin-right:15px;">全文检索</span>
         <span class="searchborder fleft">
@@ -29,8 +34,8 @@
         </span>
 </div> -->
 
-<h2 style="margin-left:80px;">全文检索</h2>
-<div id="supersearch" style="margin-top:50px;">
+<!-- <h2 style="margin-left:80px;">全文检索</h2> -->
+<div id="supersearch" style="margin-top:50px;margin-left:0px">
     <table class='table table-border bootstrap-datatable' style="margin-bottom:0px">
         <tr>
             <td class='search_name'>关键词</td>
@@ -62,6 +67,8 @@
         </tr>
 
     </table>
+</div>
+</div>
 </div>
 <!--         <div id="result_analysis" style="margin-top:20px;margin-left: 80px;padding:10px;background-color:#E1E6FF;width: 900px;font-size:14px;border:1px solid #B0CEFB">
         <b>

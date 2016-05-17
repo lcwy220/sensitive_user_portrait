@@ -7,17 +7,18 @@
             .dataTables_filter{display:none;text-align:right;margin-bottom:5px;}
             .dataTables_paginate{margin-top:-10px;margin-bottom:-20px;}
             .wrapper{min-height:330px;margin-top:50px;margin-left:-20px;background: #fff;position: relative;}
-            #tab{width: 180px;height:284px;}
+            #tab{width: 160px;height:284px;}
             #tab_left,#tab_con{margin: 0px;background: #fff;} #tab,#tab_con{float: left;}
             #tab_left{width:180px;height:380px;font-family:"Microsoft Yahei"}
             #tab_left li{list-style-type: none;font-size: 20px;text-align: center;border-top: 1px solid #ccc;}
-            #tab_left li a{color: #000;opacity:0.7;text-decoration: none;line-height: 80px;width: 180px;height: 70px;display: block;background: #fff;text-shadow:1px 1px 2px #ccc;border-left: 1px solid #ccc;}
+            #tab_left li a{color: #000;opacity:0.7;text-decoration: none;line-height: 80px;width: 160px;height: 70px;display: block;background: #fff;text-shadow:1px 1px 2px #ccc;border-left: 1px solid #ccc;}
             #tab_left li.current a{background: #dde4f2;text-decoration: none;border-left: 1px solid #f00;text-shadow:1px 1px 2px #ccc;}
             #tab_left li a:hover{background: #dde4f2;text-decoration: none;border-left: 1px solid #f00;text-shadow:1px 1px 2px #ccc;}
             #tab_con{width: 820px;overflow: hidden;margin-bottom:65px;}
                 .col-lg-2 {width:30%;}
         </style>
-
+    <link rel="stylesheet" href="/static/custom/css/overview.css" media="screen" />
+    <link  type="text/css" href="/static/personal/css/style.css" rel="stylesheet"/>
     {% endblock custom_css %}
     {% block head_js %}
         {{ super() }}
@@ -26,7 +27,10 @@
     {% block body %}
     <link rel="stylesheet" type="text/css" href="/static/css/jquery.datetimepicker.css"/>
     <script type="text/javascript" src="/static/js/jquery.datetimepicker.js"></script>
-    <h4 class="page-header">群体发现任务</h4>
+<div id="page" >
+<div id='content'>
+<h2 >群体发现</h2>
+    <!-- <h4 class="page-header">群体发现任务</h4> -->
     <div class="box-content">
         <!--
         <ul class="nav nav-tabs" id="myTab">
@@ -65,7 +69,7 @@
                     </div>
                 </div>
                 <div >
-                    <div id="dis_table" style="width:950px;margin-left:40px;">
+                    <div id="dis_table" style="width:900px;margin-left:40px;">
                     </div>
                 </div>
             </div>
@@ -121,6 +125,9 @@
         </div>
       </div>
     </div>
+    </div>
+    </div>
+
 
     <div class="modal fade" id="group_analyze" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog" role="document" style="width:850px;">

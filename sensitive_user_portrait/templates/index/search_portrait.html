@@ -11,9 +11,12 @@
 <script src='/static/custom/js/identify_table.js'></script>
    {% endblock custom_js %}
 {% block body %}
-<h2 style="margin-left:80px;">查看人物画像</h2>
-<div id='page' style="margin-left:80px;">
+
+<div id='page' >
+<div id="content">
+<h2 style="margin-bottom:50px;">查看人物画像</h2>
 {% include "index/search/search_base.html" %}
+</div>
 </div>
 {% endblock %}
 {% block end_js %}
@@ -30,5 +33,7 @@ function call_ajax_request(url, callback){
 }
 var url = '/search/portrait_search/?stype=1';
 call_ajax_request(url, draw_search_results);
+      // Social_sense.call_sync_ajax_request("/social_sensing/get_admin_sensi_words/", Social_sense.ajax_method, draw_modal);
+
 </script>
 {% endblock end_js %}

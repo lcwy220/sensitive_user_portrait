@@ -117,8 +117,8 @@
                             <span style=""><button class="btn btn-primary btn-sm" style="width:80px;height:30px;margin-top:30px;margin-left:30px;float:right;" id="add_person_tag_button" title="确定选择" onclick="add_person_tag()">添加</button></span>
                         </div>
 						<div  style="margin-top:0px;padding:0px;float:left;">
-						 <span style="width:100%;margin-left:30px;font-size:14px;">群组标签：</span>
-						<ul style="float:left;width:245px;padding-top:20px;" id="group_tag">
+						 <span style="width:100%;margin-left:30px;font-size:14px;">所在群组：</span>
+						<ul style="float:left;width:245px;padding-top:20px;font-size:14px;" id="group_tag">
 						</ul>
 						</div>
                         <div class="PersonPre" style="margin-top:0px;padding:10px;float:left;"><span class="lightw">备注：</span>
@@ -143,10 +143,10 @@
 						-->
                         <table style="height:150px;width:90%;">
                             <tr>
-                                <td style="text-align:center;vertical-align:middle;width:25%;"><img src="/static/img/active.png" style="height:80px"></td>
-                                <td style="text-align:center;vertical-align:middle;width:25%;"><img src="/static/img/important.png" style="height:80px"></td>
+                                <td style="text-align:center;vertical-align:middle;width:25%;"><img src="/static/img/activeness.png" style="height:80px"></td>
+                                <td style="text-align:center;vertical-align:middle;width:25%;"><img src="/static/img/importance.png" style="height:80px"></td>
                                 <td style="text-align:center;vertical-align:middle;width:25%;"><img src="/static/img/influence.png" style="height:80px"></td>
-								<td style="text-align:center;vertical-align:middle;width:25%;"><img src="/static/img/sensitive.png" style="height:80px"></td>
+								<td style="text-align:center;vertical-align:middle;width:25%;"><img src="/static/img/influence.png" style="height:80px"></td>
                             </tr>
                             <tr style='font-size:14px;'>
                                 <td style="text-align:center;vertical-align:middle">
@@ -404,6 +404,19 @@ Personal.prototype = {   //群组搜索
         //console.log(data);
         histData = data;
     },
+	groupData:function(data){
+        console.log(data);
+		if(data.length==0){
+			$('#group_tag').html('暂不属于任何群组');
+		}else{
+			var html = '';
+			$('#group_tag').empty();
+			for(var i=0;i<data.length;i++){
+				html += '<p style="width:100%;font-size:14px;">'+data[i]+'</p>';
+			}
+			$('#group_tag').append(html);
+		}
+    },
 }
 var global_tag_vector = new Array(); //全局标签化向量
 
@@ -417,9 +430,10 @@ var url = "/attribute/get_remark/?uid=" + uid;
 Personal.call_sync_ajax_request(url, Personal.ajax_method, Personal.remarkData);
 //var url = "/attribute/history_activeness_influence/?uid=" + uid;
 //Personal.call_sync_ajax_request(url, Personal.ajax_method, Personal.historyData);
-var url = "/attribute/current_tag_vector/?uid=" + uid;
-Personal.call_sync_ajax_request(url, Personal.ajax_method, currentData);
-
+//var url = "/attribute/current_tag_vector/?uid=" + uid;
+//Personal.call_sync_ajax_request(url, Personal.ajax_method, currentData);
+var url = "/attribute/search_user_group/?uid=" + uid;
+Personal.call_sync_ajax_request(url, Personal.ajax_method, Personal.groupData);
 function currentData(data){
     //console.log(data);
     global_tag_vector.push(['昨日影响力评价',data[0]]);

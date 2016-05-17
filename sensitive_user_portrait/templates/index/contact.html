@@ -1,5 +1,5 @@
 {% extends "index/base.html" %}
-{% block title %}关联分析{% endblock title%}
+{% block title %}个人详情{% endblock title %}
 
 {% block custom_css %}
 {{ super() }}
@@ -23,15 +23,9 @@
         #myTabContent{overflow:hidden;}
     .col-lg-2 {width:30%;}
 </style>
-
 {% endblock custom_css %}
 
-   {% block custom_js %}
-{{ super() }}
-<script type="text/javascript" src="/static/js/lanrenzhijia.js"></script>
 
-<script type="text/javascript" src='/static/js/esl.js'></script>
-   {% endblock custom_js %}
 
 {% block body %}
 <div id="page">
@@ -119,7 +113,7 @@
             <div style="float:left; line-height:40px;">关联用户总共有<span id="relatednum"></span>人</div>
 
                     <div style=" margin-left:730px">
-                        <button class="btn btn-primary btn-sm" style="width:80px;height:40px;margin-right:5px" name="compare_button" id="compare_button" title="选择2至3个用户对比"  onclick="compare_button();">个体对比</button>
+                        <!--<button class="btn btn-primary btn-sm" style="width:80px;height:40px;margin-right:5px" name="compare_button" id="compare_button" title="选择2至3个用户对比"  onclick="compare_button();">个体对比</button>-->
                         <button class="btn btn-primary btn-sm" style="width:80px;height:40px;margin-right:5px" name="group_button" id="group_button" onclick="group_button();">群体分析</button>
                     </div>
                 </div>      
@@ -273,7 +267,10 @@
     </div>
   </div>
 </div>
+{% endblock body %}
 
+{% block end_js %}
+{{ super() }}
 <script>
     // $(function() {
     //     $('#tabs').carouFredSel({
@@ -360,4 +357,4 @@
 <script type="text/javascript" src="/static/js/portrait/person_contact.js"></script>
 <script type="text/javascript" src="/static/js/portrait/identify_table.js"></script>
 
-{% endblock %}
+{% endblock end_js %}

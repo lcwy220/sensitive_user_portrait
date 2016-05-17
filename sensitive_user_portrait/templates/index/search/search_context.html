@@ -18,8 +18,11 @@
 
 
 {% block body %}
-<h2 style="margin-left:80px;">背景信息检索</h2>
-<div id="page" style="margin-top:50px;">
+<div id='page' >
+<div id="content">
+<h2 style="margin-bottom:50px">背景信息检索</h2>
+<!-- <h2 style="margin-left:80px;">背景信息检索</h2> -->
+<!-- <div id="page" style="margin-top:50px;"> -->
 <div style='margin-left:190px;' class="cols">
     <span class="fleft lineh42 mright13">用户ID或昵称</span>
     <input id='term' name="term" style='width:260px;'class="inputbox fleft " type="text" value="" placeholder="请输入用户ID或昵称" />
@@ -88,6 +91,8 @@
 </div>
 
 </div>
+</div>
+<!-- </div> -->
 {% endblock body %}
 
   {% block end_js %}
