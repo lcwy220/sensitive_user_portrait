@@ -63,6 +63,7 @@ def ajax_portrait_search():
                     query.append({"term":{attribute_name:attribute_value}})
                     condition_num += 1
 
+    print condition_num
     size = 1000
     sort = '_score'
     result = search_portrait(condition_num, query, sort, size)
@@ -84,9 +85,9 @@ def ajax_get_hot_keywords():
 
     sensitive_words = []
     search_results = es_sensitive_user_portrait.search(index=portrait_index_name, doc_type=portrait_index_type, body=query_body)['aggregations']["hot_words"]['buckets']
-    if results:
-        for item in results:
-            sensitive_words.append(item['key'])
+    if search_results:
+        for item in search_results:
+            sensitive_words.append([item['key'],item["doc_count"]])
 
     return json.dumps(sensitive_words)
 

@@ -28,7 +28,7 @@ def user_sort_interface(username , time ,sort_scope , sort_norm , arg = None, st
             #offline job
             #add job to es index
             during = ( datetime2ts(et) - datetime2ts(st) ) / DAY + 1
-            time = 1
+            time = 7
             if during > 3:
                 time = 7
             elif during > 16:
