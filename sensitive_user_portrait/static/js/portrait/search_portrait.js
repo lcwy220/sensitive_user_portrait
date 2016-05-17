@@ -1,3 +1,5 @@
+
+
 function draw_search_results(data){
     //console.log(data);
     $('#search_result').empty();
@@ -50,3 +52,7 @@ function draw_search_results(data){
     });
    
 }
+
+$('#search_keywords_input').click(function(e){
+          $('#search_deit_words').modal();
+});

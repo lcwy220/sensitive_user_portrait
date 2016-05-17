@@ -53,8 +53,12 @@ Social_sense.prototype = {   //获取数据，重新画表
   	var operate = '';
   	var f_color = '';
   	var time_now =  Date.parse(new Date())/1000;
-	html += '<table id="so_task_table_body" class="table table-bordered table-striped table-condensed datatable" >';
-	html += '<thead><tr style="text-align:center;width:115px;"><th>任务名称</th><th style="width: 60px;">创建人</th><th>创建时间</th><th>终止时间</th><th  style="width: 140px;">监控进度&nbsp;&nbsp;<i style="font-size:15px;" class="glyphicon glyphicon-question-sign" data-placement="right" title="红色表示任务处于终止状态"></i></th><th>任务状态</th><th>操作</th></tr></thead>';
+	html += '<table id="so_task_table_body" class="table table-bordered table-striped table-condensed datatable" style="width:100%">';
+	html += '<thead><tr style="text-align:center;width:115px;"><th>任务名称</th>';
+  html += '<th style="width: 120px;">创建人</th>';
+  html += '<th>创建时间</th><th>终止时间</th>';
+  html += '<th  style="width: 140px;">监控进度&nbsp;&nbsp;<i style="font-size:15px;" class="glyphicon glyphicon-question-sign" data-placement="right" title="红色表示任务处于终止状态"></i></th>';
+  html += '<th style="width: 60px;">任务状态</th><th>操作</th></tr></thead>';
 	html += '<tbody>';
 	for (i=0;i<item.length;i++){
 	  	var create_d = new Date(item[i]['create_at']*1000).format('yyyy/MM/dd hh:mm'); 
@@ -219,6 +223,28 @@ function so_more_all_1(){
   $('input[name="so_more_option_1"]').prop('checked', $("#so_more_all_1").prop('checked'));
 }
 
+function choose_key_button(){
+  var words_origin = $('#so_keywords').val();
+  // if(check_words.length != 0){
+  //   console.log(check_words)
+  //   var already_words = $('#so_keywords').val().toString().split(" ");
+  //   already_words.splice(jQuery.inArray(check_words,already_words),1); 
+  //   var words = already_words.splice(jQuery.inArray(check_words,already_words),1); 
+
+  //   //var words = $('#so_keywords').val().toString().split(" ")- check_words;
+  // }else{
+  //   var words = words_origin;
+  // }
+  check_words = [];
+  $('[name="check_words"]:checked').each(function(){
+    var key = $(this).parent().attr("title");
+    check_words.push(key);
+  });
+ var words = $('#so_keywords').val();
+ if(words != ''){words += ' ';}
+ words += check_words.join(" ");
+ $('#so_keywords').val(words)
+}
 
 function draw_sensor(data){
 	$('#so_sensor_content').empty();
@@ -330,6 +356,38 @@ function so_draw_search_results(data){
         }
     });
 }
+function draw_modal(data){
+      console.log(data.length)
+      var i=0;
+      var html = '';
+      html += '<table id="check_sensiwords_table" >';
+      html += '<thead><th>111</th><th>111</th><th>111</th><th>111</th><th>111</th><th>111</th></thead><tbody>';
+      html += '<tr>'
+      for(var d in data){
+        i=i+1;
+        if(data[d].length>6){
+          //html += '<td title='+data[d]+'>'+'<input type="checkbox" name="check_words">'+data[d].substr(0,6)+'...</td>'
+          html += '<td title='+data[d]+'>'+'<input type="checkbox" name="check_words">'+data[d].substr(0,6)+'...</td>'
+        }else{
+          html += '<td title='+data[d]+'>'+'<input type="checkbox" name="check_words">'+data[d]+'</td>'
+        }
+        if((i%6 == 0 ) && (i != data.length)){
+          html += '</tr><tr>'
+        }
+      }
+      html += '<td>ssss</td></tr></tbody></table>';
+      $("#modal_show_key").append(html);
+      $('#check_sensiwords_table').dataTable({
+        "sDom": "<'row'<'col-md-12'f>r>t",
+       "sPaginationType": "bootstrap",
+       "bSort": false,
+       "oLanguage": {
+           "sLengthMenu": "_MENU_ 每页"
+       }
+
+      });
+      $('#check_sensiwords_table th ').css('display', 'none')
+}
 
 //上传文件交互、按钮
 function bindOption(){
@@ -374,6 +432,9 @@ function bindOption(){
                 alert('只能上传csv或txt文件。');
                 return;
             }
+        });
+        $('#so_keywords_input').click(function(e){
+          $('#so_deit_words').modal();
         });
 }
 bindOption();
@@ -608,26 +669,26 @@ function so_group_data(){
 	    a['task_name'] = $('#so_name').val();
 	    a['remark'] = $('#so_remarks').val();
       a['stop_time'] = Date.parse($('input[name="so_end_time"]').val())/1000;  
-		a['task_number'] = $('#sensingnum').text();
-		//console.log(a);//['keywords0'] = '';
-		a['create_at'] =  Date.parse(new Date())/1000;
-        a['create_by'] = user; 
-		var so_user_option = $('input[name="so_mode_choose"]:checked').val();
-		var url0 = [];
-		var url1 = '';
-		var url_create = '/social_sensing/create_task/?';
-	  //   a['keywords'] = $('#so_keywords').val();
-	 	// a['keywords'] = a['keywords'].split(/\s+/g);
-	  //   a['sensitive_words'] = $('#so_keywords_nor').val();
-	 	// a['sensitive_words'] = a['sensitive_words'].split(/\s+/g);
-	  //   $('[name="so_more_option_0"]:checked').each(function(){
-		 //  	    a['sensitive_words'].push($(this).val());
-		 //  	});
-	  //  	$('[name="so_more_option_1"]:checked').each(function(){
+		  a['task_number'] = $('#sensingnum').text();
+  		//console.log(a);//['keywords0'] = '';
+  		a['create_at'] =  Date.parse(new Date())/1000;
+      a['create_by'] = user; 
+  		var so_user_option = $('input[name="so_mode_choose"]:checked').val();
+  		var url0 = [];
+  		var url1 = '';
+  		var url_create = '/social_sensing/create_task/?';
+  	  //   a['keywords'] = $('#so_keywords').val();
+  	 	// a['keywords'] = a['keywords'].split(/\s+/g);
+  	  //   a['sensitive_words'] = $('#so_keywords_nor').val();
+  	 	// a['sensitive_words'] = a['sensitive_words'].split(/\s+/g);
+  	  //   $('[name="so_more_option_0"]:checked').each(function(){
+  		 //  	    a['sensitive_words'].push($(this).val());
+  		 //  	});
+  	  //  	$('[name="so_more_option_1"]:checked').each(function(){
 		 //  	    a['keywords'].push($(this).val());
 		 //  	});
 	   a['keywords'] = $("#so_keywords").val();
-		console.log(a['keywords']);
+		//console.log(a['keywords']);
 		for(var k in a){
 			if(a[k]){
 				url0.push(k +'='+a[k]);
@@ -654,13 +715,14 @@ function so_callback(data){
 console.log(data);
 	if(data==1){
 		alert('操作成功！');
-		window.location.href=window.location.href;
+		//window.location.href=window.location.href;
 	}else if(data==0){
 		alert('已存在相同名称的监控任务，请重试！');
 	}else if(data =='more than limit'){
 		alert('提交任务数超过用户限制，请等待结果计算完成后提交新任务！');
 	}
 }
+      Social_sense.call_sync_ajax_request("/social_sensing/get_admin_sensi_words/", Social_sense.ajax_method, draw_modal);
 
 
 // have_keys(['sdfa','asdfasg','1231','asdfa','dsga4','12sdfa']);
