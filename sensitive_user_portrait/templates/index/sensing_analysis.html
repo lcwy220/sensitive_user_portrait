@@ -1,6 +1,7 @@
-{% extends "index/tbase.html" %}
-{% block title %}敏感微博监控{% endblock title%}
-	{% block css %}
+{% extends "index/base.html" %}
+    {% block title %}敏感微博监控{% endblock title%}
+    {% block subtitle %}敏感微博监控{% endblock subtitle%}
+      {% block custom_css %}
         {{ super() }}
         <style type="text/css">
            
@@ -28,20 +29,21 @@
           #pageGro .pageDown{ text-indent:5px;background:url(/static/img/pageDown.png) 46px 6px no-repeat;}
       </style>
 
-
-    {% endblock css %}
-    {% block head_js %}
+  {% endblock custom_css %}
+   {% block custom_js %}
         {{ super() }}
         <link  type="text/css" href="/static/personal/css/style.css" rel="stylesheet"/>
         <link  type="text/css" href="/static/personal/css/basic.css" rel="stylesheet"/>
         <script type="text/javascript" src="/static/js/portrait/identify_table.js"></script>
-    {% endblock head_js %}
-    {% block head_title%}
-    敏感微博监控
-    {% endblock head_title%}
+          <link rel="stylesheet" href="/static/custom/css/overview.css" media="screen" />
+    {% endblock custom_js %}
+
     {% block ex_link %}/index/nouns_explain/#social_sensing{% endblock %}
-    {% block main %}
-    	<div style="width:1100px">
+    {% block body %}
+      <div id="page" >
+      <div id='content'>
+      <h2>敏感微博监控</h2>
+    	<!-- <div style="width:1100px"> -->
         <div id="sensing_analysis">
     		<div id="task_detail" style="font-size:14px;line-height: 30px;">         
       		<span><b>任务名称：</b><span id="sensing_task_name"></span>&nbsp;
@@ -215,6 +217,8 @@
           </div>
     		</div>
     	</div>
+      <!-- </div> -->
+      </div>
       </div>
 
 
@@ -293,8 +297,8 @@
 
 
 
-    {% endblock main %}
-    {% block Own_js %}
+    {% endblock body %}
+    {% block end_js %}
       {{ super() }}
 
       <script type="text/javascript">
@@ -313,4 +317,4 @@
       <script type='text/javascript' src='/static/js/portrait/sensing_analysis.js'></script>
 
 
-    {% endblock Own_js %}
+    {% endblock end_js %}
