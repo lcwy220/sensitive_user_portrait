@@ -34,7 +34,7 @@ function draw_search_results(data){
       html += '<td class="center" style="">'+ item[4] +'</td>';
       html += '<td class="center" style="">'+ item[5] +'</td>';
       html += '<td class="center" style="">'+ item[6] +'</td>';
-      html += '<td class="center" style="width:120px;"><a class="portrait_href" href=' + user_url + ' target="_blank">查看人物属性页</a></td>';
+      html += '<td class="center" style="width:120px;"><a class="portrait_href" href=' + user_url + ' target="_blank">查看人物属性</a></td>';
       html += '</tr>';
     }
     html += '</tbody>';

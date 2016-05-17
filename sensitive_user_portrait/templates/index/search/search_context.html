@@ -97,6 +97,14 @@
 
   {% block end_js %}
     <script type="text/javascript">
+
+
+
+        var url = '/search/profile_search/?stype=1';
+        url += get_simple_par();
+        $('#al_choose').css('display','none');
+        base_call_ajax_request(url, draw_search_results);
+
         function bindAdvanced(){
             $("#show_advanced").off("click").click(function(){
                 if (($('#supersearch')).is(':hidden')){
@@ -309,7 +317,7 @@ function draw_search_results(data){
       html += '<td class="center" style="width:100px;">'+ item.statusnum +'</td>';
       html += '<td class="center" style="width:100px;">'+ item.friendsnum +'</td>';
       html += '<td class="center" style="width:100px;">'+ item.create_at+'</td>';
-      html += '<td class="center" style="width:120px;"><a class="portrait_href" href=' + user_url + ' target="_blank">查看人物属性页</a></td>';
+      html += '<td class="center" style="width:120px;"><a class="portrait_href" href=' + user_url + ' target="_blank">查看人物属性</a></td>';
       html += '</tr>';
     }
     html += '</tbody>';
@@ -319,7 +327,7 @@ function draw_search_results(data){
     $('.datatable').dataTable({
         "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
         "sPaginationType": "bootstrap",
-        "aaSorting":[[5, 'desc']],
+        //"aaSorting":[[5, 'desc']],
         //"aoColumnDefs":[ {"bSortable": false, "aTargets":[7]}],
         "oLanguage": {
             "sLengthMenu": "每页&nbsp; _MENU_ 条"
