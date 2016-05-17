@@ -357,6 +357,7 @@ $('#range_choose').change(function(){
 	if($('#range_choose').val() == 'in_limit_hashtag') {
 		$('#sort_select').empty();
 		var sort_select = '';
+		sort_select += '<select id="sort_select_2">';
 		sort_select += '<option value="retweet" checked="checked">转发量</option>';
 		sort_select += '<option value="comment">评论量</option>';
 		sort_select += '</select>';
@@ -710,7 +711,7 @@ function submit_rank(){
 					call_sync_ajax_request(url, draw_all_rank_table);
 				}else{
 					//alert('库内')
-					url += '&all=False';
+					url += '&all=True';
 					var	loading_html = '<div style="text-align:center;vertical-align:middle;height:40px">数据正在加载中，请稍后...</div>';
 					$('#result_rank_table').append(loading_html)
 					call_sync_ajax_request(url, draw_rank_table);
