@@ -201,7 +201,7 @@ text-indent:40px;
 	z-index: 1002;
 	width: 980px;
 	background: #FFF none repeat scroll 0% 0%;
-	border: 1px solid #AA8BE8;
+	/*border: 1px solid #AA8BE8;*/
     margin-left: 80px;
     font_family:"Microsoft YaHei UI";
 }
