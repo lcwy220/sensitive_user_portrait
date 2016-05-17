@@ -1,5 +1,5 @@
 {% extends "index/base.html" %}
-{% block title %}个人详情{% endblock title %}
+{% block title %}人物关联分析{% endblock title %}
 
 {% block custom_css %}
 {{ super() }}
@@ -162,14 +162,14 @@
           <div class="modal-dialog" role="document" style="width:1000px">
             <div class="modal-content">
               <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
                 <h4 class="modal-title" style="font-size:18px" id="myModalLabel">自定义属性</h4>
               </div>
               <div class="modal-body">
                 <div style="font-size:18px;margin-top:-10px">选择用户添加标签</div>
                 <div>
-                    <span>选择类别：</span><span id='attribute_name' style="margin-left:10px"></span>
-                    <span style='margin-left:20px'>选择标签：</span><span id='attribute_value' style="margin-left:10px"></span><span style="margin-left:10px"><button class="btn btn-primary btn-sm" style="width:80px;height:30px" id="add_group_tag_button" title="确定选择" onclick="add_group_tag()">添加</button></span>
+                    <span>选择类别：</span><span id='attribute_name_zh' style="margin-left:10px"></span>
+                    <span style='margin-left:20px'>选择标签：</span><span id='attribute_value_zh' style="margin-left:10px"></span><span style="margin-left:10px"><button class="btn btn-primary btn-sm" style="width:80px;height:30px" id="add_group_tag_button" title="确定选择" onclick="add_group_tag()">添加</button></span>
                 <div id= "user_lable" style="margin-top:14px"></div>
               </div>
             </div>
@@ -271,6 +271,7 @@
 
 {% block end_js %}
 {{ super() }}
+
 <script>
     // $(function() {
     //     $('#tabs').carouFredSel({
@@ -354,7 +355,9 @@
     var contact_user = "{{g.user.email}}";
     //console.log(contact_user);
 </script>
+
 <script type="text/javascript" src="/static/js/portrait/person_contact.js"></script>
 <script type="text/javascript" src="/static/js/portrait/identify_table.js"></script>
-
+<script type="text/javascript" src="/static/js/portrait/show_tag.js"></script> 
+<script type="text/javascript" src="/static/js/portrait/tag.js"></script> 
 {% endblock end_js %}
