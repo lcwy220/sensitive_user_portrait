@@ -90,7 +90,7 @@ Show_value.prototype = {   //获取数据，重新画表
   },
 
 Draw_value:function(data){
-	//console.log(data);
+	console.log(data);
 	$('#attribute_value_zh').empty();
 	var html = '';
 	html += '<select id="select_attribute_value">';
