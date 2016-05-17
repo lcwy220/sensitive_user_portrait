@@ -170,6 +170,9 @@ function get_advanced_par(){
     });
     temp += '&topic_string=' + topic.join(',');
     
+    var sensi_word = $('#sensi_word').val().split(' ').join(',');
+    temp += '&sensitive_words_string=' + sensi_word;
+
     var tag_type = $('[name="tag_type"]').val();
     if (tag_type != ''){
         temp += '&tag=' + tag_type;
