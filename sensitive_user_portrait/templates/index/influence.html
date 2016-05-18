@@ -10,11 +10,11 @@
 
 <style>
 	select{height:25px;width:140px;}
-	.shadow {
+/*	.shadow {
 		-webkit-box-shadow:5px 6px 3px #ABA8A8;
 		-moz-box-shadow:5px 6px 3px #ABA8A8;
 		box-shadow:5px 6px 3px #ABA8A8;
-	}
+	}*/
 	#rank_table_info{margin-left: 30px;}
 	#rank_table_length {margin-left: 30px;}
 	#rank_table_length select{width: 50px;}
@@ -25,7 +25,7 @@
 {% block body %}
   <div id="page">
     <div id="content">
-     <h2>影响力排名</h2>
+     <h2>人物排序</h2>
         <div class="box-content">
 <!--             <ul class="nav nav-tabs" id="myTab">
                 <li class="active" title="热门人物"><a href="#inf_recom">热门人物</a></li>
@@ -90,7 +90,7 @@
 			</tr>
 		</table>
 		<h4 id="task_zh">任务状态</h4>
-		<div id="task_status"></div>
+		<div id="task_status" style="margin-left:30px;margin-right:35px"></div>
 		<h4>结果分析</h4>
 		<div id="result_analysis" style="margin-left: 30px;padding:10px;background-color:#E1E6FF;width: 900px;font-size:14px;border:1px solid #B0CEFB"><b>
 			<span>识别范围：<span id="rec_range"></span></span>

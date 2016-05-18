@@ -21,7 +21,7 @@
 {% block body %}
 <div id='page' >
 <div id="content">
-<h2 style="margin-bottom:50px">全文检索</h2>
+<h2 style="margin-bottom:50px">微博全文检索</h2>
 <!-- <div id="textsearch" style="margin-top:200px">
         <span style="float:left;line-height:30px;margin-right:15px;">全文检索</span>
         <span class="searchborder fleft">
@@ -39,7 +39,8 @@
     <table class='table table-border bootstrap-datatable' style="margin-bottom:0px">
         <tr>
             <td class='search_name'>关键词</td>
-            <td><input style="width:330px;"name="words_list" type="text" value="" placeholder="请输入要搜索的微博内容，多个词用英文逗号隔开"/></td>
+            <td><input style="width:330px;"name="words_list" type="text" value="" id='sensi_word'placeholder="请输入要搜索的微博内容，多个词用空格隔开"/><span id="search_keywords_input" style="cursor:pointer;margin-left:20px;text-decoration: underline;">选择已有敏感词</span></td>
+            
         </tr>
         <tr>
             <td class='search_name'>用户ID</td>
@@ -91,6 +92,29 @@
         </div>
         <div id="weibo_text" style="width: 980px;margin-left: 80px;margin-top:20px;margin-bottom:50px;">
         </div>
+
+            <div class="modal fade" id="search_deit_words" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document" style="width:900px;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><!-- <span aria-hidden="true">&times;</span> --></button>
+            <h4 class="modal-title" id="myModalLabel">选择敏感词</h4>
+          </div>
+          <div class="modal-body">
+            <div id="modal_search_show_key">
+            </div>
+<!--             <span>群体名称：</span>
+            <span id="so_re_group_name" style="margin-left:10px;margin-right:20px;"></span>
+            <span style="margin-left:10px;">终止时间：</span>
+            <input id="so_re_end_time" type='text' style='width:145px; display:inline-block;height:25px'> -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="choose_key_button()">确认</button>
+          </div>
+        </div>
+      </div>
+    </div>
 <script src= '/static/custom/js/tbase.js'></script>
 
 
@@ -102,7 +126,9 @@
 <script type="text/javascript">
         var url0='/search/get_hot_keywords/'
         base_call_ajax_request(url0, draw_hot_words);
-
+$('#search_keywords_input').click(function(e){
+          $('#search_deit_words').modal();
+});
         function draw_hot_words(data){
             console.log(data);
             $('#hot_words').empty();
@@ -184,6 +210,64 @@
             });
     });
 
+    base_call_ajax_request("/social_sensing/get_admin_sensi_words/",  draw_modal);
+
+function choose_key_button(){
+  var words_origin = $('#sensi_word').val();
+  // if(check_words.length != 0){
+  //   console.log(check_words)
+  //   var already_words = $('#so_keywords').val().toString().split(" ");
+  //   already_words.splice(jQuery.inArray(check_words,already_words),1); 
+  //   var words = already_words.splice(jQuery.inArray(check_words,already_words),1); 
+
+  //   //var words = $('#so_keywords').val().toString().split(" ")- check_words;
+  // }else{
+  //   var words = words_origin;
+  // }
+  check_words = [];
+  $('[name="check_words"]:checked').each(function(){
+    var key = $(this).parent().attr("title");
+    check_words.push(key);
+  });
+ var words = $('#sensi_word').val();
+ if(words != ''){words += ' ';}
+ words += check_words.join(" ");
+ $('#sensi_word').val(words)
+}
+
+function draw_modal(data){
+      console.log(data.length)
+      var i=0;
+      var html = '';
+      html += '<table id="search_sensiwords_table" >';
+      html += '<thead><th>111</th><th>111</th><th>111</th><th>111</th><th>111</th><th>111</th></thead><tbody>';
+      html += '<tr>'
+      for(var d in data){
+        i=i+1;
+        if(data[d].length>6){
+          //html += '<td title='+data[d]+'>'+'<input type="checkbox" name="check_words">'+data[d].substr(0,6)+'...</td>'
+          html += '<td title='+data[d]+'>'+'<input type="checkbox" name="check_words">'+data[d].substr(0,6)+'...</td>'
+        }else{
+          html += '<td title='+data[d]+'>'+'<input type="checkbox" name="check_words">'+data[d]+'</td>'
+        }
+        if((i%6 == 0 ) && (i != data.length)){
+          html += '</tr><tr>'
+        }
+      }
+      html += '<td>dd</td></tr></tbody></table>';
+      $("#modal_search_show_key").append(html);
+      $('#search_sensiwords_table').dataTable({
+        "sDom": "<'row'<'col-md-12'f>r>t",
+       "sPaginationType": "bootstrap",
+       "bSort": false,
+       "oLanguage": {
+           "sLengthMenu": "_MENU_ 每页"
+       }
+
+      });
+      $('#search_sensiwords_table th ').css('display', 'none')
+}
+
 function draw_key_rank(data){
     var num = data.number;
     //$('#rec_num_range').empty();
@@ -197,7 +281,7 @@ function draw_key_rank_table(data){
     //console.log(data);
     if(data.length == 0){
         $('#result_rank_table').empty();
-        var html = '<div style="width: 900px;margin-left: 30px;text-align: center;font-size: 16px;background-color: #cccccc;margin-bottom: 30px;">暂无数据</div>';
+        var html = '<div style="width: 980px;margin-top:60px;text-align: center;font-size: 16px;background-color: #cccccc;margin-bottom: 30px;">暂无数据</div>';
         $('#result_rank_table').append(html);
     }else{
         
@@ -235,12 +319,13 @@ function draw_all_rank_table(data){
                 //<th style="width:65px;text-align:center;">排名</th>';
                 html += '<th style="text-align:center;">用户ID</th>';
                 html += '<th style="text-align:center;">昵称</th>';
-                html += '<th style="text-align:center;">是否入库</th>';
+               
                 html += '<th style="text-align:center;width:100px;">注册地</th>';
                 html += '<th style="text-align:center;">粉丝数</th>';
                 html += '<th style="text-align:center;">微博数</th>';
                 html += '<th style="text-align:center;">影响力</th>';
                 html += '<th style="text-align:center;">敏感度</th>';
+                 html += '<th style="text-align:center;">是否入库</th>';
                 //html += '<th style="min-width:40px;text-align:center;">入库</th>';
                 html += '</thead>';
                 for(var i=0;i<data.length;i++){
@@ -288,12 +373,13 @@ function draw_all_rank_table(data){
                     html += '<td style="text-align:center;"><a href='+user_url+ ' target="_blank">'+uid+'</a></td>';
                     //html += '<td style="text-align:center;"><a href="/index/personal/?uid='+uid+'" target="_blank">'+uid+'</a></td>';
                     html += '<td style="text-align:center;">'+uname+'</a></td>';
-                    html += '<td style="text-align:center;">'+is_warehousing+'</td>';
+                    
                     html += '<td style="text-align:center;">'+location+'</td>';
                     html += '<td style="text-align:center;">'+fans+'</td>';
                     html += '<td style="text-align:center;">'+weibo_num+'</td>';
                     html += '<td style="text-align:center;">'+influcence+'</td>';
                     html += '<td style="text-align:center;">'+sensitive+'</td>';
+                    html += '<td style="text-align:center;">'+is_warehousing+'</td>';
                     // if(data[i].is_warehousing == false){
                     //     html += '<td style="width:20px;text-align:center;"><input name="user_out_check" id="user_out_check" type="checkbox" value='+ uid +'></td>';
                     // }else{
@@ -497,7 +583,7 @@ function user_recom_in_modal(){
         else{
             var compute_url = '/recommentation/identify_in/?submit_user='+username+'&date='+recommend_date+'&uid_list='+cur_uids;
             console.log(compute_url);
-            call_sync_ajax_request(compute_url, confirm_ok);
+            call_ajax_request(compute_url, confirm_ok);
         }
     }
 }
