@@ -105,7 +105,7 @@ Draw_overview: function(data){
     }else{
         submit_user = data.submit_user;
     };
-    if(data.state == undefined){
+    if(data.state == undefined||data.state ==''){
         state = '无此数据';
     }else{
         state = data.state;
@@ -113,7 +113,7 @@ Draw_overview: function(data){
     $('#overview').empty();
     html = '';
     html += '<div class="panel panel-default" style="height:180px;width:250px;float:left"><div class="panel-heading" style="border-bottom: 1px solid transparent;border-color: #dddddd;">群体信息</div>';//<ul class="gs_ul" style="margin-top:0px"><li>
-    html += '<div class="panel-body"><p style="font-size:14px;font-family: inherit;margin:0px">' + task_name +'</p><p style="font-size:14px;font-family: inherit;margin:0px">' + submit_date +'</p><p style="font-size:14px;font-family: inherit;margin:0px">' + state +'</p><p style="font-size:14px;font-family: inherit;margin:0px">' + submit_user +'</p>';
+    html += '<div class="panel-body"><p style="font-size:14px;font-family: inherit;margin:0px">群体名称：' + task_name +'</p><p style="font-size:14px;font-family: inherit;margin:0px">创建时间：' + submit_date +'</p><p style="font-size:14px;font-family: inherit;margin:0px">备注：' + state +'</p><p style="font-size:14px;font-family: inherit;margin:0px">创建人：' + submit_user +'</p>';
     html += '<p style="font-size:14px;font-family: inherit;margin:0px">群组总人数：'+data.count+'</p>'
     html += '<p><a><span style="font-size:14px;font-family: inherit;margin:0px;cursor:pointer;text-decoration:underline" onclick="show_members();">群组成员</span>&nbsp;&nbsp;';
     html += '<span style="float:right;cursor:pointer;font-size:14px;font-family: inherit;margin:0px;" type="button"data-toggle="modal" data-target="#group_tag2"><u>群组标签</u></span></p>';
