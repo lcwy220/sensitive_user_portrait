@@ -159,6 +159,7 @@ function draw_all_rank_table(data){
 }
 
 function draw_rank_table(data){
+	console.log(data);
 	if(data.length == 0){
 		$('#result_rank_table').empty();
 		var html = '<div style="text-align: center;font-size: 16px;background-color: #cccccc;margin-bottom: 30px;width: 900px;margin-left: 30px;">暂无数据</div>';
@@ -780,7 +781,8 @@ call_sync_ajax_request(task_url, task_status);
 var rank_url = '/user_rank/user_sort/?username='+ username +'&time='+ day_select +'&sort_norm='+ sort_norm_rank +'&sort_scope='+ sort_scope+'&all=True'+'&number='+number;
 console.log(rank_url);
 var	loading_html = '<div style="text-align:center;vertical-align:middle;height:40px">数据正在加载中，请稍后...</div>';
-$('#result_rank_table').append(loading_html)
+$('#result_rank_table').append(loading_html);
+call_sync_ajax_request(rank_url, draw_rank_table);
 
 $('.show_key_result').live('click', function(){
 	console.log('asdfsvg');
@@ -923,32 +925,7 @@ function draw_graph(data){
 
 // date_initial();
 // select_init();
-    var url2 = '/influence_application/influence_distribution';
-$('#rank_submit').click(function(){
-  var select_date = $('#total_date_select option:selected').val();
-  var domain_text = $('#domain_select option:selected').text();  
-  var select_index = $('input[name="index_select"]:checked').val();
-  var url1 = '/influence_application/search_domain_influence/?date='+select_date+'&domain='+domain_text+'&order='+select_index;
-  call_ajax_request(url1,draw_table);
-  //draw_table(data);
-});
-
-
-call_sync_ajax_request(rank_url, draw_all_rank_table);
-$('.delete_this').live("click", function(){
-	var a = confirm('确定要删除吗？');
-	if (a == true){
-		var url = '/user_rank/delete_task/?';
-		var temp = $(this).prev().text();
-		url = url + 'search_id=' + temp;
-		console.log(url);
-		//window.location.href = url;
-		call_sync_ajax_request(url,del);
-	}
-});
-
-
-
+ 
 //全网实时排名
 
 
