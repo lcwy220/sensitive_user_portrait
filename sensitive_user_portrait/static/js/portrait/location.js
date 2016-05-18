@@ -581,6 +581,7 @@ function activity_load(){
 
 
 function Draw_more(data,div){
+	console.log(data);
 	$('#'+div).empty();
 	if(div=='daily_ip0'||div=='daily_ip1'||div=='daily_ip2'||div=='daily_ip3'||div=='daily_ip4'||div=='daily_ip5'||div=='daily_ip6'||div=='daily_s_ip0'||div=='daily_s_ip1'||div=='daily_s_ip2'||div=='daily_s_ip3'||div=='daily_s_ip4'||div=='daily_s_ip5'||div=='daily_s_ip6'){
 		var words ='IP';

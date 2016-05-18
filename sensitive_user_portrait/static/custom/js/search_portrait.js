@@ -10,7 +10,7 @@ function draw_search_results(data){
     html += '<th style="width:135px;">昵称</th>';
     html += '<th style="width:140px;">注册地</th>';
     html += '<th style="">活跃度</th>';
-    html += '<th style="">身份敏感度</th>';
+    html += '<th style="">敏感度</th>';
     html += '<th style="">影响力</th>';
     html += '<th style="">相关度</th>';
     html += '<th style="">操作</th></thead>';

@@ -276,7 +276,7 @@ function drawTopicDomain(div_name, more_div_name, rank_data){
 
 //画表格
 function drawRank(div_name, cname, rank_data, more_div){
-    var int_list = {'retweeted_user':'','top_comment_user':'', 'top_user_sensitive':''};
+    var int_list = ['retweeted_user','top_comment_user', 'top_user_sensitive'];
     if (!rank_data){
         rank_data = new Array();
     }
@@ -299,7 +299,9 @@ function drawRank(div_name, cname, rank_data, more_div){
            }
          html += '<tr><th style="text-align:center">' + m + '</th>';
          html += '<th style="text-align:center"><a title=' + item[0] +' target="_blank" href="/index/personal/?uid=' + item[0] + '">' + nickname + '</a></th>';
-         if (div_name in int_list){
+         
+		 if (div_name =='sensitive_hot_retweet' || div_name =='sensitive_hot_comment'){
+			 console.log(div_name);
              html += '<th style="text-align:center">' + item[2] + '</th></tr>';
          }
          else{
@@ -328,7 +330,7 @@ function drawRank(div_name, cname, rank_data, more_div){
        }
        html += '<tr><th style="text-align:center">' + m + '</th>';
        html += '<th style="text-align:center"><a title=' + item[0] +' target="_blank" href="/index/personal/?uid=' + item[0] + '">' + nickname + '</a></th>';
-         if (div_name in int_list){
+         if (div_name =='sensitive_hot_retweet' || div_name =='sensitive_hot_comment' ){
              html += '<th style="text-align:center">' + item[2] + '</th></tr>';
          }
          else{
@@ -587,8 +589,8 @@ function page_group_influ_weibo(start_row,end_row,data, sub_div_name){
 		var uid = data[s][7];
 		var uname = data[s][8];
         //var location = data[s][2];
-		console.log(keyword);
-        console.log(keyword.length);
+		//console.log(keyword);
+        //console.log(keyword.length);
         var tweet_ulr = data[s][10];
         //date = new Date(parseInt(timestamp)*1000).format("yyyy-MM-dd hh:mm:ss");
         if (i%2 ==0){

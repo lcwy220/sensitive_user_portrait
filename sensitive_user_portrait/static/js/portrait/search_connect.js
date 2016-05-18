@@ -6,7 +6,7 @@ function draw_search_results(data){
     //console.log(user_url);
     var html = '';
     html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
-    html += '<thead><tr><th>用户ID</th><th>昵称</th><th>注册地</th><th>活跃度</th><th>身份敏感度</th><th>重要度</th><th>影响力</th><th>相关度</th>';
+    html += '<thead><tr><th style="width:100px;">用户ID</th><th style="width:140px;">昵称</th><th style="width:140px;">注册地</th><th>活跃度</th><th>敏感度</th><th>重要度</th><th>影响力</th><th>相关度</th>';
     html += '<th>操作</th></tr></thead>';
     html += '<tbody>';
     for(var i = 0; i<data.length;i++){
