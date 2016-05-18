@@ -34,7 +34,7 @@
 <div id="supersearch" style='display:none;'>
     <table class='table table-border bootstrap-datatable'>
         <tr>
-            <td class='search_name'>属性信息</td>
+            <td class='search_name'>搜索条件</td>
             <td>
                 <span style='margin-left:20px;margin-right:12px;' class="fleft lineh42  ">用户ID</span>
                 <input name="uid" class="inputbox fleft ad-search" type="text" value="" placeholder="请输入用户ID" />
@@ -62,12 +62,22 @@
         <tr>
             <td class='search_name'>排序指标</td>
             <td>
-                <input style='margin-left:20px;' name="sort_type" type="radio" value="fansnum"  checked='checked'>粉丝数
-                <input name="sort_type" type="radio" value="friendsnum" style="margin-left:20px;">关注数
-                <input name="sort_type" type="radio" value="statusnum" style="margin-left:20px;">微博数                             
+                <input style='margin-left:20px;' name="sort_type" type="radio" value="1"  checked='checked'>粉丝数
+                <input name="sort_type" type="radio" value="2" style="margin-left:20px;">关注数
+                <input name="sort_type" type="radio" value="3" style="margin-left:20px;">微博数                             
                  
             </td>
-        </tr>    
+        </tr>   
+        <tr>
+            <td class='search_name'>排序人数</td>
+            <td>
+                <input name="sort_num_range" style="margin-left:20px;" type="radio" value="100"  checked='checked'>100
+                <input name="sort_num_range" type="radio" value="200" style="margin-left:20px;">200
+                <input name="sort_num_range" type="radio" value="300" style="margin-left:20px;">300                
+                <input name="sort_num_range" type="radio" value="400" style="margin-left:20px;">400                
+                <input name="sort_num_range" type="radio" value="500" style="margin-left:20px;">500                  
+            </td>
+        </tr> 
 <!--         <tr>
             <td class='search_name'>排序范围</td>
             <td>
@@ -77,7 +87,7 @@
             </td>
         </tr>  -->
     </table>
-     <div id="hot_words"></div>
+     <!-- <div id="hot_words"></div> -->
 </div>
 <div>
     
@@ -281,7 +291,8 @@
                 temp += input_value;
             });
             var sort = $("[name='sort_type']:checked").attr('value');
-            temp += '&'+sort+'=1';
+            var size = $("[name='sort_num_range']:checked").attr('value');
+            temp += '&order='+sort+'&size='+size;
             return temp;
         }
         function base_call_ajax_request(url, callback){
@@ -298,14 +309,14 @@
 
 
 function draw_search_results(data){
-    //console.log(data);
+    console.log(data);
     $('#search_result').empty();
     var user_url ;
     //console.log(user_url);
     var html = '';
     html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
     html += '<thead><tr><th>头像</th><th>用户ID</th><th>昵称</th><th>粉丝数</th><th>微博数</th><th>关注数</th><th>注册时间</th>';
-    html += '<th>操作</th></tr></thead>';
+    html += '<th>认证类型</th></tr></thead>';
     html += '<tbody>';
     for(var i = 0;i<data.length;i++){
       //var item = data[i];
@@ -319,6 +330,9 @@ function draw_search_results(data){
       if (item.nick_name == '未知'){
           item.nick_name = item.uid;
       } 
+      if(item.sp_type=='-1'){
+        sp_type='普通用户'
+      }
       user_url = '/index/personal/?uid=' + item.uid;
       html += '<tr id=' + item.uid +'>';
       html += '<td class="center" style="width:100px;"><img src="'+img+'" width="30" height="30"/>    </td>';
@@ -330,7 +344,8 @@ function draw_search_results(data){
       html += '<td class="center" style="width:100px;">'+ item.statusnum +'</td>';
       html += '<td class="center" style="width:100px;">'+ item.friendsnum +'</td>';
       html += '<td class="center" style="width:100px;">'+ item.create_at+'</td>';
-      html += '<td class="center" style="width:120px;"><a class="portrait_href" href=' + user_url + ' target="_blank">查看背景信息</a></td>';
+      // html += '<td class="center" style="width:120px;"><a class="portrait_href" href=' + user_url + ' target="_blank">查看背景信息</a></td>';
+      html += '<td class="center" style="width:120px;">' + item.user_location + '</td>';
       html += '</tr>';
     }
     html += '</tbody>';

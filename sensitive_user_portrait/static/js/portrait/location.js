@@ -287,6 +287,7 @@ function draw_daily_ip_table(ip_data){
 	}else{
 		today_ip.innerHTML = '暂无今日IP信息';
 		$('#moreip').css('display','none');
+        Draw_more_today('','more_today_ip');
 	}
 	var today_geo = document.getElementById('today_geo');
 	if(ip_data.today_top_city){
@@ -295,6 +296,7 @@ function draw_daily_ip_table(ip_data){
 	}else{
 		today_geo.innerHTML = '暂无今日地点信息';
 		$('#moregeo').css('display','none');
+        Draw_more_today('','more_today_geo');
 	}
 	var today_sensitive_ip = document.getElementById('today_sensitive_ip');
 	if(ip_data.today_top_sensitive_ip){
@@ -303,6 +305,7 @@ function draw_daily_ip_table(ip_data){
 	}else{
 		today_sensitive_ip.innerHTML = '暂无敏感IP信息';
 		$('#moreSip').css('display','none');
+        Draw_more_today('','more_today_s_ip');
 	}
 	var today_sensitive_geo = document.getElementById('today_sensitive_geo');
 	if(ip_data.today_sensitive_top_city){
@@ -311,6 +314,7 @@ function draw_daily_ip_table(ip_data){
 	}else{
 		today_sensitive_geo.innerHTML = '暂无敏感地点信息';
 		$('#moreSgeo').css('display','none');
+        Draw_more_today('','more_today_s_geo');
 	}
 	/*
     var tag_vector = ip_data.tag_vector;
@@ -600,6 +604,7 @@ function Draw_more(data,div){
     $('#'+ div).append(html);
 }
 function Draw_more_today(data,div){
+    console.log(data,div);
 	$('#'+div).empty();
 	if(div =='more_today_ip'|| div =='more_today_s_ip'){
 		var words = 'IP';
