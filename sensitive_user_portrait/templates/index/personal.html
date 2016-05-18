@@ -32,9 +32,9 @@
                   <div style="width:640px; float:left;">
                       <span class="nickname" id="nickname"></span>
                     <a style="font-size:15px;margin-left:15px;cursor:pointer;" onclick="detail_load();">查看详细属性</a>
-					<a id="contact" target="_blank" style="font-size:15px;margin-left:15px;cursor:pointer;">与ta相关的人</a>
+					<a id="contact" target="_blank" style="font-size:15px;margin-left:15px;cursor:pointer;">相似用户</a>
                     <div class="PersonPre" style="margin-bottom:5px;">
-                        <!--<span class="lightw">个人描述：</span>-->
+                        <span class="lightw">个人描述：</span>
                         <span class="" style="font-family: "宋体";" id="portraitDetail"></span>
                     </div>
                   </div>
@@ -703,11 +703,7 @@ $(function(){
     $('#vector_table').empty();
     var html = '';
 	//console.log(global_tag_vector);
-	if(global_tag_vector[4][1]){
-		html += '<li class="li_1"><span class="pt_title">政治倾向</span><span class="pt_detail">'+global_tag_vector[4][1]+'</span></li>';
-	}else{
-		html += '<li class="li_1"><span class="pt_title">政治倾向</span><span class="pt_detail">暂无数据</span></li>';
-	}
+	
 	if(global_tag_vector[1][1]){
 		html += '<li class="li_1"><span class="pt_title">领域</span><span class="pt_detail">'+global_tag_vector[1][1]+'</span></li>';
 	}else{
@@ -718,12 +714,22 @@ $(function(){
 	}else{
 		html += '<li class="li_1"><span class="pt_title">话题</span><span class="pt_detail">暂无数据</span></li>';
 	}
+	if(global_tag_vector[4][1]){
+		html += '<li class="li_1"><span class="pt_title">政治倾向</span><span class="pt_detail">'+global_tag_vector[4][1]+'</span></li>';
+	}else{
+		html += '<li class="li_1"><span class="pt_title">政治倾向</span><span class="pt_detail">暂无数据</span></li>';
+	}
 	//var active_geo = personalData.activity_geo;
 	//active_geo = active_geo.replace('&',' ');
 	if(personalData.活跃时间){
 		html += '<li class="li_1"><span class="pt_title">活跃时间</span><span class="pt_detail">'+personalData.活跃时间+'</span></li>';
 	}else{
-		html += '<li class="li_1"><span class="pt_title">活跃地方</span><span class="pt_detail">暂无数据</span></li>';
+		html += '<li class="li_1"><span class="pt_title">活跃时间</span><span class="pt_detail">暂无数据</span></li>';
+	}
+	if(personalData.activity_geo){
+		html += '<li class="li_1"><span class="pt_title">活跃地点</span><span class="pt_detail">'+personalData.activity_geo.split('&').join(' ')+'</span></li>';
+	}else{
+		html += '<li class="li_1"><span class="pt_title">活跃地点</span><span class="pt_detail">暂无数据</span></li>';
 	}
 	if(personalData.sensitive_words_string){
 		html += '<li class="li_1"><span class="pt_title">敏感词</span><span class="pt_detail">'+personalData.sensitive_words_string.split('&').join(' ')+'</span></li>';

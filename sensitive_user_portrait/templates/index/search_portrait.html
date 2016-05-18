@@ -20,20 +20,16 @@
 </div>
 {% endblock %}
 {% block end_js %}
-<script src="/static/js/portrait/search_portrait.js"></script>
-<script>
-function call_ajax_request(url, callback){
-    $.ajax({
-        url: url,
-        type: 'get',
-        dataType: 'json',
-        async: false,
-        success: callback
-    });
-}
-var url = '/search/portrait_search/?stype=1';
-call_ajax_request(url, draw_search_results);
-      // Social_sense.call_sync_ajax_request("/social_sensing/get_admin_sensi_words/", Social_sense.ajax_method, draw_modal);
+<script src='/static/custom/js/search_portrait.js'></script>
+    <script>
+        //var user_name = "{{g.user}}";
+        var url = '/search/portrait_search/?stype=1';
+        url += get_simple_par();
+        $('#al_choose').css('display','none');
+        //url += '&submit_user='+user_name;
+        //console.log(url);
+        //draw_conditions(url);
+        base_call_ajax_request(url, draw_search_results);
 
-</script>
+    </script>
 {% endblock end_js %}
