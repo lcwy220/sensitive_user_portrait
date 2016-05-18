@@ -6,6 +6,7 @@
    <link  type="text/css" href="/static/personal/css/style.css" rel="stylesheet"/>
 <link  type="text/css" href="/static/personal/css/basic.css" rel="stylesheet"/>
 <link rel="stylesheet" type="text/css" href="/static/css/jquery.datetimepicker.css"/>
+	<link rel="stylesheet" href="/static/custom/css/overview.css" media="screen" />
 
 <style>
 	select{height:25px;width:140px;}
@@ -24,13 +25,14 @@
 {% block body %}
   <div id="page">
     <div id="content">
+     <h2>影响力排名</h2>
         <div class="box-content">
 <!--             <ul class="nav nav-tabs" id="myTab">
                 <li class="active" title="热门人物"><a href="#inf_recom">热门人物</a></li>
                 <li title="热门微博"><a href="#sen_recom">热门微博</a></li>
             </ul> -->
             <!-- <div id="myTabContent" class="tab-content"> -->
-                    <h2>影响力排名</h2>
+                   
 					<span id="username" style='display:none'>{{ g.user }}</span>
 	<div id=''>
 		<h4>排序设置</h4>

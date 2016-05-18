@@ -319,7 +319,7 @@ function draw_search_results(data){
       if (item.nick_name == '未知'){
           item.nick_name = item.uid;
       } 
-      //user_url = '/index/personal/?uid=' + item.uid;
+      user_url = '/index/personal/?uid=' + item.uid;
       html += '<tr id=' + item.uid +'>';
       html += '<td class="center" style="width:100px;"><img src="'+img+'" width="30" height="30"/>    </td>';
 
@@ -330,7 +330,7 @@ function draw_search_results(data){
       html += '<td class="center" style="width:100px;">'+ item.statusnum +'</td>';
       html += '<td class="center" style="width:100px;">'+ item.friendsnum +'</td>';
       html += '<td class="center" style="width:100px;">'+ item.create_at+'</td>';
-      html += '<td class="center" style="width:120px;"><a class="portrait_href" href=' + user_url + ' target="_blank">查看人物属性</a></td>';
+      html += '<td class="center" style="width:120px;"><a class="portrait_href" href=' + user_url + ' target="_blank">查看背景信息</a></td>';
       html += '</tr>';
     }
     html += '</tbody>';

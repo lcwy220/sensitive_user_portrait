@@ -43,10 +43,10 @@
         </tr>
         <tr>
             <td class='search_name'>用户ID</td>
-            <td><input style="width:330px;"name="user_list" type="text" value="" placeholder="多个id用空格隔开"/></td>
+            <td><input style="width:330px;"name="user_list" type="text" value="" placeholder="请输入用户ID"/></td>
         </tr>
         <tr>
-            <td  class='search_name'>时间</td>
+            <td  class='search_name'>时间范围</td>
             <td>
               <span id='time_choose'>
                   <input id="weibo_from" type="text" class="form-control" style="width:145px; display:inline-block;height:25px;">&nbsp;-&nbsp;
@@ -240,7 +240,7 @@ function draw_all_rank_table(data){
                 html += '<th style="text-align:center;">粉丝数</th>';
                 html += '<th style="text-align:center;">微博数</th>';
                 html += '<th style="text-align:center;">影响力</th>';
-                html += '<th style="text-align:center;">言论敏感度</th>';
+                html += '<th style="text-align:center;">敏感度</th>';
                 //html += '<th style="min-width:40px;text-align:center;">入库</th>';
                 html += '</thead>';
                 for(var i=0;i<data.length;i++){

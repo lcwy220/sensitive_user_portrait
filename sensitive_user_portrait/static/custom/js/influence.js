@@ -503,7 +503,6 @@ function date_init(){
         $('#time_choose #weibo_from').datetimepicker({value:from_date,step:1440,minDate:'-1970/01/30',format:'Y/m/d',timepicker:false,maxDate:'+1970/01/01'});
         $('#time_choose #weibo_to').datetimepicker({value:from_date,step:1440,minDate:'-1970/01/30',format:'Y/m/d',timepicker:false,maxDate:'+1970/01/01'});
     }
-<<<<<<< HEAD
 }
 function submit_offline(data){
 	console.log(data)
@@ -824,18 +823,18 @@ $('.show_key_result').live('click', function(){
 		call_sync_ajax_request(url, draw_in_key_rank_table);
 	}
 
-=======
-    html += '</tbody>';
-    html += '</table>';
-    $(div).append(html);
-    $('#total_table').dataTable({
-        "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
-        "sPaginationType": "bootstrap",
-        "oLanguage": {
-            "sLengthMenu": "_MENU_ 每页"
-        }
-    });
-  }
+// =======
+//     html += '</tbody>';
+//     html += '</table>';
+//     $(div).append(html);
+//     $('#total_table').dataTable({
+//         "sDom": "<'row'<'col-md-6'l ><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>",
+//         "sPaginationType": "bootstrap",
+//         "oLanguage": {
+//             "sLengthMenu": "_MENU_ 每页"
+//         }
+//     });
+  });
 
 function draw_graph(data){
   var myChart = echarts.init(document.getElementById("distribute")); 
@@ -922,8 +921,8 @@ function draw_graph(data){
     myChart.setOption(option);   
 }
 
-date_initial();
-select_init();
+// date_initial();
+// select_init();
     var url2 = '/influence_application/influence_distribution';
 $('#rank_submit').click(function(){
   var select_date = $('#total_date_select option:selected').val();
