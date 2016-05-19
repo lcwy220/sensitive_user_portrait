@@ -560,6 +560,7 @@ def search_follower(uid, top_count):
             fansnum = 0
         retweet_count = int(retweet_dict[uid])
         out_portrait_list.append([uid, uname, retweet_count, fansnum])
+    print in_portrait_list, in_portrait_result
 
     return {'in_portrait_list':in_portrait_list, 'in_portrait_result':in_portrait_result, 'out_portrait_list':out_portrait_list}
 
@@ -662,6 +663,7 @@ def sensitive_search_follower(uid, top_count):
             fansnum = 0
         retweet_count = int(retweet_dict[uid])
         out_portrait_list.append([uid, uname, retweet_count, fansnum])
+    print in_portrait_list, in_portrait_result
 
     return {'in_portrait_list':in_portrait_list, 'in_portrait_result':in_portrait_result, 'out_portrait_list':out_portrait_list}
 
@@ -674,7 +676,7 @@ def sensitive_search_follower(uid, top_count):
 def search_comment(uid, top_count):
     results = {}
     evaluate_max_dict = get_evaluate_max()
-    if RNU_TYPE == 0:
+    if RUN_TYPE == 0:
         now_ts = datetime2ts('2013-09-02')
     else:
         now_ts = time.time()
@@ -872,6 +874,11 @@ def sensitive_search_comment(uid, top_count):
         else:
             uname = uid
             fansnum = 0
+
+        retweet_count = int(retweet_dict[uid])
+        out_portrait_list.append([uid, uname, retweet_count, fansnum])
+
+    return {'in_portrait_list':in_portrait_list, 'in_portrait_result':in_portrait_result, 'out_portrait_list':out_portrait_list}
 
 #use to get user be_comment from es: be_comment_1, be_comment_2
 #write in version: 15-12-08
@@ -1234,6 +1241,7 @@ def search_bidirect_interaction(uid, top_count):
         interaction_count = int(all_interaction_dict[uid])
         out_portrait_list.append([uid, uname, interaction_count, fansnum])
 
+    print in_portrait_list,out_portrait_list
 
     return {'in_portrait_list':in_portrait_list, 'in_portrait_result': in_portrait_result, 'out_portrait_list': out_portrait_list}
 
@@ -1644,7 +1652,6 @@ def search_location_day(uid, now_date_ts, sensitive=0):
                     day_ip_string = ""
         else:
             day_ip_string = ""
-        print day_ip_string
     else:
         if sensitive == 0:
             day_ip_string = redis_ip.hget('ip_'+str(now_date_ts), uid)
@@ -1657,7 +1664,6 @@ def search_location_day(uid, now_date_ts, sensitive=0):
 
     for ip in day_ip_dict:
         ip_weibo_count = day_ip_dict[ip]
-        print ip_weibo_count
         city = ip2city(ip)
         try:
             results[city] += ip_weibo_count
@@ -1740,7 +1746,6 @@ def search_location_month(uid, now_date_ts, sensitive=0):
     day_count = len(activity_geo_week)
     for i in range(day_count, 0, -1):
         iter_day_ts = ts2datetime(now_date_ts - DAY*i)
-        print iter_day_ts
         iter_day_date = datetime2ts(iter_day_ts)
         day_geo_dict = activity_geo_week[day_count - i]
         sort_day_geo = sorted(day_geo_dict.items(), key=lambda x:x[1], reverse=True)
@@ -1904,7 +1909,6 @@ def search_ip(now_ts, uid):
 
         day_geo_dict = dict()
         sensitive_day_geo_dict = dict()
-        print ip_time_dict
         for ip, count in ip_time_dict.items():
             geo = ip2city(ip)
             #
@@ -1987,7 +1991,6 @@ def get_ip_description(week_result, all_week_top, all_day_top):
         '''
         home_ip_list.append(item[0])
         home_ip_city = ip2city(item[0])
-        print ''
         home_ip_list.append(home_ip_city)
         home_ip.append(item[0])
 
@@ -2085,7 +2088,6 @@ def search_activity(now_ts, uid):
         sensitive_day_result = redis_activity.hget('sensitive_activity_'+str(now_day_ts), str(uid))
     except:
         sensitive_day_result = ''
-    print day_result
     if day_result:
         day_dict = json.loads(day_result)
         for segment in day_dict:
@@ -2206,7 +2208,6 @@ def search_activity(now_ts, uid):
     sort_week_weibo_count = sorted(week_weibo_count, key=lambda x:x[0])
     sensitive_sort_week_weibo_count = sorted(sensitive_week_weibo_count, key=lambda x:x[0])
     sort_segment_list = sorted(segment_result.items(), key=lambda x:x[1], reverse=True)
-    print sort_segment_list
     sensitive_sort_segment_list = sorted(sensitive_segment_result.items(), key=lambda x:x[1], reverse=True)
     #description, active_type = active_time_description(segment_result)
     active_time_string = {'0':'0-4', '1':'4-8','2':'8-12','3':'12-16','4':'16-20','5':'20-24'}
@@ -2219,7 +2220,6 @@ def search_activity(now_ts, uid):
         activity_result['activity_time'] = active_time_string[str(sort_segment_list[0][0]/16)]
     else:
         activity_result['activity_time'] = ""
-    print sensitive_sort_segment_list
     if sensitive_sort_segment_list:
         activity_result['sensitive_activity_time'] = active_time_string[str(sensitive_sort_segment_list[0][0]/16)]
     else:
@@ -2731,7 +2731,7 @@ def search_sentiment_trend(uid, time_type, now_ts):
         new_time_list = [ts2date(item) for item in time_list]
         negtive_count = sum(trend_results['2'])
         neutral_count = sum(trend_results['0'])
-        total_count = sum(trend_results['2']) + sum(trend_results['1']) +sum(trend_results['2'])
+        total_count = sum(trend_results['2']) + sum(trend_results['1']) +sum(trend_results['0'])
         if total_count == 0:
             negetive_index = 0
             negetive_influence = 0
@@ -2968,7 +2968,6 @@ def search_attribute_portrait(uid):
     user_geo_list = json.loads(results["activity_geo_dict"])
     geo_dict = {}
     for item in user_geo_list:
-        print item
         for k,v in item.iteritems():
             try:
                 geo_dict[k] += v
@@ -3063,7 +3062,6 @@ def search_attribute_portrait(uid):
         if importance_rank['_shards']['successful'] != 0:
             results['importance_rank'] = importance_rank['count']
         else:
-            print 'es_importance_rank error'
             results['importance_rank'] = 0
     else:
         results['importance_rank'] = 0
@@ -3082,7 +3080,6 @@ def search_attribute_portrait(uid):
         if activeness_rank['_shards']['successful'] != 0:
             results['activeness_rank'] = activeness_rank['count']
         else:
-            print 'es_activess_rank error'
             results['activeness_rank'] = 0
     if results['influence'] or results['influence'] == 0:
         query_body = {
@@ -3099,7 +3096,6 @@ def search_attribute_portrait(uid):
         if influence_rank['_shards']['successful'] != 0:
             results['influence_rank'] = influence_rank['count']
         else:
-            print 'es_influence_rank error'
             results['influence_rank'] = 0
     if results['sensitive'] or results['sensitive'] == 0:
         query_body = {
@@ -3116,7 +3112,6 @@ def search_attribute_portrait(uid):
         if influence_rank['_shards']['successful'] != 0:
             results['sensitive_rank'] = influence_rank['count']
         else:
-            print 'es_sensitive_rank error'
             results['sensitive_rank'] = 0
     #total count in user_portrait
     query_body ={
@@ -3128,7 +3123,6 @@ def search_attribute_portrait(uid):
     if all_count_results['_shards']['successful'] != 0:
         results['all_count'] = all_count_results['count']
     else:
-        print 'es_user_portrait error'
         results['all_count'] = 0
     # activeness normalized to 0-100
     total_index = get_total_evaluation(uid)
@@ -3241,9 +3235,7 @@ def get_activeness_trend(uid):
         return None
     influence_value_list = []
     influence_time_list = []
-    print es_result
     for item, value in es_result.iteritems():
-        print item
         item_list = item.split('_')
         if len(item_list) == 2 and "activeness_" in item:
             #run_type
@@ -3287,9 +3279,7 @@ def get_influence_trend(uid, day_count):
         return None
     influence_value_list = []
     influence_time_list = []
-    print es_result
     for item, value in es_result.iteritems():
-        print item
         item_list = item.split('_')
         if len(item_list) == 2 and "bci_" in item:
             #run_type

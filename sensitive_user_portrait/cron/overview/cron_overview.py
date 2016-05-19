@@ -11,6 +11,7 @@ sys.path.append('../../')
 from global_utils import R_RECOMMENTATION as r
 from global_utils import es_sensitive_user_portrait as es
 from global_utils import es_user_profile, es_flow_text, group_index_name, group_index_type
+from get_user_info import get_evaluate_max, normalize_index
 from time_utils import datetime2ts, ts2datetime
 from parameter import RUN_TYPE
 
@@ -43,7 +44,7 @@ def search_important(category, detail):
     return uid_list
 
 
-def search_in_portrait(category):
+def search_in_portrait(category, max_result):
     query_body={
         "query":{
             "match_all": {}
@@ -53,7 +54,7 @@ def search_in_portrait(category):
     results = es.search(index="sensitive_user_portrait", doc_type="user", body=query_body)['hits']['hits']
     uid_list = []
     for item in results:
-        uid_list.append([item['_source']['uid'], item['_source']['uname'], item['_source'][category]])
+        uid_list.append([item['_source']['uid'], item['_source']['uname'], normalize_index(item['_source'][category], max_result[category])])
     return uid_list
 
 
@@ -62,6 +63,7 @@ def get_attr(date):
     total_number = es.count(index="sensitive_user_portrait", doc_type="user")['count']
     results['total_number'] = total_number
 
+    max_result = get_evaluate_max()
     query_body={
         "query":{
             "filtered":{
@@ -185,10 +187,10 @@ def get_attr(date):
 
 
     # rank
-    results['importance'] = search_in_portrait('importance')
-    results['sensitive'] = search_in_portrait('sensitive')
-    results['influence'] = search_in_portrait('influence')
-    results['activeness'] = search_in_portrait('activeness')
+    results['importance'] = search_in_portrait('importance', max_result)
+    results['sensitive'] = search_in_portrait('sensitive', max_result)
+    results['influence'] = search_in_portrait('influence', max_result)
+    results['activeness'] = search_in_portrait('activeness', max_result)
 
     # 敏感微博转发量和评论量
     mid_list = get_top_mid()

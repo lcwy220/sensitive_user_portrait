@@ -418,6 +418,8 @@ def identify_in(data):
         elif int(source) == 2:
             r.hset('identify_in_influence_'+str(date), uid, status)
             influence_list.add(uid)
+        else:
+            r.hset("identify_in_manual_"+str(date), uid, status)
         r.hset('compute', uid, json.dumps([date, status]))
 
     """
@@ -464,22 +466,21 @@ def show_in_history(date):
     influence_uid_list = []
     sen_iden_in_name = "identify_in_sensitive_" + str(date)
     inf_iden_in_name = "identify_in_influence_" + str(date)
+    man_iden_in_name = "identify_in_manual_" + str(date)
     sen_iden_in_results = r.hgetall(sen_iden_in_name)
     inf_iden_in_results = r.hgetall(inf_iden_in_name)
-    print inf_iden_in_results
-    print sen_iden_in_results
+    man_iden_in_results = r.hgetall(man_iden_in_name)
     sensitive_uid_list = sen_iden_in_results.keys()
     influence_uid_list = inf_iden_in_results.keys()
+    manual_uid_list = man_iden_in_results.keys()
     #compute_results = r.hgetall('compute')
     results = []
     work_date = ts2datetime(datetime2ts(date)-DAY)
-    print work_date
 
     if sensitive_uid_list:
         sensitive_results = get_sensitive_user_detail(sensitive_uid_list, work_date, 1)
     else:
         sensitive_results = []
-    print sensitive_uid_list
     for item in sensitive_results:
         uid = item[0]
         status = sen_iden_in_results[uid]
@@ -496,7 +497,17 @@ def show_in_history(date):
         item.append(status)
         results.append(item)
 
+    if manual_uid_list:
+        manual_results = get_sensitive_user_detail(manual_uid_list, work_date, 0)
+    else:
+        manual_results = []
+    for item in manual_results:
+        uid = item[0]
+        status = man_iden_in_results[uid]
+        item.append(status)
+        results.append(item)
+
+
     sorted_results = sorted(results, key=lambda x:x[5], reverse=True)
-    print results
     return sorted_results
 
