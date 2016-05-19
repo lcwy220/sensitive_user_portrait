@@ -575,13 +575,17 @@ function bind_remark_edit(Personal){
 -->
 bind_remark_edit(Personal);
 var global_detail_flag = false;
+var influence_flag = false;
+var social_flag = false;
+var thought_flag = false;
+var preference_flag = false;
 function detail_load(){
     $('#detail').css('display', 'block');
     if (!global_detail_flag){
         activity_load();
-        influence_load();
-        social_load();
-        thought_load();
+        // influence_load();
+        // social_load();
+        // thought_load();
         global_detail_flag = true;
     }
     window.location.href = '#detail';
@@ -683,15 +687,31 @@ $(function(){
 		   $(".soft_con1").css({"background":" url(/static/personal/images/line_select_001.gif)"});
 		}else if(x==1){
 		   $("#crm").css({"display":"block"}).siblings().css({"display":"none"});
+           if(preference_flag==false){
+            preference_load();
+            preference_flag=true;
+           }
 		   $(".soft_con1").css({"background":"url(/static/personal/images/line_select_002.gif)"});
 		}else if(x==2){
 		   $("#xmgl").css({"display":"block"}).siblings().css({"display":"none"});
+           if(influence_flag==false){
+            influence_load();
+            influence_flag=true;
+           }
 		   $(".soft_con1").css({"background":"url(/static/personal/images/line_select_003.gif)"});
 		}else if(x==3){
 		   $("#zsgl").css({"display":"block"}).siblings().css({"display":"none"});
+           if(social_flag==false){
+            social_load();
+            social_flag=true;
+           }
 		   $(".soft_con1").css({"background":"url(/static/personal/images/line_select_004.gif)"});
 		}else{
 		   $("#ydbg").css({"display":"block"}).siblings().css({"display":"none"});
+           if(thought_flag==false){
+            thought_load();
+            thought_flag=true;
+           }
 		   $(".soft_con1").css({"background":"url(/static/personal/images/line_select_005.gif)"});
 		}
 	});
@@ -702,7 +722,7 @@ $(function(){
 <script>
     $('#vector_table').empty();
     var html = '';
-	//console.log(global_tag_vector);
+	console.log(global_tag_vector);
 	
 	if(global_tag_vector[1][1]){
 		html += '<li class="li_1"><span class="pt_title">领域</span><span class="pt_detail">'+global_tag_vector[1][1]+'</span></li>';
