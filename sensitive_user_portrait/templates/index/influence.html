@@ -9,99 +9,145 @@
 	<link rel="stylesheet" href="/static/custom/css/overview.css" media="screen" />
 
 <style>
-	select{height:25px;width:140px;}
-/*	.shadow {
-		-webkit-box-shadow:5px 6px 3px #ABA8A8;
-		-moz-box-shadow:5px 6px 3px #ABA8A8;
-		box-shadow:5px 6px 3px #ABA8A8;
-	}*/
-	#rank_table_info{margin-left: 30px;}
-	#rank_table_length {margin-left: 30px;}
-	#rank_table_length select{width: 50px;}
-    #rank_table_filter{text-align:right;margin-bottom:5px;margin-right: 70px;}
-    .dataTables_paginate{margin-top:-10px;margin-bottom:-20px;}
+
+    select{height:25px;width:145px;}
+    .shadow {
+        -webkit-box-shadow:5px 6px 3px #ABA8A8;
+        -moz-box-shadow:5px 6px 3px #ABA8A8;
+        box-shadow:5px 6px 3px #ABA8A8;
+    }
+    #rank_table_info{margin-left: 30px;}
+    #rank_table_length {margin-left: 30px;}
+    #rank_table_length select{width: 50px;}
+    #result_rank_table .row{
+        width:80%
+    }
+    #rank_table_filter{text-align:right;margin-bottom:5px;margin-right:-159px;}
+    .dataTables_paginate{margin-top:-10px;margin-bottom:-20px;margin-left:111px;}
+    #rec_detail,#rec_range, #rec_time_range, #rec_rank_by,#rec_num_range{color:brown;}
 </style>
 {% endblock custom_css  %}
 {% block body %}
   <div id="page">
     <div id="content">
      <h2>人物排序</h2>
-        <div class="box-content">
-<!--             <ul class="nav nav-tabs" id="myTab">
-                <li class="active" title="热门人物"><a href="#inf_recom">热门人物</a></li>
-                <li title="热门微博"><a href="#sen_recom">热门微博</a></li>
-            </ul> -->
-            <!-- <div id="myTabContent" class="tab-content"> -->
-                   
-					<span id="username" style='display:none'>{{ g.user }}</span>
-	<div id=''>
-		<h4>排序设置</h4>
-		<table class="shadow" style="margin:30px;width:900px; height:150px;border: 2px solid #cccccc;">
-			<tr style="border-bottom: 1px solid #cccccc;">
-				<th style="width:150px;height:50px;background-color: #E4E4E4;text-align: center;">排序范围</td>
-				<td>
-					<select id="range_choose" class="type_sub" style="float:left;width:140px;height:25px;">
-						<option value='all_nolimit'>全网-不限</option>
-						<option value='all_limit_keyword'>全网-按关键词</option>
-						<option value='in_nolimit'>库内-不限</option>
-						<option value='in_limit_keyword'>库内-按关键词</option>
-						<option value='in_limit_hashtag'>库内-按微话题</option>
-						<option value='in_limit_domain'>库内-按身份</option>
-						<option value='in_limit_topic'>库内-按领域</option>
-						<option value='in_limit_geo'>库内-按地理位置</option>
-						<option value='in_intime'>全网-实时排名</option>
-					</select>
-					<div id="range_choose_detail" style="float: left;margin-left:15px;"></div>
-				</td>
-			</tr>
-			<tr style="border-bottom: 1px solid #cccccc;">
-				<th  style="width:150px;height:50px;background-color: #E4E4E4;text-align: center;">时间范围</th>
-				<td>
-					<span id="time_choose">
-						<input name="time_range" type="radio" value="1" checked='checked'> 过去一天
-						<input name="time_range" type="radio" value="7" style="margin-left:20px;"> 过去七天
-						<input name="time_range" type="radio" value="30" style="margin-left:20px;"> 过去一个月
-					</span>
-				</td>
-			</tr>
-			
-			<tr style="border-bottom: 1px solid #cccccc;">
-				<th  style="width:150px;height:50px;background-color: #E4E4E4;text-align: center;">排序指标</th>
-				<td>
-					<span id="sort_select">
-						<select id="sort_select_2">
-							<option value="retweet" checked="checked">转发量</option>
-							<option value="comment">评论量</option>
-						</select>
-					</span>
-					
-				</td>
-			</tr>
-			<tr >
-				<th  style="width:150px;height:50px;background-color: #E4E4E4;text-align: center;">排序人数</th>
-				<td>
-					 <input name="sort_num_range" type="radio" value="100" checked="checked">100
+         <table class="shadow" style="margin:15px 30px;width:900px; height:150px;border: 2px solid #cccccc;">
+            <tr style="border-bottom: 1px solid #cccccc;">
+                <th style="width:150px;height:50px;background-color: #E4E4E4;text-align: center;">排序范围</td>
+                <td>
+                    <select id="range_choose" class="type_sub" style="float:left;width:140px;height:25px;">
+                        <option value='all_nolimit'>全网-不限</option>
+                        <option value='all_limit_keyword'>全网-按关键词</option>
+                        <!--<option value='in_intime'>全网-实时排名</option>-->
+                        <option value='in_nolimit'>库内-不限</option>
+                        <option value='in_limit_keyword'>库内-按关键词</option>
+                        <option value='in_limit_hashtag'>库内-按微话题</option>
+                        <option value='in_limit_domain'>库内-按身份</option>
+                        <option value='in_limit_topic'>库内-按领域</option>
+                        <option value='in_limit_geo'>库内-按地理位置</option>
+                    </select>
+                    <div id="range_choose_detail" style="float: left;margin-left:15px;"></div>
+                </td>
+            </tr>
+            <tr style="border-bottom: 1px solid #cccccc;">
+                <th  style="width:150px;height:50px;background-color: #E4E4E4;text-align: center;">时间范围</th>
+                <td>
+                    <span id="time_choose">
+                        <span style="float:left; margin-right:15px;">
+                        <input name="time_range" type="radio" value="0" checked='checked'> 当日
+                        </span>
+                        <select id="time_choose_intime" style="display:block;float:left;margin-right:15px;">
+						 </select>
+                        <input name="time_range" type="radio" value="1"> 昨日
+                        <input name="time_range" type="radio" value="7" style="margin-left:20px;"> 7天
+                        <input name="time_range" type="radio" value="30" style="margin-left:20px;"> 30日
+                    </span>
+                </td>
+            </tr>
+            <tr style="border-bottom: 1px solid #cccccc;">
+                <th  style="width:150px;height:50px;background-color: #E4E4E4;text-align: center;">排序指标</th>
+                <td>
+                    <span id="sort_select">
+                        <select id="sort_select_2">
+                            <option value="retweeted" checked="checked">转发量</option>
+                            <option value="comment">评论量</option>
+                        </select>
+                    </span>
+                </td>
+            </tr>
+            <tr >
+                <th  style="width:150px;height:50px;background-color: #E4E4E4;text-align: center;">排序人数</th>
+                <td>
+                        <input name="sort_num_range" type="radio" value="100"  checked='checked'>100
                         <input name="sort_num_range" type="radio" value="200" style="margin-left:20px;">200
                         <input name="sort_num_range" type="radio" value="300" style="margin-left:20px;">300
                         <input name="sort_num_range" type="radio" value="400" style="margin-left:20px;">400
                         <input name="sort_num_range" type="radio" value="500" style="margin-left:20px;">500
-					<span id="rank_submit" onclick="submit_rank()" class="portrait_button" style='float:right;cursor:pointer;margin-right:20px;width: 45px;height: 25px;text-align: center;line-height: 25px;'>提交</span>	
-				</td>
-			</tr>
-		</table>
-		<h4 id="task_zh">任务状态</h4>
-		<div id="task_status" style="margin-left:30px;margin-right:35px"></div>
-		<h4>结果分析</h4>
-		<div id="result_analysis" style="margin-left: 30px;padding:10px;background-color:#E1E6FF;width: 900px;font-size:14px;border:1px solid #B0CEFB"><b>
-			<span>识别范围：<span id="rec_range"></span></span>
-			<span id="rec_type"></span><span id='rec_detail'></span>
-			<span style="margin-left: 20px;">时间范围：<span id="rec_time_range"></span></span>
-			<span   style="margin-left: 20px;">排序指标：<span id="rec_rank_by"></span></span>
-		</b></div>
-		<div id="result_rank_table" style="margin-top:20px;">
-		</div>
-	</div>
+						 <span id="rank_submit" onclick="submit_rank()" class="portrait_button" style='float:right;cursor:pointer;margin-right:20px;width: 45px;height: 25px;text-align: center;line-height: 25px;'>提交</span>
+                </td>
+            </tr>
+
+        </table>
+        <h4 id="task_zh" style="margin:20px 0;"><span style="float:left;margin-right:10px;">任务状态
+            </span><span id="open" style="cursor:pointer;"><i class="iconfont" style="font-weight: lighter; font-size: 14px;">&#xe668;</i></span>
+            <span id="close_c" style="display:none;cursor:pointer;"><i class="iconfont" style="font-weight: lighter; font-size: 14px;">&#xe611;</i></span>
+        </h4>
+        <div id="task_search_zh" style="display:none;">
+            <span style="float: left;margin-left: 778px;margin-bottom: 10px;cursor:pointer;" id= "" type="button"data-toggle="modal" data-target="#user_search_modal" ><u>任务搜索</u></span>
+            <span id="user_show_all_task" style="float: left;margin-left: 20px;margin-bottom: 10px;cursor:pointer;"><u>显示全部任务</u></span>
         </div>
+        <div id="task_status" style="display:none;width: 900px; margin-left: 30px;"></div>
+        <h4>结果分析</h4>
+        <div id="result_analysis" style="margin-top:20px;margin-left: 30px;padding:10px;background-color:#E1E6FF;width: 900px;font-size:14px;border:1px solid #B0CEFB"><b>
+            <span>识别范围：<span id="rec_range"></span></span>
+            <span id="rec_type"></span><span id='rec_detail'></span>
+            <span style="margin-left: 20px;">时间范围：<span id="rec_time_range"></span></span>
+            <span   style="margin-left: 20px;">排序指标：<span id="rec_rank_by"></span></span>
+            <span   style="margin-left: 20px;">排序人数：<span id="rec_num_range">100</span></span>
+        </b></div>
+        <div id="result_rank_table" style="margin-top:20px;">
+        </div>
+        <p><span onclick="user_recom_in_modal()" class="portrait_button" style="float:right;cursor:pointer;margin-right:68px;width: 60px;height: 25px;text-align: center;line-height: 25px;margin-top: -60px;" id="recom_in">推荐入库</span></p>
+		<!-- <p><h4>相关微博</h4> </p>-->
+        <div id="rank_weibo" style="width: 900px;margin-left: 30px;margin-top:20px;margin-bottom:50px;">
+        </div>
+    </div>
+
+<div class="modal fade" id="user_search_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document" style="width:500px;">
+    <div class="modal-content" style="margin-top:20%;">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" style="font-size:18px" id="myModalLabel">任务搜索</h4>
+        </div>
+        <div class="modal-body" id='' style="height:200px;">
+            <p>关 键 词<input type="text"  class="form-control" placeh=old"请输入关键词，多个关键词用空格隔开" style="margin-left:20px;width:175px;dii
+splay: inline;height: 25px;" id="user_search_key"></p>
+            <p>是否完成
+                <select id="search_status" class="type_sub" style="margin-left:10px;">
+                    <option name="search_status" value="2">不限</option>
+                    <option name="search_status" value="1">计算完成</option>
+                    <option name="search_status" value="-1">正在计算</option>
+                    <option name="search_status" value="0">未计算</option>
+                </select>
+            </p>
+            <p>任务时间
+                <input type='checkbox' id="user_time_checkbox"class='inline-checkbox' style="margin-left:10px;">
+                <span id="user_time_choose_modal" style="margin-left:5px;">
+                    <input id="user_weibo_from_modal" type="text" class="form-control" style="width:175px; display:inline-block;height:25px;" disabled>&nbsp;-&nbsp;
+                    <input id="user_weibo_to_modal" type="text" class="form-control" style="width:175px; display:inline-block;height:25px" disabled>
+                </span>
+            </p>
+ <p>提交时间
+            <input type='checkbox' id="user_time_checkbox_submit"class='inline-checkbox' style="margin-left:10px;">
+                <span id="user_search_date" style="margin-left:5px;">
+                    <input id="user_weibo_modal" type="text" class="form-control" style="width:175px; display:inline-block;height:25px;" disabled>
+                </span>
+            </p>
+            <span onclick="user_search_task()" class="portrait_button" style="float:right;cursor:pointer;margin-right:20px;width: 45px;height: 25px;text-align: center;line-height: 25px;"  class="close" data-dismiss="modal" aria-label="Close">确定</span>
+        </div>
+    </div>
+  </div>
 	</div>
 </div>
 {% endblock %}
