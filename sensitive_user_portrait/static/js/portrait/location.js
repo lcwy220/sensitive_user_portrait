@@ -377,7 +377,8 @@ function draw_daily_ip_table(ip_data){
     for(var i=0;i<ip_data.ip_week_list.length;i++){
 		if(ip_data.ip_week_list[i][0]){
 			html += '<th style="text-align:center"><a style="cursor:pointer;" data-toggle="modal" data-target="#moredailyip'+i+'" >'+ip_data.ip_week_list[i][0][0]+'</a></th>';
-			Draw_more(ip_data.ip_week_list[i][0],'daily_ip'+i);
+			//console.log(ip_data.ip_week_list[i].length,ip_data.ip_week_list[i]);
+			Draw_more(ip_data.ip_week_list[i],'daily_ip'+i);
 		}else{
 			html += '<th style="text-align:center">-</th>';
 		}
@@ -386,7 +387,8 @@ function draw_daily_ip_table(ip_data){
     for(var i=0;i<ip_data.geo_week_list.length;i++){
 		if(ip_data.geo_week_list[i][0]){
 			html += '<th style="text-align:center"><a style="cursor:pointer;" data-toggle="modal" data-target="#moredailygeo'+i+'" >'+ip_data.geo_week_list[i][0][0]+'</a></th>';
-			Draw_more(ip_data.geo_week_list[i][0],'daily_geo'+i);
+			//console.log(ip_data.geo_week_list[i].length,ip_data.geo_week_list[i]);
+			Draw_more(ip_data.geo_week_list[i],'daily_geo'+i);
 		}else{
 			html += '<th style="text-align:center">-</th>';
 		}
@@ -395,7 +397,7 @@ function draw_daily_ip_table(ip_data){
     for(var i=0;i<ip_data.sensitive_ip_week_list.length;i++){
 		if(ip_data.sensitive_ip_week_list[i][0]){
 			html += '<th style="text-align:center"><a style="cursor:pointer;" data-toggle="modal" data-target="#moredailyip'+i+'" >'+ip_data.sensitive_ip_week_list[i][0][0]+'</a></th>';
-			Draw_more(ip_data.sensitive_ip_week_list[i][0],'daily_s_ip'+i);
+			Draw_more(ip_data.sensitive_ip_week_list[i],'daily_s_ip'+i);
 		}else{
 			html += '<th style="text-align:center">-</th>';
 		}
@@ -404,7 +406,7 @@ function draw_daily_ip_table(ip_data){
     for(var i=0;i<ip_data.sensitive_geo_week_list.length;i++){
 		if(ip_data.sensitive_geo_week_list[i][0]){
 			html += '<th style="text-align:center"><a style="cursor:pointer;" data-toggle="modal" data-target="#moredailygeo'+i+'" >'+ip_data.sensitive_geo_week_list[i][0][0]+'</a></th>';
-			Draw_more(ip_data.sensitive_geo_week_list[i][0],"daily_s_geo" + i);
+			Draw_more(ip_data.sensitive_geo_week_list[i],"daily_s_geo" + i);
 		}else{
 			html += '<th style="text-align:center">-</th>';
 		}
@@ -598,7 +600,7 @@ function Draw_more(data,div){
     for (var i = 0; i < data.length; i++) {
         var s = i.toString();
         var m = i + 1;
-        html += '<tr style=""><th style="text-align:center">' + m + '</th><th style="text-align:center">' + data[0] +  '</th><th style="text-align:center">' + data[1] + '</th></tr>';
+        html += '<tr style=""><th style="text-align:center">' + m + '</th><th style="text-align:center">' + data[i][0] +  '</th><th style="text-align:center">' + data[i][1] + '</th></tr>';
     };
     html += '</table>'; 
     $('#'+ div).append(html);
