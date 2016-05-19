@@ -419,8 +419,9 @@ function bindButtonClick(){
                   $('#'+sub+'recommend').append(waiting_html);
 
                   var recommend_confirm_url = '/recommentation/identify_in/?date=' + recommend_date + '&uid_list=' + uids_trans + '&status=' + compute_time + '&source=' + source;
+    console.log(recommend_confirm_url);
                   call_ajax_request(recommend_confirm_url, confirm_ok);
-                  //console.log(recommend_confirm_url);
+                  
 
 
                   var url_recommend_new = inf_recommend_url + $("#"+sub+"recommend_date_select").val();

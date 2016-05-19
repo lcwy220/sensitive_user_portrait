@@ -419,7 +419,7 @@ function out_list_button(){
       if (compute_type==2){
         var a = confirm('您选择了预约计算，系统将在今日24:00自动启动计算！');
         if (a == true){
-            var compute_url = '/recommentation/identify_in/?date='+recommend_date+'&uid_list='+cur_uids+'&status='+compute_type;
+            var compute_url = '/recommentation/identify_in/?date='+recommend_date+'&uid_list='+cur_uids+'&source=3&status='+compute_type;
             //console.log(compute_url);
             Attention.call_sync_ajax_request(compute_url, Attention.ajax_method, confirm_ok);
         }
@@ -430,7 +430,7 @@ function out_list_button(){
             // $('#out_list').empty();
             // var waiting_html = '<div style="text-align:center;vertical-align:middle;height:40px">数据正在加载中，请稍后...</div>';
             // $('#out_list').append(waiting_html);
-            var recommend_confirm_url = '/recommentation/identify_in/?date=' + recommend_date + '&uid_list=' + cur_uids + '&status=' + compute_type;
+            var recommend_confirm_url = '/recommentation/identify_in/?date=' + recommend_date + '&uid_list=' + cur_uids + '&source=3&status=' + compute_type;
             //console.log(recommend_confirm_url);
             Attention.call_sync_ajax_request(recommend_confirm_url, Attention.ajax_method, confirm_ok);
           }    
