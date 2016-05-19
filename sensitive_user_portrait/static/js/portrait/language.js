@@ -537,6 +537,7 @@ function show_results(data){
   }
   }
 
+function preference_load(){
 var prefrence_url = '/attribute/preference/?uid=' + parent.personalData.uid;
 //console.log(prefrence_url);
 call_sync_ajax_request(prefrence_url, ajax_method, show_results);
@@ -545,4 +546,5 @@ if( parent.personalData.politics){
     politic.innerHTML = parent.personalData.politics;
 }else{
     politic.innerHTML = "未知";
+}
 }
