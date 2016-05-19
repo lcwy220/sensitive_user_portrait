@@ -21,7 +21,7 @@ def user_sort():
     et = request.args.get('et', '') # "2013-09-01"
     isall = request.args.get('all','') # True or False
     number = request.args.get('number', 100)
-    task_number = request.args.get('task_number', 0)
+    task_number = request.args.get('task_number', 10)
     _all = True
     if isall == 'True':
         _all = True

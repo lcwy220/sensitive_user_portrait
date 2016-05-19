@@ -142,7 +142,7 @@ def ajax_mention():
         now_ts = time.time()
     else:
         now_ts = test_time
-    if sensitive == 0:
+    if int(sensitive) == 0:
         results = search_mention(now_ts, uid, top_count)
     else:
         results = sensitive_search_mention(now_ts, uid, top_count)
@@ -193,7 +193,7 @@ def ajax_attention():
     sensitive = request.args.get('sensitive', 0)
     uid = str(uid)
     top_count = int(top_count)
-    if sensitive == 0:
+    if int(sensitive) == 0:
         results = search_attention(uid, top_count)
     else:
         results = sensitive_search_attention(uid, top_count)
@@ -212,7 +212,7 @@ def ajax_follower():
     top_count = request.args.get('top_count', SOCIAL_DEFAULT_COUNT)
     top_count = int(top_count)
     sensitive = request.args.get("sensitive", 0)
-    if sensitive == 0:
+    if int(sensitive) == 0:
         results = search_follower(uid, top_count)
     else:
         results = sensitive_search_follower(uid, top_count)
@@ -231,7 +231,7 @@ def ajax_comment():
     top_count = request.args.get('top_count', SOCIAL_DEFAULT_COUNT)
     top_count = int(top_count)
     sensitive = request.args.get("sensitive", 0)
-    if sensitive == 0:
+    if int(sensitive) == 0:
         results = search_comment(uid, top_count)
     else:
         results = sensitive_search_comment(uid, top_count)
@@ -251,7 +251,7 @@ def ajax_be_comment():
     top_count = request.args.get('top_count', SOCIAL_DEFAULT_COUNT)
     top_count = int(top_count)
     sensitive = request.args.get('sensitive', 0)
-    if sensitive == 0:
+    if int(sensitive) == 0:
         results = search_be_comment(uid, top_count)
     else:
         results = sensitive_search_be_comment(uid, top_count)
@@ -270,7 +270,7 @@ def ajax_interaction():
     top_count = request.args.get('top_count', SOCIAL_DEFAULT_COUNT)
     top_count = int(top_count)
     sensitive = request.args.get('sensitive', 0)
-    if sensitive == 0:
+    if int(sensitive) == 0:
         results = search_bidirect_interaction(uid, top_count)
     else:
         results = sensitive_search_bidirect_interaction(uid, top_count)
