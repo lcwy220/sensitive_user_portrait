@@ -112,9 +112,9 @@ def co_search(add_info, update_bci_key, former_bci_key, now_ts):
             user_history_item['activeness_month_ave'], user_history_item['activeness_month_var'], user_history_item['activeness_month_sum'] = compute_month(user_history_item, now_ts)
         iter_count += 1
 
-        try:
+        if user_history_item.has_key(del_bci_key):
             user_history_item.pop(del_bci_key)
-        except:
+        else:
             pass
 
         action = {'index':{'_id': uid}}

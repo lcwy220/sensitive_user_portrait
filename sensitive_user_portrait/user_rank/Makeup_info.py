@@ -57,8 +57,8 @@ def all_makeup_info(uid_list , sort_norm , time):
     field_bci ,field_sen, field_weibo = get_all_filed(sort_norm , time) 
     search_result = es.mget(index=WEBUSER_INDEX_NAME , doc_type=WEBUSER_INDEX_TYPE, body={"ids":uid_list})["docs"]
     current_ts = datetime2ts(ts2datetime(TIME.time()-DAY))
-    bci_result = es.mget(index=BCIHIS_INDEX_NAME, doc_type=BCIHIS_INDEX_TYPE, body={"ids":uid_list}, fields=["bci_day_last", "user_fansnum", field_weibo, "weibo_month_sum"])["docs"]
-    sen_result = es.mget(index=SESHIS_INDEX_NAME, doc_type=SESHIS_INDEX_TYPE, body={"ids":uid_list}, fields=["sensitive_score_%s"%current_ts])["docs"]
+    bci_result = es.mget(index=BCIHIS_INDEX_NAME, doc_type=BCIHIS_INDEX_TYPE, body={"ids":uid_list}, fields=[field_bci, "user_fansnum", field_weibo, "weibo_month_sum"])["docs"]
+    sen_result = es.mget(index=SESHIS_INDEX_NAME, doc_type=SESHIS_INDEX_TYPE, body={"ids":uid_list}, fields=[field_sen])["docs"]
     in_portrait = es_user_portrait.mget(index=USER_INDEX_NAME, doc_type=USER_INDEX_TYPE, body={"ids":uid_list}, _source=False)["docs"]
     results = []
     #fans_result = es_user_profile.mget(index="bci_history", doc_type="bci", body={"ids":uid_list}, fields=["user_fansnum"], _source=False)["docs"]
@@ -79,28 +79,28 @@ def all_makeup_info(uid_list , sort_norm , time):
         else:
             tmp['is_warehousing'] = False
         if bci_result[i]['found']:
-            try:
+            if bci_result[i]["fields"].has_key(field_bci):
                 bci_value = bci_result[i]['fields'][field_bci][0]
                 tmp['bci'] = math.log(bci_value/float(bci_max)*9+1,10)*100
-            except:
+            else:
                 tmp['bci'] = 0
-            try:
+            if bci_result[i]["fields"].has_key("user_fansnum"):
                 tmp['fans'] = bci_result[i]['fields']["user_fansnum"][0]
-            except:
+            else:
                 tmp['fans'] = ''
-            try:
+            if bci_result[i]["fields"].has_key("weibo_month_sum"):
                 tmp["weibo_count"] = bci_result[i]['fields']["weibo_month_sum"][0]
-            except:
+            else:
                 tmp["weibo_count"] = ''
         else:
             tmp['bci'] = None
             tmp['fans'] = None
             tmp["weibo_count"] = None
         if sen_result[i]['found']:
-            try:
+            if sen_result[i]["fields"].has_key(field_sen):
                 sen_value = sen_result[i]['fields'][field_sen][0]
                 tmp['sen'] = math.log(sen_value/float(sen_max)*9+1,10)*100
-            except:
+            else:
                 tmp['sen'] = 0
         else:
             tmp['sen'] = None
