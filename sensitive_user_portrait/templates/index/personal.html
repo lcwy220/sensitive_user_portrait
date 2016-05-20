@@ -576,17 +576,19 @@ function bind_remark_edit(Personal){
 -->
 bind_remark_edit(Personal);
 var global_detail_flag = false;
+
 var influence_flag = false;
 var social_flag = false;
 var thought_flag = false;
 var preference_flag = false;
+
 function detail_load(){
     $('#detail').css('display', 'block');
     if (!global_detail_flag){
         activity_load();
-        // influence_load();
-        // social_load();
-        // thought_load();
+        influence_load();
+        social_load();
+        thought_load();
         global_detail_flag = true;
     }
     window.location.href = '#detail';
@@ -676,8 +678,9 @@ function person_call_ajax_request(url, callback){
 {% block end_js %}
 {{ super() }}
 <script type="text/javascript">
+
 $(function(){
-	/**软件功能切换js**/
+
 	$(".soft_con_icon ul li a").click(function(){
 		console.log("fdsfdgdfgfdgf");
 		var id = $(this).attr("id");
@@ -718,13 +721,40 @@ $(function(){
 	});
 	
 });
+/*
+$(function(){
+	软件功能切换js
+	$(".soft_con_icon ul li a").click(function(){
+		var id = $(this).attr("id");
+		var x=$(this).parent().index();
+		$(this).children("p").css({"color":"#008dd9"}).parent().parent().siblings().children().children("p").css({"color":"#333333"});
+		if(x==0){
+		   $("#xzgl").css({"display":"block"}).siblings().css({"display":"none"});
+		   $(".soft_con1").css({"background":" url(/static/personal/images/line_select_001.gif)"});
+		}else if(x==1){
+		   $("#crm").css({"display":"block"}).siblings().css({"display":"none"});
+		   $(".soft_con1").css({"background":"url(/static/personal/images/line_select_002.gif)"});
+		}else if(x==2){
+		   $("#xmgl").css({"display":"block"}).siblings().css({"display":"none"});
+		   $(".soft_con1").css({"background":"url(/static/personal/images/line_select_003.gif)"});
+		}else if(x==3){
+		   $("#zsgl").css({"display":"block"}).siblings().css({"display":"none"});
+		   $(".soft_con1").css({"background":"url(/static/personal/images/line_select_004.gif)"});
+		}else{
+		   $("#ydbg").css({"display":"block"}).siblings().css({"display":"none"});
+		   $(".soft_con1").css({"background":"url(/static/personal/images/line_select_005.gif)"});
+		}
+	});
+	
+});
+*/
 </script>
 <script type="text/javascript" src="/static/js/portrait/show_tag.js"></script> 
 <script>
     $('#vector_table').empty();
     var html = '';
 	console.log(global_tag_vector);
-	
+	/*
 	if(global_tag_vector[1][1]){
 		html += '<li class="li_1"><span class="pt_title">领域</span><span class="pt_detail">'+global_tag_vector[1][1]+'</span></li>';
 	}else{
@@ -763,24 +793,45 @@ $(function(){
 	}else{
 		html += '<li class="li_1"><span class="pt_title">微话题</span><span class="pt_detail">暂无数据</span></li>';
 	}
-    /*
-	for (var i = 0;i < global_tag_vector.length; i++){
-        var unit = global_tag_vector[i];
-        
-        html += '<li class="li_1"><span class="pt_title">';
-        html += unit[0] + '</span><span class="pt_detail">';
-        html += unit[1] + '</span></li>';
-    }
-	/*
-    //console.log('tagvector');
-    //console.log(global_tag_vector);
-	for (var i = 0;i < 8; i++){
-        //var unit = global_tag_vector[i];
-        html += '<li class="li_1"><span class="pt_title">';
-        html += '地点' + '</span><span class="pt_detail">';
-        html += '北京' + '</span></li>';
-    }
 	*/
+	if(personalData.domain){
+		html += '<li class="li_1"><span class="pt_title">领域</span><span class="pt_detail">'+personalData.domain+'</span></li>';
+	}else{
+		html += '<li class="li_1"><span class="pt_title">领域</span><span class="pt_detail">暂无数据</span></li>';
+	}
+	if(personalData.topic_string){
+		html += '<li class="li_1"><span class="pt_title">话题</span><span class="pt_detail">'+personalData.topic_string.split('&').join(' ')+'</span></li>';
+	}else{
+		html += '<li class="li_1"><span class="pt_title">话题</span><span class="pt_detail">暂无数据</span></li>';
+	}
+	if(personalData.politics){
+		html += '<li class="li_1"><span class="pt_title">政治倾向</span><span class="pt_detail">'+personalData.politics+'</span></li>';
+	}else{
+		html += '<li class="li_1"><span class="pt_title">政治倾向</span><span class="pt_detail">暂无数据</span></li>';
+	}
+	//var active_geo = personalData.activity_geo;
+	//active_geo = active_geo.replace('&',' ');
+	if(personalData.活跃时间){
+		html += '<li class="li_1"><span class="pt_title">活跃时间</span><span class="pt_detail">'+personalData.活跃时间+'</span></li>';
+	}else{
+		html += '<li class="li_1"><span class="pt_title">活跃时间</span><span class="pt_detail">暂无数据</span></li>';
+	}
+	if(personalData.activity_geo){
+		html += '<li class="li_1"><span class="pt_title">活跃地点</span><span class="pt_detail">'+personalData.activity_geo.split('&').join(' ')+'</span></li>';
+	}else{
+		html += '<li class="li_1"><span class="pt_title">活跃地点</span><span class="pt_detail">暂无数据</span></li>';
+	}
+	if(personalData.sensitive_words_string){
+		html += '<li class="li_1"><span class="pt_title">敏感词</span><span class="pt_detail">'+personalData.sensitive_words_string.split('&').join(' ')+'</span></li>';
+	}else{
+		html += '<li class="li_1"><span class="pt_title">敏感词</span><span class="pt_detail">暂无数据</span></li>';
+	}
+	//html += '<li class="li_1"><span class="pt_title">敏感微话题</span><span class="pt_detail">'+global_tag_vector[3][1]+'</span></li>';
+	if(personalData.hashtag_string){
+		html += '<li class="li_1"><span class="pt_title">微话题</span><span class="pt_detail">'+personalData.hashtag_string.split('&').join(' ')+'</span></li>';
+	}else{
+		html += '<li class="li_1"><span class="pt_title">微话题</span><span class="pt_detail">暂无数据</span></li>';
+	}
     $('#vector_table').html(html);
 </script>
 {% endblock end_js %}
