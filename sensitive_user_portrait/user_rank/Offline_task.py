@@ -94,6 +94,7 @@ def delOfflineTask(search_id):
 
 
 def sort_task(user, keyword, status, start_time, end_time, submit_time):
+    print 'sort_task:', keyword
     query_body = {
         "query":{
             "filtered":{
@@ -138,7 +139,8 @@ def sort_task(user, keyword, status, start_time, end_time, submit_time):
             tmp.append(json.loads(iter_item['keyword']))
             tmp.append(ts2datetime(iter_item['start_time']))
             tmp.append(ts2datetime(iter_item['end_time']))
-            tmp.append(iter_item['range'])
+            #tmp.append(iter_item['range'])
+            tmp.append(iter_item['number'])
             tmp.append(ts2date(iter_item['create_time']))
             tmp.append(iter_item['status'])
             tmp.append(iter_item['sort_norm'])

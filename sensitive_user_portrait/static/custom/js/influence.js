@@ -155,7 +155,7 @@ function user_rank_timepicker(str){
 }
 function rank_task_status(data) {
     //var data = data.data;
-    //console.log(data);
+    console.log(data);
     if (data.length == 0){
         $('#task_status').empty();
         var html = '<div style="text-align: center;margin-top:42px;background-color: #cccccc;">暂无任务</div>'
@@ -170,8 +170,9 @@ function rank_task_status(data) {
         html += '<th style="width:100px;text-align:center;">关键词</th>'
         html += '<th style="width:100px;text-align:center;">排序范围</th>'
         html += '<th style="width:180px;text-align:center;">时间范围</th>'
-        html += '<th style="width:125px;text-align:center;">提交时间</th>'
         html += '<th style="width:100px;text-align:center;">排序指标</th>'
+        html += '<th style="width:80px;text-align:center;">排序人数</th>'
+        html += '<th style="width:125px;text-align:center;">提交时间</th>'
         html += '<th style="width:80px;text-align:center;">任务状态</th>'
         html += '<th style="width:50px;text-align:center;">操作</th>'
         html += '</thead>'
@@ -190,8 +191,9 @@ function rank_task_status(data) {
 			 html += '<td style="text-align:center;">'+data[i][1]+'</td>';
             html += '<td style="text-align:center;">'+sort_scope+'</td>';
             html += '<td style="text-align:center;">'+data[i][2]+' 至 '+data[i][3]+'</td>';
-            html += '<td style="text-align:center;">'+data[i][5]+'</td>';
             html += '<td style="text-align:center;">'+sort_norm+'</td>';
+            html += '<td style="text-align:center;">'+data[i][4]+'</td>';
+            html += '<td style="text-align:center;">'+data[i][5]+'</td>';
             html += '<td style="text-align:center;"><span style="display:none;">'+data[i][9]+'</span>'+'<span style="display:none;">'+data[i][8]+'</span>'+status+'</td>';
             html += '<td style="text-align:center;">'+delete_this+'</td>';
             html += '</tr>';
@@ -202,7 +204,7 @@ function rank_task_status(data) {
 }
 function task_status (data) {
     var data = data.data;
-    //console.log(data);
+    console.log(data);
     if (data.length == 0){
         $('#task_status').empty();
         var html = '<div style="text-align: center;margin-top:30px;background-color: #cccccc;">暂无任务</div>'
@@ -217,8 +219,9 @@ function task_status (data) {
         html += '<th style="width:100px;text-align:center;">关键词</th>'
         html += '<th style="width:100px;text-align:center;">排序范围</th>'
         html += '<th style="width:180px;text-align:center;">时间范围</th>'
-        html += '<th style="width:125px;text-align:center;">提交时间</th>'
         html += '<th style="width:100px;text-align:center;">排序指标</th>'
+        html += '<th style="width:80px;text-align:center;">排序人数</th>'
+        html += '<th style="width:125px;text-align:center;">提交时间</th>'
         html += '<th style="width:80px;text-align:center;">任务状态</th>'
         html += '<th style="width:50px;text-align:center;">操作</th>'
         html += '</thead>'
@@ -241,8 +244,9 @@ function task_status (data) {
             html += '<td style="text-align:center;">'+data[i].keyword+'</td>';
             html += '<td style="text-align:center;">'+sort_scope+'</td>';
             html += '<td style="text-align:center;">'+data[i].start_time+' 至 '+data[i].end_time+'</td>';
-            html += '<td style="text-align:center;">'+data[i].create_time+'</td>';
             html += '<td style="text-align:center;">'+sort_norm+'</td>';
+            html += '<td style="text-align:center;">'+data[i].number+'</td>';
+            html += '<td style="text-align:center;">'+data[i].create_time+'</td>';
             html += '<td style="text-align:center;"><span style="display:none;">'+data[i].search_id+'</span>'+'<span style="display:none;">'+data[i].sort_scope+'</span>'+status+'</td>';
             html += '<td style="text-align:center;">'+delete_this+'</td>';
             html += '</tr>';
@@ -477,19 +481,18 @@ $('#range_choose').change(function(){
 
         var html = '';
         html += '<select id="range_choose_detail_2">';
-        html += '<option value="境内机构">境内机构</option>'
-        html += '<option value="境外机构">境外机构</option>'
-        html += '<option value="民间组织">民间组织</option>'
-        html += '<option value="境外媒体">境外媒体</option>'
-        html += '<option value="活跃人士">活跃人士</option>'
-        html += '<option value="商业人士">商业人士</option>'
-        html += '<option value="媒体人士">媒体人士</option>'
-        html += '<option value="高校">高校</option>'
-        html += '<option value="草根">草根</option>'
-        html += '<option value="媒体">媒体</option>'
-        html += '<option value="法律机构及人士">法律机构及人士</option>'
-        html += '<option value="政府机构及人士">政府机构及人士</option>'
-		 html += '<option value="其他">其他</option>'
+        html += '<option value="专家学者">专家学者</option>'
+        html += '<option value="草根红人">草根红人</option>'
+        html += '<option value="宗教人士">宗教人士</option>'
+        html += '<option value="维权律师">维权律师</option>'
+        html += '<option value="公知分子">公知分子</option>'
+        html += '<option value="非公企业主">非公企业主</option>'
+        html += '<option value="独立媒体人">独立媒体人</option>'
+        html += '<option value="官方媒体">官方媒体</option>'
+        html += '<option value="公职人员">公职人员</option>'
+        html += '<option value="文体明星">文体明星</option>'
+        html += '<option value="社会公益">社会公益</option>'
+		html += '<option value="其他">其他</option>'
         html += '</select>'
     };
 	 //库内-话题
@@ -516,25 +519,12 @@ $('#range_choose').change(function(){
         $('#time_choose').append(time_html);
 		  var html = '';
         html += '<select id="range_choose_detail_2">';
-        html += '<option value="科技类">科技类</option>';
-        html += '<option value="经济类">经济类</option>';
-        html += '<option value="教育类">教育类</option>';
-        html += '<option value="军事类">军事类</option>';
-        html += '<option value="民生类_健康">民生类_健康</option>';
-        html += '<option value="民生类_住房">民生类_住房</option>';
-        html += '<option value="民生类_环保">民生类_环保</option>';
-        html += '<option value="民生类_就业">民生类_就业</option>';
-        html += '<option value="民生类_社会保障">民生类_社会保障</option>';
-        html += '<option value="民生类_交通">民生类_交通</option>';
-        html += '<option value="民生类_法律">民生类_法律</option>';
-        html += '<option value="政治类_外交">政治类_外交</option>';
-        html += '<option value="政治类_暴恐">政治类_暴恐</option>';
-        html += '<option value="政治类_地区和平">政治类_地区和平</option>';
-        html += '<option value="政治类_反腐">政治类_反腐</option>';
-        html += '<option value="政治类_宗教">政治类_宗教</option>';
-        html += '<option value="文体类_娱乐">文体类_娱乐</option>';
-        html += '<option value="文体类_体育">文体类_体育</option>';
-        html += '<option value="其他类">其他类</option>';
+        html += '<option value="暴恐">暴恐</option>';
+        html += '<option value="邪教">邪教</option>';
+        html += '<option value="意识形态">意识形态</option>';
+        html += '<option value="民生">民生</option>';
+        html += '<option value="宗教">宗教</option>';
+        html += '<option value="其他">其他</option>';
         html += '</select>';
     };
     //库内-关键词（修改时间范围）

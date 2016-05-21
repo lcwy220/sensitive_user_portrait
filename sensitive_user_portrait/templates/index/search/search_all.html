@@ -180,8 +180,6 @@
     date_init();
 
     $('#search_all_btn').click(function(){
-        $('#show_block').css('display','none');
-        $('#search_all_load').css('display','block');
         var words = $('input[name="words_list"]').val();
         var users = $('input[name="user_list"]').val();
         var number_sort = $("input[name='sort_num_range']:checked").val();
@@ -198,6 +196,8 @@
             alert('关键词不能为空');
             return false;
         }
+                $('#show_block').css('display','none');
+        $('#search_all_load').css('display','block');
             var words0 = words.replace(/(^\s*)|(\s*$)/g, "");  
             var words_list = words0.split(/\s+/g);
             //var words_list = words.split(' ').join(',');
@@ -344,11 +344,12 @@ function draw_all_rank_table(data){
                     }
                     var is_warehousing = '';
                     if(data[i][7] != '0'){
-                        // var user_url = '/index/personal/?uid='+uid;
+                        var user_url = '<td style="text-align:center;"><a href=/index/personal/?uid='+uid+ ' target="_blank">'+uid+'</a></td>'
                         var user_url = '';
                         is_warehousing = '是';
                     }else{
-                        var user_url = '/index/personal/?uid='+uid;
+                        //var user_url = '/index/personal/?uid='+uid;
+                        var user_url = '<td style="text-align:center;">'+uid+'</td>';
                         is_warehousing = '否'
                     };
                     var location = data[i][4];
@@ -379,7 +380,7 @@ function draw_all_rank_table(data){
                     };
                     html += '<tr>';
                     //html += '<td style="text-align:center;">'+(i+1)+'</td>';
-                    html += '<td style="text-align:center;"><a href='+user_url+ ' target="_blank">'+uid+'</a></td>';
+                    html += user_url;
                     //html += '<td style="text-align:center;"><a href="/index/personal/?uid='+uid+'" target="_blank">'+uid+'</a></td>';
                     html += '<td style="text-align:center;">'+uname+'</a></td>';
                     
