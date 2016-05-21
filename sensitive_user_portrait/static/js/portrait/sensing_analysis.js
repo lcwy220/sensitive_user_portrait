@@ -173,11 +173,11 @@ function sensing_participate_table (head, data, div_name) {
 		html += '<td style="text-align:center;vertical-align:middle;">' + data[i][3] + '</td>';
 		html += '<td  style="text-align:center;vertical-align:middle;">'+data[i][4][0]+'</td>';
 		//html +=  data[i][4].join(',');
-		html += '</td><td style="text-align:center;vertical-align:middle;">' + data[i][5] + '</td>';
-		html += '<td style="text-align:center;vertical-align:middle;">' + data[i][5] + '</td>';
-        html += '<td style="text-align:center;vertical-align:middle;">' + data[i][6] + '</td>';
+		html += '</td><td style="text-align:center;vertical-align:middle;">' + data[i][5].toFixed(2) + '</td>';
+		//html += '<td style="text-align:center;vertical-align:middle;">' + data[i][5] + '</td>';
+        //html += '<td style="text-align:center;vertical-align:middle;">' + data[i][6] + '</td>';
 		html += '<td style="text-align:center;vertical-align:middle;">' + data[i][6].toFixed(2) + '</td>';
-		html += '<td style="text-align:center;vertical-align:middle;">' + data[i][8] + '</td>';
+		html += '<td style="text-align:center;vertical-align:middle;">' + data[i][7].toFixed(2) + '</td>';
 		html += '</tr>';
 	}
 	html += '</tbody></table>';
@@ -335,6 +335,7 @@ function pageGroup(pageNum,pageCount, div_name){
 }
 
 function Draw_num_weibo (data){
+    console.log(data);
 	Draw_group_weibo(data, 'num_weibo', 'num_related_weibo');
     $('#num_weibo').css("display", 'block');
 }
@@ -1285,6 +1286,7 @@ function draw_num_line_charts(data, div_name, legend_data){
                 // };
 
    var num_line_url = '/social_sensing/get_text_detail/?task_name=' + task_name + '&ts=' + num_click_time + '&text_type='+index_type+'&user='+sensing_user;
+   console.log(num_line_url);
    //var num_line_event_url = '/social_sensing/get_clustering_topic/?task_name='+ task_name +'&ts=' + num_click_time+'&user='+sensing_user;
    //var sen_num_line_url = '/social_sensing/get_sensitive_text_detail/?task_name=' + task_name + '&ts=' + num_click_time + '&&user='+sensing_user+'&order=';
     //call_sync_ajax_request(num_line_event_url, Draw_num_related_event);

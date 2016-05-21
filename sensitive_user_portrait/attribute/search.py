@@ -3304,7 +3304,10 @@ def get_influence_trend(uid, day_count):
     results["min_influence"] = min_influence
     results["ave_influence"] = ave_influence
     results["time_list"] = sorted_results
-
+    new_sort_results = [sorted_results[i] for i in range(0, len(sorted_results), 4)]
+    results['new_time_list'] = new_sort_results
+    #print 'sorted_result:', sorted_results
+    #print 'new_sort_result:', new_sort_results
     return results
 
 

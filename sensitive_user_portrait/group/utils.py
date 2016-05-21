@@ -95,7 +95,8 @@ def submit_task(input_data):
 #search task by some condition -whether add download
 def search_task(task_name, submit_user, submit_date, state, status):
     results = []
-    query = [{"term": {"submit_user": submit_user}}]
+    #query = [{"term": {"submit_user": submit_user}}]
+    query = []
     condition_num = 0
     if task_name:
         task_name_list = task_name.split(' ')
