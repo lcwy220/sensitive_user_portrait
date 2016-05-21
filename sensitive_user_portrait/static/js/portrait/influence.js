@@ -15,7 +15,7 @@ Influence.prototype = {   //获取数据，重新画表
       });
   },
   Draw_influence:function(data){
-    //console.log(data);
+    ////console.log(data);
 	var item_x = data.time_line;
     var item_y = data.time_line;
 	// var conclusion = data.description;
@@ -25,6 +25,7 @@ Influence.prototype = {   //获取数据，重新画表
 	var data_time = [];
     var data_count = [];
     var timeline = data.time_list;
+	////console.log(timeline);
     //var activeness = data.ave_activeness;
     for (var i = 0;i < timeline.length;i++){
         data_time.push(timeline[i][1]);
@@ -106,7 +107,7 @@ Influence.prototype = {   //获取数据，重新画表
   Draw_get_top_weibo(data, div_name);
 },
 Draw_pie_all0:function(data){
-    console.log(data);
+    //console.log(data);
     $('#all_re_conclusion').empty();
     var html = '';
     html += '该类用户共有<span style="color:red">'+data.total_number+'</span>人，';
@@ -124,7 +125,7 @@ Draw_pie_all0:function(data){
     Influence_motal(data_set, 're_user_in_all', 're_user_out_all', 're_three_pie_all', 're_user_content_all')
   },
 Draw_pie_all0_sensitive:function(data){
-    console.log(data);
+    //console.log(data);
     $('#sensitive_all_re_conclusion').empty();
     var html = '';
     html += '该类用户共有<span style="color:red">'+data.total_number+'</span>人，';
@@ -142,7 +143,7 @@ Draw_pie_all0_sensitive:function(data){
     Influence_motal(data_set, 're_user_in_all_sensitive', 're_user_out_all_sensitive', 're_three_pie_all_sensitive', 're_user_content_all_sensitive')
   },
   Draw_pie_all1:function(data){
-	  console.log(data);
+	  //console.log(data);
 	  
     var div_name = ['cmt_user_domain_all','cmt_user_topic_all','cmt_user_geo_all'];
     $('#all_cmt_conclusion').empty();
@@ -161,7 +162,7 @@ Draw_pie_all0_sensitive:function(data){
     Influence_motal(data_set, 'cmt_user_in_all', 'cmt_user_out_all', 'cmt_three_pie_all', 'cmt_user_content_all')
   },
   Draw_pie_all1_sensitive:function(data){
-	  console.log(data);
+	  //console.log(data);
 	  
     var div_name = ['cmt_user_domain_all_sensitive','cmt_user_topic_all_sensitive','cmt_user_geo_all_sensitive'];
     $('#all_cmt_conclusion_sensitive').empty();
@@ -181,7 +182,7 @@ Draw_pie_all0_sensitive:function(data){
   },
 
   Draw_basic_influence:function(data){
-    //console.log(data);
+    ////console.log(data);
     $('#influence_conclusion_c').empty();
     var html='';
     if(data[0][0] != ''){
@@ -256,7 +257,7 @@ Draw_pie_all0_sensitive:function(data){
       html+= conclu_s3.join('，')+'。';
     };
     if (conclu_s4.length != 0){
-      //console.log(conclu_s4);
+      ////console.log(conclu_s4);
       html+= conclu_s4.join('，')+'。';
     };
     $('#influence_conclusion_c').append(html);  
@@ -264,7 +265,7 @@ Draw_pie_all0_sensitive:function(data){
   
   Draw_user_influence_detail:function(data){
 	//影响力表
-	console.log(data);
+	//console.log(data);
     $('#influence_table').empty();
     var html = '';
     html += '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive" style="font-size:14px;">';
@@ -371,7 +372,7 @@ Draw_pie_all0_sensitive:function(data){
   },
 
   Single_users_influence_re:function(data){
-	console.log(data);
+	////console.log(data);
     var data_user_detail = [];
     data_user_detail.push(data.influence_users[0]);
     data_user_detail.push(data.influence_users[1]);
@@ -442,7 +443,7 @@ Draw_pie_all0_sensitive:function(data){
     $('#'+div_name_in).empty();
 
     var html = '';
-    //console.log(data);
+    ////console.log(data);
     //html += '<hr style="margin-top:-10px;">';
     html += '<h4>已入库用户('+data[2]+')</h4><p style="text-align:left;padding: 0px 10px;width:800px;">';
     if (data[2] == 0){
@@ -563,14 +564,14 @@ Draw_pie_all0_sensitive:function(data){
   }
 
 function Draw_get_top_weibo(data,div_name){
-  //console.log(data);
+  ////console.log(data.length);
   var html = '';
   $('#'+div_name).empty();
     if(data.length==0){
         html += "<div style='margin-left:10px;width:100%;height:100px;'>用户在昨天未发布任何微博</div>";
     }
 	else{
-		console.log(data);
+		////console.log(data);
 		for(var i=0;i<data.length;i++){
 			html += '<div id="weibo_list" class="weibo_list weibo_list_height scrolls tang-scrollpanel" style="margin:0;">';
 			html += '<div id="content_control_height" class="tang-scrollpanel-wrapper" style="margin:0;">';
@@ -589,7 +590,7 @@ function Draw_get_top_weibo(data,div_name){
 				};
 				var date = data[i][6];
 				var geo = data[i][5];
-				//console.log(geo);
+				////console.log(geo);
 				// var reposts_count = weibo[1];
 				//var comments_count = weibo[2];
 				//var weibo_link = weibo[7];
@@ -638,8 +639,9 @@ function Draw_get_top_weibo(data,div_name){
 			html += '</div>';
 			html += '</div>';   
 			}
-		$('#'+div_name).append(html);
+		
 		}
+	$('#'+div_name).append(html);
 
 }
 
@@ -660,7 +662,7 @@ function click_action(){
         $("#cmt_influence").removeClass("hidden"); 
         var mid = $(this).prev().prev(".hidden").text();
         var influenced_users_url_cmt = '/attribute/influenced_users/?uid='+parent.personalData.uid+'&date='+date_str+'&style=1&mid='+mid;
-		console.log(influenced_users_url_cmt);
+		//console.log(influenced_users_url_cmt);
         Influence.call_ajax_request(influenced_users_url_cmt, Influence.ajax_method, Influence.Single_users_influence_cmt);
         return false;
       });
@@ -669,7 +671,7 @@ function click_action(){
         $("#re_influence").removeClass("hidden");
         var mid = $(this).prev(".hidden").text();
         var influenced_users_url_re = '/attribute/influenced_users/?uid='+parent.personalData.uid+'&date='+date_str+'&style=0&mid='+mid;
-        //console.log(influenced_users_url_re);
+        ////console.log(influenced_users_url_re);
         Influence.call_ajax_request(influenced_users_url_re, Influence.ajax_method, Influence.Single_users_influence_re);
         return false;
       });
@@ -679,16 +681,16 @@ function click_action(){
         $("#float-wrap").removeClass("hidden");
         $("#retweet_distribution_content").removeClass("hidden");
         var all_influenced_users_url_style0 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid+'&date='+date_str+'&style=0';
-        //console.log(all_influenced_users_url_style0);
+        ////console.log(all_influenced_users_url_style0);
         Influence.call_ajax_request(all_influenced_users_url_style0, Influence.ajax_method, Influence.Draw_pie_all0);
         return false;
       });
 	  $("#sensitive_retweet_distribution").live("click",function(){
-		console.log("sdfghjk");
+		//console.log("sdfghjk");
         $("#float-wrap").removeClass("hidden");
         $("#sensitive_retweet_distribution_content").removeClass("hidden");
         var all_influenced_users_url_style0 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid+'&date='+date_str+'&sensitive=1';
-        //console.log(all_influenced_users_url_style0);
+        ////console.log(all_influenced_users_url_style0);
         Influence.call_ajax_request(all_influenced_users_url_style0, Influence.ajax_method, Influence.Draw_pie_all0_sensitive);
         return false;
       });
@@ -697,7 +699,7 @@ function click_action(){
         $("#float-wrap").removeClass("hidden");
         $("#comment_distribution_content").removeClass("hidden");
         var all_influenced_users_url_style1 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid +'&date='+date_str+'&style=1';
-        console.log(all_influenced_users_url_style1);
+        //console.log(all_influenced_users_url_style1);
         Influence.call_ajax_request(all_influenced_users_url_style1, Influence.ajax_method, Influence.Draw_pie_all1);
         return false;
       });
@@ -705,13 +707,13 @@ function click_action(){
         $("#float-wrap").removeClass("hidden");
         $("#sensitive_comment_distribution_content").removeClass("hidden");
         var all_influenced_users_url_style1 = '/attribute/all_influenced_users/?uid='+parent.personalData.uid +'&date='+date_str+'&sensitive=1';
-        console.log(all_influenced_users_url_style1);
+        //console.log(all_influenced_users_url_style1);
         Influence.call_ajax_request(all_influenced_users_url_style1, Influence.ajax_method, Influence.Draw_pie_all1_sensitive);
         return false;
       });
     $('input[name="choose_module"]').live('click', function(){             
       var index = $('input[name="choose_module"]:checked').val();
-      //console.log(index);
+      ////console.log(index);
       if(index == 1){
         var influence_url = '/attribute/influence_trend/?uid='+uid + '&time_segment=7';
         Influence.call_ajax_request(influence_url, Influence.ajax_method, Influence.Draw_influence);
@@ -728,10 +730,10 @@ function influence_load(){
     var influence_url = '/attribute/influence_trend/?uid='+uid + '&time_segment=7';
     Influence.call_async_ajax_request(influence_url, Influence.ajax_method, Influence.Draw_influence);
 
-    //var user_influence_detail_url = '/attribute/user_influence_detail/?uid='+parent.personalData.uid+'&date='+date_str;
-	var user_influence_detail_url = '/attribute/user_influence_detail/?uid='+parent.personalData.uid+'&date=2013-09-02&sensitive=0';
+    var user_influence_detail_url = '/attribute/user_influence_detail/?uid='+parent.personalData.uid+'&date='+date_str+'&sensitive=0';
+	//var user_influence_detail_url = '/attribute/user_influence_detail/?uid='+parent.personalData.uid+'&date=2013-09-02&sensitive=0';
     Influence.call_async_ajax_request(user_influence_detail_url, Influence.ajax_method, Influence.Draw_user_influence_detail);
-	var user_influence_detail_url = '/attribute/user_influence_detail/?uid='+parent.personalData.uid+'&date=2013-09-02&sensitive=1';
+	var user_influence_detail_url = '/attribute/user_influence_detail/?uid='+parent.personalData.uid+'&date='+date_str+'&sensitive=1';
     Influence.call_async_ajax_request(user_influence_detail_url, Influence.ajax_method, Influence.Draw_user_influence_sensitive_detail);
     var basic_influence_url = '/attribute/current_influence_comment/?uid='+parent.personalData.uid+'&date='+date_str;
     Influence.call_async_ajax_request(basic_influence_url, Influence.ajax_method, Influence.Draw_basic_influence);
@@ -760,7 +762,7 @@ $(function(){
 	
 	$('#modechoose').click(function(){
 	var tabs = $('#myTab .active').text();
-	//console.log(tabs);
+	////console.log(tabs);
 	if(tabs == "原创微博"){
 		var style = 1;
 	}
@@ -790,7 +792,7 @@ $(function(){
 	}
 	
 	var url = "/attribute/get_top_weibo/?uid="+parent.personalData.uid+'&date='+date_str+"&style="+style+'&order='+order;
-	console.log(url);
+	//console.log(url);
 	if(style==1){
 		Influence.call_async_ajax_request(url, Influence.ajax_method, Influence.Draw_get_top_weibo2);
 	}
