@@ -36,8 +36,12 @@ Draw_tag:function(data){
 	//console.log(attributeNames);
 	$('#ptag').empty();
 	var html = '';
-	for(i=0;i<item.length;i++){
-		html += '<div class="tagClo fleft" ><span class="ptagName" style="color:red;">'+attributeNames[i]+'</span>：<span class="tagbg"><span>'+attributeValues[i]+'<span><a id="delIcon">&times;</a></span></div>';	
+	if(attributeNames.length){
+		for(i=0;i<item.length;i++){
+			html += '<div class="tagClo fleft" ><span class="ptagName" style="color:red;">'+attributeNames[i]+'</span>：<span class="tagbg"><span>'+attributeValues[i]+'<span><a id="delIcon">&times;</a></span></div>';	
+		}
+	}else{
+		html += '<div class="tagClo fleft" >暂无数据</div>';	
 	}
 	$('#ptag').append(html);
   }
