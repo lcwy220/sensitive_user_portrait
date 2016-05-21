@@ -35,11 +35,13 @@ def ajax_portrait_search():
         simple_item = ['uid', 'uname']
         fuzz_item = ['politics', 'hashtag']
         multi_item = ['domain','topic_string', 'keywords_string','sensitive_words_string','activity_geo' ]
+        item_data = request.args.get('term', '')
+        query_list = []
         for item in simple_item:
-            item_data = request.args.get(item, '')
             if item_data:
-                query.append({'wildcard':{item:'*'+item_data+'*'}})
+                query_list.append({'wildcard':{item:'*'+item_data+'*'}})
                 condition_num += 1
+        query.append({'bool':{'should':query_list}})
         for item in fuzz_item:
             item_data = request.args.get(item, '')
             if item_data:
@@ -64,7 +66,6 @@ def ajax_portrait_search():
                 query.append({"term":{"tag-"+tag_name:tag_value}})
                 condition_num += 1
 
-    print condition_num
     print query
     size = 1000
     sort = '_score'

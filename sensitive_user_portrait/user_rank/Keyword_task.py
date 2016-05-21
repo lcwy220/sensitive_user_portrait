@@ -135,7 +135,7 @@ def key_words_search(task_id, search_type , pre , during , start_time , keyword_
 
 def scan_offline_task():
     
-    query = {"query":{"bool":{"must":[{"term":{"status":-1}}]}},"size":1000}
+    query = {"query":{"bool":{"must":[{"term":{"status":0}}]}},"size":1000}
     results = es_user_portrait.search(index = USER_RANK_KEYWORD_TASK_INDEX , doc_type = USER_RANK_KEYWORD_TASK_TYPE,body=query)['hits']['hits']
     if results :
         for item in results:

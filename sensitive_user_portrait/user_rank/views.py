@@ -15,6 +15,7 @@ def user_sort():
     username = request.args.get('username', '')
     search_time = request.args.get('time', '') # 1 7 30
     sort_norm = request.args.get('sort_norm', '') # bci fans
+    print "---------------------------", sort_norm
     sort_scope = request.args.get('sort_scope', '') # "all_limit_keyword" "all_nolimit" 'in_limit_keyword' 'in_limit_hashtag'
     arg = request.args.get('arg', '')
     st = request.args.get('st', '') # "2013-09-01"
@@ -31,7 +32,8 @@ def user_sort():
         pass
     else :
         arg = None
-    results = user_sort_interface(username,int(search_time),sort_scope,sort_norm,arg,st,et,_all,task_number, number)
+    print username, search_time, sort_norm, sort_scope, arg
+    results = user_sort_interface(username,int(search_time),sort_scope,sort_norm,arg,st,et,_all,int(task_number), int(number))
     return json.dumps(results)
 
 @mod.route('/search_task/', methods=['GET', 'POST'])

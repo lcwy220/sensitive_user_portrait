@@ -63,7 +63,7 @@ def get_user_influence(uid, date):
     result["total_count"] = total_count
     result["order_count"] = order_count + 1
 
-    return [result,sensitive_result]
+    return [sensitive_result, result]
 
 
 def get_text(top_list, date, order):
@@ -372,7 +372,7 @@ def influenced_user_detail(uid, date, origin_retweeted_mid, retweeted_retweeted_
         "size":20000,
     }
     if RUN_TYPE == 1:
-        query_body["query"]["sort"] = {"user_fansnum":{"order":"desc"}}
+        query_body["sort"] = {"user_fansnum":{"order":"desc"}}
 
     #详细影响到的人 
     date1 = str(date).replace('-', '')
