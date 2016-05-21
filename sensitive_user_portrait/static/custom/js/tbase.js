@@ -147,7 +147,7 @@ function get_advanced_par(){
         input_value = '=' + $(this).val();
         if (input_name == '&activity_geo'){
 
-            if(input_value=='=不限'){input_value=''}
+            if(input_value=='=不限'){input_value='='}
             else{
                 input_value = input_value.replace('省','');
                 input_value = input_value.replace('市','');

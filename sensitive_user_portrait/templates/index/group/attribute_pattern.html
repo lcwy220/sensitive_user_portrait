@@ -644,14 +644,16 @@ function attribute_pattern_check(){             // check validation
         url: url_attribute,
         contentType:"application/json",
         dataType: "json",
-        success: callback
+        success: callback2
       });
       
     }	
 	}
-  function callback(data){
+  function callback2(data){
     if (data == true){
       alert('提交成功！');
+      window.location.reload(); 
+      
     } 
     if(data =='task name invalid'){
         alert('已存在相同名称的群体分析任务,请重试!');
