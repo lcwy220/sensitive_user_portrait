@@ -84,7 +84,7 @@ def normal_index(index, max_index):
     return normal_value
 
 
-def co_search(add_info, update_bci_key, former_bci_key, now_ts):
+def co_search(add_info, update_bci_key, former_bci_key, now_ts, del_bci_key):
     uid_list = add_info.keys()
     evaluate_history_results = es_user_portrait.mget(index=COPY_USER_PORTRAIT_IMPORTANCE, doc_type=COPY_USER_PORTRAIT_IMPORTANCE_TYPE,body={'ids':uid_list})['docs']
     iter_count = 0
@@ -156,9 +156,9 @@ def main():
             add_info[uid] = {update_bci_key: normal_influence, "politics":scan_re["politics"], "domain": scan_re['domain'], "activity_geo": scan_re["activity_geo"], "hashtag": scan_re['hashtag_string'],"sensitive_words_string":scan_re["sensitive_words_string"], "topic_string": scan_re["topic_string"]}
 
             if count % 1000 == 0:
-                co_search(add_info, update_bci_key, former_bci_key, now_ts)
+                co_search(add_info, update_bci_key, former_bci_key, now_ts, del_bci_key)
         except StopIteration:
-            co_search(add_info, update_bci_key, former_bci_key, now_ts)
+            co_search(add_info, update_bci_key, former_bci_key, now_ts, del_bci_key)
             break
         #except Exception, r:
         #    print Exception, r

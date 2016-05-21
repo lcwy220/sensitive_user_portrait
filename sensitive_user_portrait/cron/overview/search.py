@@ -32,7 +32,7 @@ def get_top_mid():
     if RUN_TYPE:
         index_name = "flow_text_" + ts2datetime(time.time())
     else:
-        index_name = "flow_text_2013-09-02"
+        index_name = "flow_text_2016-05-20"
 
     search_results = es_flow_text.search(index=index_name, doc_type="text", body=query_body, _source=False, fields=['root_mid'])['hits']['hits']
     mid_list = []
@@ -69,7 +69,7 @@ def sort_retweet_sensitive_weibo(sensitive_mid_list):
     if RUN_TYPE:
         index_name = "flow_text_" + ts2datetime(time.time())
     else:
-        index_name = "flow_text_2013-09-02"
+        index_name = "flow_text_2016-05-20"
 
     uid_list = []
     results = []
@@ -113,7 +113,7 @@ def sort_comment_sensitive_weibo(sensitive_mid_list):
     if RUN_TYPE:
         index_name = "flow_text_" + ts2datetime(time.time())
     else:
-        index_name = "flow_text_2013-09-02"
+        index_name = "flow_text_2016-05-20"
 
     uid_list = []
     results = []
@@ -161,8 +161,8 @@ def get_weibo_detail(sensitive_mid_list):
         index_name = "flow_text_" + ts2datetime(time.time())
         now_ts = time.time()
     else:
-        index_name = "flow_text_2013-09-02"
-        now_ts = datetime2ts('2013-09-02')
+        index_name = "flow_text_2016-05-20"
+        now_ts = datetime2ts('2016-05-20')
 
     uid_list = []
     weibo_dict = dict() # weibo

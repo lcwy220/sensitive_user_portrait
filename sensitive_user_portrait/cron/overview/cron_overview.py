@@ -210,6 +210,6 @@ if __name__ == "__main__":
         date = ts2datetime(time.time())
         get_attr(date)
     else:
-        get_attr('2013-09-02')
+        get_attr('2016-05-20')
 
 
