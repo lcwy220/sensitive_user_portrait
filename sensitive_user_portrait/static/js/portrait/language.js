@@ -72,7 +72,7 @@ function Draw_keyword(data, div_name, more_div, more){
       for (var i = 0; i < data.length; i++) {
          var s = i.toString();
          var m = i + 1;
-         html += '<tr style=""><th style="text-align:center">' + m + '</th><th style="text-align:center"><a href="/index/search_result/?stype=2&uid=&uname=&location=&hashtag=&adkeyword=' + data[i][0] +  '&psycho_status=&domain&topic" target="_blank">' + data[i][0] +  '</a></th><th style="text-align:center">' + data[i][1] + '</th></tr>';
+         html += '<tr style=""><th style="text-align:center">' + m + '</th><th style="text-align:center">' + data[i][0] +  '</th><th style="text-align:center">' + data[i][1] + '</th></tr>';
       };
       html += '</table>'; 
       $('#'+ more_div).append(html);
@@ -145,7 +145,7 @@ function Draw_hashtag(data_sensitive,data_hash, div_name, more_div, more){
 	  for (var i = 0; i < data_sensitive.length; i++) {
          var s = i.toString();
 		 m = m + i;
-         html += '<tr style=""><th style="text-align:center">' + m + '</th><th style="text-align:center"><a href="/index/search_result/?stype=2&uid=&uname=&location=&hashtag=&adkeyword=' + data_sensitive[i][0] +  '&psycho_status=&domain&topic" target="_blank">' + data_sensitive[i][0] +  '</a></th><th style="text-align:center">' + data_sensitive[i][1] + '</th></tr>';
+         html += '<tr style=""><th style="text-align:center">' + m + '</th><th style="text-align:center">' + data_sensitive[i][0] +  '</th><th style="text-align:center">' + data_sensitive[i][1] + '</th></tr>';
       };
       for (var i = 0; i < data_hash.length; i++) {
          var s = i.toString();
@@ -357,6 +357,13 @@ function show_domain(data){
   // var html = '';
   //html += '<h3>用户领域分析</h3>';
   //console.log(data);
+  for(var i=0;i<3;i++){
+	  if(data[0][i]){
+		  data[0][i] = data[0][i];
+	  }else{
+		  data[0][i] = '未知';
+	  }
+  }
   data1 = '根据注册信息分类：'+data[0][0];
   data2 = '根据转发结构分类：'+data[0][1];
   data3 = '根据发帖内容分类：'+data[0][2];
