@@ -298,7 +298,7 @@ function drawRank(div_name, cname, rank_data, more_div){
                nickname = item[1];
            }
          html += '<tr><th style="text-align:center">' + m + '</th>';
-         html += '<th style="text-align:center"><a title=' + item[0] +' target="_blank" href="/index/personal/?uid=' + item[0] + '">' + nickname + '</a></th>';
+         html += '<th style="text-align:center">' + nickname + '</th>';
          
 		 if (div_name =='sensitive_hot_retweet' || div_name =='sensitive_hot_comment'){
 			 console.log(div_name);
@@ -329,7 +329,7 @@ function drawRank(div_name, cname, rank_data, more_div){
            nickname = item[1];
        }
        html += '<tr><th style="text-align:center">' + m + '</th>';
-       html += '<th style="text-align:center"><a title=' + item[0] +' target="_blank" href="/index/personal/?uid=' + item[0] + '">' + nickname + '</a></th>';
+       html += '<th style="text-align:center">' + nickname + '</th>';
          if (div_name =='sensitive_hot_retweet' || div_name =='sensitive_hot_comment' ){
              html += '<th style="text-align:center">' + item[2] + '</th></tr>';
          }
@@ -576,6 +576,7 @@ function page_group_influ_weibo(start_row,end_row,data, sub_div_name){
     weibo_num = end_row - start_row;
     $('#'+ sub_div_name).empty();
     var html = "";
+    console.log(data);
     html += '<div class="group_weibo_font" style="margin-right:5px;">';
     for (var i = start_row; i < end_row; i += 1){
         s=i.toString();

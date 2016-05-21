@@ -45,9 +45,9 @@
                 <span  style='margin-left:20px;margin-right:12px;' class="fleft lineh42 ">注册地</span>
                 <input name="user_location" class="inputbox fleft ad-search" type="text" value="" placeholder="请输入注册地" />
                 <span class="fleft lineh42 mright5 ">邮箱</span>
-                <input name="user_email" class="inputbox fleft ad-search" type="text" value="" placeholder="请输入邮箱" />
-                <span  class="fleft lineh42 mright5 " style='margin-left:37px'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;生日</span>
-                <input name="user_birth" class="inputbox fleft ad-search" type="text" value="" placeholder="请输入生日" /> <br>    
+                <input name="user_email" class="inputbox fleft ad-search" type="text" value="" placeholder="请输入邮箱" /><br>
+                <!-- <span  class="fleft lineh42 mright5 " style='margin-left:37px'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;生日</span> -->
+                <!-- <input name="user_birth" class="inputbox fleft ad-search" type="text" value="" placeholder="请输入生日" /> <br>     -->
                 <span  style='margin-left:20px;margin-right:12px;' class="fleft lineh42 ">粉丝数</span>
                 <input name="fansnum_from" style="width:70px;min-width:0px" class="inputbox fleft ad-search" type="text" value="" placeholder="" />----      
                 <input name="fansnum_to" style="width:70px;min-width:0px" class="inputbox fleft ad-search" type="text" value="" placeholder="" />  
@@ -149,10 +149,10 @@
                 else{
                     var url = '/search/profile_search/?stype=2';
                     url += get_advanced_par();
-                    console.log(url);
+                    //console.log(url);
                 }
                 //url += '&submit_user=' + current_user;
-                //console.log(url);
+                console.log(url);
                 draw_conditions(url);
                 //var url = '/attribute/profile_search/?stype=1';
                 base_call_ajax_request(url, draw_search_results);
@@ -338,7 +338,7 @@ function draw_search_results(data){
       html += '<td class="center" style="width:100px;"><img src="'+img+'" width="30" height="30"/>    </td>';
 
       //html += '<td class="center" name="uids"><a href='+ user_url+ '  target="_blank">'+ item.uid +'</td>';
-      html += '<td class="center" name="uids"><a target="_blank">'+ item.uid +'</a></td>';
+      html += '<td class="center" name="uids">'+ item.uid +'</td>';
       html += '<td class="center">'+ item.nick_name +'</td>';
       html += '<td class="center">'+ item.fansnum +'</td>';
       html += '<td class="center" style="width:100px;">'+ item.statusnum +'</td>';

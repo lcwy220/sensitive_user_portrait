@@ -253,7 +253,7 @@ function seed_single_user_callback(data){
     if (data == true){
       //redraw_result();
       alert('提交成功！');
-      //window.location.reload(); 
+      window.location.reload(); 
     } 
     if (data == 'seed user invalid') alert('人物库中不存在该用户！');
     if (data == 'task name invalid') alert('任务名称已存在！');

@@ -403,7 +403,6 @@ def ajax_get_top_weibo():
     style = request.args.get("style", 0) # 1:origin, 2:retweet, 3:comment
     order = request.args.get("order", 1) # 1:sensitive, 2:retweet, 3:comment, 4:ts
     uid = str(uid)
-
     results = influenced_detail(uid, date, style, order)
 
     return json.dumps(results)

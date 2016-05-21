@@ -242,7 +242,17 @@
                 var last = $select.next().length === 0;
                 $active.removeClass('active');
                 $(this).addClass('active');
-                if ($active.data('code') !== $(this).data('code')) {
+                if($(this).data('code')=='000000'){
+                        $this.close();
+                        $select.data('item', {
+                        address: $(this).attr('title'), code: $(this).data('code')
+                    });
+                    $(this).trigger(EVENT_CHANGE);
+                    $this.feedText();
+                    $this.feedVal();
+
+                }
+                if ($active.data('code') !== $(this).data('code') && $(this).data('code')!='000000') {
                     $select.data('item', {
                         address: $(this).attr('title'), code: $(this).data('code')
                     });
@@ -261,9 +271,10 @@
             }).on('mousedown', function () {
                 $this.needBlur = false;
             });
-
             if (this.$province) {
                 this.$province.on(EVENT_CHANGE, (this._changeProvince = $.proxy(function () {
+            console.log(this.$province)
+
                     this.output(CITY);
                     this.output(DISTRICT);
                     this.tab(CITY);
@@ -436,6 +447,7 @@
             $.each(data, function (i, n) {
                 list.push('<dl class="clearfix">');
                 list.push('<dt>' + i + '</dt><dd>');
+                //console.log(list)
                 $.each(n, function (j, m) {
                     list.push(
                         '<a' +
@@ -449,7 +461,7 @@
                 });
                 list.push('</dd></dl>');
             });
-
+            //console.log(list.join(''));
             return list.join('');
         },
 

@@ -80,8 +80,8 @@ def ajax_task_sort():
     submit_time = request.args.get('submit_time', "")
     status = int(status)
     
-    if user:
-        results = sort_task(user, keyword, status, start_time, end_time, submit_time)
+    #if user:
+    results = sort_task(user, keyword, status, start_time, end_time, submit_time)
 
     return json.dumps(results)
 

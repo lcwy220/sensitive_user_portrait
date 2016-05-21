@@ -28,9 +28,10 @@ Search_weibo.prototype = {
       user_lable_html += '<th class="center" style="text-align:center">全选<input name="recommend_all" id="recommend_all" type="checkbox" value="" onclick="recommend_all()"></th>';
       user_lable_html += '</tr></thead>';
       user_lable_html += '<tbody>';
+      console.log(data);
       for (key in data){
        user_lable_html += '<tr>';
-       user_lable_html += '<th class="center" style="text-align:center"><a target="_blank" href="/index/personal/?uid=' + key + '">' + key +'</a></th>'; 
+       user_lable_html += '<th class="center" style="text-align:center;width:200px;"><a target="_blank" href="/index/personal/?uid=' + key + '">' + key +'</a></th>'; 
        //user_lable_html += '<th class="center" style="text-align:center">' + data[key] + '</th>';
        user_lable_html += '<th class="center" style="text-align:center">' + data[key] + '</th>';
        user_lable_html += '<th class="center" style="text-align:center"><input name="in_status" class="in_status" type="checkbox" value="' + key + '"/></th>';
@@ -151,7 +152,7 @@ Search_weibo.prototype = {
         var Related_Link = new Array();
         var main_name = data[0][1];
         if(main_name == 'unknown'){
-            main_name = '未知';
+            main_name = data[0][0];
         }
         var user_value = 100;
         Related_Node.push({'name':data[0][0],'value':user_value,'label':main_name,'category':0,'symbolSize':2*Math.sqrt(user_value),'itemStyle':{'normal':{'color':'rgba(255,215,0,0.4)'}}});
@@ -160,12 +161,18 @@ Search_weibo.prototype = {
         for(var item =1; item < data.length-1; item++){
             if(data[item][1]=='unknown'){
                 data[item][1] = '未知';
+
                 Related_Node.push({'name':data[item][0], 'value':data[item][5], 'label':data[item][1],'category':1,'symbolSize':2*Math.sqrt(data[item][5])});
                 Related_Link.push({'source':user_name, 'target':data[item][0], 'weight':data[item][5],'itemStyle':{'normal':{'width':Math.sqrt(data[item][5])}}});
             }
             else{
+                if(Math.sqrt(data[item][5])==0){
+                    var line_width = 1
+                }else{
+                    var line_width = Math.sqrt(data[item][5])
+                }
                 Related_Node.push({'name':data[item][0], 'value':data[item][5], 'label':data[item][1],'category':1,'symbolSize':2*Math.sqrt(data[item][5])});
-                Related_Link.push({'source':user_name, 'target':data[item][0], 'weight':data[item][5],'itemStyle':{'normal':{'width':Math.sqrt(data[item][5])}}});
+                Related_Link.push({'source':user_name, 'target':data[item][0], 'weight':data[item][5],'itemStyle':{'normal':{'width':line_width}}});   //Math.sqrt(data[item][5])
             }
         }
         var option = {
@@ -282,7 +289,8 @@ var Search_weibo = new Search_weibo();
 
 
 
- Search_weibo.call_sync_ajax_request(get_choose_data(uid), Search_weibo.ajax_method, Search_weibo.Draw_table);
+ //Search_weibo.call_sync_ajax_request(get_choose_data(uid), Search_weibo.ajax_method, Search_weibo.Draw_table);
+ console.log(uid)
 
 //get tag
 //var user_tag = '/tag/show_user_attribute_name/?uid='+ uid;
@@ -589,7 +597,7 @@ function group_confirm_button(){
   })
   //console.log(group_confirm_uids);
   var group_ajax_url = '/group/submit_task/';
-  var group_url = '/index/group/';
+  var group_url = '/index/group_identify/';
   var group_name = $('input[name="group_name"]').val();
   var remark = $('input[name="remark"]').val();
   //console.log(group_name, remark);
@@ -611,7 +619,7 @@ function group_confirm_button(){
     alert("请选择至少1个用户");
     return ;
   }
-  var job = {"task_name":group_name, "uid_list":group_confirm_uids, "state":remark};
+  var job = {"task_name":group_name, "uid_list":group_confirm_uids, "state":remark,"submit_user":'admin'};
   $.ajax({
       type:'POST',
       url: group_ajax_url,
@@ -621,7 +629,7 @@ function group_confirm_button(){
       success: callback
   });
   function callback(data){
-      //console.log(data);
+      console.log(data);
       if (data == '1'){
           //console.log('seceed',group_ajax_url)
           window.location.href = group_url;
