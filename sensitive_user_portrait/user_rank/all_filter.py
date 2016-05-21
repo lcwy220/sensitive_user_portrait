@@ -123,7 +123,7 @@ def history_sort( prefix ,index_name , index_type , uid_list , time , ischange =
             "size" : number
         }
     result = es.search(index = index_name , doc_type = index_type , body = query, _source=False)['hits']['hits']
-    uid_list = []
+    sorted_uid_list = []
     for item in result :
         sorted_uid_list.append(item['_id'].encode("utf-8"))
     none_in_list = set(uid_list) - set(sorted_uid_list)

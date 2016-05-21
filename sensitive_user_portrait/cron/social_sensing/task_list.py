@@ -27,9 +27,11 @@ def create_task_list():
     current_path = os.getcwd()
     file_path = os.path.join(current_path, 'task_list.py')
     if RUN_TYPE == 0:
-        now_ts = 1378015200 # 1378008000
+        now_ts = 1463241600 # 1378008000
     else:
-        now_ts = date_hour2ts(ts2date_hour(time.time()))
+        i = int(sys.argv[1])
+        now_ts = 1463241600 + 3600 * i
+        #now_ts = date_hour2ts(ts2date_hour(time.time()))
     print_log = "&".join([file_path, "start", ts2date(now_ts)])
     print print_log
     #ts = ts - 3600
