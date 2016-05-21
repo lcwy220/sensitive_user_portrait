@@ -2,7 +2,7 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
 <svg xmlns="http://www.w3.org/2000/svg">
 <metadata>
-Created by FontForge 20120731 at Wed May 11 21:43:19 2016
+Created by FontForge 20120731 at Sat May 21 14:08:40 2016
  By admin
 </metadata>
 <defs>
@@ -19,7 +19,7 @@ Created by FontForge 20120731 at Wed May 11 21:43:19 2016
     bbox="0 -212 1170 896"
     underline-thickness="50"
     underline-position="-100"
-    unicode-range="U+0078-E61E"
+    unicode-range="U+0078-E621"
   />
 <missing-glyph horiz-adv-x="374" 
 d="M34 0v682h272v-682h-272zM68 34h204v614h-204v-614z" />
@@ -164,5 +164,13 @@ d="M946 339.5q0 -21.5 -15 -36.5l-103 -102q-15 -15 -36 -15t-36 15t-15 36t15 36l15
 q21 0 36 -15t15 -36.5t-15 -36.5t-36 -15h-256h-52v-51q0 -21 -15 -36t-36 -15q-12 0 -26 8v-1l-257 154l1 1q-11 6 -17 16l-1 1q-1 1 -1 2q-7 12 -7 24v564q0 16 9 29t23 18q9 5 20 5h410h205q21 0 36 -15.5t15 -36.5t-15 -36t-36 -15z" />
     <glyph glyph-name="uniE61E" unicode="&#xe61e;" 
 d="M943 438l-116 -123l-59 61l73 78h-306v93h306l-73 77l59 62l116 -124l58 -62zM629 780h-438l251 -140v-419h187v140h93v-233h-280v-233l-419 233v745h699v-233h-93v140z" />
+    <glyph glyph-name="uniE61F" unicode="&#xe61f;" 
+d="M960 -78h-176l176 176v-176zM64 147h761v-84h-761v84zM64 324h761v-84h-761v84zM64 501h761v-84h-761v84zM64 678h761v-84h-761v84z" />
+    <glyph glyph-name="uniE620" unicode="&#xe620;" 
+d="M528 729q-6 6 -14.5 6t-15.5 -6h30zM498 729l-403 -386q-14 -13 -13.5 -31.5t14 -31t32 -12.5t32.5 12l353 339l354 -339q14 -12 32.5 -12t32 12.5t13.5 31t-13 31.5l-404 386h-30zM529 429q-6 6 -15 6t-15 -6h30zM499 429l-404 -386q-13 -13 -12.5 -31.5t13.5 -31
+t32 -12.5t32 12l354 339l353 -339q14 -12 32.5 -12t32 12.5t14 31t-12.5 31.5l-404 386h-30z" />
+    <glyph glyph-name="uniE621" unicode="&#xe621;" 
+d="M496 39q6 -6 14.5 -6t15.5 6h-30zM526 39l403 386q14 13 13.5 31.5t-14 31t-32 12.5t-32.5 -12l-353 -339l-354 339q-14 12 -32.5 12t-32 -12.5t-13.5 -31t13 -31.5l404 -386h30zM495 339q6 -6 15 -6t15 6h-30zM525 339l404 386q13 13 12.5 31.5t-13.5 31t-32 12.5
+t-32 -12l-354 -339l-353 339q-14 12 -32.5 12t-32 -12.5t-14 -31t12.5 -31.5l404 -386h30z" />
   </font>
 </defs></svg>
