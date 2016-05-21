@@ -87,7 +87,7 @@ Social_sense.prototype = {   //获取数据，重新画表
 		if(item[i]['finish'] == 0){
 			if(item[i]['processing_status']==0){
 				f_color = 'style="color:red"';
-				warn='中止';
+				warn='终止';
                 //operate = '<a href="javascript:void(0)" id="so_revise_task">修改</a>';
 				operate = '';
 			}else{
