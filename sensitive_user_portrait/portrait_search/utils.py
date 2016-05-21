@@ -164,12 +164,18 @@ def full_text_search(keywords, uid, start_time, end_time, size):
         else:
             user_set.add(item[0])
         if bci_results[count]["found"]:
-            bci_value = bci_results[count]["fields"]["bci_day_last"][0]
+            if bci_results[count].has_key("fields"):
+                bci_value = bci_results[count]["fields"]["bci_day_last"][0]
+            else:
+                bci_value = 0
             item.append(normalize_index(bci_value, history_max["max_bci"]))
         else:
             item.append(0)
         if sensitive_results[count]["found"]:
-            sensitive_value = sensitive_results[count]['fields']['last_value'][0]
+            if sensitive_results[count].has_key("fields"):
+                sensitive_value = sensitive_results[count]['fields']['last_value'][0]
+            else:
+                sensitive_value = 0
             item.append(normalize_index(sensitive_value, history_max["max_sensitive"]))
         else:
             item.append(0)

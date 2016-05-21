@@ -326,9 +326,18 @@ function draw_attribute(data){
     }else{
         $('#topic').html(data.topic);
     }
-    $('#hashtag').html(data.hashtag);
-    $('#geo_activity').html(data.geo_activity);
-    $('#keywords_string').html(data.keywords_string);
+    // $('#hashtag').html(data.hashtag);
+    // $('#geo_activity').html(data.geo_activity);
+    // $('#keywords_string').html(data.keywords_string);
+    var dict=['hashtag','geo_activity','keywords_string'];
+    for (var i=0; i<dict.length;i++){
+        if(data[dict[i]].length>8){
+            $('#'+dict[i]).html(data[dict[i]].substr(0,6)+'...');
+            $('#'+dict[i]).attr('title',data[dict[i]]);
+        }else if(data[dict[i]].length==0){
+            $('#'+dict[i]).html('无')
+        }
+    }
     draw_list(data.keywords_detail,'key_WordList','关键词');
     draw_list(data.geo_activity_detail,'location_WordList','地理位置');
     draw_list(data.hashtag_detail,'hashtag_WordList','微话题');
@@ -597,7 +606,7 @@ function group_confirm_button(){
   })
   //console.log(group_confirm_uids);
   var group_ajax_url = '/group/submit_task/';
-  var group_url = '/index/group_identify/';
+  var group_url = '/index/group_list/';
   var group_name = $('input[name="group_name"]').val();
   var remark = $('input[name="remark"]').val();
   //console.log(group_name, remark);
@@ -619,7 +628,7 @@ function group_confirm_button(){
     alert("请选择至少1个用户");
     return ;
   }
-  var job = {"task_name":group_name, "uid_list":group_confirm_uids, "state":remark,"submit_user":'admin'};
+  var job = {"task_name":group_name, "uid_list":group_confirm_uids, "state":remark,"submit_user":username};
   $.ajax({
       type:'POST',
       url: group_ajax_url,

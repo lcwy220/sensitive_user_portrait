@@ -105,7 +105,7 @@ function week_chart(trend_data){
     var data_count=[];
     var data_time = [];
     var date_zhang = [];
-    if(trend,length==0){
+    if(trend.length==0){
 		//console.log('fghfgdf');
 		$('#Activezh').empty();
 		var html ='';
@@ -113,6 +113,7 @@ function week_chart(trend_data){
 		$('#Activezh').append(html);
 		$('#show_weibo_zh').css('display','none');
 		$('#weibo_content').css('display','none');
+        // $('#time_se').css('display','none');
 	}
 	else{
     if (global_time_type == 'day'){

@@ -381,7 +381,7 @@ Draw_pie_all0_sensitive:function(data){
 
     Influence_motal(data_user_detail, 're_user_in', 're_user_out', 're_three_pie', 're_user_content');
     $('#re_conclusion').empty();
-    var html = '该类用户的平均影响力为'+data.influence_distribution.influence;
+    var html = '该类用户的平均影响力为'+data.influence_distribution.influence.toFixed(2);
     $('#re_conclusion').append(html);
     Draw_pie(data.influence_distribution.topic, 're_user_topic');
     Draw_pie(data.influence_distribution.domian, 're_user_domain');

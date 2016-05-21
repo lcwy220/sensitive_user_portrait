@@ -44,6 +44,7 @@ Social_sense.prototype = {   //获取数据，重新画表
   },
   Draw_task_table: function(data){
   	$('#so_task_table').empty();
+    console.log(data);
   	var item = data;
   	var html = '';
   	var warn = '';
@@ -62,7 +63,7 @@ Social_sense.prototype = {   //获取数据，重新画表
 	html += '<tbody>';
 	for (i=0;i<item.length;i++){
 	  	var create_d = new Date(item[i]['create_at']*1000).format('yyyy/MM/dd hh:mm'); 
-      console.log(item[i]['stop_time'],item[i]['stop_time'].length);
+     // console.log(item[i]['stop_time'],item[i]['stop_time'].length);
 	  	if(item[i]['stop_time']!= 'default'){
       var end_d = new Date(item[i]['stop_time']*1000).format('yyyy/MM/dd hh:mm'); 
       time_pro = (((time_now-item[i]['create_at'])/(item[i]['stop_time']-item[i]['create_at']))*100).toFixed(0);

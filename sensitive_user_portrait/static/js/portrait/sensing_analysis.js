@@ -173,11 +173,11 @@ function sensing_participate_table (head, data, div_name) {
 		html += '<td style="text-align:center;vertical-align:middle;">' + data[i][3] + '</td>';
 		html += '<td  style="text-align:center;vertical-align:middle;">'+data[i][4][0]+'</td>';
 		//html +=  data[i][4].join(',');
-		html += '</td><td style="text-align:center;vertical-align:middle;">' + data[i][5] + '</td>';
-		html += '<td style="text-align:center;vertical-align:middle;">' + data[i][5] + '</td>';
-        html += '<td style="text-align:center;vertical-align:middle;">' + data[i][6] + '</td>';
+		html += '</td><td style="text-align:center;vertical-align:middle;">' + data[i][5].toFixed(2) + '</td>';
+		//html += '<td style="text-align:center;vertical-align:middle;">' + data[i][5] + '</td>';
+        //html += '<td style="text-align:center;vertical-align:middle;">' + data[i][6] + '</td>';
 		html += '<td style="text-align:center;vertical-align:middle;">' + data[i][6].toFixed(2) + '</td>';
-		html += '<td style="text-align:center;vertical-align:middle;">' + data[i][8] + '</td>';
+		html += '<td style="text-align:center;vertical-align:middle;">' + data[i][7].toFixed(2) + '</td>';
 		html += '</tr>';
 	}
 	html += '</tbody></table>';
