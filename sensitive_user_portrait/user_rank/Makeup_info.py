@@ -237,7 +237,7 @@ def get_all_filed(sort_norm , time):
     ts = datetime2ts(ts2datetime(TIME.time() - DAY))
     field_bci = 'bci_day_last'
     field_weibo = "weibo_month_sum"
-    field_sen = 'sensitive_score_%s'%ts
+    field_sen = 'sensitive_week_ave'
     if sort_norm == "weibo_num":
         if time == 1:
             field_weibo = 'weibo_day_last'

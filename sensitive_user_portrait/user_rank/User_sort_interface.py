@@ -48,7 +48,7 @@ def user_sort_interface(username , time ,sort_scope , sort_norm , arg = None, st
             #offline job
             #deal with the offline task
             during = ( datetime2ts(et) - datetime2ts(st) ) / DAY + 1
-            time = 1
+            time = 7
             if during > 3:
                 time = 7
             elif during > 16:
@@ -60,7 +60,7 @@ def user_sort_interface(username , time ,sort_scope , sort_norm , arg = None, st
             return {"flag":True , "search_id" : search_id }
         elif sort_scope == 'in_limit_hashtag':
             during = ( datetime2ts(et) - datetime2ts(st) ) / DAY + 1
-            time = 1
+            time = 7
             if during > 3:
                 time = 7
             elif during > 16:
