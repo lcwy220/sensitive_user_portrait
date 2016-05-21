@@ -523,13 +523,14 @@ def get_attr_social(uid_list, uid2uname):
             user_be_comment_result = be_comment_dict[iter_uid]
             filter_out_dict = filter_union_dict([filter_out_dict, user_be_retweet_result, user_be_comment_result], uid_list, 'out')
             #step10: filter out user who is in user_portrait
-            out_in_user_portrait = es_user_portrait.mget(index=portrait_index_name, doc_type=portrait_index_type, body={'ids':filter_out_dict.keys()}, _source=False, fields=['influence'])['docs']
             uid_out_record = []
-            for out_in_item in out_in_user_portrait:
-                ruid = out_in_item['_id']
-                if out_in_item['found'] == True and ruid != iter_uid:
-                    influence = out_in_item['fields']['influence'][0]
-                    uid_out_record.append([iter_uid, ruid, filter_out_dict[ruid], influence, uid2uname[iter_uid]])
+            if len(filter_out_dict):
+                out_in_user_portrait = es_user_portrait.mget(index=portrait_index_name, doc_type=portrait_index_type, body={'ids':filter_out_dict.keys()}, _source=False, fields=['influence'])['docs']
+                for out_in_item in out_in_user_portrait:
+                    ruid = out_in_item['_id']
+                    if out_in_item['found'] == True and ruid != iter_uid:
+                        influence = out_in_item['fields']['influence'][0]
+                        uid_out_record.append([iter_uid, ruid, filter_out_dict[ruid], influence, uid2uname[iter_uid]])
             all_out_record.extend(uid_out_record) #[[uid1, ruid1,count1],[uid1,ruid2,count2],[uid2,ruid2,count3],...]
         iter_count += GROUP_ITER_COUNT
     #step11 sort interaction in group by retweet&comment count
@@ -1232,6 +1233,7 @@ def get_attr_sentiment_word(uid_list):
             #filter null item in sentiment word result
             new_sentiment_word_result = [item for item in sentiment_word_result if item != None]
             if new_sentiment_word_result != []:
+                sentiment_word_result = [json.loads(s) for s in sentiment_word_result if isinstance(s, str)]
                 date_sentiment_word_result = union_dict_list(sentiment_word_result)
                 week_result_list.append(date_sentiment_word_result)
         if week_result_list != []:
