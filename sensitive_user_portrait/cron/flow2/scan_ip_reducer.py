@@ -20,10 +20,9 @@ from global_utils import ES_CLUSTER_FLOW2 as es_cluster
 def scan_reducer():
     if RUN_TYPE:
         ts = datetime2ts(ts2datetime(time.time - DAY))
-        date = ts2datetime(time.time - DAY)
     else:
-        ts = datetime2ts('2013-09-01')
-        date = '2013-09-01'
+        ts = datetime2ts('2016-05-14')
+    date = ts2datetime(ts)
     ts = str(ts)
     hash_name = pre_ip + ts
     #sen_hash_name = sen_pre_ip + ts
@@ -35,7 +34,7 @@ def scan_reducer():
     tb = time.time()
 
     while 1:
-        tmp_list = redis_ip.rpop('ip_uid_list')
+        tmp_list = redis_ip.rpop('ip_uid_list_0520')
         if tmp_list:
             uid_list = json.loads(tmp_list)
             ip_dict = redis_ip.hmget(hash_name, uid_list)

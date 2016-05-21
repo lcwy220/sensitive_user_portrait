@@ -1,5 +1,10 @@
 # -*- coding:utf-8 -*-
 from elasticsearch import Elasticsearch
+import sys
+reload(sys)
+sys.path.append('../../')
+from global_utils import redis_influence as R_CLUSTER_FLOW1
+from global_utils import ES_CLUSTER_FLOW1 as es
 
 index_info = {
     "mappings":{
@@ -147,6 +152,8 @@ def mappings(es, index_name):
     return 1
 
 
+if __name__ == "__main__":
+    mappings(es, "bci_20160520")
 
 
 

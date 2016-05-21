@@ -221,14 +221,12 @@ def sensitive_get_db_num(timestamp):
 #input: uid
 #output: remark
 def search_remark(uid):
-    try:
-        user_portrait_result = es_user_portrait.get(index=portrait_index_name, doc_type=portrait_index_type, id=uid)['_source']
-    except:
-        user_portrait_result = {}
-    try:
-        remark_result = user_portrait_result['remark']
-    except:
+    exist_bool = es_user_portrait.exists(index=portrait_index_name, doc_type=portrait_index_type, id=uid)
+    if not exist_bool:
         remark_result = ''
+    else:
+        user_portrait_result = es_user_portrait.get(index=portrait_index_name, doc_type=portrait_index_type, id=uid)['_source']
+        remark_result = user_portrait_result.get('remark', '')
 
     return remark_result
 

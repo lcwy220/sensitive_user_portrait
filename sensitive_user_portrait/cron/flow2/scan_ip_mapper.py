@@ -18,7 +18,7 @@ def scan_mapper(pre, sen_pre, r):
     if RUN_TYPE:
         ts = datetime2ts(ts2datetime(time.time - DAY))
     else:
-        ts = datetime2ts('2013-09-01')
+        ts = datetime2ts('2016-05-14')
     ts = str(ts)
     hash_name = pre + ts
     sen_hash_name = sen_pre + ts
@@ -32,7 +32,7 @@ def scan_mapper(pre, sen_pre, r):
         ip_dict = re_scan[1]
         uid_list = ip_dict.keys()
         if uid_list:
-            r.lpush('ip_uid_list', json.dumps(uid_list))
+            print r.lpush('ip_uid_list_0520', json.dumps(uid_list))
             count += len(uid_list)
             ts = time.time()
             print '%s : %s' %(count, ts - tb)
