@@ -81,10 +81,11 @@
         </b>
         </div> -->
         <div id="search_all_load" style="display:none;margin-left: 490px;margin-top: 60px;">正在加载，请稍候...</div>
+        <div id='show_block' style="display:none;">
         <div id="result_rank_table" style="margin-top:20px;width: 980px;margin-left: 50px;
 ">
         </div>
-        <div style="text-align:right;margin-right: 200px;">
+        <div  style="text-align:right;margin-right: 200px;">
             <input type="radio" name="instant"  style="opacity:1; position:static;" checked value="2" /> 预约计算
             <input type="radio" name="instant" value="1" style="opacity:1; position:static;margin-left:5px" /> 立即计算
             <button class="btn btn-primary btn-sm" style="width:80px;height:40px;margin-left:10px" name="recommend_button" id="recommend_button">选择入库</button>
@@ -92,7 +93,7 @@
         <!-- <p><span onclick="user_recom_in_modal()" class="portrait_button" style="float:right;cursor:pointer;margin-right:68px;width: 60px;height: 25px;text-align: center;line-height: 25px;margin-top: -60px;" id="recom_in">推荐入库</span></p> -->
         <div id="weibo_text" style="width: 980px;margin-left: 50px;margin-top:20px;margin-bottom:50px;">
         </div>
-
+        </div>
             <div class="modal fade" id="search_deit_words" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog" role="document" style="width:900px;">
         <div class="modal-content">
@@ -146,6 +147,7 @@
                 var sen = $(this).html();   
                 var url_sen='/search/full_text_search/?keywords='+sen;
                  $('#search_all_load').css('display','block');
+                 $('#show_block').css('display','none');
                 $.ajax({
                     url:url_sen,
                     type:"GET",
@@ -178,6 +180,8 @@
     date_init();
 
     $('#search_all_btn').click(function(){
+        $('#show_block').css('display','none');
+        $('#search_all_load').css('display','block');
         var words = $('input[name="words_list"]').val();
         var users = $('input[name="user_list"]').val();
         var number_sort = $("input[name='sort_num_range']:checked").val();
@@ -204,6 +208,7 @@
             //window.location.href = simple_url;
         var url='/search/full_text_search/?start_time='+time_from+'&end_time='+time_to+'&uid='+users_list+'&keywords='+words_list+'&number='+number_sort;
             $('#search_all_load').css('display','block');
+            $('#show_block').css('display','none');
             $.ajax({
                 url:url,
                 type:"GET",
@@ -276,6 +281,7 @@ function draw_key_rank(data){
     //$('#rec_num_range').append(num);
     draw_key_rank_table(data[1]);
     Draw_get_top_weibo(data[0], 'rank_weibo');
+    $('#show_block').css('display','block');
 }
 
 //选择条件，调用画表函数
@@ -502,6 +508,8 @@ function Draw_get_top_weibo(data){
     }
     $('#'+div_name).append(html);
     $('#search_all_load').css('display','none');
+    $('#show_block').css('display','block');
+
 }
 
 

@@ -146,9 +146,13 @@ function get_advanced_par(){
         temp += input_name;
         input_value = '=' + $(this).val();
         if (input_name == '&activity_geo'){
-            input_value = input_value.replace('省','');
-            input_value = input_value.replace('市','');
-            input_value = input_value.replace('市','');
+
+            if(input_value=='=不限'){input_value=''}
+            else{
+                input_value = input_value.replace('省','');
+                input_value = input_value.replace('市','');
+                input_value = input_value.replace('市','');
+            }
         }
         temp += input_value;
     });

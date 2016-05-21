@@ -570,7 +570,7 @@ function Draw_get_top_weibo(data,div_name){
         html += "<div style='margin-left:10px;width:100%;height:100px;'>用户在昨天未发布任何微博</div>";
     }
 	else{
-		//console.log(data);
+		console.log(data);
 		for(var i=0;i<data.length;i++){
 			html += '<div id="weibo_list" class="weibo_list weibo_list_height scrolls tang-scrollpanel" style="margin:0;">';
 			html += '<div id="content_control_height" class="tang-scrollpanel-wrapper" style="margin:0;">';
@@ -605,7 +605,7 @@ function Draw_get_top_weibo(data,div_name){
 				var user_link = 'http://weibo.com/u/' + uid;
 				html += '<li class="item">';
 				html += '<div class="weibo_detail" style="width:1000px">';
-				if(i==1){
+				if(i==0){
 					html += '<p style="text-align:left;margin-bottom:0;margin-right:20px;">' +s + '、发布内容：&nbsp;&nbsp;<span style="color:red">' + weibo + '<span></p>';
 				}else{
 					html += '<p style="text-align:left;margin-bottom:0;margin-right:20px;">' +s + '、发布内容：&nbsp;&nbsp;' + weibo + '</p>';
