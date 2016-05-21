@@ -13,7 +13,7 @@ Tag_show.prototype = {   //获取数据，重新画表
   },
 
 Draw_tag:function(data){
-	//console.log(data);
+	////console.log(data);
 	var item;
 	var name;
 	var value;
@@ -23,17 +23,17 @@ Draw_tag:function(data){
     for(var key in data){
 		item = data[key];
 	}
-	//console.log(item);
+	////console.log(item);
     for(i=0;i<item.length;i++){
 		attrTag.push(item[i].split(':'));
 	}
-	//console.log(attrTag);
+	////console.log(attrTag);
 	for(i=0;i<attrTag.length;i++){
 		attributeNames.push(attrTag[i][0]);
 		attributeValues.push(attrTag[i][1]);
-		//console.log(attrTag[i][0]);
+		////console.log(attrTag[i][0]);
 	}
-	//console.log(attributeNames);
+	////console.log(attributeNames);
 	$('#ptag').empty();
 	var html = '';
 	if(attributeNames.length){
@@ -65,7 +65,7 @@ Show_name.prototype = {   //获取数据，重新画表
   },
 
 Draw_name:function(data){
-	//console.log(data);
+	////console.log(data);
 	$('#attribute_name_zh').empty();
 	var html = '';
 	html += '<select id="select_attribute_name">';
@@ -94,7 +94,7 @@ Show_value.prototype = {   //获取数据，重新画表
   },
 
 Draw_value:function(data){
-	console.log(data);
+	//console.log(data);
 	$('#attribute_value_zh').empty();
 	var html = '';
 	html += '<select id="select_attribute_value">';
@@ -112,7 +112,7 @@ Draw_value:function(data){
 var select_attribute_name = $("#select_attribute_name").val();
 if(select_attribute_name != ''){
     url_attribute_value = "/tag/show_attribute_value/?attribute_name="+select_attribute_name;
-    //console.log(url_attribute_value);
+    ////console.log(url_attribute_value);
     var Show_value = new Show_value();
     Show_value.call_sync_ajax_request(url_attribute_value, Show_value.ajax_method, Show_value.Draw_value);
 }else{
@@ -178,7 +178,7 @@ Tag_change.prototype = {   //获取数据，重新画表
   },
 
 Draw_tag_change:function(data){
-	//console.log(data);
+	////console.log(data);
 	url ="/tag/show_user_tag/?uid_list=" + uid;
 	Tag_show.call_sync_ajax_request(url, Tag_show.ajax_method, Tag_show.Draw_tag);
 	//刷新页面
@@ -216,7 +216,7 @@ function add_person_tag(){
 		    alert("已经存在相同的标签类型，新的标签名将替换原有的标签名！");
 		    var change_url = '';
 		    change_url = '/tag/change_attribute_portrait/?uid=' + uid + '&attribute_name='+new_attribute_name+'&attribute_value='+new_attribute_value+'&user=admint';
-		    //console.log(change_url);
+		    ////console.log(change_url);
 		    Tag_change.call_sync_ajax_request(change_url, Tag_change.ajax_method, Tag_change.Draw_tag_change);
 	    }
 	}else{

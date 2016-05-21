@@ -64,7 +64,7 @@ function geo_track(data){
 
 function  active_chart(data){
     global_active_data = data;
-	//console.log.log(global_active_data);
+	////console.log.log(global_active_data);
 	/*
     var tag_vector = data.tag_vector;
     //active time
@@ -90,25 +90,35 @@ function  active_chart(data){
     $('#saysay').html(this_desc);
 	*/
     if (global_time_type == 'day'){
-		//console.log.log("day");
+		////console.log.log("day");
        week_chart(data.day_trend);
     }
     // week
     else{
-		//console.log.log("week");
+		////console.log.log("week");
         week_chart(data.week_trend);
     }
 }
 function week_chart(trend_data){
     var trend = trend_data;
-	//console.log.log(trend);
+	//console.log(trend);
     var data_count=[];
     var data_time = [];
     var date_zhang = [];
+    if(trend,length==0){
+		//console.log('fghfgdf');
+		$('#Activezh').empty();
+		var html ='';
+		html += '<h4 style="align:center">暂无今日活动数据</h4>';
+		$('#Activezh').append(html);
+		$('#show_weibo_zh').css('display','none');
+		$('#weibo_content').css('display','none');
+	}
+	else{
     if (global_time_type == 'day'){
         for(i=0;i<trend.length;i++){
             var time = getDate(pre_time+trend[i][0]);
-            //console.log.log(pre_time);
+            ////console.log.log(pre_time);
             var count = trend[i][1];
             var date_zh =getYearDate(pre_time+trend[i][0]);
             data_time.push(time);
@@ -119,9 +129,9 @@ function week_chart(trend_data){
         $('#date_zh').html(date_zhang[0]);
         var dateStr = getFullDate(pre_time+trend[0][0]);
         var ts = get_unix_time(dateStr);
-        //console.log.log('ts',ts);
+        ////console.log.log('ts',ts);
         var url ="/attribute/activity_weibo/?uid="+uid+"&type="+global_time_type+"&start_ts="+ts;
-        //console.log.log(url);
+        ////console.log.log(url);
         activity_call_ajax_request(url, draw_content); // draw_weibo
     }
     else{
@@ -138,7 +148,7 @@ function week_chart(trend_data){
         var dateStr = getFullDate(trend[0][0]);
         var ts = get_unix_time(dateStr);
         var url ="/attribute/activity_weibo/?uid="+uid+"&type="+global_time_type+"&start_ts="+ts;
-        //console.log.log(url);
+        ////console.log.log(url);
         activity_call_ajax_request(url, draw_content); // draw_weibo
     }
 	//Draw_trend:
@@ -217,15 +227,16 @@ function week_chart(trend_data){
             data: data_count
         }]
     });
+	}
 }
 //微博文本默认数据
 function point2weibo(xnum, ts){
-	//console.log.log("fdghjkl;'l;kjhgfd");
-    //console.log.log(xnum);
+	////console.log.log("fdghjkl;'l;kjhgfd");
+    ////console.log.log(xnum);
     var delta = '';
     if (global_time_type == 'day'){
         var url ="/attribute/activity_weibo/?uid="+uid+"&type="+global_time_type+"&start_ts="+(pre_time+ts[0]);
-        //console.log.log(url);
+        ////console.log.log(url);
         person_call_ajax_request(url, draw_content); //draw weibo
 
         var a = Math.floor(xnum / 2);
@@ -260,7 +271,7 @@ function point2weibo(xnum, ts){
     $('#time_zh').html(delta);
 }
 function draw_content(data){
-	//console.log.log(data);
+	////console.log.log(data);
     var html = '';
     $('#weibo_text').empty();
     if(data[0].length==0 && data[1].length==0){
@@ -279,7 +290,7 @@ function draw_content(data){
 
 
 function draw_daily_ip_table(ip_data){
-    console.log(ip_data);
+    //console.log(ip_data);
 	var today_ip = document.getElementById('today_ip');
 	if(ip_data.today_top_ip){
 		today_ip.innerHTML = ip_data.today_top_ip;
@@ -331,7 +342,7 @@ function draw_daily_ip_table(ip_data){
     //var div_name = ['daily_ip','weekly_ip'];
     var this_desc = '';
 	
-    //console.log.log(ip_data.description);
+    ////console.log.log(ip_data.description);
 	
     if (ip_data.description[1].length != 0){
         this_desc += "<span>" + ip_data.description[0] + "</span><span style='color:red;'>" + ip_data.description[1][0] + '(' + ip_data.description[1][1].split('\t').pop() +')' + "</span>"; //description
@@ -377,7 +388,7 @@ function draw_daily_ip_table(ip_data){
     for(var i=0;i<ip_data.ip_week_list.length;i++){
 		if(ip_data.ip_week_list[i][0]){
 			html += '<th style="text-align:center"><a style="cursor:pointer;" data-toggle="modal" data-target="#moredailyip'+i+'" >'+ip_data.ip_week_list[i][0][0]+'</a></th>';
-			//console.log(ip_data.ip_week_list[i].length,ip_data.ip_week_list[i]);
+			////console.log(ip_data.ip_week_list[i].length,ip_data.ip_week_list[i]);
 			Draw_more(ip_data.ip_week_list[i],'daily_ip'+i);
 		}else{
 			html += '<th style="text-align:center">-</th>';
@@ -387,7 +398,7 @@ function draw_daily_ip_table(ip_data){
     for(var i=0;i<ip_data.geo_week_list.length;i++){
 		if(ip_data.geo_week_list[i][0]){
 			html += '<th style="text-align:center"><a style="cursor:pointer;" data-toggle="modal" data-target="#moredailygeo'+i+'" >'+ip_data.geo_week_list[i][0][0]+'</a></th>';
-			//console.log(ip_data.geo_week_list[i].length,ip_data.geo_week_list[i]);
+			////console.log(ip_data.geo_week_list[i].length,ip_data.geo_week_list[i]);
 			Draw_more(ip_data.geo_week_list[i],'daily_geo'+i);
 		}else{
 			html += '<th style="text-align:center">-</th>';
@@ -496,7 +507,7 @@ function draw_online_pattern(data){
 }
 
 function draw_activeness_chart(data){
-	//console.log.log(data);
+	////console.log.log(data);
     //$('#activeness_desc').html("<span>" + data.description[0] + "</span><span style='color:red;'>" + data.description[1] + "</span>。");
     //global_tag_vector.push(['活跃类型', data.tag_vector]);
     var data_time = [];
@@ -587,7 +598,7 @@ function activity_load(){
 
 
 function Draw_more(data,div){
-	console.log(data);
+	////console.log(data);
 	$('#'+div).empty();
 	if(div=='daily_ip0'||div=='daily_ip1'||div=='daily_ip2'||div=='daily_ip3'||div=='daily_ip4'||div=='daily_ip5'||div=='daily_ip6'||div=='daily_s_ip0'||div=='daily_s_ip1'||div=='daily_s_ip2'||div=='daily_s_ip3'||div=='daily_s_ip4'||div=='daily_s_ip5'||div=='daily_s_ip6'){
 		var words ='IP';
@@ -606,7 +617,7 @@ function Draw_more(data,div){
     $('#'+ div).append(html);
 }
 function Draw_more_today(data,div){
-    console.log(data,div);
+    //console.log(data,div);
 	$('#'+div).empty();
 	if(div =='more_today_ip'|| div =='more_today_s_ip'){
 		var words = 'IP';
