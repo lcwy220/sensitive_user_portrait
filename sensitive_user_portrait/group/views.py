@@ -50,6 +50,7 @@ def upload_file():
 def ajax_submit_task():
     input_data = dict()
     input_data = request.get_json()
+    print 'input_data:', input_data
     now_ts = int(time.time())
     input_data['submit_date'] = now_ts
     status = submit_task(input_data)

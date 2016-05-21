@@ -33,6 +33,7 @@
     <div class="PortraitImg" ><img id="portraitImg" src="" alt="" class="img-circle"></div>
     <div class="nickname" id="nickname"></div>
 </div>
+
 <!-- <div id="float-wrap" class="hidden"></div> -->
 <div class='row'>
 <div class="box col-md-12" >
@@ -324,7 +325,7 @@
     }
     var Personal = new Personal();
     var personalData; // global data
-
+    var username = '{{g.user.email}}';
     var url = "/attribute/portrait_attribute/?uid=" + uid;
     Personal.call_sync_ajax_request(url, Personal.ajax_method, Personal.personData);
 
