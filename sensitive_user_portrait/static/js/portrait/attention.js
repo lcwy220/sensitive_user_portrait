@@ -62,7 +62,7 @@ function attention(data,UserID,UserName,texts){
     }
     var rename_in = '';
     for (var i=0;i<in_data.length;i++){
-      ////console.log(in_data);
+      //////console.log(in_data);
       nod = {};
       nod['category'] = 1;
       if(in_data[i][0]=='None'){
@@ -216,8 +216,8 @@ function draw_topic(data){
     $('#topic').empty();
     var datas = data['topic'];
     html = '';
-    //console.log(datas);
-    //console.log(datas.length);
+    ////console.log(datas);
+    ////console.log(datas.length);
     if(datas.length==0){
       html = '无入库用户';
     }else{
@@ -259,7 +259,7 @@ function draw_field(data){
     $('#field').empty();
     html = '';
     var datas = data['domain'];
-    ////console.log(datas.length);
+    //////console.log(datas.length);
     if(datas.length==0){
       html = '无入库用户';
     }else{
@@ -311,8 +311,8 @@ function draw_out_list(data){
       //item = replace_space(item);
       //global_data[item[0]] = item; // make global data\
       var list_id = '';
-      //console.log(item[0]=='' );
-      //console.log(item[0],item[1].length);
+      ////console.log(item[0]=='' );
+      ////console.log(item[0],item[1].length);
       if(item[0]=='None'){
         continue;
       }else if(item[0]=='' && item[1].length>0){
@@ -340,8 +340,8 @@ function draw_out_list(data){
 
 
 function draw_in_list(data){
-  ////console.log(personalData.uname);
-  ////console.log(uname);
+  //////console.log(personalData.uname);
+  //////console.log(uname);
     //var select_graph = $('input[name="graph-type"]:checked').attr("title");
 	var select_graph =$("#weibo_way").val();
     if(personalData.uname == 'unknown'){
@@ -375,7 +375,7 @@ function draw_in_list(data){
       }else if(item[1]  == 'undefined'){
       var user_name  = '未知';
      }else{ var user_name =item[1]};
-     ////console.log(item[1]);
+     //////console.log(item[1]);
       html += '<td style="text-align:center" style="width:150px;">'+ user_name +'</td>';
       html += '<td style="text-align:center" style="width:70px;">'+ item[2].toFixed(2) +'</td>';
       html += '<td style="text-align:center" style="width:70px;">'+ item[3].toFixed(2) +'</td>';
@@ -420,7 +420,7 @@ function out_list_button(){
         var a = confirm('您选择了预约计算，系统将在今日24:00自动启动计算！');
         if (a == true){
             var compute_url = '/recommentation/identify_in/?date='+recommend_date+'&uid_list='+cur_uids+'&source=3&status='+compute_type;
-            //console.log(compute_url);
+            ////console.log(compute_url);
             Attention.call_sync_ajax_request(compute_url, Attention.ajax_method, confirm_ok);
         }
       }
@@ -431,7 +431,7 @@ function out_list_button(){
             // var waiting_html = '<div style="text-align:center;vertical-align:middle;height:40px">数据正在加载中，请稍后...</div>';
             // $('#out_list').append(waiting_html);
             var recommend_confirm_url = '/recommentation/identify_in/?date=' + recommend_date + '&uid_list=' + cur_uids + '&source=3&status=' + compute_type;
-            //console.log(recommend_confirm_url);
+            ////console.log(recommend_confirm_url);
             Attention.call_sync_ajax_request(recommend_confirm_url, Attention.ajax_method, confirm_ok);
           }    
       }
@@ -447,7 +447,7 @@ function in_list_button(){
   var group_ajax_url = '/group/submit_task/';
   //var group_ajax_url = '/detect/add_detect2analysis/';
   //var group_url = '/index/group_result/';
-  var group_url = '/index/group/#';
+  var group_url = '/index/group_list/';
   var group_name = $('input[name="so_group_name"]').val();
   var remark = $('input[name="so_states"]').val();
   if (group_confirm_uids.length == 0){
@@ -471,7 +471,7 @@ function in_list_button(){
     alert("请选择至少1个用户");
     return ;
   }
-  var job = {"task_name":group_name, "uid_list":group_confirm_uids, "state":remark};
+  var job = {"task_name":group_name, "uid_list":group_confirm_uids, "state":remark,'submit_user':'admin'};
   $.ajax({
       type:'POST',
       url: group_ajax_url,
@@ -505,7 +505,7 @@ function bind_social_mode_choose(){
         $("#test0").empty();
         $("#field").empty();
         $("#topic").empty();
-        ////console.log(uid);
+        //////console.log(uid);
       if (select_graph == 1){
           var test_html='转发情况 <hr style="margin-top:10px;margin-right:20px;" /> ';
         $("#test0").append(test_html);
