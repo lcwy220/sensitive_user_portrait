@@ -601,7 +601,7 @@ function page_group_influ_weibo(start_row,end_row,data, sub_div_name){
 			}else{
 				html += '<p style="margin-top:-5px;margin-left:10px;"><span style="width: 700px;float: left;">敏感词：<span style="color:red">' + keyword + '</span></a></span>';
 			}   
-            html += '<span style="width:40%;"><a style="cursor:pointer;">转发数（'+ retweet_count +'）</a><a style="cursor:pointer;">评论数（'+ comment_count +'）</a></span></p>';
+            html += '<span style="width:40%;">转发数（'+ retweet_count +'）评论数（'+ comment_count +'）</span></p>';
 			html += '</div>'
     }
         else{
@@ -612,7 +612,7 @@ function page_group_influ_weibo(start_row,end_row,data, sub_div_name){
 			}else{
 				html += '<p style="margin-top:-5px;margin-left:10px;"><span style="width: 700px;float: left;">敏感词：<span style="color:red">' + keyword + '</span></a></span>';
 			}
-            html += '<span style="width:40%;"><a style="cursor:pointer;">转发数（'+ retweet_count +'）</a><a style="cursor:pointer;">评论数（'+ comment_count +'）</a></span></p>';
+            html += '<span style="width:40%;">转发数（'+ retweet_count +'）评论数（'+ comment_count +'）</span></p>';
 			html += '</div>';
         }
     }
