@@ -118,7 +118,7 @@ Draw_overview: function(data){
     html += '<p><a><span style="font-size:14px;font-family: inherit;margin:0px;cursor:pointer;text-decoration:underline" onclick="show_members();">群组成员</span>&nbsp;&nbsp;';
     html += '<span style="float:right;cursor:pointer;font-size:14px;font-family: inherit;margin:0px;" type="button"data-toggle="modal" data-target="#group_tag2"><u>群组标签</u></span></p>';
     html += '</a></div></div>';//</li></ul>
-    html += '<table style="height:150px;width:750px;float:right">';
+    html += '<table style="height:150px;width:700px;float:right">';
     html += '<tr><td style="text-align:center;vertical-align:middle"><img src="/static/img/closeness.png" style="height:80px"></td>';
     html += '<td style="text-align:center;vertical-align:middle;width: 187px;"><img src="/static/img/active.png" style="height:80px"></td>';
     html += '<td style="text-align:center;vertical-align:middle;width: 187px;"><img src="/static/img/important.png" style="height:80px"></td>';

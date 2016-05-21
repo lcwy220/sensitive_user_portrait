@@ -634,8 +634,12 @@ function person_call_ajax_request(url, callback){
 
 <script type="text/javascript" src="/static/js/portrait/show_tag.js"></script> 
 
-<div class="soft_function" id="detail" style='display:none;'>
-    <p><a style="font-size:15px;margin-left:15px;" href='#basicpage' onclick="$('#detail').css('display','none');">收起详细属性</a></p>
+<div class="soft_function" id="detail" style='float:left;width:1000px;margin-left:30px;display:none;'>
+    <p style="
+    width: 1000px;
+    display: block;
+    float: left;
+"><a style="font-size:15px;margin-left:15px;" href='#basicpage' onclick="$('#detail').css('display','none');">收起详细属性</a></p>
 	<div class="soft_con_icon">
 		<ul>
 			<li style="float:left"><a id="pic_fun_adm" href="#detail" style="height:128px;width:128px"><img src="/static/personal/images/activity.png"/><p style="color:#008dd9">活动特征</p></a></li>
