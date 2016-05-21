@@ -338,7 +338,7 @@ def ajax_activeness_trend():
 def ajax_influence_trend():
     uid = request.args.get('uid', '')
     uid = str(uid)
-    time_segment = request.args.get('time_segment', '30') #time_segment=7/30
+    time_segment = request.args.get('time_segment', '7') #time_segment=7/30
     time_segment = int(time_segment)
     results = get_influence_trend(uid, time_segment)
     if not results:
@@ -436,6 +436,7 @@ def ajax_all_influenced_users():
     uid = str(uid)
     style = int(style)
     sensitive = int(sensitive)
+    print date
 
     results = statistics_influence_people(uid, date, style, sensitive)
 

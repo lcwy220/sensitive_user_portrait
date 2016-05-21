@@ -3,7 +3,7 @@
 use to save parameter
 '''
 #for test
-RUN_TYPE = 0 #0 mark run for test; 1 mark run for operation
+RUN_TYPE = 1 #0 mark run for test; 1 mark run for operation
 WORK_TYPE = 0 # limited source
 RUN_TEST_TIME = '2013-09-08'
 

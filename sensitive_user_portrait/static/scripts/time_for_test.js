@@ -1,4 +1,4 @@
-var global_test_mode = 0;  // 0 for test, 1 for running
+var global_test_mode = 1;  // 0 for test, 1 for running
 
 // Date format
 Date.prototype.format = function(format){
