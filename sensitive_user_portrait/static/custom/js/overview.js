@@ -576,6 +576,7 @@ function page_group_influ_weibo(start_row,end_row,data, sub_div_name){
     weibo_num = end_row - start_row;
     $('#'+ sub_div_name).empty();
     var html = "";
+    console.log(data);
     html += '<div class="group_weibo_font" style="margin-right:5px;">';
     for (var i = start_row; i < end_row; i += 1){
         s=i.toString();

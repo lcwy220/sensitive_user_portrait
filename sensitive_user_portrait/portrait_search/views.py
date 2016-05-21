@@ -114,6 +114,7 @@ def ajax_full_text_search():
 @mod.route('/profile_search/')
 def ajax_profile_search():
     stype = request.args.get('stype', '')
+    print 'stype:', stype
     query = []
     query_list = []
     condition_num = 0
@@ -126,8 +127,8 @@ def ajax_profile_search():
         order = [{'friendsnum':{'order':'desc'}}]
     size = request.args.get('size', 100)
 
-    if stype:
-        fuzz_item = ['uid', 'uname']
+    if stype == '1':
+        fuzz_item = ['uid', 'nick_name']
         item_data = request.args.get('term', '')
         for item in fuzz_item:
             if item_data:
@@ -145,9 +146,17 @@ def ajax_profile_search():
             if item_data:
                 query.append({'wildcard':{item:'*'+item_data+'*'}})
                 condition_num += 1
-        for i in range(3):
+        for i in range(0,3):
             from_item = request.args.get(range_item_from[i], 0)
             to_item = request.args.get(range_item_to[i], 1000000000)
+            try:
+                from_item = int(from_item)
+            except:
+                from_item = 0
+            try:
+                to_item = int(to_item)
+            except:
+                to_item = 1000000000
             query.append({"range":{range_item[i]:{"from":from_item,"to":to_item}}})
             condition_num += 1
         for item in select_item:

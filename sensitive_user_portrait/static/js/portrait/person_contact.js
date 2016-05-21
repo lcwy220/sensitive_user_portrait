@@ -589,7 +589,7 @@ function group_confirm_button(){
   })
   //console.log(group_confirm_uids);
   var group_ajax_url = '/group/submit_task/';
-  var group_url = '/index/group/';
+  var group_url = '/index/group_identify/';
   var group_name = $('input[name="group_name"]').val();
   var remark = $('input[name="remark"]').val();
   //console.log(group_name, remark);
@@ -611,7 +611,7 @@ function group_confirm_button(){
     alert("请选择至少1个用户");
     return ;
   }
-  var job = {"task_name":group_name, "uid_list":group_confirm_uids, "state":remark};
+  var job = {"task_name":group_name, "uid_list":group_confirm_uids, "state":remark,"submit_user":'admin'};
   $.ajax({
       type:'POST',
       url: group_ajax_url,
@@ -621,7 +621,7 @@ function group_confirm_button(){
       success: callback
   });
   function callback(data){
-      //console.log(data);
+      console.log(data);
       if (data == '1'){
           //console.log('seceed',group_ajax_url)
           window.location.href = group_url;
