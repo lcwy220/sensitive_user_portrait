@@ -11,7 +11,7 @@ def retweet_es_mappings(db_number):
     index_info = {
             'settings':{
                 'number_of_shards':5,
-                'number_of_replicas':0
+                'number_of_replicas':0,
                 },
             'mappings':{
                 'user':{
@@ -42,7 +42,7 @@ def be_retweet_es_mappings(db_number):
     index_info = {
             'settings':{
                 'number_of_shards': 5,
-                'number_of_replicas':0
+                'number_of_replicas':0,
                 },
             'mappings':{
                 'user':{
@@ -69,6 +69,6 @@ def be_retweet_es_mappings(db_number):
 
 if __name__=='__main__':
     #test
-    db_number = '1'
+    db_number = '2'
     retweet_mark = retweet_es_mappings(db_number)
     be_retweet_mark = be_retweet_es_mappings(db_number)

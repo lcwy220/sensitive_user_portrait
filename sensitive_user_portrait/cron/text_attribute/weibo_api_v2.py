@@ -34,11 +34,8 @@ def read_flow_text_sentiment(uid_list):
         iter_date_ts = start_date_ts + DAY * i
         flow_text_index_date = ts2datetime(iter_date_ts)
         flow_text_index_name = flow_text_index_name_pre + flow_text_index_date
-        try:
-            flow_text_exist = es_flow_text.search(index=flow_text_index_name, doc_type=flow_text_index_type,\
+        flow_text_exist = es_flow_text.search(index=flow_text_index_name, doc_type=flow_text_index_type,\
                     body={'query':{'filtered':{'filter':{'terms':{'uid': uid_list}}}}, 'size': MAX_VALUE}, _source=False,  fields=['text','uid','sentiment','keywords_dict','timestamp'])['hits']['hits']
-        except:
-            flow_text_exist = []
 
         for flow_text_item in flow_text_exist:
             uid = flow_text_item['fields']['uid'][0].encode('utf-8')
@@ -95,11 +92,8 @@ def read_flow_text(uid_list):
         flow_text_index_date = ts2datetime(iter_date_ts)
         flow_text_index_name = flow_text_index_name_pre + flow_text_index_date
         print flow_text_index_name
-        try:
-            flow_text_exist = es_flow_text.search(index=flow_text_index_name, doc_type=flow_text_index_type,\
+        flow_text_exist = es_flow_text.search(index=flow_text_index_name, doc_type=flow_text_index_type,\
                     body={'query':{'filtered':{'filter':{'terms':{'uid': uid_list}}}}, 'size': MAX_VALUE}, _source=False,  fields=['text','uid','keywords_dict','timestamp'])['hits']['hits']
-        except:
-            flow_text_exist = []
 
         for flow_text_item in flow_text_exist:
             uid = flow_text_item['fields']['uid'][0].encode('utf-8')

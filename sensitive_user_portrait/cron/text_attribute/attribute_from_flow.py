@@ -89,6 +89,7 @@ def get_flow_information(uid_list):
         sensitive_uid_day_geo = {}
         flow_index_name = flow_text_index_name_pre + str(date)
         # hashtag
+        print uid_list
         hashtag_results = redis_cluster.hmget('hashtag_'+str(ts), uid_list)
         sensitive_hashtag = redis_cluster.hmget('sensitive_hashtag_'+str(ts), uid_list)
         # sensitive_words

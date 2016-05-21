@@ -72,7 +72,7 @@ FLOW_TEXT_ES_PORT = '9206'
 
 
 # use to identify the db number of redis-97
-R_BEGIN_TIME = '2013-09-01'
+R_BEGIN_TIME = '2016-05-08'
 
 # use to recommentation
 RECOMMENTATION_FILE_PATH = '/home/ubuntu8/huxiaoqian/user_portrait/recommentaion_file'

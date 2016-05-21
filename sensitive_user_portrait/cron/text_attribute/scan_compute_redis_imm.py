@@ -21,7 +21,7 @@ def scan_compute_redis():
         user_list = json.loads(results[uid])
         in_date = user_list[0]
         status = user_list[1]
-        if status == '1': #imme
+        if int(status) == 1: #imme
             #test
             count += 1
             iter_user_list.append(uid)
@@ -39,6 +39,7 @@ def scan_compute_redis():
             else:
                 r.hset(manual_hashname, uid, '3')
         if len(iter_user_list) % 100 == 0 and len(iter_user_list) != 0:
+            print iter_user_list
             r.hmset('compute', mapping_dict)
             #acquire bulk user weibo data
             if WEIBO_API_INPUT_TYPE == 0:
@@ -105,7 +106,7 @@ def change_status_computed(mapping_dict):
         tmp1 = r.hget(sensitive_hashname, uid)
         if tmp:
             r.hset(influence_hashname, uid, '4')
-        elif tmpq:
+        elif tmp1:
             r.hset(sensitive_hashname, uid, '4')
         else:
             r.hset(manual_hashname, uid, '4')

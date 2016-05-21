@@ -10,7 +10,7 @@ def get_mappings(index_name):
     index_info = {
             'settings':{
                 'number_of_shards':5,
-                'number_of_replicas':0
+                'number_of_replicas':0,
                 'analysis':{
                     'analyzer':{
                         'my_analyzer':{
