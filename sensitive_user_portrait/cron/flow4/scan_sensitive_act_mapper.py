@@ -18,7 +18,7 @@ def scan_mapper(pre, sen_pre, r):
     if RUN_TYPE:
         ts = datetime2ts(ts2datetime(time.time - DAY))
     else:
-        ts = datetime2ts('2013-09-01')
+        ts = datetime2ts('2016-05-14')
     ts = str(ts)
     #hash_name = pre + ts
     sen_hash_name = sen_pre + ts

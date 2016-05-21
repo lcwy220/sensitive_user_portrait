@@ -19,11 +19,10 @@ from global_utils import ES_CLUSTER_FLOW2 as es_cluster
 # ip
 def scan_reducer():
     if RUN_TYPE:
-        ts = datetime2ts(ts2datetime(time.time - DAY))
-        date = ts2datetime(time.time - DAY)
+        ts = datetime2ts(ts2datetime(time.time() - DAY))
     else:
-        ts = datetime2ts('2013-09-01')
-        date = '2013-09-01'
+        ts = datetime2ts('2016-05-14')
+    date = ts2datetime(ts)
     ts = str(ts)
     hash_name = sen_pre_act + ts
     #sen_hash_name = sen_pre_ip + ts
