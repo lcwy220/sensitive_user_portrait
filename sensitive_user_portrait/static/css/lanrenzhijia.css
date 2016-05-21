@@ -8,12 +8,7 @@ html, body {
 body {
 	min-height: 600px;
 }
-body * {
-	font-family: Arial, Geneva, SunSans-Regular, sans-serif;
-/*	font-size: 14px;
-	color: #333;
-	line-height: 22px;*/
-}
+
 #wrapper {
 /*	background-color: #F4F0EE;*/
 /*	border-top: 1px solid #ccc;
