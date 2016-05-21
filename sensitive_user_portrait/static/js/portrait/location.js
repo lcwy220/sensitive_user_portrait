@@ -513,15 +513,28 @@ function draw_activeness_chart(data){
     //global_tag_vector.push(['活跃类型', data.tag_vector]);
     var data_time = [];
     var data_count = [];
+	var times = [];
     var timeline = data.time_list;
     //var activeness = data.ave_activeness;
     for (var i = 0;i < timeline.length;i++){
-        data_time.push(timeline[i][1]);
+		//console.log(i);
+		if(i==0){
+			data_time.push(timeline[i][1]);
+			data_count.push(parseFloat(timeline[i][2].toFixed(2)));
+		}else{
+			if(i+5<timeline.length){
+				//console.log(i+4);
+				data_time.push(timeline[i+5][1]);
+				 data_count.push(parseFloat(timeline[i+4][2].toFixed(2)));
+			}
+        }
+		
     }
+	/*
     for (var i = 0;i < timeline.length;i++){
         data_count.push(parseFloat(timeline[i][2].toFixed(2)));
     }
-
+	*/
     $('#activeness').highcharts({
         chart: {
             type: 'spline',// line,
