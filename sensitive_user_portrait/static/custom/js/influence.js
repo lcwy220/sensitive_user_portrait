@@ -63,11 +63,11 @@ function Draw_get_top_weibo(data, div_name){
                 }
             }
             var weibo_link = weibo[10];
-            var user_link = 'http://weibo.com/u/' + uid;
+           // var user_link = 'http://weibo.com/u/' + uid;
+             var user_link = '/index/personal/?uid=' + uid;
             html += '<li class="item">';
             html += '<div class="weibo_detail" style="width:100%">';
-            html += '<p style="text-align:left;margin-bottom:0;margin-left:10px;">' +s +'、</span>昵称:<a class="undlin" target="_blank" href="' + uss
-er_link  + '">' + name + '</a>(' + geo_after + ')&nbsp;&nbsp;发布内容：&nbsp;&nbsp;' + text + '</p>';
+            html += '<p style="text-align:left;margin-bottom:0;margin-left:10px;">' +s +'、</span>昵称:<a class="undlin" target="_blank" href="' + user_link  + '">' + name + '</a>(' + geo_after + ')&nbsp;&nbsp;发布内容：&nbsp;&nbsp;' + text + '</p>';
             html += '<div class="weibo_info" style="width:100%;margin-bottom:10px;">';
             html += '<div class="weibo_pz" style="margin-left:10px;">';
             //html += '<div id="topweibo_mid" class="hidden">'+mid+'</div>';
@@ -77,9 +77,9 @@ er_link  + '">' + name + '</a>(' + geo_after + ')&nbsp;&nbsp;发布内容：&nbs
             //html += '<span class="comment_count">敏感度(' + sensitive_score + ')</span></div>';
             html += '</div>';
             html += '<div class="m">';
-            html += '<u>' + date + '</u>&nbsp;-&nbsp;';
-            html += '<a target="_blank" href="' + weibo_link + '">微博</a>&nbsp;-&nbsp;';
-            html += '<a target="_blank" href="' + user_link + '">用户</a>';
+            html += '<u>' + date + '</u>';//&nbsp;-&nbsp;
+            //html += '<a target="_blank" href="' + weibo_link + '">微博</a>&nbsp;-&nbsp;';
+            //html += '<a target="_blank" href="' + user_link + '">用户</a>';
 
             //html += type_list[weibo[3]-1] + '微博&nbsp;-&nbsp;';
             //html += sentiment_dict[weibo[4]];
