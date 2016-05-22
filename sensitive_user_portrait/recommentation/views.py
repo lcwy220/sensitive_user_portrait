@@ -6,6 +6,7 @@ import time
 import json
 from flask import Blueprint, url_for, render_template, request, abort, flash, session, redirect
 from utils import recommend_in_sensitive, recommend_in_top_influence, influence_recommentation_more_information
+from utils import recommend_in_sensitive_test, recommend_in_influence_test
 from utils import sensitive_recommentation_more_information, identify_in, show_in_history
 from sensitive_user_portrait.global_utils import R_RECOMMENTATION as r
 from sensitive_user_portrait.time_utils import datetime2ts, ts2datetime
@@ -18,7 +19,8 @@ mod = Blueprint('recommentation', __name__, url_prefix='/recommentation')
 @mod.route('/show_sensitive_list/')
 def ajax_recommentation_in_sensitive_list():
     date = request.args.get('date', '') # 2013-09-01
-    results = recommend_in_sensitive(date)
+    #results = recommend_in_sensitive(date)
+    results = recommend_in_sensitive_test()
     if results:
         return json.dumps(results)
     else:
@@ -30,7 +32,8 @@ def ajax_recommentation_in_sensitive_list():
 def ajax_recommentation_in_influence_list():
     date = request.args.get('date', '') # 2013-09-01
     if date:
-        results = recommend_in_top_influence(date)
+        #results = recommend_in_top_influence(date)
+        results = recommend_in_influence_test()
     if results:
         return json.dumps(results)
     else:

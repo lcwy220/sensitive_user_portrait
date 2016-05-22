@@ -1,5 +1,5 @@
 BCI_INDEX_NAME = 'copy_user_portrait_influence'
-BCI_INDEX_TYPE = 'bci'
+BCI_INDEX_TYPE = 'influence'
 
 ACT_INDEX_NAME = 'copy_user_portrait_activeness'
 ACT_INDEX_TYPE = 'activeness'

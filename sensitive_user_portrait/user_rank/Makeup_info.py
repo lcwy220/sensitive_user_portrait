@@ -116,6 +116,10 @@ def in_makeup_info(uid_list , sort_norm , time):
     results = []
     ts = datetime2ts(ts2datetime(TIME.time()-DAY))
     field_bci , field_sen ,field_imp ,field_act = get_in_filed(sort_norm,time)
+    field_bci = "last_value"
+    field_sen = "last_value"
+    field_imp = "last_value"
+    field_act = "last_value"
     field_dict = {"uid":"uid","uname":"uname","location":"location","topic":"topic_string","domain":"domain","fans":"fansnum", "act":"activeness", "imp":"importance", "bci":"influence", "sen":"sensitive"}
     if uid_list:
         search_results = es_user_portrait.mget(index=USER_INDEX_NAME, doc_type=USER_INDEX_TYPE, body={"ids":uid_list}, _source=False, fields=["uid","uname","location","topic_string","domain","fansnum", "influence", "importance", "activeness", "sensitive"])["docs"]
@@ -143,23 +147,27 @@ def in_makeup_info(uid_list , sort_norm , time):
                 item['act'] = 0
             try:
                 imp_value = imp_results[i]['fields'][field_imp][0]
-                item['ipm'] = imp_value
+                item['imp'] = imp_value
             except:
-                item['ipm'] = 0
+                item['imp'] = 0
             try:
                 user_fansnum = bci_results[i]['fields']['user_fansnum'][0]
                 item['fans'] = user_fansnum
             except:
                 item['fans'] = ''
-            try:
+            if 1:
+            #try:
                 bci_value = bci_results[i]['fields']['last_value'][0]
                 item['bci'] = bci_value
-            except:
+            #except:
+            else:
                 item['bci'] = 0 
-            try:
-                sen_value = sen_results[i]['fields'][field_sen][0]
-                tmp['sen'] = sen_value
-            except:
+            #try:
+            if 1:
+                sen_value = sen_results[i]['fields']['last_value'][0]
+                item['sen'] = sen_value
+            else:
+            #except:
                 item['sen'] = 0
             
             results.append(item)

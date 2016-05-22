@@ -133,6 +133,13 @@ function drawPsyState(){
 */
 //话题重点人物
 function drawTopic(div_name, more_div_name, rank_data){
+    rank_data={'宗教':[['1218353337','学诚法师',''],['1142208455','前沿思想',''],['1078339650','人性之美丽',''],['2925215361','珂南三世',''],['1591767737','搏风击浪','']],
+    '意识形态':[['1182425635','鄢烈山',''],['5303172232','美国总统胡汉川',''],['2144789105','爱新觉罗载勋',''],['1672392695','陈光武律师',''],['3209218915','大江春秋','']],
+    '暴恐':[['1113218211','江宁公安在线',''],['1687198333','严锋',''],['1223354542','朱孝顶律师',''],['1182425635','鄢烈山',''],['3668293823','王占阳','']],
+    '民主':[['1232121710','山西晚报',''],['1219097704','潍坊交警',''],['1189617115','河北公安网络发言人',''],['1193491727','王石',''],['1224449043','李晓峰','']],
+    '邪教':[['1242388827','荀夜羽',''],['1223354542','朱孝顶律师',''],['1291622710','战斗到底傲青松',''],['5291379812','陨石老刀',''],['1500352022','儰城','']],
+    }
+    console.log(rank_data);
     $('#'+div_name).empty();
     var num = 0; 
     for (var key in rank_data){ 
@@ -157,8 +164,8 @@ function drawTopic(div_name, more_div_name, rank_data){
                 domain_top_username = person_data[1];
             }
             var domain_top_user_portrait;
-            if (person_data[2] == 'unknown'){
-                domain_top_user_portrait = "http://tp2.sinaimg.cn/1878376757/50/0/1";
+            if (person_data[2] == 'unknown'||person_data[2] =='' ){
+                domain_top_user_portrait = "/static/img/unknown_per.gif";
             }
             else{
                 domain_top_user_portrait = person_data[2];
@@ -190,7 +197,7 @@ function drawTopic(div_name, more_div_name, rank_data){
             }
             var domain_top_user_portrait;
             if (person_data[2] == 'unknown'){
-                domain_top_user_portrait = "http://tp2.sinaimg.cn/1878376757/50/0/1";
+                domain_top_user_portrait = "/static/img/unknown_per.gif";
             }
             else{
                 domain_top_user_portrait = person_data[2];
@@ -227,7 +234,7 @@ function drawTopicDomain(div_name, more_div_name, rank_data){
             }
             var domain_top_user_portrait;
             if (person_data[2] == 'unknown'){
-                domain_top_user_portrait = "http://tp2.sinaimg.cn/1878376757/50/0/1";
+                domain_top_user_portrait = "/static/img/unknown_per.gif";
             }
             else{
                 domain_top_user_portrait = person_data[2];
@@ -259,7 +266,7 @@ function drawTopicDomain(div_name, more_div_name, rank_data){
             }
             var domain_top_user_portrait;
             if (person_data[2] == 'unknown'){
-                domain_top_user_portrait = "http://tp2.sinaimg.cn/1878376757/50/0/1";
+                domain_top_user_portrait = "/static/img/unknown_per.gif";
             }
             else{
                 domain_top_user_portrait = person_data[2];

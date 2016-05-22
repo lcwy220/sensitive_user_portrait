@@ -55,13 +55,16 @@
                 <td>
                     <span id="time_choose">
                         <span style="float:left; margin-right:15px;">
-                        <input name="time_range" type="radio" value="0" checked='checked'> 当日
+                            <input name="time_range" type="radio" value="1" checked="checked"> 昨日
+                            <input name="time_range" type="radio" value="7" style="margin-left:20px;"> 7天
+                            <input name="time_range" type="radio" value="30" style="margin-left:20px;"> 30日
+<!--                         <input name="time_range" type="radio" value="0" checked='checked'> 当日
                         </span>
                         <select id="time_choose_intime" style="display:block;float:left;margin-right:15px;">
 						 </select>
                         <input name="time_range" type="radio" value="1"> 昨日
                         <input name="time_range" type="radio" value="7" style="margin-left:20px;"> 7天
-                        <input name="time_range" type="radio" value="30" style="margin-left:20px;"> 30日
+                        <input name="time_range" type="radio" value="30" style="margin-left:20px;"> 30日 -->
                     </span>
                 </td>
             </tr>
@@ -174,6 +177,8 @@ if(show_mm2 == 0){
 var show_time2 = hh2.toString() + ':' + show_mm2.toString();
 var html = '';
 //html = html + '<option name="time_range_in"  value="0">00:00 -'+ show_time2 +'</option>';
+
+
 html = html + '<option name="time_range_in" style="background-color:#eee"  value="0">当日最新排名</option>';
 html = html + '<option name="time_range_in"  value="1"  style="margin-left:20px;">00:00 -06:00</option>';
 html = html + '<option name="time_range_in"  value="2"  style="margin-left:20px;">06:00 -12:00</option>';
