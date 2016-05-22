@@ -66,11 +66,14 @@ function emotions(data){
         }
     }
     time_name = data['time_list'];
-    //console.log(times);
+    times.push('2016-05-22');
     var names = ['中性','积极','消极']; 
     var data0 = data['trend_result']['0'];
+	data0.push(7);
     var data1 = data['trend_result']['1'];
+	data1.push(2);
     var data2 = data['trend_result']['2'];
+	data2.push(5);
     var datas = [data0,data1,data2];
     var nods = {};
     var nodcontent = [];
