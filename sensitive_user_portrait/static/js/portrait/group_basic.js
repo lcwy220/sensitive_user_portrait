@@ -330,24 +330,24 @@ var option = {
         data:legends
     },
     toolbox: {
-        show : true,
+        //show : true,
         feature : {
-            mark : {show: true},
-            dataView : {show: true, readOnly: false},
+           // mark : {show: true},
+            //dataView : {show: true, readOnly: false},
             magicType : {
-                show: true, 
+                //show: true, 
                 type: ['pie', 'funnel'],
                 option: {
                     funnel: {
-                        x: '25%',
-                        width: '50%',
+                        x: '5%',
+                        width: '40%',
                         funnelAlign: 'left',
                         max: 1548
                     }
                 }
             },
-            restore : {show: true},
-            saveAsImage : {show: true}
+            //restore : {show: true},
+            //saveAsImage : {show: true}
         }
     },
     calculable : true,
@@ -355,8 +355,8 @@ var option = {
         {
             name:'访问来源',
             type:'pie',
-            radius : '55%',
-            center: ['50%', '60%'],
+            radius : '40%',
+            center: ['45%', '60%'],
             data:topic
         }
     ]
