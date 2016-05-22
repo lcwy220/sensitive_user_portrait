@@ -1147,10 +1147,10 @@ task_status_fresh();
 window.setInterval(task_status_fresh, 60000);
 
 //画结果表格
-//var rank_url = '/user_rank/user_sort/?username='+ username +'&time='+ day_select +'&sort_norm='+ sort_norm_rank +'&sort_scope='+ sort_scope+'&all=True';
-var rank_url = '/user_rank/temporal_rank/?task_type='+day_select+'&sort='+sort_norm_rank+'&number=100';
+//var rank_url = '/user_rank/temporal_rank/?task_type='+day_select+'&sort='+sort_norm_rank+'&number=100';
+var  rank_url='/user_rank/user_sort/?username=&time=0&sort_norm=bci&sort_scope=in_nolimit&number=100&all=False';
 console.log(rank_url);
-var loading_html = '<div style="text-align:center;vertical-align:middle;height:40px">数据正在加载中，请稍后...</div>';
+var loading_html = '<div tsyle="text-align:center;vertical-align:middle;height:40px">数据正在加载中，请稍后...</div>';
 $('#result_rank_table').append(loading_html)
 $('#recom_in').css('display','none');
 $('.show_key_result').live('click', function(){
@@ -1198,8 +1198,8 @@ $('.show_key_result').live('click', function(){
     }
 
 });
-call_sync_ajax_request(rank_url, temporal_rank_table);
-
+//call_sync_ajax_request(rank_url, temporal_rank_table);
+call_sync_ajax_request(rank_url, draw_rank_table);
 $('.delete_this').live("click", function(){
     var a = confirm('确定要删除吗？');
     if (a == true){

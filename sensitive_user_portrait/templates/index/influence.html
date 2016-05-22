@@ -36,10 +36,11 @@
                 <th style="width:150px;height:50px;background-color: #E4E4E4;text-align: center;">排序范围</td>
                 <td>
                     <select id="range_choose" class="type_sub" style="float:left;width:140px;height:25px;">
+                        <option value='in_nolimit'>库内-不限</option>
                         <option value='all_nolimit'>全网-不限</option>
                         <option value='all_limit_keyword'>全网-按关键词</option>
                         <!--<option value='in_intime'>全网-实时排名</option>-->
-                        <option value='in_nolimit'>库内-不限</option>
+                        
                         <option value='in_limit_keyword'>库内-按关键词</option>
                         <option value='in_limit_hashtag'>库内-按微话题</option>
                         <option value='in_limit_domain'>库内-按身份</option>
@@ -68,9 +69,16 @@
                 <th  style="width:150px;height:50px;background-color: #E4E4E4;text-align: center;">排序指标</th>
                 <td>
                     <span id="sort_select">
-                        <select id="sort_select_2">
-                            <option value="retweeted" checked="checked">转发量</option>
-                            <option value="comment">评论量</option>
+                        <select  id="sort_select_2">
+                        <option value="bci">影响力</option>
+                        <option value="imp">重要度</option>
+                        <option value="act">活跃度</option>
+                    
+                        <option value="ses">敏感度</option>
+                        <option value="imp_change">突发重要度变动</option>
+                        <option value="act_change">突发活跃度变动</option>
+                        <option value="bci_change">突发影响力变动</option>
+                        <option value="ses_change">突发敏感度变动</option>
                         </select>
                     </span>
                 </td>

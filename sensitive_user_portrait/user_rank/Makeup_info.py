@@ -57,12 +57,12 @@ def all_makeup_info(uid_list , sort_norm , time):
     field_bci ,field_sen, field_weibo = get_all_filed(sort_norm , time) 
     search_result = es.mget(index=WEBUSER_INDEX_NAME , doc_type=WEBUSER_INDEX_TYPE, body={"ids":uid_list})["docs"]
     current_ts = datetime2ts(ts2datetime(TIME.time()-DAY))
-    bci_result = es.mget(index=BCIHIS_INDEX_NAME, doc_type=BCIHIS_INDEX_TYPE, body={"ids":uid_list}, fields=[field_bci, "user_fansnum", field_weibo, "weibo_month_sum"])["docs"]
+    bci_result = es.mget(index=BCIHIS_INDEX_NAME, doc_type=BCIHIS_INDEX_TYPE, body={"ids":uid_list}, fields=['last_value', "user_fansnum", field_weibo, "weibo_month_sum"])["docs"]
     sen_result = es.mget(index=SESHIS_INDEX_NAME, doc_type=SESHIS_INDEX_TYPE, body={"ids":uid_list}, fields=[field_sen])["docs"]
     in_portrait = es_user_portrait.mget(index=USER_INDEX_NAME, doc_type=USER_INDEX_TYPE, body={"ids":uid_list}, _source=False)["docs"]
     results = []
     #fans_result = es_user_profile.mget(index="bci_history", doc_type="bci", body={"ids":uid_list}, fields=["user_fansnum"], _source=False)["docs"]
-    bci_max = get_max_value(es_user_profile, "bci_history", "bci", field_bci)
+    bci_max = get_max_value(es_user_profile, "bci_history", "bci",'last_value')
     sen_max = get_max_value(es_user_profile, "sensitive_history", "sensitive", field_sen)
     for i in range(len(uid_list)):
         tmp = dict()
@@ -120,7 +120,7 @@ def in_makeup_info(uid_list , sort_norm , time):
     if uid_list:
         search_results = es_user_portrait.mget(index=USER_INDEX_NAME, doc_type=USER_INDEX_TYPE, body={"ids":uid_list}, _source=False, fields=["uid","uname","location","topic_string","domain","fansnum", "influence", "importance", "activeness", "sensitive"])["docs"]
         
-        bci_results = es.mget(index=BCI_INDEX_NAME, doc_type=BCI_INDEX_TYPE, body={"ids":uid_list}, _source=False, fields=[field_bci,"user_fansnum", "weibo_month_sum"])["docs"]
+        bci_results = es.mget(index=BCI_INDEX_NAME, doc_type=BCI_INDEX_TYPE, body={"ids":uid_list}, _source=False, fields=['last_value',"user_fansnum", "weibo_month_sum"])["docs"]
         imp_results = es.mget(index=IMP_INDEX_NAME, doc_type=IMP_INDEX_TYPE, body={"ids":uid_list}, _source=False, fields=[field_imp])["docs"]
         act_results = es.mget(index=ACT_INDEX_NAME, doc_type=ACT_INDEX_TYPE, body={"ids":uid_list}, _source=False, fields=[field_act])["docs"]
         sen_results = es.mget(index=SES_INDEX_NAME, doc_type=SES_INDEX_TYPE, body={"ids":uid_list}, _source=False, fields=[field_sen])["docs"]
@@ -152,7 +152,7 @@ def in_makeup_info(uid_list , sort_norm , time):
             except:
                 item['fans'] = ''
             try:
-                bci_value = bci_results[i]['fields'][field_bci][0]
+                bci_value = bci_results[i]['fields']['last_value'][0]
                 item['bci'] = bci_value
             except:
                 item['bci'] = 0 

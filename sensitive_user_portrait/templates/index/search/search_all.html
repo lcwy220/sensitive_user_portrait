@@ -137,14 +137,16 @@
             $('#hot_words').empty();
             var html = '';
             for(i=0;i<data.length;i++){
-                html += '<span style="width: 83px;display: block;float: left;"><a href=javacript:void(0) name="search_sen">'+data[i][0]+'</a>('+data[i][1]+')</span>';
+                html += '<span style="width: 83px;display: block;float: left;"><a href=javascript:void(0) name="search_sen">'+data[i][0]+'</a>('+data[i][1]+')</span>';
             }
             $('#hot_words').append(html);
         }
 
         $(function()
             {$('a[name^="search_sen"]').live('click',function(){
-                var sen = $(this).html();   
+
+                var sen = $(this).html(); 
+                console.log(sen);  
                 var url_sen='/search/full_text_search/?keywords='+sen;
                  $('#search_all_load').css('display','block');
                  $('#show_block').css('display','none');
@@ -276,6 +278,7 @@ function draw_modal(data){
 }
 
 function draw_key_rank(data){
+    console.log(data);
     var num = data.number;
     //$('#rec_num_range').empty();
     //$('#rec_num_range').append(num);
