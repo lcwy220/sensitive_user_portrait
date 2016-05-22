@@ -153,10 +153,7 @@ def mappings(es, index_name):
 
 
 if __name__ == "__main__":
-    mappings(es, "bci_20160520")
-
-
-
-
-
+    #mappings(es, "bci_20160520")
+    #mappings(es, "bci_20160521")
+    mappings(es, "bci_20160522")
 
