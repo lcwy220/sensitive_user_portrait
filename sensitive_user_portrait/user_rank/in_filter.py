@@ -39,6 +39,7 @@ def in_sort_filter( time = 1 , sort_norm = 'bci' , sort_scope = 'in_nolimit' , a
         ischange = False
         index = BCI_INDEX_NAME
         type = BCI_INDEX_TYPE
+        type = 'influence'
     elif sort_norm == 'bci_change':
         pre = 'bci_'
         ischange = True
@@ -85,12 +86,16 @@ def es_search( pre , scope , arg , index_name , type_name  , time , ischange = F
     print time
     print ischange
     sort_field = ''
+    sort_field = 'bci_1463587200'
     datetime = datetime2ts(ts2datetime(TIME.time()-DAY))
     if time == 1:
         if ischange :
             sort_field = pre + 'day_' + 'change'
         else:
-            sort_field = pre  + str(datetime)
+            if pre == 'bci_':
+                sort_fields = 'last_value'
+            else:
+                sort_field = pre  + str(datetime)
     elif time == 7 :
         if ischange :
             sort_field = pre + 'week_' + 'change'
@@ -136,6 +141,8 @@ def es_search( pre , scope , arg , index_name , type_name  , time , ischange = F
             "sort": sort,
             "size" : number
         }
+    #index_name = 'bci_1463587200'
+    print 'index_name:', index_name
     result = es.search(index = index_name , doc_type = type_name , body = query)['hits']['hits']
     uid_list = []
     for item in result :
