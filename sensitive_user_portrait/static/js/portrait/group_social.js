@@ -149,9 +149,9 @@ function draw_relation_net(data,name,symbols){
         };
         //content1['name'] = data[name][s]['0'];
         content1['id'] = data[name][s]['0'];
-        content1['value'] = 7;
+        content1['value'] = 2;
         content1['draggable'] = true;
-        content1['symbolSize'] = [60, 30];
+        content1['symbolSize'] = [30, 15];
         total_content.push(content1);
         var content2 = {};
         content2['category'] = 1;
@@ -164,9 +164,9 @@ function draw_relation_net(data,name,symbols){
         };
         //content2['name'] = data[name][s]['1'];
         content2['id'] = data[name][s]['1'];
-        content2['value'] = 7;
+        content2['value'] = 2;
         content2['draggable'] = true;
-        content2['symbolSize'] = [60, 30];
+        content2['symbolSize'] = [30, 15];
         total_content.push(content2);
 
         var relation = {};
@@ -238,8 +238,8 @@ function draw_relation_net(data,name,symbols){
                     linkStyle : {}
                 }
             },
-            minRadius : 15,
-            maxRadius : 25,
+            minRadius : 10,
+            maxRadius : 20,
             gravity: 1.1,
             scaling: 1.2,
             draggable: false,
@@ -404,8 +404,8 @@ function draw_relation_out_net(data,name,symbols){
                     linkStyle : {}
                 }
             },
-            minRadius : 15,
-            maxRadius : 25,
+            minRadius : 10,
+            maxRadius : 20,
             gravity: 1.1,
             scaling: 1.2,
             draggable: false,
