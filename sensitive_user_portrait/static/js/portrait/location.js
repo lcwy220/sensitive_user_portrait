@@ -515,17 +515,20 @@ function draw_activeness_chart(data){
     var data_count = [];
 	var times = [];
     var timeline = data.time_list;
+	var j;
     //var activeness = data.ave_activeness;
-    for (var i = 0;i < timeline.length;i++){
-		//console.log(i);
+    for (var i = 0;i < timeline.length;i=i+ parseInt(timeline.length /7)){
+		//console.log(timeline);
 		if(i==0){
 			data_time.push(timeline[i][1]);
 			data_count.push(parseFloat(timeline[i][2].toFixed(2)));
 		}else{
-			if(i+5<timeline.length){
-				//console.log(i+4);
-				data_time.push(timeline[i+5][1]);
-				 data_count.push(parseFloat(timeline[i+4][2].toFixed(2)));
+			j = parseInt(timeline.length /4);
+			//console.log(j,timeline.length,j+i);
+			if(i+j<timeline.length){
+				console.log(timeline[i][1]);
+				data_time.push(timeline[i][1]);
+				data_count.push(parseFloat(timeline[i][2].toFixed(2)));
 			}
         }
 		
