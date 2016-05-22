@@ -301,7 +301,7 @@ function drawRank(div_name, cname, rank_data, more_div){
          html += '<th style="text-align:center">' + nickname + '</th>';
          
 		 if (div_name =='sensitive_hot_retweet' || div_name =='sensitive_hot_comment'){
-			 console.log(div_name);
+			 //console.log(div_name);
              html += '<th style="text-align:center">' + item[2] + '</th></tr>';
          }
          else{
@@ -393,7 +393,7 @@ function drawLocationRank(div_name, cname, rank_data, more_div){
     $('#' + more_div).append(html);                  
 }
 function draw(data){
-    console.log(data);
+    //console.log(data);
     var global_overview_data = data;
     $('#totalNumber').html(global_overview_data.total_number);
     $('#sensitiveN').html(global_overview_data.sensitive_number);
@@ -494,13 +494,15 @@ function DrawWeibo(data, div_name, sub_div_name){
           var total_pages = 0;
           if (data.length % page_num == 0) {
               total_pages = data.length / page_num;
+              console.log(total_pages,'total_pages1');
           }
           else {
-              total_pages = Math.round(data.length / page_num) + 1;
+              total_pages = parseInt(data.length / page_num) + 1;
+             // console.log(total_pages,'total_pages2',data.length,parseInt(data.length / page_num));
           }
         }
     var pageCount = total_pages;
-    
+   // console.log(pageCount,'pageCount');
     if(pageCount>5){
         page_icon(1,5,0, div_name);
     }else{
@@ -576,7 +578,7 @@ function page_group_influ_weibo(start_row,end_row,data, sub_div_name){
     weibo_num = end_row - start_row;
     $('#'+ sub_div_name).empty();
     var html = "";
-    console.log(data);
+    //console.log(data);
     html += '<div class="group_weibo_font" style="margin-right:5px;">';
     for (var i = start_row; i < end_row; i += 1){
         s=i.toString();
