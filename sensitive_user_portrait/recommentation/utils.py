@@ -103,6 +103,35 @@ def recommend_in_sensitive(date):
         results = []
     return results
 
+def recommend_in_sensitive_test():
+    f = open('/home/ubuntu8/jiangln/sensitive_user_portrait/sensitive_user_portrait/recommentation/sensitive_recomment.txt', 'r')
+    results = []
+    count = 0
+    for line in f:
+        count += 1
+        if count >= 1068:
+            break
+        sensitive_result = line.split('\n')[0]
+        sensitive_result_item = json.loads(sensitive_result)
+        new_sensitive_item = sensitive_result_item[:5]
+        new_sensitive_item.append(sensitive_result_item[7])
+        new_sensitive_item.append(sensitive_result_item[6])
+        results.append(new_sensitive_item)
+    return results
+
+def recommend_in_influence_test():
+    f = open('/home/ubuntu8/jiangln/sensitive_user_portrait/sensitive_user_portrait/recommentation/influence_recomment.txt', 'r')
+    results = []
+    count = 0
+    for line in f:
+        count += 1
+        if count >= 1200:
+            break
+        influence_result = line.split('\n')[0]
+        influence_result_item = json.loads(influence_result)
+        results.append(influence_result_item)
+    return results
+
 # show top influence user recommend
 def recommend_in_top_influence(date):
     influence_name = "recomment_" + date + "_influence"

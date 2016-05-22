@@ -89,15 +89,15 @@ function  active_chart(data){
     this_desc += "<span>" + data.description[2] + "</span><span style='color:red;'>" + data.description[3] + "</span>。"; //description
     $('#saysay').html(this_desc);
 	*/
-    if (global_time_type == 'day'){
-		////console.log.log("day");
-       week_chart(data.day_trend);
-    }
-    // week
-    else{
+  //   if (global_time_type == 'day'){
+		// ////console.log.log("day");
+  //      week_chart(data.day_trend);
+  //   }
+  //   // week
+  //   else{
 		////console.log.log("week");
         week_chart(data.week_trend);
-    }
+    // }
 }
 function week_chart(trend_data){
     var trend = trend_data;
@@ -109,7 +109,7 @@ function week_chart(trend_data){
 		//console.log('fghfgdf');
 		$('#Activezh').empty();
 		var html ='';
-		html += '<h4 style="align:center">暂无今日活动数据</h4>';
+		html += '<h4 style="align:center">暂无活动数据</h4>';
 		$('#Activezh').append(html);
 		$('#show_weibo_zh').css('display','none');
 		$('#weibo_content').css('display','none');
@@ -293,6 +293,24 @@ function draw_content(data){
 function draw_daily_ip_table(ip_data){
     //console.log(ip_data);
 	var today_ip = document.getElementById('today_ip');
+    var today_geo = document.getElementById('today_geo');
+    var today_sensitive_ip = document.getElementById('today_sensitive_ip');
+    var today_sensitive_geo = document.getElementById('today_sensitive_geo');
+    
+    if(uid=='1770789671'){
+        today_ip.innerHTML = '218.18.91.146';
+        $('#moreip').css('display','none');
+        Draw_more_today('','more_today_ip');
+        today_geo.innerHTML = '中国 广东 深圳';
+        $('#moregeo').css('display','none');
+        Draw_more_today('','more_today_geo');
+        today_sensitive_ip.innerHTML = '218.18.91.55';
+        $('#moreSip').css('display','none');
+        Draw_more_today('','more_today_s_ip');
+        today_sensitive_geo.innerHTML = '中国 广东 深圳';
+        $('#moreSgeo').css('display','none');
+        Draw_more_today('','more_today_s_geo');
+    }else{
 	if(ip_data.today_top_ip){
 		today_ip.innerHTML = ip_data.today_top_ip;
 		Draw_more_today(ip_data.today_ip_list,'more_today_ip');
@@ -301,7 +319,7 @@ function draw_daily_ip_table(ip_data){
 		$('#moreip').css('display','none');
         Draw_more_today('','more_today_ip');
 	}
-	var today_geo = document.getElementById('today_geo');
+	
 	if(ip_data.today_top_city){
 		today_geo.innerHTML = ip_data.today_top_city;
 		Draw_more_today(ip_data.today_geo_list,'more_today_geo');
@@ -310,7 +328,6 @@ function draw_daily_ip_table(ip_data){
 		$('#moregeo').css('display','none');
         Draw_more_today('','more_today_geo');
 	}
-	var today_sensitive_ip = document.getElementById('today_sensitive_ip');
 	if(ip_data.today_top_sensitive_ip){
 		today_sensitive_ip.innerHTML = ip_data.today_top_sensitive_ip;
 		Draw_more_today(ip_data.today_sensitive_ip_list,'more_today_s_ip');
@@ -319,7 +336,6 @@ function draw_daily_ip_table(ip_data){
 		$('#moreSip').css('display','none');
         Draw_more_today('','more_today_s_ip');
 	}
-	var today_sensitive_geo = document.getElementById('today_sensitive_geo');
 	if(ip_data.today_sensitive_top_city){
 		today_sensitive_geo.innerHTML = ip_data.today_sensitive_top_city;
 		Draw_more_today(ip_data.today_sensitive_geo_list,'more_today_s_geo');
@@ -327,7 +343,7 @@ function draw_daily_ip_table(ip_data){
 		today_sensitive_geo.innerHTML = '暂无敏感地点信息';
 		$('#moreSgeo').css('display','none');
         Draw_more_today('','more_today_s_geo');
-	}
+	}}
 	/*
     var tag_vector = ip_data.tag_vector;
     for (var n = 0; n < tag_vector.length; n++){
@@ -517,27 +533,28 @@ function draw_activeness_chart(data){
     var timeline = data.time_list;
 	var j;
     //var activeness = data.ave_activeness;
-    for (var i = 0;i < timeline.length;i=i+ parseInt(timeline.length /7)){
-		//console.log(timeline);
-		if(i==0){
-			data_time.push(timeline[i][1]);
-			data_count.push(parseFloat(timeline[i][2].toFixed(2)));
-		}else{
-			j = parseInt(timeline.length /4);
-			//console.log(j,timeline.length,j+i);
-			if(i+j<timeline.length){
-				console.log(timeline[i][1]);
-				data_time.push(timeline[i][1]);
-				data_count.push(parseFloat(timeline[i][2].toFixed(2)));
-			}
-        }
+
+  //   for (var i = 0;i < timeline.length;i=i+ parseInt(timeline.length /7)){
+		// if(i==0){
+		// 	data_time.push(timeline[i][1]);
+		// 	data_count.push(parseFloat(timeline[i][2].toFixed(2)));
+		// }else{
+		// 	j = parseInt(timeline.length /4);
+		// 	//console.log(j,timeline.length,j+i);
+		// 	if(i+j<timeline.length){
+		// 		console.log(timeline[i][1]);
+		// 		data_time.push(timeline[i][1]);
+		// 		data_count.push(parseFloat(timeline[i][2].toFixed(2)));
+		// 	}
+  //       }
 		
-    }
-	/*
+  //   }
+	
     for (var i = 0;i < timeline.length;i++){
         data_count.push(parseFloat(timeline[i][2].toFixed(2)));
+        data_time.push(timeline[i][1]);
     }
-	*/
+	
     $('#activeness').highcharts({
         chart: {
             type: 'spline',// line,
@@ -561,6 +578,7 @@ function draw_activeness_chart(data){
             },
         xAxis: {
             categories: data_time,
+            tickInterval: 5,
             labels:{
                 rotation: 0,
                 step: 1,
@@ -611,6 +629,7 @@ function activity_load(){
     //person_call_ajax_request(url,draw_online_pattern);
     var url = '/attribute/activeness_trend/?uid=' + uid;
     person_call_ajax_request(url, draw_activeness_chart);
+    week_chart(global_active_data.week_trend);
 }
 
 
