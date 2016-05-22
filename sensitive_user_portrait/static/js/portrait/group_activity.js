@@ -388,6 +388,7 @@ function show_active_users(data, div_name){
 
 function group_activity(data){
 
+
 	//活跃非活跃用户
 	var main_active = data.main_max;
 	var main_unactive = data.main_min;
@@ -398,17 +399,26 @@ function group_activity(data){
 
 	//折线图
 	//var legend_data = []
-	var xAxis_data = data.time_list;
-	var yAxis_ave = data.ave_list;
+    var xAxis_data = data.time_list.slice(1,-1);
+    var yAxis_ave = data.ave_list.slice(1,-1);
+    
+    // for(var j=0;j<data.time_list.length;j++){
+    //     console.log(data.time_list[j],data.time_list[j].indexOf('2013'));
+    //     if(data.time_list[j].indexOf('2013')==-1){
+    //         xAxis_data.push(data.time_list[j]);
+    //         yAxis_ave.push(data.ave_list[j]);
+    //         console.log(j,data.ave_list[j],yAxis_ave)
+    //     }
+    // }
 
-	var max_list = data.max_list;
+
+	var max_list = data.max_list.slice(1,-1);
 	var yAxis_max = [];
 	for(var i=0; i<max_list.length;i++){
 		yAxis_max.push(max_list[i][1]);
-
 	};
 
-	var min_list = data.min_list;
+	var min_list = data.min_list.slice(1,-1);
 	var yAxis_min = [];
 	for(var i=0; i<min_list.length;i++){
 		yAxis_min.push(min_list[i][1])

@@ -105,8 +105,6 @@ function week_chart(trend_data){
     var data_count=[];
     var data_time = [];
     var date_zhang = [];
-
-    var global_time_type='week';
     if(trend.length==0){
 		//console.log('fghfgdf');
 		$('#Activezh').empty();
@@ -145,17 +143,9 @@ function week_chart(trend_data){
             data_time.push(time);
             data_count.push(count);
             date_zhang.push(date_zh);
-            console.log(date_zhang);
         }
         $('#time_zh').html('00:00-04:00');
         $('#date_zh').html(date_zhang[0]);
-        
-        data_time.push("05-22 00:00", "05-22 04:00", "05-22 08:00", "05-22 12:00", "05-22 16:00", "05-22 20:00");
-        for(i=0;i<6;i++){
-            data_count.push(trend[i][1]);
-        }
-        console.log(data_time);
-        console.log(data_count);
         var dateStr = getFullDate(trend[0][0]);
         var ts = get_unix_time(dateStr);
         var url ="/attribute/activity_weibo/?uid="+uid+"&type="+global_time_type+"&start_ts="+ts;

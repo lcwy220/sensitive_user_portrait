@@ -164,12 +164,12 @@ function drawTopic(div_name, more_div_name, rank_data){
                 domain_top_username = person_data[1];
             }
             var domain_top_user_portrait;
-            if (person_data[2] == 'unknown'||person_data[2] =='' ){
+            // if (person_data[2] == 'unknown'||person_data[2] =='' ){
                 domain_top_user_portrait = "/static/img/unknown_per.gif";
-            }
-            else{
-                domain_top_user_portrait = person_data[2];
-            }
+            // }
+            // else{
+            //     domain_top_user_portrait = person_data[2];
+            // }
             html += '<li ng-repeat="result in t.result" target="_blank" style="margin-bottom: 10px" class="index-small-photo-wrap no-padding ng-scope"><a target="_blank" href="/index/personal/?uid=' + person_data[0] +'" title="' + domain_top_username +'">';
             html += '<div class="small-photo shadow-5"><span class="helper"></span><img src="' + domain_top_user_portrait + '" alt="' + domain_top_username +'"></div></a></li>';
 	   }
@@ -196,12 +196,12 @@ function drawTopic(div_name, more_div_name, rank_data){
                 domain_top_username = person_data[1];
             }
             var domain_top_user_portrait;
-            if (person_data[2] == 'unknown'){
+            // if (person_data[2] == 'unknown'){
                 domain_top_user_portrait = "/static/img/unknown_per.gif";
-            }
-            else{
-                domain_top_user_portrait = person_data[2];
-            }
+            // }
+            // else{
+            //     domain_top_user_portrait = person_data[2];
+            // }
             html += '<li ng-repeat="result in t.result" target="_blank" style="margin-bottom: 10px" class="index-small-photo-wrap no-padding ng-scope"><a target="_blank" href="/index/personal/?uid=' + person_data[0] +'" title="' + domain_top_username +'">';
             html += '<div class="small-photo shadow-5"><span class="helper"></span><img src="' + domain_top_user_portrait + '" alt="' + domain_top_username +'"></div></a></li>';
         }
@@ -233,12 +233,12 @@ function drawTopicDomain(div_name, more_div_name, rank_data){
                 domain_top_username = person_data[1];
             }
             var domain_top_user_portrait;
-            if (person_data[2] == 'unknown'){
+            // if (person_data[2] == 'unknown'){
                 domain_top_user_portrait = "/static/img/unknown_per.gif";
-            }
-            else{
-                domain_top_user_portrait = person_data[2];
-            }
+            // }
+            // else{
+            //     domain_top_user_portrait = person_data[2];
+            // }
             html += '<li ng-repeat="result in t.result" target="_blank" style="margin-bottom: 10px" class="index-small-photo-wrap no-padding ng-scope"><a target="_blank" href="/index/personal/?uid=' + person_data[0] +'" title="' + domain_top_username +'">';
             html += '<div class="small-photo shadow-5"><span class="helper"></span><img src="' + domain_top_user_portrait + '" alt="' + domain_top_username +'"></div></a></li>';
 			
@@ -265,12 +265,12 @@ function drawTopicDomain(div_name, more_div_name, rank_data){
                 domain_top_username = person_data[1];
             }
             var domain_top_user_portrait;
-            if (person_data[2] == 'unknown'){
+            // if (person_data[2] == 'unknown'){
                 domain_top_user_portrait = "/static/img/unknown_per.gif";
-            }
-            else{
-                domain_top_user_portrait = person_data[2];
-            }
+            // }
+            // else{
+            //     domain_top_user_portrait = person_data[2];
+            // }
             html += '<li ng-repeat="result in t.result" target="_blank" style="margin-bottom: 10px" class="index-small-photo-wrap no-padding ng-scope"><a target="_blank" href="/index/personal/?uid=' + person_data[0] +'" title="' + domain_top_username +'">';
             html += '<div class="small-photo shadow-5"><span class="helper"></span><img src="' + domain_top_user_portrait + '" alt="' + domain_top_username +'"></div></a></li>';
         }
